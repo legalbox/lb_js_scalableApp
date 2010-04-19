@@ -12,7 +12,7 @@
  * 2010-04-19
  */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb */
+/*global window */
 // preserve the library, if already loaded
 window.lb = window.lb || (function() {
   // Builder of
