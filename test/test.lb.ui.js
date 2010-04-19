@@ -15,7 +15,7 @@
 /*requires bezen.testrunner.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, window */
-window.test = (function() {
+(function() {
   // Builder of
   // Closure object for Test of lb.ui
  
