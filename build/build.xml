@@ -5,14 +5,14 @@
   
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-04-16
+  Version: 2010-04-19
   
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
   </description>
   
   <target name="build" 
-    depends="clean,check,document,combine,compress"
+    depends="doc,check,combine,compress"
   />
 
   <target name="clean" description="Remove previous temps">
@@ -38,10 +38,12 @@
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
+    <jslint file="../src/lb.ui.js" />
   </target>
    
   <target name="checkTest" description="Check test files with JSLint">
     <jslint file="../test/test.lb.js" />
+    <jslint file="../test/test.lb.ui.js" />
   </target>
    
   <target name="check" description="Check JavaScript files with JSLint" 
