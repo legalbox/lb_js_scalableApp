@@ -11,12 +11,13 @@
 
 /*requires lb.js */
 /*requires bezen.assert.js */
+/*requires bezen.object.js */
 /*requires bezen.testrunner.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, window */
 window.test = (function() {
   // Builder of
-  // Closure object for Test of bezen
+  // Closure object for Test of Legal Box Web Application
  
   // Define aliases
   var assert = bezen.assert,
