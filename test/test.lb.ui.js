@@ -24,13 +24,14 @@
       object = bezen.object,
       testrunner = bezen.testrunner;
 
-  var testLbUi = function(){
+  var testNamespace = function(){
     
-    assert.isTrue( object.exists(window,'lb','ui'),     "lb.ui was not found");
+    assert.isTrue( object.exists(window,'lb','ui'),
+                                            "lb.ui namespace was not found");
   };
 
   var tests = {
-    testLbUi: testLbUi
+    testNamespace: testNamespace
   };
    
   testrunner.define(tests, "lb.ui");

@@ -24,13 +24,14 @@
       object = bezen.object,
       testrunner = bezen.testrunner;
 
-  var testRoot = function(){
+  var testNamespace = function(){
     
-    assert.isTrue( object.exists(window.lb),        "window.lb was not found");
+    assert.isTrue( object.exists(window,'lb'),
+                                                "lb namespace was not found");
   };
 
   var tests = {
-    testRoot: testRoot
+    testNamespace: testNamespace
   };
    
   testrunner.define(tests, "lb");

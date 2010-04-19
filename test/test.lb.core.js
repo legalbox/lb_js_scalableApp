@@ -24,13 +24,14 @@
       object = bezen.object,
       testrunner = bezen.testrunner;
 
-  var testLbCore = function(){
+  var testNamespace = function(){
     
-    assert.isTrue( object.exists(window,'lb','core'), "lb.core was not found");
+    assert.isTrue( object.exists(window,'lb','core'),
+                                            "lb.core namespace was not found");
   };
 
   var tests = {
-    testLbCore: testLbCore
+    testNamespace: testNamespace
   };
    
   testrunner.define(tests, "lb.core");
