@@ -38,6 +38,7 @@
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
+    <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.ui.js" />
   </target>
    
