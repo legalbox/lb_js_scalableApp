@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="transform" basedir="." default="build">
+  <description>
+  Build script for Legal Box Web Application
+  
+  Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
+  Copyright: Legal Box (c) 2010, All Rights Reserved
+  Version: 2010-04-16
+  
+  Based on Build script for bezen.org JavaScript library
+  CC-BY: Eric Bréchemier - http://bezen.org/javascript/
+  </description>
+  
+  <target name="build" 
+    depends="clean,check,document,combine,compress"
+  />
+
+  <target name="clean" description="Remove previous temps">
+    <delete dir="out"/>
+  </target>
+
+  <macrodef name="jslint">
+    <attribute name="file" />
+    <sequential>
+      <echo>jslint: checking @{file}</echo>
+      <java jar="lib/yuicompressor/rhino-1.6R7.jar"
+          fork="true"
+          failonerror="true"
+      >
+        <arg line="-f lib/jslint/fulljslint.js" />
+        <arg value="lib/jslint/rhino.js" />
+        <arg value="@{file}" />
+      </java>
+      <echo />
+    </sequential>
+  </macrodef>
+
+  <target name="checkSrc"
+          description="Check JavaScript source files with JSLint">
+    <jslint file="../src/lb.js" />
+  </target>
+   
+  <target name="checkTest" description="Check test files with JSLint">
+    <jslint file="../test/test.lb.js" />
+  </target>
+   
+  <target name="check" description="Check JavaScript files with JSLint" 
+          depends="checkSrc, checkTest"
+  />
+
+  <macrodef name="naturaldocs">
+    <attribute name="in" description="path to input folder for JS files" />
+    <attribute name="out" description="path to folder for HTML output" />
+    <attribute name="config" description="path to folder for configuration" />
+    <sequential>
+      <echo>naturaldocs: started processing @{in} => @{out}</echo>
+      <exec executable="lib/naturaldocs/NaturalDocs" dir="${basedir}"
+        failonerror="true"
+      >
+        <arg line="-i @{in}" />
+        <arg line="-o HTML @{out}" />
+        <arg line="-p @{config}" />
+      </exec>
+      <echo>naturaldocs: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <target name="document" 
+    description="Document JavaScript source files with Natural Docs">
+    <mkdir dir="out/doc/config"/>
+    <naturaldocs in="../src" out="out/doc" config="out/doc/config" />
+  </target>
+
+  <target name="doc" depends="document" description="alias for document" />
+
+  <macrodef name="combiner">
+    <attribute name="in" />
+    <attribute name="out" />
+    <sequential>
+      <echo>combiner: started processing @{in} => @{out}</echo>
+      <java jar="lib/combiner/combiner-0.0.1.jar"
+          fork="true"
+          failonerror="true"
+      >
+        <arg value="-v" />
+        <arg line="--charset UTF-8" />
+        <arg line="-o @{out}" />
+        <arg line="@{in}" />
+      </java>
+      <echo>combiner: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <target name="combine" description="Combine JavaScript files with Combiner">
+    <mkdir dir="out/js"/>
+    <fileset id="allinfiles" dir="../src" includes="*.js" />
+    <pathconvert property="allin" pathsep=" " refid="allinfiles" />
+    <combiner in="${allin}" out="out/js/lb-full.js" />
+  </target>
+   
+  <macrodef name="yuicompressor">
+    <attribute name="in" />
+    <attribute name="out" />
+    <sequential>
+      <echo>yuicompressor: started processing @{in} => @{out}</echo>
+      <java jar="lib/yuicompressor/yuicompressor-2.4.2.jar"
+          fork="true"
+          failonerror="true"
+      >
+        <arg value="-v" />
+        <arg line="--charset UTF-8" />
+        <arg line="-o @{out}" />
+        <arg line="@{in}" />
+      </java>
+      <echo>yuicompressor: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <target name="setToday">
+    <tstamp>
+      <format property="TODAY" pattern="yyyy-MM-dd" timezone="GMT" />
+    </tstamp>
+  </target>
+
+  <target name="compress"
+   description="Compress JavaScript files with YUI Compressor"
+   depends="setToday"
+  >
+    <yuicompressor in="out/js/lb-full.js"
+                   out="out/js/lb-min.js" />
+     
+    <copy file="out/js/lb-min.js" tofile="out/js/lb-min-${TODAY}.js" />
+  </target>
+
+</project>

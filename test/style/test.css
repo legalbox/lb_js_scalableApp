@@ -1,0 +1,44 @@
+/*
+ * CSS Styles for bezen.org Unit Tests Runner
+ *
+ * author:    Eric Bréchemier <bezen@eric.brechemier.name>
+ * license:   Creative Commons Attribution 3.0 Unported
+ *            http://creativecommons.org/licenses/by/3.0/
+ * version:   2009-12-02
+ */
+
+.console {
+  width: 95%;
+  overflow-x: scroll;
+  background-color: black;
+  color: white;
+  font-family: sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.25em;
+  padding: 0.1em 1em 0.1em 1em;
+}
+.status-text {
+  text-align: center;
+  font-size: 300%;
+}
+.progress-bar {
+  background-color: black;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 2em;
+  margin-bottom: 0.5em;
+  padding: 2px;
+}
+.progress {
+  background-color: white;
+  width: 100%;
+  height: 100%; 
+}
+.pass {
+  background-color: #0F0;
+}
+.fail {
+  background-color: #F00;
+}
