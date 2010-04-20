@@ -74,11 +74,11 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
       sb = sandbox;
       module = creator(sandbox);
       status = 'created';
-    } catch(e) {
+    } catch(e1) {
       sb.log('ERROR: Failed to create module "'+name+
              '" using creator "'+creator+
              '" with sandbox "'+sandbox+
-             '"; '+e+'.');
+             '"; '+e1+'.');
       status = 'failed';
       return;
     }
@@ -86,8 +86,8 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     try {
       module.start();
       status = 'started';
-    } catch(e){
-      sb.log('ERROR: Failed to start module "'+name+'"; '+e+'.');
+    } catch(e2){
+      sb.log('ERROR: Failed to start module "'+name+'"; '+e2+'.');
       status = 'failed';
     }
   }
