@@ -33,19 +33,25 @@
   var subscribedModules = [];
   var subscribedEvents = [];
 
+  function stubFunc1(){ // stub function #1
+  }
+  function stubFunc2(){ // stub function #2
+  }
+  function stubFunc3(){ // stub function #3
+  }
+
   // stub Facade object, for unit tests
   var stubFacade = {
     subscribe: function(module,event){
       subscribedModules.push(module);
       subscribedEvents.push(event);
     },
-    api: {
-      func1: function(){ // stub function #1
-      },
-      func2: function(){ // stub function #2
-      },
-      func3: function(){ // stub function #3
-      }
+    getApi: function(){
+      return {
+        func1: stubFunc1,
+        func2: stubFunc2,
+        func3: stubFunc3
+      };
     }
   };
 
@@ -63,11 +69,11 @@
     // are simply copied to the sandbox object. An more complex intermediation
     // may be put in place in the future, e.g. to have this reference the
     // facade during the call.
-    assert.equals( sandbox.func1, stubFacade.api.func1,
+    assert.equals( sandbox.func1, stubFunc1,
                                          "function #1 expected to be copied");
-    assert.equals( sandbox.func2, stubFacade.api.func2,
+    assert.equals( sandbox.func2, stubFunc2,
                                          "function #2 expected to be copied");
-    assert.equals( sandbox.func3, stubFacade.api.func3,
+    assert.equals( sandbox.func3, stubFunc3,
                                          "function #3 expected to be copied");
   }
 

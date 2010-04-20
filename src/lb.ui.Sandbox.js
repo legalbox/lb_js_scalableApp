@@ -77,7 +77,7 @@ lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
   }
 
   // Public methods
-  proxify.call(this,facade.api);
+  proxify.call(this, facade.getApi() );
   this.getBox = getBox;
   this.subscribe = subscribe;
 
