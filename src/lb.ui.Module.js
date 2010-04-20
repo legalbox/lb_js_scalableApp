@@ -59,7 +59,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
 
   function start(sandbox){
     // Function: start(sandbox)
-    // Start the underlying module
+    // Create and start the underlying module
     //
     // Parameters:
     //   sandbox - object, the sandbox instance for this UI module.
