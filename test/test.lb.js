@@ -24,11 +24,11 @@
       object = bezen.object,
       testrunner = bezen.testrunner;
 
-  var testNamespace = function(){
+  function testNamespace(){
     
     assert.isTrue( object.exists(window,'lb'),
                                                 "lb namespace was not found");
-  };
+  }
 
   var tests = {
     testNamespace: testNamespace
