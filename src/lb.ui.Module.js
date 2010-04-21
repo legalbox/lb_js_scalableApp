@@ -77,27 +77,37 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     return sb;
   }
 
-  function start(sandbox){
-    // Function: start(sandbox)
-    // Create and start the underlying module
+  function setSandbox(sandbox){
+    // Function: setSandbox(sandbox)
+    // Set the sandbox associated with this module.
     //
     // Parameters:
-    //   sandbox - object, the sandbox instance for this UI module.
+    //   sandbox - object, the sandbox to set (instance of lb.ui.Sandbox)
     //
     // Note:
-    // Nothing happens in case no sandbox is provided.
-    if (!sandbox){
+    // setSandbox() must be called to initialize the sandbox before start() and
+    // other methods are called; it is needed to access the logging api.
+
+    sb = sandbox;
+  }
+
+  function start(){
+    // Function: start()
+    // Create and start the underlying module
+    //
+    // Note:
+    // Nothing happens in case no sandbox has been configured.
+    if (!sb){
       return;
     }
 
     try {
-      sb = sandbox;
-      module = creator(sandbox);
+      module = creator(sb);
       status = 'created';
     } catch(e1) {
       sb.log('ERROR: Failed to create module "'+name+
              '" using creator "'+creator+
-             '" with sandbox "'+sandbox+
+             '" with sandbox "'+sb+
              '"; '+e1+'.');
       status = 'failed';
       return;
@@ -120,7 +130,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     // are cancelled.
     //
     // Note:
-    // Nothing happens in case no sandbox has been provided in a start() call.
+    // Nothing happens in case no sandbox has been configured.
     if (!sb){
       return;
     }
@@ -161,7 +171,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     //   event - object, the event subject of the notification
     //
     // Note:
-    // Nothing happens in case no sandbox has been provided in a start() call.
+    // Nothing happens in case no sandbox has been configured.
     if (!sb){
       return;
     }
@@ -181,6 +191,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   // Public methods
   this.getStatus = getStatus;
   this.getSandbox = getSandbox;
+  this.setSandbox = setSandbox;
   this.start = start;
   this.stop = stop;
   this.subscribe = subscribe;

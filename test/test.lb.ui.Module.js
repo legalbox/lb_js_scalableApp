@@ -83,7 +83,7 @@
   function testConstructor(){
     // Unit tests for new lb.ui.Module()
 
-    var module = new lb.ui.Module('lb.ui.stub', createStubModule, stubSandbox);
+    var module = new lb.ui.Module('lb.ui.stub', createStubModule);
   }
 
   function testGetName(){
@@ -95,33 +95,54 @@
                   "getName expected to return the name given in constructor");
   }
 
+  function testGetSandbox(){
+    // Unit tests for lb.ui.Module#getSandbox()
+
+    var module = new lb.ui.Module('lb.ui.module', createStubModule);
+    assert.isFalse( object.exists( module.getSandbox() ),
+                                    "no sandbox expected in module initially");
+  }
+
+  function testSetSandbox(){
+    // Unit tests for lb.ui.Module#setSandbox()
+
+    var module = new lb.ui.Module('lb.ui.module', createStubModule);
+    module.setSandbox(stubSandbox);
+    assert.equals( module.getSandbox(), stubSandbox, 
+                                       "sandbox given in setSandbox expected");
+  }
+
   function testStart(){
     // Unit tests for lb.core.Module#start()
 
     var module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.setSandbox(stubSandbox);
 
     startCounter = 0;
-    module.start(stubSandbox);
+    module.start();
     assert.arrayEquals(sandboxes,[stubSandbox],
              "underlying module expected to be created with provided sandbox");
     assert.equals(startCounter, 1, "Underlying module expected to be started");
 
     startCounter = 0;
+    module.setSandbox(undefined);
     module.start();
-    module.start(undefined);
-    module.start(null);
+    module.setSandbox(null);
+    module.start();
     assert.equals(startCounter, 0,        "No start expected without sandbox");
 
     logMessages = [];
     module = new lb.ui.Module('lb.ui.fail', creatorWhichFails);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     assert.equals(logMessages.length, 1,     "one message expected in log #1");
     assert.isTrue(string.startsWith(logMessages[0], 'ERROR: '),
                                            "error message expected in log #1");
 
     module = new lb.ui.Module('lb.ui.fail', createModuleWhichFailsToStart);
+    module.setSandbox(stubSandbox);
     logMessages = [];
-    module.start(stubSandbox);
+    module.start();
     assert.equals(logMessages.length, 1,     "one message expected in log #2");
     assert.isTrue(string.startsWith(logMessages[0], 'ERROR: '),
                                            "error message expected in log #2");
@@ -131,7 +152,8 @@
     // Unit tests for lb.ui.Module#subscribe()
 
     var module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
 
     var counter = 0;
     module.subscribe({}, function(){ counter++; });
@@ -154,7 +176,8 @@
     }
 
     var module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.subscribe(subscriptionA,callback);
     module.notify(event1);
     assert.arrayEquals(notifyEvents, [event1],
@@ -168,7 +191,8 @@
 
     notifyEvents = [];
     module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.subscribe(subscriptionB,callback);
     module.notify(event1);
     module.notify(event2);
@@ -177,14 +201,16 @@
         "With subscription B, module expected to be notified of events 2,3");
 
     module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(null);
+    module.setSandbox(null);
+    module.start();
     module.subscribe(subscriptionA,callback);
     notifyEvents = [];
     module.notify(event1);
     assert.arrayEquals(notifyEvents, [], "No notify expected without sandbox");
 
     module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.subscribe(subscriptionA,failingCallback);
     logMessages = [];
     module.notify(event1);
@@ -197,19 +223,22 @@
     // Unit tests for lb.ui.Module#stop()
 
     var module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     stopCounter = 0;
     module.stop();
     assert.equals(stopCounter, 1, "Underlying module expected to be stopped");
 
     module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(null);
+    module.setSandbox(null);
+    module.start();
     stopCounter = 0;
     module.stop();
     assert.equals(stopCounter, 0,         "No stop expected without sandbox");
 
     module = new lb.ui.Module('lb.ui.fail', createFailingModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     logMessages = [];
     module.stop();
     assert.equals(logMessages.length, 1,     "one message expected in log");
@@ -221,7 +250,8 @@
       counter++;
     };
     module = new lb.ui.Module('lb.ui.module', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.subscribe({},callback);
     module.notify({});
     assert.equals(counter, 1,              "callback expected before stop()");
@@ -236,57 +266,51 @@
     var module = new lb.ui.Module('lb.ui.module', createStubModule);
     assert.equals( module.getStatus(), 'idle', "wrong initial status");
 
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     assert.equals( module.getStatus(), 'started',"wrong status after start()");
 
     module.stop();
     assert.equals( module.getStatus(), 'stopped', "wrong status after stop()");
 
     module = new lb.ui.Module('lb.ui.fail', creatorWhichFails);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in creator");
 
     module = new lb.ui.Module('lb.ui.fail', createModuleWhichFailsToStart);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in start");
 
     module = new lb.ui.Module('lb.ui.fail', createFailingModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.stop();
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in stop");
 
     module = new lb.ui.Module('lb.ui.module', createStubModule);
-    module.start(stubSandbox);
+    module.setSandbox(stubSandbox);
+    module.start();
     module.subscribe({},failingCallback);
     module.notify({});
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in notify");
   }
 
-  function testGetSandbox(){
-    // Unit tests for lb.ui.Module#getSandbox()
-
-    var module = new lb.ui.Module('lb.ui.module', createStubModule);
-    assert.isFalse( object.exists( module.getSandbox() ),
-                                    "no sandbox expected in module initially");
-
-    module.start(stubSandbox);
-    assert.equals( module.getSandbox(), stubSandbox,
-                      "sandbox expected to match the one provided in start()");
-  }
-
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
+    testGetSandbox: testGetSandbox,
+    testSetSandbox: testSetSandbox,
     testStart: testStart,
     testSubscribe: testSubscribe,
     testNotify: testNotify,
     testStop: testStop,
-    testGetStatus: testGetStatus,
-    testGetSandbox: testGetSandbox
+    testGetStatus: testGetStatus
   };
 
   testrunner.define(tests, "lb.ui.Module");
