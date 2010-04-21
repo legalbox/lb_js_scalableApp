@@ -266,6 +266,18 @@
                                       "wrong status after failure in notify");
   }
 
+  function testGetSandbox(){
+    // Unit tests for lb.ui.Module#getSandbox()
+
+    var module = new lb.ui.Module('lb.ui.module', createStubModule);
+    assert.isFalse( object.exists( module.getSandbox() ),
+                                    "no sandbox expected in module initially");
+
+    module.start(stubSandbox);
+    assert.equals( module.getSandbox(), stubSandbox,
+                      "sandbox expected to match the one provided in start()");
+  }
+
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
@@ -273,7 +285,8 @@
     testSubscribe: testSubscribe,
     testNotify: testNotify,
     testStop: testStop,
-    testGetStatus: testGetStatus
+    testGetStatus: testGetStatus,
+    testGetSandbox: testGetSandbox
   };
 
   testrunner.define(tests, "lb.ui.Module");

@@ -16,9 +16,10 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-20
+ * 2010-04-21
  */
 /*requires lb.ui.js */
+/*requires lb.ui.EventFilter.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global window, lb */
 // preserve the module, if already loaded
@@ -34,14 +35,23 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   // Returns:
   //   object, the new instance of lb.ui.Module
 
+  // Define aliases
+  var EventFilter = lb.ui.EventFilter,
+
+  // Private fields
+
   // string, the status of underlying module
-  var status = 'idle',
+      status = 'idle',
 
   // object, the underlying module instance
       module,
 
-  // object, the sandbox instance for the underlying module
-      sb;
+  // object, the sandbox for the underlying module
+      sb,
+
+  // array, the list of filter objects (lb.ui.EventFilter)
+  // See EventFilter.filter() for details on filtering implementation.
+      filters = [];
 
   function getStatus(){
     // Function: getStatus(): string
@@ -55,6 +65,16 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     // - 'failed' after a failure in creator(), start(), stop() or notify()
 
     return status;
+  }
+
+  function getSandbox(){
+    // Function: getSandbox(): lb.ui.Sandbox
+    // Get the sandbox associated with this module.
+    //
+    // Returns:
+    //   object, the sandbox initialized in the previous start() call.
+
+    return sb;
   }
 
   function start(sandbox){
@@ -94,7 +114,10 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
 
   function stop(){
     // Function: stop()
-    // Stop the underlying module
+    // Stop the underlying module.
+    //
+    // All created Filters are deleted ; as a consequence, event subscriptions
+    // are cancelled.
     //
     // Note:
     // Nothing happens in case no sandbox has been provided in a start() call.
@@ -103,12 +126,31 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     }
 
     try {
+      filters.length = 0;
       module.stop();
       status = 'stopped';
     } catch(e){
       sb.log('ERROR: Failed to stop module "'+name+'": '+e+'.');
       status = 'failed';
     }
+  }
+
+  function subscribe(event,callback){
+    // Function: subscribe(event, callback)
+    // Filter incoming events and trigger callback for given event type.
+    //
+    // Parameters:
+    //   event - object, the event type defining the filter
+    //   callback - function, the callback function. This function shall accept
+    //              an event as argument.
+    //
+    // Notes:
+    // Each time notify(event) gets called by the Application Core Facade, the
+    // incoming event will be checked against register filter to determine
+    // whether the associated callback shall be triggered.
+    //
+
+    filters.push( new EventFilter(event,callback) );
   }
 
   function notify(event){
@@ -124,20 +166,24 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
       return;
     }
 
-    try {
-      module.notify(event);
-    } catch(e){
-      sb.log('ERROR: Failed to notify module "'+name+
-                  '" of event "'+event+
-                  '": '+e+'.');
-      status = 'failed';
+    for (var i=0; i<filters.length; i++){
+      try {
+        filters[i].apply(event);
+      } catch(e){
+        sb.log('ERROR: Failed to notify module "'+name+
+                    '" of event "'+event+
+                    '": '+e+'.');
+        status = 'failed';
+      }
     }
   }
 
   // Public methods
   this.getStatus = getStatus;
+  this.getSandbox = getSandbox;
   this.start = start;
   this.stop = stop;
+  this.subscribe = subscribe;
   this.notify = notify;
   return this;
 };
