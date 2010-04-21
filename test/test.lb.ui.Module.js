@@ -173,7 +173,7 @@
     var notifyEvents = [];
     var callback = function(event){
       notifyEvents.push(event);
-    }
+    };
 
     var module = new lb.ui.Module('lb.ui.stub', createStubModule);
     module.setSandbox(stubSandbox);
