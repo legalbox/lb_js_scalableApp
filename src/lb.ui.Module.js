@@ -35,13 +35,13 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   //   object, the new instance of lb.ui.Module
 
   // string, the status of underlying module
-  var status = 'idle';
+  var status = 'idle',
 
   // object, the underlying module instance
-  var module;
+      module,
 
   // object, the sandbox instance for the underlying module
-  var sb;
+      sb;
 
   function getStatus(){
     // Function: getStatus(): string
