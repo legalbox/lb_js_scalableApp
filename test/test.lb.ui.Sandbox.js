@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-20
+ * Version:   2010-04-21
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -31,7 +31,6 @@
   }
 
   var subscribedModules = [];
-  var subscribedEvents = [];
 
   function stubFunc1(){ // stub function #1
   }
@@ -42,9 +41,8 @@
 
   // stub Facade object, for unit tests
   var stubFacade = {
-    subscribe: function(module,event){
+    subscribe: function(module){
       subscribedModules.push(module);
-      subscribedEvents.push(event);
     },
     getApi: function(){
       return {
@@ -55,8 +53,13 @@
     }
   };
 
+  var eventFilters = [];
+
   // stub Module object, for unit tests
   var stubModule = {
+    addFilter: function(event){
+      eventFilters.push(event);
+    }
   };
 
   function testConstructor(){
@@ -95,10 +98,10 @@
     subscribedEvents = [];
     var event = {};
     sandbox.subscribe(event);
+    assert.arrayEquals(eventFilters, [event],
+                                "event filter expected on module");
     assert.arrayEquals(subscribedModules,[stubModule],
                                 "module expected to be subscribed on facade");
-    assert.arrayEquals(subscribedEvents,[event],
-                                 "event expected to be subscribed on facade");
   }
 
   var tests = {

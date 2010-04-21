@@ -55,7 +55,10 @@ lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
 
     // subscribe the associated User Interface Module to this event
-    facade.subscribe(module,event);
+    // 1. add a filter for this type of event
+    module.addFilter(event);
+    // 2. subscribe the module to all events
+    facade.subscribe(module);
   }
 
   function proxify(api){
