@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-20
+ * 2010-04-21
  */
 /*requires lb.ui.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -41,9 +41,15 @@ lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
     return box;
   }
 
-  function subscribe(event){
-    // Function: subscribe(event)
-    // Subscribe to an event of given type
+  function subscribe(event,callback){
+    // Function: subscribe(event,callback)
+    // Attach a callback for events of given type.
+    //
+    // The User Interface Module will get subscribed to all events on the
+    // Application Core Facade. Each event will get notified to the Module
+    // by the Facade. The Module will then filter events and trigger the
+    // provided callback in case the event has the same properties as the
+    // event.
     //
     // Parameters:
     //   event - object, the type of event.
@@ -53,10 +59,11 @@ lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
     //           * {} is a subscription to all events (no filter)
     //           * {name: 'foo'} is a subscription to all events named 'foo'
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
+    //   callback - function, the associated callback function
 
     // subscribe the associated User Interface Module to this event
-    // 1. add a filter for this type of event
-    module.addFilter(event);
+    // 1. add a filter for this type of event, associated with given callback
+    module.subscribe(event,callback);
     // 2. subscribe the module to all events
     facade.subscribe(module);
   }

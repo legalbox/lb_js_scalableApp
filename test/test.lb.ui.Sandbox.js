@@ -54,11 +54,13 @@
   };
 
   var eventFilters = [];
+  var eventCallbacks = [];
 
   // stub Module object, for unit tests
   var stubModule = {
-    addFilter: function(event){
+    subscribe: function(event,callback){
       eventFilters.push(event);
+      eventCallbacks.push(callback);
     }
   };
 
@@ -94,12 +96,16 @@
 
     var sandbox = new lb.ui.Sandbox('testId', stubModule, stubFacade);
 
+    eventFilters = [];
+    eventCallbacks = [];
     subscribedModules = [];
-    subscribedEvents = [];
     var event = {};
-    sandbox.subscribe(event);
+    var callback = function(){};
+    sandbox.subscribe(event,callback);
     assert.arrayEquals(eventFilters, [event],
                                 "event filter expected on module");
+    assert.arrayEquals(eventCallbacks, [callback],
+                                "event callback expected on module");
     assert.arrayEquals(subscribedModules,[stubModule],
                                 "module expected to be subscribed on facade");
   }
