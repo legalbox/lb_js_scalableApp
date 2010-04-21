@@ -68,11 +68,11 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   }
 
   function getSandbox(){
-    // Function: getSandbox(): lb.ui.Sandbox
+    // Function: getSandbox(): Sandbox
     // Get the sandbox associated with this module.
     //
     // Returns:
-    //   object, the sandbox initialized in the previous start() call.
+    //   object, the sandbox initialized in setSandbox().
 
     return sb;
   }
