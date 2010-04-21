@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-20
+ * Version:   2010-04-21
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -35,7 +35,6 @@
   var sandboxes = [];
   var startCounter = 0;
   var stopCounter = 0;
-  var notifyEvents = [];
 
   function createStubModule(sandbox){
     // create a new stub module, for Unit Tests purpose,
@@ -45,8 +44,7 @@
     sandboxes.push(sandbox);
     return {
       start: function(){ startCounter++; },
-      stop: function(){ stopCounter++; },
-      notify: function(event){ notifyEvents.push(event); }
+      stop: function(){ stopCounter++; }
     };
   }
 
@@ -69,10 +67,13 @@
 
     return {
       start: function(){},
-      stop: function(){ throw new Error('Test failure in stop'); },
-      notify: function(event){ throw new Error('Test failure in notify'); }
+      stop: function(){ throw new Error('Test failure in stop'); }
     };
   }
+
+  var failingCallback = function(){
+    throw new Error('Test failure in notify callback');
+  };
 
   var logMessages = [];
   var stubSandbox = {
@@ -126,6 +127,72 @@
                                            "error message expected in log #2");
   }
 
+  function testSubscribe(){
+    // Unit tests for lb.ui.Module#subscribe()
+
+    var module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.start(stubSandbox);
+
+    var counter = 0;
+    module.subscribe({}, function(){ counter++; });
+    assert.equals(counter, 0,   "callback must not be triggered at subscribe");
+  }
+
+  function testNotify(){
+    // Unit tests for lb.ui.Module#notify()
+
+    var event1 = {};
+    var event2 = {name:'test'};
+    var event3 = {name:'test', id:42};
+
+    var subscriptionA = {};
+    var subscriptionB = {name:'test'};
+
+    var notifyEvents = [];
+    var callback = function(event){
+      notifyEvents.push(event);
+    }
+
+    var module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.start(stubSandbox);
+    module.subscribe(subscriptionA,callback);
+    module.notify(event1);
+    assert.arrayEquals(notifyEvents, [event1],
+              "With subscription A, module expected to be notified of event1");
+    module.notify(event2);
+    assert.arrayEquals(notifyEvents, [event1,event2],
+              "With subscription A, module expected to be notified of event2");
+    module.notify(event3);
+    assert.arrayEquals(notifyEvents, [event1,event2,event3],
+              "With subscription A, module expected to be notified of event3");
+
+    notifyEvents = [];
+    module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.start(stubSandbox);
+    module.subscribe(subscriptionB,callback);
+    module.notify(event1);
+    module.notify(event2);
+    module.notify(event3);
+    assert.arrayEquals(notifyEvents, [event2,event3],
+        "With subscription B, module expected to be notified of events 2,3");
+
+    module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.start(null);
+    module.subscribe(subscriptionA,callback);
+    notifyEvents = [];
+    module.notify(event1);
+    assert.arrayEquals(notifyEvents, [], "No notify expected without sandbox");
+
+    module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    module.start(stubSandbox);
+    module.subscribe(subscriptionA,failingCallback);
+    logMessages = [];
+    module.notify(event1);
+    assert.equals(logMessages.length, 1,     "one message expected in log");
+    assert.isTrue(string.startsWith(logMessages[0], 'ERROR: '),
+                                             "error message expected in log");
+  }
+
   function testStop(){
     // Unit tests for lb.ui.Module#stop()
 
@@ -148,32 +215,19 @@
     assert.equals(logMessages.length, 1,     "one message expected in log");
     assert.isTrue(string.startsWith(logMessages[0], 'ERROR: '),
                                              "error message expected in log");
-  }
 
-  function testNotify(){
-    // Unit tests for lb.ui.Module#notify()
-
-    var module = new lb.ui.Module('lb.ui.stub', createStubModule);
+    var counter = 0;
+    var callback = function(){
+      counter++;
+    };
+    module = new lb.ui.Module('lb.ui.module', createStubModule);
     module.start(stubSandbox);
-    notifyEvents = [];
-    var event = {};
-    module.notify(event);
-    assert.arrayEquals(notifyEvents, [event],
-                        "Underlying module expected to be notified of event");
-
-    module = new lb.ui.Module('lb.ui.stub', createStubModule);
-    module.start(null);
-    notifyEvents = [];
-    module.notify(event);
-    assert.arrayEquals(notifyEvents, [], "No notify expected without sandbox");
-
-    module = new lb.ui.Module('lb.ui.fail', createFailingModule);
-    module.start(stubSandbox);
-    logMessages = [];
-    module.notify(event);
-    assert.equals(logMessages.length, 1,     "one message expected in log");
-    assert.isTrue(string.startsWith(logMessages[0], 'ERROR: '),
-                                             "error message expected in log");
+    module.subscribe({},callback);
+    module.notify({});
+    assert.equals(counter, 1,              "callback expected before stop()");
+    module.stop();
+    module.notify({});
+    assert.equals(counter, 1,        "no new callback expected after stop()");
   }
 
   function testGetStatus(){
@@ -199,13 +253,14 @@
                                       "wrong status after failure in start");
 
     module = new lb.ui.Module('lb.ui.fail', createFailingModule);
-    module.start(stubSandbox)
+    module.start(stubSandbox);
     module.stop();
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in stop");
 
-    module = new lb.ui.Module('lb.ui.fail', createFailingModule);
+    module = new lb.ui.Module('lb.ui.module', createStubModule);
     module.start(stubSandbox);
+    module.subscribe({},failingCallback);
     module.notify({});
     assert.equals( module.getStatus(), 'failed',
                                       "wrong status after failure in notify");
@@ -215,8 +270,9 @@
     testNamespace: testNamespace,
     testConstructor: testConstructor,
     testStart: testStart,
-    testStop: testStop,
+    testSubscribe: testSubscribe,
     testNotify: testNotify,
+    testStop: testStop,
     testGetStatus: testGetStatus
   };
 
