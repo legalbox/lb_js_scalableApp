@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-21
+ * Version:   2010-04-23
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -304,6 +304,7 @@
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
+    testGetName: testGetName,
     testGetSandbox: testGetSandbox,
     testSetSandbox: testSetSandbox,
     testStart: testStart,

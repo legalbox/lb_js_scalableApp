@@ -16,7 +16,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-21
+ * 2010-04-23
  */
 /*requires lb.ui.js */
 /*requires lb.ui.EventFilter.js */
@@ -52,6 +52,16 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   // array, the list of filter objects (lb.ui.EventFilter)
   // See EventFilter.filter() for details on filtering implementation.
       filters = [];
+
+  function getName(){
+    // Function: getName(): string
+    // Get the module name.
+    //
+    // Returns:
+    //   string, the module name, as given in contructor.
+
+    return name;
+  }
 
   function getStatus(){
     // Function: getStatus(): string
@@ -189,6 +199,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   }
 
   // Public methods
+  this.getName = getName;
   this.getStatus = getStatus;
   this.getSandbox = getSandbox;
   this.setSandbox = setSandbox;
