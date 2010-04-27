@@ -28,7 +28,10 @@
 // * renamed file from goog/base.js to goog.js
 // * moved global var COMPILED to goog.COMPILED
 // * set goog.COMPILED to true
-// * set goog.global.CLOSURE_NO_DEPS to true
+// * moved goog.global.CLOSURE_BASE_PATH to goog.CLOSURE_BASE_PATH
+// * moved goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
+// * moved all constants in goog.global.* (typicall window.*) to just goog.*
+// * set CLOSURE_NO_DEPS to true
 
 /**
  * @fileoverview Bootstrap for the Google JS Library (Closure).
@@ -301,7 +304,7 @@ goog.basePath = '';
  * A hook for overriding the base path.
  * @type {string|undefined}
  */
-goog.global.CLOSURE_BASE_PATH;
+goog.CLOSURE_BASE_PATH;
 
 
 /**
@@ -309,7 +312,7 @@ goog.global.CLOSURE_BASE_PATH;
  * the deps are written.
  * @type {boolean|undefined}
  */
-goog.global.CLOSURE_NO_DEPS = true;
+goog.CLOSURE_NO_DEPS = true;
 
 
 /**
@@ -412,8 +415,8 @@ if (!goog.COMPILED) {
       return;
     }
     var doc = goog.global.document;
-    if (goog.global.CLOSURE_BASE_PATH) {
-      goog.basePath = goog.global.CLOSURE_BASE_PATH;
+    if (goog.CLOSURE_BASE_PATH) {
+      goog.basePath = goog.CLOSURE_BASE_PATH;
       return;
     }
     var scripts = doc.getElementsByTagName('script');
@@ -528,7 +531,7 @@ if (!goog.COMPILED) {
   goog.findBasePath_();
 
   // Allow projects to manage the deps files themselves.
-  if (!goog.global.CLOSURE_NO_DEPS) {
+  if (!goog.CLOSURE_NO_DEPS) {
     goog.writeScriptTag_(goog.basePath + 'deps.js');
   }
 }
