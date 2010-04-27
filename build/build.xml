@@ -2,15 +2,15 @@
 <project name="transform" basedir="." default="build">
   <description>
   Build script for Legal Box Web Application
-  
+
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-04-19
-  
+  Version: 2010-04-21
+
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
   </description>
-  
+
   <target name="build" 
     depends="doc,check,combine,compress"
   />
@@ -39,14 +39,23 @@
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
     <jslint file="../src/lb.core.js" />
+    <jslint file="../src/lb.core.facade.js" />
     <jslint file="../src/lb.ui.js" />
+    <jslint file="../src/lb.ui.EventFilter.js" />
+    <jslint file="../src/lb.ui.Module.js" />
+    <jslint file="../src/lb.ui.Sandbox.js" />
   </target>
-   
+
   <target name="checkTest" description="Check test files with JSLint">
     <jslint file="../test/test.lb.js" />
+    <jslint file="../test/test.lb.core.js" />
+    <jslint file="../test/test.lb.core.facade.js" />
     <jslint file="../test/test.lb.ui.js" />
+    <jslint file="../test/test.lb.ui.EventFilter.js" />
+    <jslint file="../test/test.lb.ui.Module.js" />
+    <jslint file="../test/test.lb.ui.Sandbox.js" />
   </target>
-   
+
   <target name="check" description="Check JavaScript files with JSLint" 
           depends="checkSrc, checkTest"
   />
@@ -102,7 +111,7 @@
     <pathconvert property="allin" pathsep=" " refid="allinfiles" />
     <combiner in="${allin}" out="out/js/lb-full.js" />
   </target>
-   
+
   <macrodef name="yuicompressor">
     <attribute name="in" />
     <attribute name="out" />
@@ -134,7 +143,7 @@
   >
     <yuicompressor in="out/js/lb-full.js"
                    out="out/js/lb-min.js" />
-     
+
     <copy file="out/js/lb-min.js" tofile="out/js/lb-min-${TODAY}.js" />
   </target>
 
