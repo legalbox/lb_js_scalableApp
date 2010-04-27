@@ -27,7 +27,7 @@
   var assert = bezen.assert,
       object = bezen.object,
       array = bezen.array,
-      string = bezen.string,
+      startsWith = bezen.string.startsWith,
       log = lb.core.log,
       testrunner = bezen.testrunner;
 
@@ -151,8 +151,12 @@
     array.empty( lb.core.facade.getModules() );
     ut();
 
-    sandboxes1 = [], sandboxes2 = [], sandboxes3 = [];
-    startCounter1 = 0, startCounter2 = 0, startCounter3 = 0;
+    sandboxes1 = [];
+    sandboxes2 = [];
+    sandboxes3 = [];
+    startCounter1 = 0;
+    startCounter2 = 0;
+    startCounter3 = 0;
 
     lb.core.facade.register('div1', 'lb.ui.stub1', createStubModule1);
     lb.core.facade.register('div2', 'lb.ui.stub2', createStubModule2);
@@ -178,7 +182,9 @@
     lb.core.facade.register('div3', 'lb.ui.stub3', createStubModule3);
     lb.core.facade.startAll();
 
-    stopCounter1 = 0, stopCounter2 = 0, stopCounter3 = 0;
+    stopCounter1 = 0;
+    stopCounter2 = 0;
+    stopCounter3 = 0;
     ut();
     assert.equals(stopCounter1, 1,             "module 1 must have stopped");
     assert.equals(stopCounter2, 1,             "module 2 must have stopped");
@@ -239,7 +245,8 @@
     assert.arrayEquals(events1, [event], "first module must get notified");
     assert.arrayEquals(events2, [event], "second module must get notified");
 
-    events1 = [], events2 = [];
+    events1 = [];
+    events2 = [];
     lb.core.facade.stopAll();
     ut(event);
     assert.arrayEquals(events1, [],
