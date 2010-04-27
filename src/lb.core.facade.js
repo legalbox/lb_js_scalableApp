@@ -12,6 +12,8 @@
  * 2010-04-27
  */
 /*requires lb.core.js */
+/*requires lb.core.dom.js */
+/*requires lb.core.log.js */
 /*requires lb.ui.Module.js */
 /*requires lb.ui.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -24,14 +26,8 @@ lb.core.facade = lb.core.facade || (function() {
   // Declare aliases
   var Module = lb.ui.Module,
       Sandbox = lb.ui.Sandbox,
-      //$ = lb.core.dom.$, // TODO: define
-      $ = function(id){ return document.getElementById(id); },
-
-      //log = lb.core.log.print, // TODO: define
-      log = function(msg){
-        if (window.console){ window.console.log(msg); }
-        else {window.alert(msg); }
-      },
+      $ = lb.core.dom.$,
+      log = lb.core.log.print,
 
   // Private members
 
