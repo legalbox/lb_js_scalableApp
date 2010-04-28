@@ -9,7 +9,6 @@
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.log.js */
 /*requires lb.core.facade.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
@@ -28,7 +27,6 @@
       object = bezen.object,
       array = bezen.array,
       startsWith = bezen.string.startsWith,
-      log = lb.core.log,
       testrunner = bezen.testrunner;
 
   function testNamespace(){
@@ -95,12 +93,15 @@
     assert.equals( modules[0].getSandbox().getBox(), bezen.$(id),
                                         "wrong HTML element as sandbox root");
 
-    log.clear();
-    lb.core.facade.register('notFound', name, createStubModule);
-    var logs = log.list();
-    assert.equals(logs.length, 1,   "one log expected when HTML id not found");
-    assert.isTrue( startsWith(logs[0], "ERROR: "),
-                                        "error expected for missing HTML id");
+    var failure = false;
+    try {
+      lb.core.facade.register('notFound', name, createStubModule);
+    } catch(e) {
+      failure = true;
+      assert.isTrue( startsWith( e.message, "ERROR:" ),
+                                 "error message expected for missing HTML id");
+    }
+    assert.isTrue(failure,          "Failure expected when HTML id not found");
   }
 
   var sandboxes1 = [];

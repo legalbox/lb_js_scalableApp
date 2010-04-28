@@ -65,8 +65,10 @@ lb.core.facade = lb.core.facade || (function() {
     module = new Module(name, creator);
     box = $(id);
     if (!box){
-      log('ERROR: could not find box element "'+'" for module "'+name+'".');
-      return;
+      var message = 'ERROR: could not find box element "'+id+
+                    '" for module "'+name+'".';
+      log(message);
+      throw new Error(message);
     }
     sandbox = new Sandbox(box,module,this);
     module.setSandbox(sandbox);
