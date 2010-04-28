@@ -13,11 +13,11 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-21
+ * 2010-04-28
  */
 /*requires lb.ui.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb */
+/*global lb */
 // preserve the module, if already loaded
 lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
   // Function: new Sandbox(box,module,facade): Sandbox

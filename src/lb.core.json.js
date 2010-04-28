@@ -9,11 +9,11 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-27
+ * 2010-04-28
  */
 /*requires lb.core.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb */
+/*global lb */
 // preserve the module, if already loaded
 lb.core.json = lb.core.json || (function() {
   // Builder of

@@ -15,7 +15,7 @@
 /*requires closure/goog.debug.Logger.js*/
 /*requires closure/goog.debug.Console.js*/
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb, goog */
+/*global lb, goog */
 // preserve the module, if already loaded
 lb.core.log = lb.core.log || (function() {
   // Builder of

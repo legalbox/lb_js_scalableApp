@@ -16,12 +16,12 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-23
+ * 2010-04-28
  */
 /*requires lb.ui.js */
 /*requires lb.ui.EventFilter.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb */
+/*global lb */
 // preserve the module, if already loaded
 lb.ui.Module = lb.ui.Module || function (name, creator){
   // Function: new Module(name,creator): Module

@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-27
+ * 2010-04-28
  */
 /*requires lb.core.js */
 /*requires lb.core.dom.js */
@@ -17,7 +17,7 @@
 /*requires lb.ui.Module.js */
 /*requires lb.ui.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, lb */
+/*global lb */
 // preserve the module, if already loaded
 lb.core.facade = lb.core.facade || (function() {
   // Builder of
