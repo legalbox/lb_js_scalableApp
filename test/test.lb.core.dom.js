@@ -229,7 +229,7 @@
     var ut = lb.core.dom.addListener;
 
     var div1 = element('div');
-    var events1 = []
+    var events1 = [];
     var callback1 = function(event){
       events1.push(event);
     };
