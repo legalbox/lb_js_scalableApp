@@ -26,7 +26,7 @@
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
 // * renamed file from goog/timer/timer.js to goog.Timer.js
-// * added requires comment for goog.js and goog.events.EventTarget
+// * added requires comment for goog.js and goog.events.EventTarget.js
 
 /**
  * @fileoverview A timer class to which other classes and objects can
@@ -37,7 +37,7 @@
 /*requires goog.js*/
 goog.provide('goog.Timer');
 
-/*requires goog.events.EventTarget*/
+/*requires goog.events.EventTarget.js*/
 goog.require('goog.events.EventTarget');
 
 

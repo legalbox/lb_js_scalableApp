@@ -29,7 +29,7 @@
 // * added requires comments for goog.js, goog.Timer.js, goog.debug.Logger.js,
 //   goog.debug.errorHandlerWeakDep.js, goog.events.EventTarget.js,
 //   goog.json.js, goog.net.ErrorCode.js, goog.net.EventType.js,
-//   goog.net.XmlHttp.js, goog.xhrMonitor.js, goog.structs.js,
+//   goog.net.XmlHttp.js, goog.net.xhrMonitor.js, goog.structs.js,
 //   goog.structs.Map.js
 
 /**
@@ -67,8 +67,8 @@ goog.provide('goog.net.XhrIo');
 /*requires goog.net.ErrorCode.js*/
 /*requires goog.net.EventType.js*/
 /*requires goog.net.XmlHttp.js*/
-/*requires goog.net.xhrMoniror.js*/
-/*requires goog.structs*/
+/*requires goog.net.xhrMonitor.js*/
+/*requires goog.structs.js*/
 /*requires goog.structs.Map.js*/
 goog.require('goog.Timer');
 goog.require('goog.debug.Logger');

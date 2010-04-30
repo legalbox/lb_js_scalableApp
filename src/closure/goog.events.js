@@ -78,7 +78,7 @@ goog.provide('goog.events.EventType');
 /*requires goog.array.js*/
 /*requires goog.debug.errorHandlerWeakDep.js*/
 /*requires goog.events.BrowserEvent.js*/
-/*requires goog.events.Event*/
+/*requires goog.events.Event.js*/
 /*requires goog.events.EventWrapper.js*/
 /*requires goog.events.pools.js*/
 /*requires goog.object.js*/
