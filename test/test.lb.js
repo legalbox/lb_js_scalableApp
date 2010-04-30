@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-19
+ * Version:   2010-04-30
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -18,14 +18,14 @@
 (function() {
   // Builder of
   // Closure object for Test of Legal Box Web Application
- 
+
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
       testrunner = bezen.testrunner;
 
   function testNamespace(){
-    
+
     assert.isTrue( object.exists(window,'lb'),
                                                 "lb namespace was not found");
   }
@@ -33,8 +33,8 @@
   var tests = {
     testNamespace: testNamespace
   };
-   
+
   testrunner.define(tests, "lb");
   return tests;
-   
+
 }());
