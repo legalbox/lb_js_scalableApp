@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-04-21
+  Version: 2010-04-30
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -38,7 +38,10 @@
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
+    <jslint file="../src/lb.base.js" />
     <jslint file="../src/lb.core.js" />
+    <jslint file="../src/lb.core.events.js" />
+
     <jslint file="../src/lb.core.ajax.js" />
     <jslint file="../src/lb.core.dom.js" />
     <jslint file="../src/lb.core.facade.js" />
@@ -52,7 +55,10 @@
 
   <target name="checkTest" description="Check test files with JSLint">
     <jslint file="../test/test.lb.js" />
+    <jslint file="../test/test.lb.base.js" />
     <jslint file="../test/test.lb.core.js" />
+    <jslint file="../test/test.lb.core.events.js" />
+
     <jslint file="../test/test.lb.core.ajax.js" />
     <jslint file="../test/test.lb.core.dom.js" />
     <jslint file="../test/test.lb.core.facade.js" />
