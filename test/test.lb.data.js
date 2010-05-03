@@ -18,7 +18,7 @@
 (function() {
   // Builder of
   // Closure object for Test of lb.data
- 
+
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
