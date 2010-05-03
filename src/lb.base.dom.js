@@ -143,7 +143,7 @@ lb.base.dom = lb.base.dom || (function() {
   }
 
   function removeListener(element, type, listener, useCapture){
-    // Function: removeListener(element, type, listener, useCapture);
+    // Function: removeListener(element, type, listener, useCapture)
     // Unregister a listener for a type of event on a DOM element.
     //
     // Parameters:
