@@ -19,7 +19,7 @@
  * 2010-04-28
  */
 /*requires lb.ui.js */
-/*requires lb.ui.EventFilter.js */
+/*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
@@ -36,7 +36,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   //   object, the new instance of lb.ui.Module
 
   // Define aliases
-  var EventFilter = lb.ui.EventFilter,
+  var Subscriber = lb.core.events.Subscriber,
 
   // Private fields
 
@@ -49,9 +49,8 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
   // object, the sandbox for the underlying module
       sb,
 
-  // array, the list of filter objects (lb.ui.EventFilter)
-  // See EventFilter.filter() for details on filtering implementation.
-      filters = [];
+  // array, the list of subscriber objects (lb.core.events.Subscriber)
+      subscribers = [];
 
   function getName(){
     // Function: getName(): string
@@ -146,7 +145,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     }
 
     try {
-      filters.length = 0;
+      subscribers.length = 0;
       module.stop();
       status = 'stopped';
     } catch(e){
@@ -155,6 +154,7 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     }
   }
 
+  // TODO: REMOVE, SPLIT TO lb.core.Sandbox / lb.core.events.publisher
   function subscribe(event,callback){
     // Function: subscribe(event, callback)
     // Filter incoming events and trigger callback for given event type.
@@ -163,16 +163,11 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
     //   event - object, the event type defining the filter
     //   callback - function, the callback function. This function shall accept
     //              an event as argument.
-    //
-    // Notes:
-    // Each time notify(event) gets called by the Application Core Facade, the
-    // incoming event will be checked against register filter to determine
-    // whether the associated callback shall be triggered.
-    //
 
-    filters.push( new EventFilter(event,callback) );
+    subscribers.push( new Subscriber(event,callback) );
   }
 
+  // TODO: MOVE TO lb.core.events.publisher#subscribe
   function notify(event){
     // Function: notify(event)
     // Notify an event to the underlying module
@@ -186,9 +181,9 @@ lb.ui.Module = lb.ui.Module || function (name, creator){
       return;
     }
 
-    for (var i=0; i<filters.length; i++){
+    for (var i=0; i<subscribers.length; i++){
       try {
-        filters[i].apply(event);
+        subscribers[i].notify(event);
       } catch(e){
         sb.log('ERROR: Failed to notify module "'+name+
                     '" of event "'+event+

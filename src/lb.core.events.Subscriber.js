@@ -68,7 +68,6 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   }
 
   return { // Public methods
-    apply: notify, // TODO: REMOVE to complete refactoring
     notify: notify
   };
 };
