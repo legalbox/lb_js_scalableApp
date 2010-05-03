@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.facade
- * Application Core Facade
+ * Namespace: lb.core.application
+ * Core Application
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -20,7 +20,7 @@
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
-lb.core.facade = lb.core.facade || (function() {
+lb.core.application = lb.core.application || (function() {
   // Builder of
   // Closure for lb.core.facade module
 

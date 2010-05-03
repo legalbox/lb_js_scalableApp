@@ -1,15 +1,15 @@
 /*
- * test.lb.core.facade.js - Unit Tests of Application Core Facade
+ * test.lb.core.application.js - Unit Tests of Core Application
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-27
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.facade.js */
+/*requires lb.core.application.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
@@ -20,7 +20,7 @@
 /*global lb, bezen, window */
 (function() {
   // Builder of
-  // Closure object for Test of lb.core
+  // Closure object for Test of lb.core.application
 
   // Define aliases
   var assert = bezen.assert,
@@ -31,12 +31,13 @@
 
   function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','core','facade'), 
-                                             "lb.core.facade was not found");
+    assert.isTrue( object.exists(window,'lb','core','application'), 
+                                         "lb.core.application was not found");
   }
 
+  // TODO: move to Sandbox unit tests
   function testGetApi(){
-    var ut = lb.core.facade.getApi;
+    var ut = lb.core.application.getApi;
 
     var api = ut();
     assert.isTrue( object.exists(api),                  "api object expected");
@@ -64,16 +65,16 @@
   }
 
   function testGetModules(){
-    var ut = lb.core.facade.getModules;
+    var ut = lb.core.application.getModules;
 
     assert.isTrue( object.exists( ut() ),     "modules must exist initially");
     array.empty( ut() );
     assert.isTrue( object.exists( ut() ),     "modules must exist when empty");
     assert.arrayEquals( ut().length, 0,   "empty list expected after empty()");
 
-    lb.core.facade.register('div1', 'lb.ui.stub1', bezen.nix);
-    lb.core.facade.register('div2', 'lb.ui.stub2', bezen.nix);
-    lb.core.facade.register('div3', 'lb.ui.stub3', bezen.nix);
+    lb.core.application.register('div1', 'lb.ui.stub1', bezen.nix);
+    lb.core.application.register('div2', 'lb.ui.stub2', bezen.nix);
+    lb.core.application.register('div3', 'lb.ui.stub3', bezen.nix);
     assert.isTrue( object.exists( ut() ), "modules expected after registers");
     assert.equals( ut().length, 3,                 "wrong number of modules");
   }
@@ -82,20 +83,22 @@
     // var ut = lb.core.facade.register;
     // This method must be called on the Facade
 
-    var modules = lb.core.facade.getModules();
+    var modules = lb.core.application.getModules();
     array.empty(modules);
 
     var name = 'lb.ui.stub';
     var id = 'testDiv';
-    lb.core.facade.register(id, name, createStubModule);
+    lb.core.application.register(id, name, createStubModule);
     assert.equals( modules.length, 1,              "one new module expected");
     assert.equals( modules[0].getName(), name,     "wrong module name");
     assert.equals( modules[0].getSandbox().getBox(), bezen.$(id),
                                         "wrong HTML element as sandbox root");
 
+    // TODO: create element at end of body (responsibility of Sandbox)
+    //       in case it is missing.
     var failure = false;
     try {
-      lb.core.facade.register('notFound', name, createStubModule);
+      lb.core.application.register('notFound', name, createStubModule);
     } catch(e) {
       failure = true;
       assert.isTrue( startsWith( e.message, "ERROR:" ),
@@ -147,9 +150,9 @@
   }
 
   function testStartAll(){
-    var ut = lb.core.facade.startAll;
+    var ut = lb.core.application.startAll;
 
-    array.empty( lb.core.facade.getModules() );
+    array.empty( lb.core.application.getModules() );
     ut();
 
     sandboxes1 = [];
@@ -159,9 +162,9 @@
     startCounter2 = 0;
     startCounter3 = 0;
 
-    lb.core.facade.register('div1', 'lb.ui.stub1', createStubModule1);
-    lb.core.facade.register('div2', 'lb.ui.stub2', createStubModule2);
-    lb.core.facade.register('div3', 'lb.ui.stub3', createStubModule3);
+    lb.core.application.register('div1', 'lb.ui.stub1', createStubModule1);
+    lb.core.application.register('div2', 'lb.ui.stub2', createStubModule2);
+    lb.core.application.register('div3', 'lb.ui.stub3', createStubModule3);
 
     ut();
     assert.equals(sandboxes1.length, 1,    "module 1 must have been created");
@@ -173,15 +176,15 @@
   }
 
   function testStopAll(){
-    var ut = lb.core.facade.stopAll;
+    var ut = lb.core.application.stopAll;
 
-    array.empty( lb.core.facade.getModules() );
+    array.empty( lb.core.application.getModules() );
     ut();
 
-    lb.core.facade.register('div1', 'lb.ui.stub1', createStubModule1);
-    lb.core.facade.register('div2', 'lb.ui.stub2', createStubModule2);
-    lb.core.facade.register('div3', 'lb.ui.stub3', createStubModule3);
-    lb.core.facade.startAll();
+    lb.core.application.register('div1', 'lb.ui.stub1', createStubModule1);
+    lb.core.application.register('div2', 'lb.ui.stub2', createStubModule2);
+    lb.core.application.register('div3', 'lb.ui.stub3', createStubModule3);
+    lb.core.application.startAll();
 
     stopCounter1 = 0;
     stopCounter2 = 0;
@@ -193,7 +196,7 @@
   }
 
   function testSubscribe(){
-    var ut = lb.core.facade.subscribe;
+    var ut = lb.core.application.subscribe;
 
     var notifCounter1 = 0;
     var module1 = {
@@ -207,23 +210,23 @@
 
     ut(module1);
     var event1 = {};
-    lb.core.facade.notifyAll(event1);
+    lb.core.application.notifyAll(event1);
     assert.equals(notifCounter1, 1, "first module must be notified of event1");
 
     ut(module1);
     ut(module2);
     ut(module2);
     var event2 = {};
-    lb.core.facade.notifyAll(event2);
+    lb.core.application.notifyAll(event2);
     assert.equals(notifCounter1, 2, "first module must be notified of event2");
     assert.equals(notifCounter2, 1,
                          "second module must be notified of event2 only once");
   }
 
   function testNotifyAll(){
-    var ut = lb.core.facade.notifyAll;
+    var ut = lb.core.application.notifyAll;
 
-    lb.core.facade.stopAll();
+    lb.core.application.stopAll();
     ut();
 
     var events1 = [];
@@ -238,8 +241,8 @@
 
     ut();
 
-    lb.core.facade.subscribe(module1);
-    lb.core.facade.subscribe(module2);
+    lb.core.application.subscribe(module1);
+    lb.core.application.subscribe(module2);
 
     var event = {};
     ut(event);
@@ -248,7 +251,7 @@
 
     events1 = [];
     events2 = [];
-    lb.core.facade.stopAll();
+    lb.core.application.stopAll();
     ut(event);
     assert.arrayEquals(events1, [],
                         "no notification expected after stopAll for module 1");
@@ -267,7 +270,7 @@
     testNotifyAll: testNotifyAll
   };
 
-  testrunner.define(tests, "lb.core.facade");
+  testrunner.define(tests, "lb.core.application");
   return tests;
 
 }());
