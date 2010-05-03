@@ -40,9 +40,9 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   // Returns:
   //   object, the new instance of lb.core.events.Subscriber
 
-  function apply(event){
-    // Function: apply(event)
-    // Apply this filter to incoming event and trigger the callback if the
+  function notify(event){
+    // Function: notify(event)
+    // Apply the filter to incoming event and trigger the callback if the
     // event matches the expected filter.
     //
     // Parameters:
@@ -68,6 +68,7 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   }
 
   return { // Public methods
-    apply: apply
+    apply: notify, // TODO: REMOVE to complete refactoring
+    notify: notify
   };
 };

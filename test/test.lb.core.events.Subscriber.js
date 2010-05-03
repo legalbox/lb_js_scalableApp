@@ -37,9 +37,8 @@
     var module = new Ut({}, bezen.nix);
   }
 
-  // TODO: renamed to notify
-  function testApply(){
-    // Unit tests for lb.core.events.Subscriber#apply()
+  function testNotify(){
+    // Unit tests for lb.core.events.Subscriber#notify()
 
     var event1 = {};
     var event2 = {name:'test'};
@@ -57,43 +56,43 @@
     };
 
     var filter = new lb.core.events.Subscriber(subscriptionA, callback);
-    filter.apply(event1);
+    filter.notify(event1);
     assert.arrayEquals(notifiedEvents, [event1],
                        "With subscription A, event1 expected to be notified");
-    filter.apply(event2);
+    filter.notify(event2);
     assert.arrayEquals(notifiedEvents, [event1,event2],
                        "With subscription A, event2 expected to be notified");
-    filter.apply(event3);
+    filter.notify(event3);
     assert.arrayEquals(notifiedEvents, [event1,event2,event3],
                        "With subscription A, event3 expected to be notified");
-    filter.apply(event4);
+    filter.notify(event4);
     assert.arrayEquals(notifiedEvents, [event1,event2,event3,event4],
                        "With subscription A, event4 expected to be notified");
 
     notifiedEvents = [];
     filter = new lb.core.events.Subscriber(subscriptionB, callback);
-    filter.apply(event1);
-    filter.apply(event2);
-    filter.apply(event3);
-    filter.apply(event4);
+    filter.notify(event1);
+    filter.notify(event2);
+    filter.notify(event3);
+    filter.notify(event4);
     assert.arrayEquals(notifiedEvents, [event2,event3,event4],
                   "With subscription B, events 2,3,4 expected to be notified");
 
     notifiedEvents = [];
     filter = new lb.core.events.Subscriber(subscriptionC, callback);
-    filter.apply(event1);
-    filter.apply(event2);
-    filter.apply(event3);
-    filter.apply(event4);
+    filter.notify(event1);
+    filter.notify(event2);
+    filter.notify(event3);
+    filter.notify(event4);
     assert.arrayEquals(notifiedEvents, [],
                   "With subscription C, no event expected to be notified");
 
     notifiedEvents = [];
     filter = new lb.core.events.Subscriber(subscriptionD, callback);
-    filter.apply(event1);
-    filter.apply(event2);
-    filter.apply(event3);
-    filter.apply(event4);
+    filter.notify(event1);
+    filter.notify(event2);
+    filter.notify(event3);
+    filter.notify(event4);
     assert.arrayEquals(notifiedEvents, [event3,event4],
                   "With subscription D, events 3,4 expected to be notified");
   }
@@ -101,7 +100,7 @@
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
-    testApply: testApply
+    testNotify: testNotify
   };
 
   testrunner.define(tests, "lb.core.events.Subscriber");
