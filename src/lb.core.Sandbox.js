@@ -1,10 +1,10 @@
 /*
- * Namespace: lb.ui.Sandbox
- * Sandbox for User Interface Modules of Legal Box Web Application
+ * Namespace: lb.core.Sandbox
+ * Sandbox for Modules of Legal Box Web Application
  *
- * A new instance of Sandbox gets attributed to each User Interface Module.
- * It acts as a proxy to Application Programming Interface methods on the
- * Application Core Facade.
+ * A new instance of Sandbox gets attributed to each User Interface Module
+ * and Data Model Module. It acts as a proxy to the methods of the Application
+ * Core.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -13,13 +13,13 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-28
+ * 2010-05-03
  */
-/*requires lb.ui.js */
+/*requires lb.core.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
-lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
+lb.core.Sandbox = lb.core.Sandbox || function (box,module,facade){
   // Function: new Sandbox(box,module,facade): Sandbox
   // Constructor of a new Sandbox.
   //
@@ -29,7 +29,7 @@ lb.ui.Sandbox = lb.ui.Sandbox || function (box,module,facade){
   //   facade - object, the Application Core Facade to proxify
   //
   // Returns:
-  //   object, the new instance of lb.ui.Sandbox
+  //   object, the new instance of lb.core.Sandbox
 
   function getBox(){
     // Function: getBox(): object

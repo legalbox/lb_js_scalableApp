@@ -47,13 +47,11 @@
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.application.js" />
     <jslint file="../src/lb.core.Module.js" />
+    <jslint file="../src/lb.core.Sandbox.js" />
     <jslint file="../src/lb.core.events.js" />
     <jslint file="../src/lb.core.events.Subscriber.js" />
-
     <jslint file="../src/lb.ui.js" />
     <jslint file="../src/lb.data.js" />
-
-    <jslint file="../src/lb.ui.Sandbox.js" />
   </target>
 
   <target name="checkTest" description="Check test files with JSLint">
@@ -67,13 +65,11 @@
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.application.js" />
     <jslint file="../test/test.lb.core.Module.js" />
+    <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.core.events.js" />
     <jslint file="../test/test.lb.core.events.Subscriber.js" />
-
     <jslint file="../test/test.lb.ui.js" />
     <jslint file="../test/test.lb.data.js" />
-
-    <jslint file="../test/test.lb.ui.Sandbox.js" />
   </target>
 
   <target name="check" description="Check JavaScript files with JSLint" 

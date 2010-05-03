@@ -16,7 +16,7 @@
 /*requires lb.base.log.js */
 /*requires lb.core.js */
 /*requires lb.core.Module.js */
-/*requires lb.ui.Sandbox.js */
+/*requires lb.core.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
@@ -26,7 +26,7 @@ lb.core.application = lb.core.application || (function() {
 
   // Declare aliases
   var Module = lb.core.Module,
-      Sandbox = lb.ui.Sandbox,
+      Sandbox = lb.core.Sandbox,
       $ = lb.base.dom.$,
       log = lb.base.log.print,
 

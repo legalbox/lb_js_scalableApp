@@ -1,15 +1,15 @@
 /*
- * test.lb.ui.Sandbox.js - Unit Tests of Sandbox for User Interface Modules
+ * test.lb.core.Sandbox.js - Unit Tests of Sandbox for Modules
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-21
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.ui.Sandbox.js */
+/*requires lb.core.Sandbox.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
@@ -26,8 +26,8 @@
 
   function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','ui','Sandbox'),
-                                     "lb.ui.Sandbox namespace was not found");
+    assert.isTrue( object.exists(window,'lb','core','Sandbox'),
+                                   "lb.core.Sandbox namespace was not found");
   }
 
   var subscribedModules = [];
@@ -65,9 +65,9 @@
   };
 
   function testConstructor(){
-    // Unit tests for lb.ui.Sandbox#Sandbox()
+    var Ut = lb.core.Sandbox;
 
-    var sandbox = new lb.ui.Sandbox('testId', stubModule, stubFacade);
+    var sandbox = new Ut('testId', stubModule, stubFacade);
 
     // Note:
     // in current implementation, it is expected that the proxified functions
@@ -83,18 +83,18 @@
   }
 
   function testGetBox(){
-    // Unit tests for lb.ui.Sandbox#getBox()
+    // Unit tests for lb.core.Sandbox#getBox()
 
     var box = {};
-    var sandbox = new lb.ui.Sandbox(box, stubModule, stubFacade);
+    var sandbox = new lb.core.Sandbox(box, stubModule, stubFacade);
     assert.equals( sandbox.getBox(), box,
                                       "box provided in constructor expected");
   }
 
   function testSubscribe(){
-    // Unit tests for lb.ui.Sandbox#notify()
+    // Unit tests for lb.core.Sandbox#notify()
 
-    var sandbox = new lb.ui.Sandbox('testId', stubModule, stubFacade);
+    var sandbox = new lb.core.Sandbox('testId', stubModule, stubFacade);
 
     eventFilters = [];
     eventCallbacks = [];
@@ -117,7 +117,7 @@
     testSubscribe: testSubscribe
   };
 
-  testrunner.define(tests, "lb.ui.Sandbox");
+  testrunner.define(tests, "lb.core.Sandbox");
   return tests;
 
 }());
