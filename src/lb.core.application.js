@@ -77,7 +77,7 @@ lb.core.application = lb.core.application || (function() {
   }
 
   function startAll(){
-    // Function startAll()
+    // Function: startAll()
     // Start all registered modules.
 
     for (var i=0; i<modules.length; i++){
@@ -86,7 +86,7 @@ lb.core.application = lb.core.application || (function() {
   }
 
   function stopAll(){
-    // Function stopAll()
+    // Function: stopAll()
     // Stop all registered modules.
     //
     // Note:
@@ -100,7 +100,7 @@ lb.core.application = lb.core.application || (function() {
   }
 
   function subscribe(module){
-    // Function subscribe(module)
+    // Function: subscribe(module)
     // Subscribe a module to event notifications.
     //
     // Parameter:
@@ -119,7 +119,7 @@ lb.core.application = lb.core.application || (function() {
   }
 
   function notifyAll(event){
-    // Function notifyAll(event)
+    // Function: notifyAll(event)
     // Notify all subscribed modules of the given event.
     //
     // Parameter:
