@@ -49,6 +49,7 @@
     <jslint file="../src/lb.core.Module.js" />
     <jslint file="../src/lb.core.Sandbox.js" />
     <jslint file="../src/lb.core.events.js" />
+    <jslint file="../src/lb.core.events.publisher.js" />
     <jslint file="../src/lb.core.events.Subscriber.js" />
     <jslint file="../src/lb.ui.js" />
     <jslint file="../src/lb.data.js" />
@@ -67,6 +68,7 @@
     <jslint file="../test/test.lb.core.Module.js" />
     <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.core.events.js" />
+    <jslint file="../test/test.lb.core.events.publisher.js" />
     <jslint file="../test/test.lb.core.events.Subscriber.js" />
     <jslint file="../test/test.lb.ui.js" />
     <jslint file="../test/test.lb.data.js" />
