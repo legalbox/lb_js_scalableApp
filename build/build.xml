@@ -47,11 +47,11 @@
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.application.js" />
     <jslint file="../src/lb.core.events.js" />
+    <jslint file="../src/lb.core.events.Subscriber.js" />
 
     <jslint file="../src/lb.ui.js" />
     <jslint file="../src/lb.data.js" />
 
-    <jslint file="../src/lb.ui.EventFilter.js" />
     <jslint file="../src/lb.ui.Module.js" />
     <jslint file="../src/lb.ui.Sandbox.js" />
   </target>
@@ -67,11 +67,11 @@
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.application.js" />
     <jslint file="../test/test.lb.core.events.js" />
+    <jslint file="../test/test.lb.core.events.Subscriber.js" />
 
     <jslint file="../test/test.lb.ui.js" />
     <jslint file="../test/test.lb.data.js" />
 
-    <jslint file="../test/test.lb.ui.EventFilter.js" />
     <jslint file="../test/test.lb.ui.Module.js" />
     <jslint file="../test/test.lb.ui.Sandbox.js" />
   </target>
@@ -85,6 +85,8 @@
     <attribute name="out" description="path to folder for HTML output" />
     <attribute name="config" description="path to folder for configuration" />
     <sequential>
+      <echo>naturaldocs: copy configuration to @{config}</echo>
+      <copy file="lib/naturaldocs/Config/Menu.txt" todir="@{config}" />
       <echo>naturaldocs: started processing @{in} => @{out}</echo>
       <exec executable="lib/naturaldocs/NaturalDocs" dir="${basedir}"
         failonerror="true"
