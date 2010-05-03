@@ -15,7 +15,7 @@
 /*requires lb.base.dom.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
-/*requires lb.ui.Module.js */
+/*requires lb.core.Module.js */
 /*requires lb.ui.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
@@ -25,7 +25,7 @@ lb.core.application = lb.core.application || (function() {
   // Closure for lb.core.facade module
 
   // Declare aliases
-  var Module = lb.ui.Module,
+  var Module = lb.core.Module,
       Sandbox = lb.ui.Sandbox,
       $ = lb.base.dom.$,
       log = lb.base.log.print,
