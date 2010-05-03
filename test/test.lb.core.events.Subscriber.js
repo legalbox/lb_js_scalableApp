@@ -1,15 +1,15 @@
 /*
- * test.lb.ui.EventFilter.js - Unit Tests of User Interface Event Filter
+ * test.lb.core.Subscriber.js - Unit Tests of Events Subscriber
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-21
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.ui.EventFilter.js */
+/*requires lb.core.Subscriber.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
@@ -18,7 +18,7 @@
 /*global lb, bezen, window */
 (function() {
   // Builder of
-  // Closure object for Test of User Interface Event Filter
+  // Closure object for Test of Events Subscriber
 
   // Define aliases
   var assert = bezen.assert,
@@ -27,18 +27,19 @@
 
   function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','ui','EventFilter'),
-                                  "lb.ui.EventFilter namespace was not found");
+    assert.isTrue( object.exists(window,'lb','core','events','Subscriber'),
+                          "lb.core.events.Suscriber namespace was not found");
   }
 
   function testConstructor(){
-    // Unit tests for new lb.ui.EventFilter()
+    var Ut = lb.core.events.Subscriber;
 
-    var module = new lb.ui.EventFilter({}, bezen.nix);
+    var module = new Ut({}, bezen.nix);
   }
 
+  // TODO: renamed to notify
   function testApply(){
-    // Unit tests for lb.ui.EventFilter#apply()
+    // Unit tests for lb.core.events.Subscriber#apply()
 
     var event1 = {};
     var event2 = {name:'test'};
@@ -55,7 +56,7 @@
       notifiedEvents.push(event);
     };
 
-    var filter = new lb.ui.EventFilter(subscriptionA, callback);
+    var filter = new lb.core.events.Subscriber(subscriptionA, callback);
     filter.apply(event1);
     assert.arrayEquals(notifiedEvents, [event1],
                        "With subscription A, event1 expected to be notified");
@@ -70,7 +71,7 @@
                        "With subscription A, event4 expected to be notified");
 
     notifiedEvents = [];
-    filter = new lb.ui.EventFilter(subscriptionB, callback);
+    filter = new lb.core.events.Subscriber(subscriptionB, callback);
     filter.apply(event1);
     filter.apply(event2);
     filter.apply(event3);
@@ -79,7 +80,7 @@
                   "With subscription B, events 2,3,4 expected to be notified");
 
     notifiedEvents = [];
-    filter = new lb.ui.EventFilter(subscriptionC, callback);
+    filter = new lb.core.events.Subscriber(subscriptionC, callback);
     filter.apply(event1);
     filter.apply(event2);
     filter.apply(event3);
@@ -88,7 +89,7 @@
                   "With subscription C, no event expected to be notified");
 
     notifiedEvents = [];
-    filter = new lb.ui.EventFilter(subscriptionD, callback);
+    filter = new lb.core.events.Subscriber(subscriptionD, callback);
     filter.apply(event1);
     filter.apply(event2);
     filter.apply(event3);
@@ -103,7 +104,7 @@
     testApply: testApply
   };
 
-  testrunner.define(tests, "lb.ui.EventFilter");
+  testrunner.define(tests, "lb.core.events.Subscriber");
   return tests;
 
 }());
