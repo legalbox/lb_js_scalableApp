@@ -43,6 +43,7 @@
     <jslint file="../src/lb.base.dom.js" />
     <jslint file="../src/lb.base.json.js" />
     <jslint file="../src/lb.base.log.js" />
+    <jslint file="../src/lb.base.string.js" />
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.events.js" />
 
@@ -60,6 +61,7 @@
     <jslint file="../test/test.lb.base.dom.js" />
     <jslint file="../test/test.lb.base.json.js" />
     <jslint file="../test/test.lb.base.log.js" />
+    <jslint file="../test/test.lb.base.string.js" />
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.events.js" />
 

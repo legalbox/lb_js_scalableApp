@@ -24,7 +24,7 @@ lb.base.string = lb.base.string || (function() {
   var gTrim = goog.string.trim;
 
   function trim(string){
-    // Function: trim(string): trim
+    // Function: trim(string): string
     // Remove white space from the start and end of the string.
     //
     // Parameter:
