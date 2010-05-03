@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.log
- * Logging Application Core Module
+ * Namespace: lb.base.log
+ * Logging Adapter Module for Base Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,17 +9,17 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-28
+ * 2010-05-03
  */
-/*requires lb.core.js */
+/*requires lb.base.js */
 /*requires closure/goog.debug.Logger.js*/
 /*requires closure/goog.debug.Console.js*/
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
-lb.core.log = lb.core.log || (function() {
+lb.base.log = lb.base.log || (function() {
   // Builder of
-  // Closure for lb.core.log module
+  // Closure for lb.base.log module
 
   // Define aliases
   var Console = goog.debug.Console,

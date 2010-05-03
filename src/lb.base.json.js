@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.json
- * JSON (JavaScript Object Notation) Application Core Module
+ * Namespace: lb.base.json
+ * JSON (JavaScript Object Notation) Adapter Module for Base Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,16 +9,16 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-29
+ * 2010-05-03
  */
+/*requires lb.base.js */
 /*requires closure/goog.json.js */
-/*requires lb.core.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
-lb.core.json = lb.core.json || (function() {
+lb.base.json = lb.base.json || (function() {
   // Builder of
-  // Closure for lb.core.json module
+  // Closure for lb.base.json module
 
   // Declare alias
   var json = goog.json;

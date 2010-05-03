@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-04-30
+  Version: 2010-05-03
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -39,14 +39,14 @@
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
     <jslint file="../src/lb.base.js" />
+    <jslint file="../src/lb.base.ajax.js" />
+    <jslint file="../src/lb.base.dom.js" />
+    <jslint file="../src/lb.base.json.js" />
+    <jslint file="../src/lb.base.log.js" />
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.events.js" />
 
-    <jslint file="../src/lb.core.ajax.js" />
-    <jslint file="../src/lb.core.dom.js" />
     <jslint file="../src/lb.core.facade.js" />
-    <jslint file="../src/lb.core.json.js" />
-    <jslint file="../src/lb.core.log.js" />
     <jslint file="../src/lb.ui.js" />
     <jslint file="../src/lb.ui.EventFilter.js" />
     <jslint file="../src/lb.ui.Module.js" />
@@ -56,14 +56,14 @@
   <target name="checkTest" description="Check test files with JSLint">
     <jslint file="../test/test.lb.js" />
     <jslint file="../test/test.lb.base.js" />
+    <jslint file="../test/test.lb.base.ajax.js" />
+    <jslint file="../test/test.lb.base.dom.js" />
+    <jslint file="../test/test.lb.base.json.js" />
+    <jslint file="../test/test.lb.base.log.js" />
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.events.js" />
 
-    <jslint file="../test/test.lb.core.ajax.js" />
-    <jslint file="../test/test.lb.core.dom.js" />
     <jslint file="../test/test.lb.core.facade.js" />
-    <jslint file="../test/test.lb.core.json.js" />
-    <jslint file="../test/test.lb.core.log.js" />
     <jslint file="../test/test.lb.ui.js" />
     <jslint file="../test/test.lb.ui.EventFilter.js" />
     <jslint file="../test/test.lb.ui.Module.js" />

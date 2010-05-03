@@ -1,15 +1,15 @@
 /*
- * test.lb.core.ajax.js - Unit Tests of lb.core.ajax module
+ * test.lb.base.ajax.js - Unit Tests of lb.base.ajax module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-29
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.ajax.js */
+/*requires lb.base.ajax.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
@@ -18,7 +18,7 @@
 /*global lb, bezen, goog, window */
 (function() {
   // Builder of
-  // Closure object for Test of lb.core.ajax
+  // Closure object for Test of lb.base.ajax
 
   // Define aliases
   var assert = bezen.assert,
@@ -28,12 +28,12 @@
 
   function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','core','ajax'),
-                                       "lb.core.ajax namespace was not found");
+    assert.isTrue( object.exists(window,'lb','base','ajax'),
+                                       "lb.base.ajax namespace was not found");
   }
 
   function testSend(){
-    var ut = lb.core.ajax.send;
+    var ut = lb.base.ajax.send;
 
     var url = '/events/';
     var data = {name: 'message', data: [{id:1, title:'Test'}]};
@@ -68,7 +68,7 @@
     testSend: testSend
   };
 
-  testrunner.define(tests, "lb.core.ajax");
+  testrunner.define(tests, "lb.base.ajax");
   return tests;
 
 }());

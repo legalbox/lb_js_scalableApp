@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.ajax
- * AJAX (Asynchronous JavaScript And XML) Application Core Module
+ * Namespace: lb.base.ajax
+ * AJAX (Asynchronous JavaScript And XML) Adapter Module for Base Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,23 +9,23 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-29
+ * 2010-05-03
  */
-/*requires lb.core.js */
-/*requires lb.core.log.js */
-/*requires lb.core.json.js */
+/*requires lb.base.js */
+/*requires lb.base.log.js */
+/*requires lb.base.json.js */
 /*requires closure/goog.net.XhrIo.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
-lb.core.ajax = lb.core.ajax || (function() {
+lb.base.ajax = lb.base.ajax || (function() {
   // Builder of
-  // Closure for lb.core.ajax module
+  // Closure for lb.base.ajax module
 
   // Declare alias
   var XhrIo = goog.net.XhrIo,
-      json = lb.core.json,
-      log = lb.core.log.print;
+      json = lb.base.json,
+      log = lb.base.log.print;
 
   function send(url, data, receive){
     // Function: send(url, data, receive)

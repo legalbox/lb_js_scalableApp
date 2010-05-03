@@ -9,11 +9,12 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-28
+ * 2010-05-03
  */
+/*requires lb.base.js */
+/*requires lb.base.dom.js */
+/*requires lb.base.log.js */
 /*requires lb.core.js */
-/*requires lb.core.dom.js */
-/*requires lb.core.log.js */
 /*requires lb.ui.Module.js */
 /*requires lb.ui.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -26,8 +27,8 @@ lb.core.facade = lb.core.facade || (function() {
   // Declare aliases
   var Module = lb.ui.Module,
       Sandbox = lb.ui.Sandbox,
-      $ = lb.core.dom.$,
-      log = lb.core.log.print,
+      $ = lb.base.dom.$,
+      log = lb.base.log.print,
 
   // Private members
 

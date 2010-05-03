@@ -1,15 +1,15 @@
 /*
- * test.lb.core.dom.js - Unit Tests of lb.core.dom module
+ * test.lb.base.dom.js - Unit Tests of lb.base.dom module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-28
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.dom.js */
+/*requires lb.base.dom.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.string.js */
@@ -20,7 +20,7 @@
 /*global lb, bezen, goog, window, document */
 (function() {
   // Builder of
-  // Closure object for Test of lb.core.dom
+  // Closure object for Test of lb.base.dom
 
   // Define aliases
   var assert = bezen.assert,
@@ -35,12 +35,12 @@
 
   function testNamespace(){
 
-    assert.isTrue( exists(window,'lb','core','dom'),
-                                        "lb.core.dom namespace was not found");
+    assert.isTrue( exists(window,'lb','base','dom'),
+                                        "lb.base.dom namespace was not found");
   }
 
   function test$(){
-    var ut = lb.core.dom.$;
+    var ut = lb.base.dom.$;
 
     assert.equals( ut('testId'), document.getElementById('testId'),
                         "$ must return same node as document.getElementById");
@@ -49,7 +49,7 @@
   }
 
   function testElement(){
-    var ut = lb.core.dom.element;
+    var ut = lb.base.dom.element;
 
     // Unit tests below taken from testElement in bezen.dom.test.js
     // part of bezen.org Javascript Library, CC-BY Eric Bréchemier
@@ -166,7 +166,7 @@
   }
 
   function testGetClasses(){
-    var ut = lb.core.dom.getClasses;
+    var ut = lb.base.dom.getClasses;
 
     assert.objectEquals( ut( $('noClass') ), {},
                               "empty hash expected when no class is present");
@@ -182,7 +182,7 @@
   }
 
   function testAddClass(){
-    var ut = lb.core.dom.addClass;
+    var ut = lb.base.dom.addClass;
 
     var div = element('div');
     ut(div, 'one');
@@ -203,7 +203,7 @@
   }
 
   function testRemoveClass(){
-    var ut = lb.core.dom.removeClass;
+    var ut = lb.base.dom.removeClass;
 
     var div = element('div');
     div.className = 'one two three';
@@ -226,7 +226,7 @@
   }
 
   function testAddListener(){
-    var ut = lb.core.dom.addListener;
+    var ut = lb.base.dom.addListener;
 
     var div1 = element('div');
     var events1 = [];
@@ -258,7 +258,7 @@
   }
 
   function testRemoveListener(){
-    var ut = lb.core.dom.removeListener;
+    var ut = lb.base.dom.removeListener;
 
     var div1 = element('div');
     var callback1 = function(){};
@@ -290,7 +290,7 @@
     testRemoveListener: testRemoveListener
   };
 
-  testrunner.define(tests, "lb.core.dom");
+  testrunner.define(tests, "lb.base.dom");
   return tests;
 
 }());

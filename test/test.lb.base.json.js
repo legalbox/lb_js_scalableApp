@@ -1,15 +1,15 @@
 /*
- * test.lb.core.json.js - Unit Tests of lb.core.json module
+ * test.lb.base.json.js - Unit Tests of lb.base.json module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-29
+ * Version:   2010-05-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.json.js */
+/*requires lb.base.json.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
@@ -17,7 +17,7 @@
 /*global lb, bezen, window */
 (function() {
   // Builder of
-  // Closure object for Test of lb.core.json
+  // Closure object for Test of lb.base.json
 
   // Define aliases
   var assert = bezen.assert,
@@ -26,12 +26,12 @@
 
   function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','core','json'),
-                                      "lb.core.json namespace was not found");
+    assert.isTrue( object.exists(window,'lb','base','json'),
+                                      "lb.base.json namespace was not found");
   }
 
   function testSerialize(){
-    var ut = lb.core.json.serialize;
+    var ut = lb.base.json.serialize;
 
     var object = {
       string: 'one',
@@ -62,7 +62,7 @@
   }
 
   function testParse(){
-    var ut = lb.core.json.parse;
+    var ut = lb.base.json.parse;
 
     var string = '{'+
       '"string": "one",'+
@@ -110,7 +110,7 @@
     testParse: testParse
   };
 
-  testrunner.define(tests, "lb.core.json");
+  testrunner.define(tests, "lb.base.json");
   return tests;
 
 }());

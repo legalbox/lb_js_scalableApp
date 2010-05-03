@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.dom
- * DOM (Document Object Model) Application Core Module
+ * Namespace: lb.base.dom
+ * DOM (Document Object Model) Adapter Module for Base Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,18 +9,18 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-28
+ * 2010-05-03
  */
-/*requires lb.core.js */
+/*requires lb.base.js */
 /*requires closure/goog.dom.js */
 /*requires closure/goog.dom.classes.js */
 /*requires closure/goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
-lb.core.dom = lb.core.dom || (function() {
+lb.base.dom = lb.base.dom || (function() {
   // Builder of
-  // Closure for lb.core.dom module
+  // Closure for lb.base.dom module
 
   // Declare aliases
   var dom = goog.dom,
