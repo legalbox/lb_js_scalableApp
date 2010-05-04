@@ -108,7 +108,7 @@
 
     var module = new lb.core.Module('lb.ui.stub', createStubModule);
     module.start();
-    stopCounter = 0;
+    endCounter = 0;
     module.end();
     assert.equals(endCounter, 1, "Underlying module expected to be ended");
 
