@@ -76,7 +76,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function getBox(){
     // Function: getBox(): DOM element
-    // Get the root HTML element for this module
+    // Get the root HTML element for this module.
     //
     // Returns:
     //   DOM element, the HTML element corresponding to the module id
@@ -160,7 +160,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function $(localId){
     // Function: $(localId): DOM element
-    // Get the element of the box with given local identifier
+    // Get the element of the box with given local identifier.
     //
     // Parameter:
     //   localId - string, the local identifier of the element, without prefix.
@@ -190,11 +190,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function element(name,attributes){
     // Function: element(name,attributes,childNodes): DOM element
-    // Create a new DOM element
-    // e.g.
-    // element('a',{href:'#here',title:'Here'},'Click here')
+    // Create a new DOM element.
+    // For example,
+    // |  element('a',{href:'#here',title:'Here'},'Click here')
     // will create a new DOM element
-    // <a href='#here' title='Here'>Click here</a>
+    // |  <a href='#here' title='Here'>Click here</a>
     //
     // Parameters:
     //   name - string, the name of the element
@@ -211,7 +211,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function getClasses(element){
     // Function: getClasses(element): object
-    // Get the CSS classes of given DOM element
+    // Get the CSS classes of given DOM element.
     //
     // Parameter:
     //   element - DOM element, an element of the box
@@ -235,7 +235,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function addClass(element,name){
     // Function: addClass(element,name)
-    // Append a CSS class to a DOM element part of the box
+    // Append a CSS class to a DOM element part of the box.
     //
     // Parameters:
     //   element - DOM element, an element of the box
@@ -256,7 +256,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function removeClass(element,name){
     // Function: removeClass(element,name)
-    // Remove a CSS class from a DOM element part of the box
+    // Remove a CSS class from a DOM element part of the box.
     //
     // Parameters:
     //   element - DOM element, an element of the box
@@ -277,7 +277,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function addListener(element,type,listener,useCapture){
     // Function: addListener(element, type, listener, useCapture)
-    // Register a new listener for a type of event on a DOM element of the box
+    // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
     //   element - Element, a DOM element
@@ -301,7 +301,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function removeListener(element,type,listener,useCapture){
     // Function: removeListener(element, type, listener, useCapture)
-    // Unregister a listener for a type of event on a DOM element of the box
+    // Unregister a listener for a type of event on a DOM element of the box.
     //
     // Parameters:
     //   element - Element, a DOM element

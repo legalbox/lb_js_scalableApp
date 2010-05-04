@@ -12,7 +12,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-04
  */
 /*requires lb.base.log.js */
 /*requires lb.core.events.js */
@@ -43,7 +43,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
 
   function addSubscriber(subscriber){
     // Function: addSubscriber(subscriber)
-    // Add a new subscriber to the list
+    // Add a new subscriber to the list.
     //
     // Parameter:
     //   subscriber - object, the new subscriber (lb.core.events.Subscriber)
@@ -61,7 +61,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
 
   function removeSubscriber(subscriber){
     // Function: removeSubscriber(subscriber)
-    // Remove an existing subscriber from the list
+    // Remove an existing subscriber from the list.
     //
     // Parameter:
     //   subscriber - object, the old subscriber (lb.core.events.Subscriber)

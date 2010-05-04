@@ -73,7 +73,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
   function getStatus(){
     // Function: getStatus(): string
-    // Get the status of the underlying module
+    // Get the status of the underlying module.
     //
     // Returns:
     // - 'idle' initially
@@ -87,7 +87,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
   function start(){
     // Function: start()
-    // Create and start the underlying module
+    // Create and start the underlying module.
     //
     // Note:
     // Nothing happens in case no underlying module is available.
