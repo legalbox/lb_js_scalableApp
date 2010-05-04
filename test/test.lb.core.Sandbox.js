@@ -56,6 +56,9 @@
                                   "id must match value given in constructor");
     assert.isFalse( object.exists( $('lb.ui.myModule') ),
                     "box element must not be created until getBox is called");
+
+    assert.equals( sandbox.getId('testId'), 'lb.ui.myModule.testId',
+                    "conversion to full id must add prefix and separator");
   }
 
   function testGetBox(){
