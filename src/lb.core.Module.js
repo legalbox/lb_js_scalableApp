@@ -90,8 +90,9 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Create and start the underlying module.
     //
     // Note:
-    // Nothing happens in case no underlying module is available.
-    if (!module){
+    // Nothing happens in case the underlying module has no start() method or
+    // no underlying module is available.
+    if (!module || !module.start){
       return;
     }
 
@@ -109,8 +110,9 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Terminate the underlying module.
     //
     // Note:
-    // Nothing happens in case no underlying module is available.
-    if (!module){
+    // Nothing happens in case the underlying module has no end() method or
+    // no underlying module is available.
+    if (!module || !module.end){
       return;
     }
 

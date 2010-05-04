@@ -70,6 +70,12 @@
     };
   }
 
+  function createLazyModule(sandbox){
+    // create a new stub module which was too lazy to declare start() and end()
+
+    return {};
+  }
+
   function testConstructor(){
     var Ut = lb.core.Module;
 
@@ -101,6 +107,9 @@
 
     module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToStart);
     module.start();
+
+    module = new lb.core.Module('lb.ui.lazy', createLazyModule);
+    module.start();
   }
 
   function testEnd(){
@@ -119,6 +128,9 @@
 
     module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToEnd);
     module.start();
+    module.end();
+
+    module = new lb.core.Module('lb.ui.lazy', createLazyModule);
     module.end();
   }
 
