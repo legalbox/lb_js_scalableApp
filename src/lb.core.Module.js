@@ -15,50 +15,60 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-04
  */
 /*requires lb.core.js */
-/*requires lb.core.events.Subscriber.js */
+/*requires lb.core.Sandbox.js */
+/*requires lb.base.log.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
-lb.core.Module = lb.core.Module || function (name, creator){
-  // Function: new Module(name,creator): Module
+lb.core.Module = lb.core.Module || function (id, creator){
+  // Function: new Module(id,creator): Module
   // Constructor of a new Core Module.
   //
   // Parameters:
-  //   name - string, the qualified module name, e.g. 'lb.ui.myModule'
-  //   creator - function, a creator function returning a module.
+  //   id - string, the module identifier, e.g. 'lb.ui.myModule'
+  //   creator - function, a creator function returning a custom module.
   //             A new Sandbox instance will be provided as parameter.
+  //             creator functions for User Interface modules should be
+  //             registered in the namespace 'lb.ui', e.g. lb.ui.myModule while
+  //             creator functions for Data Model modules should be registered
+  //             in the namespace 'lb.data', e.g. lb.data.myModule.
   //
   // Returns:
   //   object, the new instance of lb.core.Module
 
   // Define aliases
-  var Subscriber = lb.core.events.Subscriber,
+  var log = lb.base.log.print,
+      Sandbox = lb.core.Sandbox,
 
   // Private fields
-
-  // string, the status of underlying module
-      status = 'idle',
 
   // object, the underlying module instance
       module,
 
-  // object, the sandbox for the underlying module
-      sb,
+  // string, the status of underlying module
+      status;
 
-  // array, the list of subscriber objects (lb.core.events.Subscriber)
-      subscribers = [];
+  try {
+    module = creator( new Sandbox(id) );
+    status = 'created';
+  } catch(creationError){
+    log('ERROR: failed to create module "'+id+
+        '" using creator "'+creator+
+        '"; '+creationError);
+    status = 'error';
+  }
 
-  function getName(){
-    // Function: getName(): string
-    // Get the module name.
+  function getId(){
+    // Function: getId(): string
+    // Get the module identifier.
     //
     // Returns:
-    //   string, the module name, as given in contructor.
+    //   string, the module identifier, as given in contructor.
 
-    return name;
+    return id;
   }
 
   function getStatus(){
@@ -75,131 +85,48 @@ lb.core.Module = lb.core.Module || function (name, creator){
     return status;
   }
 
-  function getSandbox(){
-    // Function: getSandbox(): Sandbox
-    // Get the sandbox associated with this module.
-    //
-    // Returns:
-    //   object, the sandbox initialized in setSandbox().
-
-    return sb;
-  }
-
-  function setSandbox(sandbox){
-    // Function: setSandbox(sandbox)
-    // Set the sandbox associated with this module.
-    //
-    // Parameters:
-    //   sandbox - object, the sandbox to set (instance of lb.ui.Sandbox)
-    //
-    // Note:
-    // setSandbox() must be called to initialize the sandbox before start() and
-    // other methods are called; it is needed to access the logging api.
-
-    sb = sandbox;
-  }
-
   function start(){
     // Function: start()
     // Create and start the underlying module
     //
     // Note:
-    // Nothing happens in case no sandbox has been configured.
-    if (!sb){
-      return;
-    }
-
-    try {
-      module = creator(sb);
-      status = 'created';
-    } catch(e1) {
-      sb.log('ERROR: Failed to create module "'+name+
-             '" using creator "'+creator+
-             '" with sandbox "'+sb+
-             '"; '+e1+'.');
-      status = 'failed';
+    // Nothing happens in case no underlying module is available.
+    if (!module){
       return;
     }
 
     try {
       module.start();
       status = 'started';
-    } catch(e2){
-      sb.log('ERROR: Failed to start module "'+name+'"; '+e2+'.');
-      status = 'failed';
+    } catch(startError){
+      log('ERROR: Failed to start module "'+id+'"; '+startError+'.');
+      status = 'error';
     }
   }
 
-  function stop(){
-    // Function: stop()
-    // Stop the underlying module.
-    //
-    // All created Filters are deleted ; as a consequence, event subscriptions
-    // are cancelled.
+  function end(){
+    // Function: end()
+    // Terminate the underlying module.
     //
     // Note:
-    // Nothing happens in case no sandbox has been configured.
-    if (!sb){
+    // Nothing happens in case no underlying module is available.
+    if (!module){
       return;
     }
 
     try {
-      subscribers.length = 0;
-      module.stop();
-      status = 'stopped';
-    } catch(e){
-      sb.log('ERROR: Failed to stop module "'+name+'": '+e+'.');
-      status = 'failed';
+      module.end();
+      status = 'ended';
+    } catch(endError){
+      log('ERROR: Failed to end module "'+id+'"; '+endError+'.');
+      status = 'error';
     }
   }
 
-  // TODO: REMOVE, SPLIT TO lb.core.Sandbox / lb.core.events.publisher
-  function subscribe(event,callback){
-    // Function: subscribe(event, callback)
-    // Filter incoming events and trigger callback for given event type.
-    //
-    // Parameters:
-    //   event - object, the event type defining the filter
-    //   callback - function, the callback function. This function shall accept
-    //              an event as argument.
-
-    subscribers.push( new Subscriber(event,callback) );
-  }
-
-  // TODO: MOVE TO lb.core.events.publisher#subscribe
-  function notify(event){
-    // Function: notify(event)
-    // Notify an event to the underlying module
-    //
-    // Parameter:
-    //   event - object, the event subject of the notification
-    //
-    // Note:
-    // Nothing happens in case no sandbox has been configured.
-    if (!sb){
-      return;
-    }
-
-    for (var i=0; i<subscribers.length; i++){
-      try {
-        subscribers[i].notify(event);
-      } catch(e){
-        sb.log('ERROR: Failed to notify module "'+name+
-                    '" of event "'+event+
-                    '": '+e+'.');
-        status = 'failed';
-      }
-    }
-  }
-
-  // Public methods
-  this.getName = getName;
-  this.getStatus = getStatus;
-  this.getSandbox = getSandbox;
-  this.setSandbox = setSandbox;
-  this.start = start;
-  this.stop = stop;
-  this.subscribe = subscribe;
-  this.notify = notify;
-  return this;
+  return { // Public methods
+    getId: getId,
+    getStatus: getStatus,
+    start: start,
+    end: end
+  };
 };
