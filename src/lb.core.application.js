@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-04
  */
 /*requires lb.base.js */
 /*requires lb.base.dom.js */
@@ -63,7 +63,7 @@ lb.core.application = lb.core.application || (function() {
 
     var box, sandbox, module;
 
-    module = new Module(name, creator);
+    module = new Module(id, creator);
     box = $(id);
     if (!box){
       var message = 'ERROR: could not find box element "'+id+
@@ -71,8 +71,6 @@ lb.core.application = lb.core.application || (function() {
       log(message);
       throw new Error(message);
     }
-    sandbox = new Sandbox(box,module,this);
-    module.setSandbox(sandbox);
     modules.push(module);
   }
 
@@ -94,7 +92,7 @@ lb.core.application = lb.core.application || (function() {
     // anew to receive future notifications.
 
     for (var i=0; i<modules.length; i++){
-      modules[i].stop();
+      modules[i].end();
     }
     subscribers = [];
   }

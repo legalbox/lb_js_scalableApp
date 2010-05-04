@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-03
+ * Version:   2010-05-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -51,7 +51,7 @@
   }
 
   var startCounter = 0;
-  var stopCounter = 0;
+  var endCounter = 0;
   var notifiedEvents = [];
 
   function createStubModule(sandbox){
@@ -59,7 +59,7 @@
 
     return {
       start: function(){ startCounter++; },
-      stop: function(){ stopCounter++; },
+      end: function(){ endCounter++; },
       notify: function(event){ notifiedEvents.push(event); }
     };
   }
@@ -90,26 +90,12 @@
     var id = 'testDiv';
     lb.core.application.register(id, name, createStubModule);
     assert.equals( modules.length, 1,              "one new module expected");
-    assert.equals( modules[0].getName(), name,     "wrong module name");
-    assert.equals( modules[0].getSandbox().getBox(), bezen.$(id),
-                                        "wrong HTML element as sandbox root");
-
-    // TODO: create element at end of body (responsibility of Sandbox)
-    //       in case it is missing.
-    var failure = false;
-    try {
-      lb.core.application.register('notFound', name, createStubModule);
-    } catch(e) {
-      failure = true;
-      assert.isTrue( startsWith( e.message, "ERROR:" ),
-                                 "error message expected for missing HTML id");
-    }
-    assert.isTrue(failure,          "Failure expected when HTML id not found");
+    assert.equals( modules[0].getId(), id,                "wrong module id");
   }
 
   var sandboxes1 = [];
   var startCounter1 = 0;
-  var stopCounter1 = 0;
+  var endCounter1 = 0;
 
   function createStubModule1(sandbox){
     // create a stub module for unit tests purpose
@@ -117,13 +103,13 @@
     sandboxes1.push(sandbox);
     return {
       start: function(){ startCounter1++; },
-      stop: function(){ stopCounter1++; }
+      end: function(){ endCounter1++; }
     };
   }
 
   var sandboxes2 = [];
   var startCounter2 = 0;
-  var stopCounter2 = 0;
+  var endCounter2 = 0;
 
   function createStubModule2(sandbox){
     // create a stub module for unit tests purpose
@@ -131,13 +117,13 @@
     sandboxes2.push(sandbox);
     return {
       start: function(){ startCounter2++; },
-      stop: function(){ stopCounter2++; }
+      end: function(){ endCounter2++; }
     };
   }
 
   var sandboxes3 = [];
   var startCounter3 = 0;
-  var stopCounter3 = 0;
+  var endCounter3 = 0;
 
   function createStubModule3(sandbox){
     // create a stub module for unit tests purpose
@@ -145,7 +131,7 @@
     sandboxes3.push(sandbox);
     return {
       start: function(){ startCounter3++; },
-      stop: function(){ stopCounter3++; }
+      end: function(){ endCounter3++; }
     };
   }
 
@@ -186,13 +172,13 @@
     lb.core.application.register('div3', 'lb.ui.stub3', createStubModule3);
     lb.core.application.startAll();
 
-    stopCounter1 = 0;
-    stopCounter2 = 0;
-    stopCounter3 = 0;
+    endCounter1 = 0;
+    endCounter2 = 0;
+    endCounter3 = 0;
     ut();
-    assert.equals(stopCounter1, 1,             "module 1 must have stopped");
-    assert.equals(stopCounter2, 1,             "module 2 must have stopped");
-    assert.equals(stopCounter3, 1,             "module 3 must have stopped");
+    assert.equals(endCounter1, 1,             "module 1 must have stopped");
+    assert.equals(endCounter2, 1,             "module 2 must have stopped");
+    assert.equals(endCounter3, 1,             "module 3 must have stopped");
   }
 
   function testSubscribe(){
