@@ -22,7 +22,7 @@
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb */
+/*global lb, document */
 // preserve the module, if already loaded
 lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Function: new Sandbox(id): Sandbox
@@ -38,7 +38,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Define aliases
   var dom = lb.base.dom,
-      trim = lb.base.string.trim,
+      gTrim = lb.base.string.trim,
       log = lb.base.log.print,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
@@ -154,7 +154,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   string, a copy of the string with no whitespace at start and end
 
-    return trim(string);
+    //
+    return gTrim(string);
   }
 
   function $(localId){
@@ -178,6 +179,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   getId(), a call to $() without argument will return the root element
     //   of the box, in the same way as getBox().
 
+    //
     var element = dom.$( getId(localId) );
     if ( isInBox(element) ){
       return element;
@@ -203,6 +205,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   DOM element, the newly created DOM element
 
+    //
     return dom.element.apply(this,arguments);
   }
 
