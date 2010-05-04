@@ -10,6 +10,8 @@
  */
 
 /*requires lb.core.application.js */
+/*requires lb.core.Module.js */
+/*requires goog.events.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
@@ -17,7 +19,7 @@
 /*requires bezen.array.js */
 /*requires bezen.testrunner.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window */
+/*global lb, bezen, goog, window */
 (function() {
   // Builder of
   // Closure object for Test of lb.core.application
@@ -27,41 +29,14 @@
       object = bezen.object,
       array = bezen.array,
       startsWith = bezen.string.startsWith,
-      testrunner = bezen.testrunner;
+      testrunner = bezen.testrunner,
+      Module = lb.core.Module,
+      events = goog.events;
 
   function testNamespace(){
 
     assert.isTrue( object.exists(window,'lb','core','application'), 
                                          "lb.core.application was not found");
-  }
-
-  // TODO: move to Sandbox unit tests
-  function testGetApi(){
-    var ut = lb.core.application.getApi;
-
-    var api = ut();
-    assert.isTrue( object.exists(api),                  "api object expected");
-    assert.isTrue( object.exists(api,'log'),   "log function expected in api");
-    for (var name in api){
-      if ( api.hasOwnProperty(name) ){
-        assert.equals( typeof api[name], 'function', 
-                                     "api."+name+" expected to be a function");
-      }
-    }
-  }
-
-  var startCounter = 0;
-  var endCounter = 0;
-  var notifiedEvents = [];
-
-  function createStubModule(sandbox){
-    // create a stub module for unit tests purpose
-
-    return {
-      start: function(){ startCounter++; },
-      end: function(){ endCounter++; },
-      notify: function(event){ notifiedEvents.push(event); }
-    };
   }
 
   function testGetModules(){
@@ -71,64 +46,73 @@
     array.empty( ut() );
     assert.isTrue( object.exists( ut() ),     "modules must exist when empty");
     assert.arrayEquals( ut().length, 0,   "empty list expected after empty()");
-
-    lb.core.application.register('div1', 'lb.ui.stub1', bezen.nix);
-    lb.core.application.register('div2', 'lb.ui.stub2', bezen.nix);
-    lb.core.application.register('div3', 'lb.ui.stub3', bezen.nix);
-    assert.isTrue( object.exists( ut() ), "modules expected after registers");
-    assert.equals( ut().length, 3,                 "wrong number of modules");
   }
 
-  function testRegister(){
-    // var ut = lb.core.facade.register;
-    // This method must be called on the Facade
+  function testAddModule(){
+    var ut = lb.core.application.addModule;
 
     var modules = lb.core.application.getModules();
     array.empty(modules);
 
-    var name = 'lb.ui.stub';
-    var id = 'testDiv';
-    lb.core.application.register(id, name, createStubModule);
+    ut( new Module('lb.ui.stub1',bezen.nix) );
     assert.equals( modules.length, 1,              "one new module expected");
-    assert.equals( modules[0].getId(), id,                "wrong module id");
+    ut( new Module('lb.ui.stub2',bezen.nix) );
+    assert.equals( modules.length, 2,             "two new modules expected");
+    ut( new Module('lb.ui.stub3',bezen.nix) );
+    assert.equals( modules.length, 3,           "three new modules expected");
   }
 
-  var sandboxes1 = [];
+  function testRemoveModule(){
+    var ut = lb.core.application.removeModule;
+
+    var module1 = new Module('lb.ui.stub1',bezen.nix);
+    var module2 = new Module('lb.ui.stub2',bezen.nix);
+    var module3 = new Module('lb.ui.stub3',bezen.nix);
+
+    var modules = lb.core.application.getModules();
+    array.empty(modules);
+    lb.core.application.addModule(module1); // once
+    lb.core.application.addModule(module2);
+    lb.core.application.addModule(module1); // twice
+    lb.core.application.addModule(module3);
+    lb.core.application.addModule(module1); // thrice
+
+    ut(module1);
+    modules = lb.core.application.getModules();
+    assert.arrayEquals(modules, [module2,module3],
+                       "all instances of module1 are expected to be removed");
+  }
+
   var startCounter1 = 0;
   var endCounter1 = 0;
 
   function createStubModule1(sandbox){
     // create a stub module for unit tests purpose
 
-    sandboxes1.push(sandbox);
     return {
       start: function(){ startCounter1++; },
       end: function(){ endCounter1++; }
     };
   }
 
-  var sandboxes2 = [];
   var startCounter2 = 0;
   var endCounter2 = 0;
 
   function createStubModule2(sandbox){
     // create a stub module for unit tests purpose
 
-    sandboxes2.push(sandbox);
     return {
       start: function(){ startCounter2++; },
       end: function(){ endCounter2++; }
     };
   }
 
-  var sandboxes3 = [];
   var startCounter3 = 0;
   var endCounter3 = 0;
 
   function createStubModule3(sandbox){
     // create a stub module for unit tests purpose
 
-    sandboxes3.push(sandbox);
     return {
       start: function(){ startCounter3++; },
       end: function(){ endCounter3++; }
@@ -141,119 +125,69 @@
     array.empty( lb.core.application.getModules() );
     ut();
 
-    sandboxes1 = [];
-    sandboxes2 = [];
-    sandboxes3 = [];
+    var module1 = new Module('lb.ui.stub1', createStubModule1);
+    var module2 = new Module('lb.ui.stub2', createStubModule2);
+    var module3 = new Module('lb.ui.stub3', createStubModule3);
+    lb.core.application.addModule(module1);
+    lb.core.application.addModule(module2);
+    lb.core.application.addModule(module3);
+
     startCounter1 = 0;
     startCounter2 = 0;
     startCounter3 = 0;
-
-    lb.core.application.register('div1', 'lb.ui.stub1', createStubModule1);
-    lb.core.application.register('div2', 'lb.ui.stub2', createStubModule2);
-    lb.core.application.register('div3', 'lb.ui.stub3', createStubModule3);
-
     ut();
-    assert.equals(sandboxes1.length, 1,    "module 1 must have been created");
-    assert.equals(sandboxes2.length, 1,    "module 2 must have been created");
-    assert.equals(sandboxes3.length, 1,    "module 3 must have been created");
     assert.equals(startCounter1, 1,             "module 1 must have started");
     assert.equals(startCounter2, 1,             "module 2 must have started");
     assert.equals(startCounter3, 1,             "module 3 must have started");
   }
 
-  function testStopAll(){
-    var ut = lb.core.application.stopAll;
+  function testEndAll(){
+    var ut = lb.core.application.endAll;
 
     array.empty( lb.core.application.getModules() );
     ut();
 
-    lb.core.application.register('div1', 'lb.ui.stub1', createStubModule1);
-    lb.core.application.register('div2', 'lb.ui.stub2', createStubModule2);
-    lb.core.application.register('div3', 'lb.ui.stub3', createStubModule3);
-    lb.core.application.startAll();
+    var module1 = new Module('lb.ui.stub1', createStubModule1);
+    var module2 = new Module('lb.ui.stub2', createStubModule2);
+    var module3 = new Module('lb.ui.stub3', createStubModule3);
+    lb.core.application.addModule(module1);
+    lb.core.application.addModule(module2);
+    lb.core.application.addModule(module3);
 
     endCounter1 = 0;
     endCounter2 = 0;
     endCounter3 = 0;
     ut();
-    assert.equals(endCounter1, 1,             "module 1 must have stopped");
-    assert.equals(endCounter2, 1,             "module 2 must have stopped");
-    assert.equals(endCounter3, 1,             "module 3 must have stopped");
+    assert.equals(endCounter1, 1,                 "module 1 must have ended");
+    assert.equals(endCounter2, 1,                 "module 2 must have ended");
+    assert.equals(endCounter3, 1,                 "module 3 must have ended");
   }
 
-  function testSubscribe(){
-    var ut = lb.core.application.subscribe;
-
-    var notifCounter1 = 0;
-    var module1 = {
-      notify: function(event){ notifCounter1++; }
-    };
-
-    var notifCounter2 = 0;
-    var module2 = {
-      notify: function(event){ notifCounter2++; }
-    };
-
-    ut(module1);
-    var event1 = {};
-    lb.core.application.notifyAll(event1);
-    assert.equals(notifCounter1, 1, "first module must be notified of event1");
-
-    ut(module1);
-    ut(module2);
-    ut(module2);
-    var event2 = {};
-    lb.core.application.notifyAll(event2);
-    assert.equals(notifCounter1, 2, "first module must be notified of event2");
-    assert.equals(notifCounter2, 1,
-                         "second module must be notified of event2 only once");
-  }
-
-  function testNotifyAll(){
-    var ut = lb.core.application.notifyAll;
-
-    lb.core.application.stopAll();
-    ut();
-
-    var events1 = [];
-    var module1 = {
-      notify: function(event){ events1.push(event); }
-    };
-
-    var events2 = [];
-    var module2 = {
-      notify: function(event){ events2.push(event); }
-    };
+  function testRun(){
+    var ut = lb.core.application.run;
 
     ut();
 
-    lb.core.application.subscribe(module1);
-    lb.core.application.subscribe(module2);
+    var onloadListeners = events.getListeners(window, 'load', false);
+    assert.equals( onloadListeners.length, 1, "one onload listener expected");
+    assert.equals( onloadListeners[0].listener, lb.core.application.startAll,
+                                       "startAll expected as onload handler");
 
-    var event = {};
-    ut(event);
-    assert.arrayEquals(events1, [event], "first module must get notified");
-    assert.arrayEquals(events2, [event], "second module must get notified");
-
-    events1 = [];
-    events2 = [];
-    lb.core.application.stopAll();
-    ut(event);
-    assert.arrayEquals(events1, [],
-                        "no notification expected after stopAll for module 1");
-    assert.arrayEquals(events2, [],
-                        "no notification expected after stopAll for module 2");
+    var onunloadListeners = events.getListeners(window, 'unload', false);
+    assert.equals( onunloadListeners.length, 1,
+                                           "one onunload listener expected");
+    assert.equals( onunloadListeners[0].listener, lb.core.application.endAll,
+                                       "endAll expected as onunload handler");
   }
 
   var tests = {
     testNamespace: testNamespace,
-    testGetApi: testGetApi,
     testGetModules: testGetModules,
-    testRegister: testRegister,
+    testAddModule: testAddModule,
+    testRemoveModule: testRemoveModule,
     testStartAll: testStartAll,
-    testStopAll: testStopAll,
-    testSubscribe: testSubscribe,
-    testNotifyAll: testNotifyAll
+    testEndAll: testEndAll,
+    testRun: testRun
   };
 
   testrunner.define(tests, "lb.core.application");

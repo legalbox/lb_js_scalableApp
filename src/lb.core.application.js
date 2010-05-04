@@ -2,6 +2,8 @@
  * Namespace: lb.core.application
  * Core Application
  *
+ * The Core Application manages the life cycle of modules.
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -12,13 +14,12 @@
  * 2010-05-04
  */
 /*requires lb.base.js */
-/*requires lb.base.dom.js */
 /*requires lb.base.log.js */
+/*requires lb.base.dom.js */
 /*requires lb.core.js */
 /*requires lb.core.Module.js */
-/*requires lb.core.Sandbox.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb */
+/*global lb, window */
 // preserve the module, if already loaded
 lb.core.application = lb.core.application || (function() {
   // Builder of
@@ -26,52 +27,48 @@ lb.core.application = lb.core.application || (function() {
 
   // Declare aliases
   var Module = lb.core.Module,
-      Sandbox = lb.core.Sandbox,
-      $ = lb.base.dom.$,
       log = lb.base.log.print,
+      addListener = lb.base.dom.addListener,
 
   // Private members
 
-  // array, the list of modules (lb.ui.Module) registered on the facade
-      modules = [],
-
-  // array, the list of modules (lb.ui.Module) subscribed to notifications
-      subscribers = [];
+  // array, the list of modules (lb.core.Module) added in the application
+      modules = [];
 
   function getModules(){
     // Function: getModules(): array
-    // Get the list of User Interface modules registered on the facade.
+    // Get the list of modules added in the application.
     //
     // Returns:
-    //   array, the list of registered modules (lb.ui.Module)
+    //   array, the list of modules (lb.core.Module) added with addModule().
 
     return modules;
   }
 
-  function register(id, name, creator){
-    // Function: register(id, name, creator)
-    // Register a user interface module.
+  function addModule(module){
+    // Function: addModule(module)
+    // Add a new module to the application.
     //
-    // Parameters:
-    //   id - string, the identifier of the HTML element for the module box
-    //   name - string, a name to describe the module, e.g. 'lb.ui.myModule'
-    //   creator - func, the function to create an instance of the module
-    //
-    // Note:
-    // This method expects the keyword this to reference the Facade object.
-    // It must be called or applied on the Facade.
+    // Parameter:
+    //   module - object, the new module (lb.core.Module) to add
 
-    var box, sandbox, module;
-
-    module = new Module(id, creator);
-    box = $(id);
-    if (!box){
-      var message = 'ERROR: could not find box element "'+id+
-                    '" for module "'+name+'".';
-      log(message);
-      throw new Error(message);
-    }
+    // no check: modules may be added multiple times
     modules.push(module);
+  }
+
+  function removeModule(module){
+    // Function: removeModule(module)
+    // Remove a module from the application.
+    //
+    // Parameter:
+    //   module - object, the module (lb.core.Module) to remove
+
+    for (var i=0; i<modules.length; i++){
+      if (modules[i]===module){
+        modules.splice(i,1);
+        // no return: remove duplicates if any
+      }
+    }
   }
 
   function startAll(){
@@ -83,71 +80,32 @@ lb.core.application = lb.core.application || (function() {
     }
   }
 
-  function stopAll(){
-    // Function: stopAll()
-    // Stop all registered modules.
-    //
-    // Note:
-    // All subscriptions are cancelled. Any module will have to get subscribed
-    // anew to receive future notifications.
+  function endAll(){
+    // Function: endAll()
+    // Terminate all registered modules.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
-    subscribers = [];
   }
 
-  function subscribe(module){
-    // Function: subscribe(module)
-    // Subscribe a module to event notifications.
+  function run(){
+    // Function: run()
+    // Run the application.
     //
-    // Parameter:
-    //   module - object, the User Interface Module (instance of lb.ui.Module)
-    //
-    // Note:
-    // A module may be subscribed multiple times, it will receive the event
-    // notifications only once.
+    // * startAll gets registered as listener for window 'load' event,
+    // * endAll gets registered as listener for window 'unload' event.
 
-    for (var i=0; i<subscribers.length; i++){
-      if (module === subscribers[i]){
-        return; // already subscribed
-      }
-    }
-    subscribers.push(module);
-  }
-
-  function notifyAll(event){
-    // Function: notifyAll(event)
-    // Notify all subscribed modules of the given event.
-    //
-    // Parameter:
-    //   event - object, the event object
-
-    for (var i=0; i<subscribers.length; i++){
-      subscribers[i].notify(event);
-    }
-  }
-
-  function getApi(){
-    // Function: getApi(): object
-    // Get the public api to publish in the sandboxes
-    //
-    // Returns:
-    //   object, a set of named functions, making the public api
-
-    return {
-      // TODO: define API methods
-      log: log
-    };
+    addListener(window, 'load', startAll);
+    addListener(window, 'unload', endAll);
   }
 
   return { // Facade API
     getModules: getModules,
-    register: register,
+    addModule: addModule,
+    removeModule: removeModule,
     startAll: startAll,
-    stopAll: stopAll,
-    subscribe: subscribe,
-    notifyAll: notifyAll,
-    getApi: getApi
+    endAll: endAll,
+    run: run
   };
 }());
