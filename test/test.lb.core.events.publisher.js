@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-03
+ * Version:   2010-05-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -55,10 +55,6 @@
     ut(subscriber1);
     assert.arrayEquals(subscribers, [subscriber1],
                                                 "First subscriber expected");
-
-    ut(subscriber1);
-    assert.arrayEquals(subscribers, [subscriber1],
-                                      "First subscriber expected only once");
 
     ut(subscriber2);
     ut(subscriber3);
@@ -120,7 +116,6 @@
 
     lb.core.events.publisher.addSubscriber(module1);
     lb.core.events.publisher.addSubscriber(module2);
-    lb.core.events.publisher.addSubscriber(module3);
 
     var event1 = {};
     ut(event1);
@@ -128,17 +123,15 @@
                                   "first module must get notified of event1");
     assert.arrayEquals(events2, [event1],
                                   "second module must get notified of event1");
-    assert.arrayEquals(events3, [event1],
-                                  "third module must get notified of event1");
 
-    lb.core.events.publisher.addSubscriber(module1);
+    lb.core.events.publisher.addSubscriber(module3);
     var event2 = {};
     ut(event2);
     assert.arrayEquals(events1, [event1,event2],
                         "first module must get notified of event2 only once");
     assert.arrayEquals(events2, [event1,event2],
                         "second module must get notified of event2");
-    assert.arrayEquals(events3, [event1,event2],
+    assert.arrayEquals(events3, [event2],
                                   "third module must get notified of event2");
 
     lb.core.events.publisher.removeSubscriber(module1);
@@ -148,44 +141,42 @@
                               "first module must not get notified of event3");
     assert.arrayEquals(events2, [event1,event2,event3],
                               "second module must get notified of event3");
-    assert.arrayEquals(events3, [event1,event2,event3],
+    assert.arrayEquals(events3, [event2,event3],
                                   "third module must get notified of event3");
 
     lb.core.events.publisher.getSubscribers().length = 0;
     var events4 = [];
     var module4 = {
       notify: function(event){
-        lb.core.events.publisher.removeSubscriber(module4);
+        lb.core.events.publisher.addSubscriber(module4);
         events4.push(event);
       }
     };
 
     var events5 = [];
-    function module5(){
-      return {
-        notify: function(event){
-          events5.push(event);
-          // adds a new module recursively
-          lb.core.events.publisher.addSubscriber( module5() );
-        }
-      };
-    }
+    var module5 = {
+      notify: function(event){
+        lb.core.events.publisher.removeSubscriber(module5);
+        events5.push(event);
+      }
+    };
+
     lb.core.events.publisher.addSubscriber( module4 );
-    lb.core.events.publisher.addSubscriber( module5() );
+    lb.core.events.publisher.addSubscriber( module5 );
 
     var event4 = {};
     ut(event4);
     assert.arrayEquals(events4,[event4],
-                        "destructive subscriber must get notified of event4");
-    assert.arrayEquals(events5,[event4],
                 "recursive subscriber must get notified of event4 only once");
+    assert.arrayEquals(events4,[event4],
+                        "destructive subscriber must get notified of event4");
 
     var event5 = {};
     ut(event5);
-    assert.arrayEquals(events4,[event4],
-                     "destructive subscriber must not get notified of event5");
-    assert.arrayEquals(events5,[event4,event5,event5],
+    assert.arrayEquals(events4,[event4,event5,event5],
                 "recursive subscriber must get notified of event5 only twice");
+    assert.arrayEquals(events5,[event4],
+                     "destructive subscriber must not get notified of event5");
   }
 
   var tests = {

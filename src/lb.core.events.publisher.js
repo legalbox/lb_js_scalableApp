@@ -47,15 +47,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     //
     // Parameter:
     //   subscriber - object, the new subscriber (lb.core.events.Subscriber)
-    //
-    // Note:
-    // Nothing happens in case the subscriber is already present.
 
-    for (var i=0; i<subscribers.length; i++){
-      if (subscriber === subscribers[i]){
-        return; // already subscribed
-      }
-    }
     subscribers.push(subscriber);
   }
 
@@ -72,7 +64,6 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     for (var i=0; i<subscribers.length; i++){
       if (subscriber === subscribers[i]){
         subscribers.splice(i,1);
-        return;
       }
     }
   }
