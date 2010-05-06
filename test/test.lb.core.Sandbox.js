@@ -211,7 +211,7 @@
     window.setTimeout = function(func,delay){
       funcs.push(func);
       delays.push(delay);
-    }
+    };
 
     var count = 0;
     function callback(){
