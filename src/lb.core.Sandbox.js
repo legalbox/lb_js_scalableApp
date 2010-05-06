@@ -147,6 +147,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
     //   callback - function, the associated callback function
 
+    //
     var subscriber = new Subscriber(filter,callback);
     subscribers.push(subscriber);
     publisher.addSubscriber(subscriber);
@@ -189,6 +190,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // [1] Introducing JSON (JavaScript Object Notation)
     // http://www.json.org/
 
+    //
     publisher.publish(event);
   }
 
@@ -214,6 +216,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   callback - function, the function to run after a delay
     //   delay - integer, the delay in milliseconds
 
+    //
     window.setTimeout(function(){
       try {
         callback();
