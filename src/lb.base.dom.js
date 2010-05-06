@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-06
  */
 /*requires lb.base.js */
 /*requires closure/goog.dom.js */
@@ -44,6 +44,7 @@ lb.base.dom = lb.base.dom || (function() {
     // DOM Level 2 Core
     // <http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-getElBId>
 
+    //
     return dom.$(id);
   }
 
@@ -62,6 +63,7 @@ lb.base.dom = lb.base.dom || (function() {
     // Returns:
     //   Element, the newly created DOM element
 
+    //
     return dom.$dom.apply(dom,arguments);
   }
 
