@@ -15,7 +15,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-04
+ * 2010-05-06
  */
 /*requires lb.core.js */
 /*requires lb.core.Sandbox.js */
@@ -92,6 +92,8 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Note:
     // Nothing happens in case the underlying module has no start() method or
     // no underlying module is available.
+
+    //
     if (!module || !module.start){
       return;
     }
@@ -112,6 +114,8 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Note:
     // Nothing happens in case the underlying module has no end() method or
     // no underlying module is available.
+
+    //
     if (!module || !module.end){
       return;
     }
