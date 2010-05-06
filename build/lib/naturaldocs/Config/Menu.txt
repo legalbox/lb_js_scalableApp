@@ -5,7 +5,7 @@ Format: 1.4
 # Title: [project name]
 # SubTitle: [subtitle]
 
-Title: Web Application
+Title: Scalable Web Application
 SubTitle: by Legal Box
 
 # You can add a footer to your documentation like this:
