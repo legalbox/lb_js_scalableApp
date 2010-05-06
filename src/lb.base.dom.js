@@ -49,7 +49,7 @@ lb.base.dom = lb.base.dom || (function() {
   }
 
   function element(name,attributes){
-    // Function: element(name,attributes,childNodes): Element
+    // Function: element(name[,attributes[,childNodes]]): Element
     // Create a new element with given name, attributes and child nodes.
     //
     // Parameters:
@@ -123,7 +123,7 @@ lb.base.dom = lb.base.dom || (function() {
   }
 
   function addListener(element, type, listener, useCapture){
-    // Function: addListener(element, type, listener, useCapture)
+    // Function: addListener(element, type, listener[, useCapture])
     // Register a new listener for a type of event on a DOM element.
     //
     // Parameters:
@@ -145,7 +145,7 @@ lb.base.dom = lb.base.dom || (function() {
   }
 
   function removeListener(element, type, listener, useCapture){
-    // Function: removeListener(element, type, listener, useCapture)
+    // Function: removeListener(element, type, listener[, useCapture])
     // Unregister a listener for a type of event on a DOM element.
     //
     // Parameters:

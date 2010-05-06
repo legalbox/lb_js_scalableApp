@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-04
+ * 2010-05-06
  */
 /*requires lb.base.dom.js */
 /*requires lb.base.string.js */
@@ -51,7 +51,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       box;
 
   function getId(localId){
-    // Function: getId(localId): string
+    // Function: getId([localId]): string
     // Get the identifier of the module, when optional parameter is omitted.
     // With optional parameter, get the full identifier corresponding to the
     // given local identifier.
@@ -189,7 +189,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function element(name,attributes){
-    // Function: element(name,attributes,childNodes): DOM element
+    // Function: element(name[,attributes[,childNodes]]): DOM element
     // Create a new DOM element.
     // For example,
     // |  element('a',{href:'#here',title:'Here'},'Click here')
@@ -276,7 +276,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function addListener(element,type,listener,useCapture){
-    // Function: addListener(element, type, listener, useCapture)
+    // Function: addListener(element, type, listener[, useCapture])
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
@@ -300,7 +300,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function removeListener(element,type,listener,useCapture){
-    // Function: removeListener(element, type, listener, useCapture)
+    // Function: removeListener(element, type, listener[, useCapture])
     // Unregister a listener for a type of event on a DOM element of the box.
     //
     // Parameters:
