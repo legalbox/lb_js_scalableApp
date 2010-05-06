@@ -20,9 +20,10 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-06
  */
 /*requires lb.core.events.js */
+/*requires lb.base.object.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
@@ -35,10 +36,15 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   //   filter - object, the set of properties/values expected in events
   //   callback - function, the associated callback function to trigger.
   //              A matching event will trigger the callback, and be provided
-  //              as parameter: callback(event).
+  //              as parameter: callback(event). The provided parameter is a
+  //              deep clone of the input event, and can thus be kept at hand
+  //              and updated freely by the target module.
   //
   // Returns:
   //   object, the new instance of lb.core.events.Subscriber
+
+  // Define alias
+  var clone = lb.base.object.clone;
 
   function notify(event){
     // Function: notify(event)
@@ -53,6 +59,10 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
     // * any property set on the filter must be found with the same value on
     //   the incoming event. If the property is not present, or present with a
     //   different value, the incoming event is rejected.
+    //
+    // Note:
+    // The input event is cloned recursively before being provided to the
+    // target callback, which can then keep it and update it freely.
 
     for (var name in filter) {
       if ( filter.hasOwnProperty(name) ){
@@ -64,7 +74,7 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
     }
 
     // event accepted
-    callback(event);
+    callback( clone(event,true) );
   }
 
   return { // Public methods

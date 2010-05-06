@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-03
+ * Version:   2010-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -57,16 +57,16 @@
 
     var filter = new lb.core.events.Subscriber(subscriptionA, callback);
     filter.notify(event1);
-    assert.arrayEquals(notifiedEvents, [event1],
+    assert.objectEquals(notifiedEvents, [event1],
                        "With subscription A, event1 expected to be notified");
     filter.notify(event2);
-    assert.arrayEquals(notifiedEvents, [event1,event2],
+    assert.objectEquals(notifiedEvents, [event1,event2],
                        "With subscription A, event2 expected to be notified");
     filter.notify(event3);
-    assert.arrayEquals(notifiedEvents, [event1,event2,event3],
+    assert.objectEquals(notifiedEvents, [event1,event2,event3],
                        "With subscription A, event3 expected to be notified");
     filter.notify(event4);
-    assert.arrayEquals(notifiedEvents, [event1,event2,event3,event4],
+    assert.objectEquals(notifiedEvents, [event1,event2,event3,event4],
                        "With subscription A, event4 expected to be notified");
 
     notifiedEvents = [];
@@ -75,7 +75,7 @@
     filter.notify(event2);
     filter.notify(event3);
     filter.notify(event4);
-    assert.arrayEquals(notifiedEvents, [event2,event3,event4],
+    assert.objectEquals(notifiedEvents, [event2,event3,event4],
                   "With subscription B, events 2,3,4 expected to be notified");
 
     notifiedEvents = [];
@@ -84,7 +84,7 @@
     filter.notify(event2);
     filter.notify(event3);
     filter.notify(event4);
-    assert.arrayEquals(notifiedEvents, [],
+    assert.objectEquals(notifiedEvents, [],
                   "With subscription C, no event expected to be notified");
 
     notifiedEvents = [];
@@ -93,8 +93,31 @@
     filter.notify(event2);
     filter.notify(event3);
     filter.notify(event4);
-    assert.arrayEquals(notifiedEvents, [event3,event4],
+    assert.objectEquals(notifiedEvents, [event3,event4],
                   "With subscription D, events 3,4 expected to be notified");
+
+
+    var event5 = {
+      level1: {
+        level2: {
+          level3: [1,2,3]
+        }
+      }
+    };
+    notifiedEvents = [];
+    filter = new lb.core.events.Subscriber(subscriptionA, callback);
+    filter.notify(event5);
+    assert.objectEquals(notifiedEvents, [event5],
+                  "With subscription A, events 5 expected to be notified");
+    assert.isFalse( notifiedEvents[0] === event5,
+                                "deep clone of event5 expected (level 0)");
+    assert.isFalse( notifiedEvents[0].level1 === event5.level1,
+                                "deep clone of event5 expected (level 1)");
+    assert.isFalse( notifiedEvents[0].level1.level2 === event5.level1.level2,
+                                "deep clone of event5 expected (level 2)");
+    assert.isFalse( notifiedEvents[0].level1.level2.level3 ===
+                               event5.level1.level2.level3,
+                                "deep clone of event5 expected (level 3)");
   }
 
   var tests = {
