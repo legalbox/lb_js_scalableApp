@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-04
+ * Version:   2010-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -74,8 +74,9 @@
     lb.core.application.addModule(module1); // once
     lb.core.application.addModule(module2);
     lb.core.application.addModule(module1); // twice
+    lb.core.application.addModule(module1); // thrice, subsequent
     lb.core.application.addModule(module3);
-    lb.core.application.addModule(module1); // thrice
+    lb.core.application.addModule(module1); // fourth
 
     ut(module1);
     modules = lb.core.application.getModules();

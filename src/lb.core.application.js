@@ -11,7 +11,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-04
+ * 2010-05-06
  */
 /*requires lb.base.js */
 /*requires lb.base.log.js */
@@ -66,6 +66,7 @@ lb.core.application = lb.core.application || (function() {
     for (var i=0; i<modules.length; i++){
       if (modules[i]===module){
         modules.splice(i,1);
+        i--; // index for next item decreased
         // no return: remove duplicates if any
       }
     }

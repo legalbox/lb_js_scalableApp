@@ -12,7 +12,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-04
+ * 2010-05-06
  */
 /*requires lb.base.log.js */
 /*requires lb.core.events.js */
@@ -64,6 +64,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     for (var i=0; i<subscribers.length; i++){
       if (subscriber === subscribers[i]){
         subscribers.splice(i,1);
+        i--; // index for next item decreased
       }
     }
   }

@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-04
+ * Version:   2010-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -71,14 +71,15 @@
     var subscriber1 = {}, subscriber2 = {}, subscriber3 = {};
     lb.core.events.publisher.addSubscriber(subscriber1);
     lb.core.events.publisher.addSubscriber(subscriber2);
+    lb.core.events.publisher.addSubscriber(subscriber2);
 
     ut(subscriber3);
-    assert.arrayEquals(subscribers, [subscriber1,subscriber2],
+    assert.arrayEquals(subscribers, [subscriber1,subscriber2,subscriber2],
                          "No change expected when subscriber is not present");
 
     ut(subscriber2);
     assert.arrayEquals(subscribers, [subscriber1],
-                                  "Second subscriber expected to be removed");
+                "Second subscriber expected to be removed (twice, adjacent)");
 
     ut(subscriber1);
     assert.arrayEquals(subscribers, [],
