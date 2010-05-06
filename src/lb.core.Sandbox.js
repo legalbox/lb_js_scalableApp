@@ -15,6 +15,7 @@
  * Version:
  * 2010-05-06
  */
+/*requires lb.base.ajax.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
@@ -22,7 +23,7 @@
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb, document */
+/*global lb, document, window */
 // preserve the module, if already loaded
 lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Function: new Sandbox(id): Sandbox
@@ -37,7 +38,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   object, the new instance of lb.core.Sandbox
 
   // Define aliases
-  var dom = lb.base.dom,
+  var ajax = lb.base.ajax,
+      dom = lb.base.dom,
       gTrim = lb.base.string.trim,
       log = lb.base.log.print,
       publisher = lb.core.events.publisher,
@@ -48,7 +50,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // DOM element, the root of the box, carrying the module identifier.
   // Used only withing getBox(), to avoid multiple lookups of the same element.
   // Initialized on first call to getBox().
-      box;
+      box,
+
+  // array, the set of Subscribers created for this module. Kept locally for
+  // use in unsubscribe.
+      subscribers = [];
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -141,7 +147,80 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
     //   callback - function, the associated callback function
 
-    publisher.addSubscriber( new Subscriber(filter,callback) );
+    var subscriber = new Subscriber(filter,callback);
+    subscribers.push(subscriber);
+    publisher.addSubscriber(subscriber);
+  }
+
+  function unsubscribe(filter){
+    // Function: unsubscribe(filter)
+    // Remove all subscriptions for given filter.
+    //
+    // Parameter:
+    //   filter - object, an event filter.
+    //
+    // Note:
+    //   It is not necessary to provide the identical filter project provided
+    //   in subscribe(); all filters with the same set of properties/values
+    //   will get the corresponding subscriptions removed.
+    var i, subscriber;
+
+    for (i=0; i<subscribers.length; i++){
+      subscriber = subscribers[i];
+      // check for equality as mutual inclusion
+      if ( subscriber.includes( filter, subscriber.getFilter() ) &&
+           subscriber.includes( subscriber.getFilter(), filter ) ) {
+        publisher.removeSubscriber(subscriber);
+        subscribers.splice(i,1);
+        i--; // index for next item decreased
+      }
+    }
+  }
+
+  function publish(event){
+    // Function: publish(event)
+    // Publish a new event for broadcasting to all interested subscribers.
+    //
+    // Parameter:
+    //   event - object, the event to publish. It shall be a valid JSON [1] 
+    //           object: no methods, no circular references.
+    //
+    // Reference:
+    // [1] Introducing JSON (JavaScript Object Notation)
+    // http://www.json.org/
+
+    publisher.publish(event);
+  }
+
+  function send(url, data, receive){
+    // Function; send(url, data, receive)
+    // Send and receive data from the remote host.
+    //
+    // Parameters:
+    //   url - string, a url on remote host (must respect same origin policy)
+    //   data - object, the data to send to the server. It must be valid JSON.
+    //   receive - function, the callback with data received in response from/
+    //             the server. The data provided in argument will be a valid
+    //             JSON object or array.
+
+    ajax.send(url, data, receive);
+  }
+
+  function setTimeout(callback, delay){
+    // Function: setTimeout(callback, delay)
+    // Plan the delayed execution of a callback function.
+    //
+    // Parameters:
+    //   callback - function, the function to run after a delay
+    //   delay - integer, the delay in milliseconds
+
+    window.setTimeout(function(){
+      try {
+        callback();
+      } catch(e){
+        log('ERROR: failure in setTimeout for callback '+callback+'.');
+      }
+    },delay);
   }
 
   function trim(string){
@@ -328,6 +407,10 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     getBox: getBox,
     isInBox: isInBox,
     subscribe: subscribe,
+    unsubscribe: unsubscribe,
+    publish: publish,
+    send: send,
+    setTimeout: setTimeout,
     trim: trim,
     $: $,
     element: element,

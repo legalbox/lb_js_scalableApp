@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-04
+ * Version:   2010-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -11,6 +11,7 @@
 
 /*requires lb.core.Sandbox.js */
 /*requires lb.core.events.publisher.js */
+/*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
 /*requires bezen.string.js */
 /*requires bezen.dom.js */
@@ -18,6 +19,7 @@
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
 /*requires goog.events.js */
+/*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, window, document, goog */
 (function() {
@@ -33,7 +35,8 @@
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
       element = bezen.dom.element,
-      events = goog.events;
+      events = goog.events,
+      MockXmlHttp = goog.net.MockXmlHttp;
 
   function testNamespace(){
 
@@ -111,8 +114,126 @@
                                           "one new event Subscriber expected");
     var event1 = {};
     lb.core.events.publisher.publish(event1);
-    assert.arrayEquals(notifiedEvents, [event1],
+    assert.objectEquals(notifiedEvents, [event1],
                                 "callback expected to be notified of event 1");
+  }
+
+  function testUnsubscribe(){
+    var sandbox = new lb.core.Sandbox('testUnsubscribe');
+    var ut = sandbox.unsubscribe;
+
+    lb.core.events.publisher.getSubscribers().length = 0;
+
+    var counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0;
+    function func1(){ counter1++; }
+    function func2(){ counter2++; }
+    function func3(){ counter3++; }
+    function func4(){ counter4++; }
+    sandbox.subscribe({},func1);
+    sandbox.subscribe({topic: 'abc'},func2);
+    sandbox.subscribe({topic: 'abc'},func3);
+    sandbox.subscribe({topic: 'abc', type: 'new'}, func4);
+
+    assert.equals(lb.core.events.publisher.getSubscribers().length, 4,
+                                  "assert: 4 subscribers expected initially");
+    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    assert.arrayEquals([counter1,counter2,counter3,counter4],[1,1,1,1],
+                           "assert: all initial subscribers expected to run");
+
+    ut({});
+    assert.equals(lb.core.events.publisher.getSubscribers().length, 3,
+                                         "3 subscribers expected: remove {}");
+    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,2],
+                                         "subscriber for {} must be removed");
+
+    ut({topic:'abc'});
+    assert.equals(lb.core.events.publisher.getSubscribers().length, 1,
+                                "1 subscriber expected: remove {topic:'abc'}");
+    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,3],
+                               "subscriber for {topic:'abc'} must be removed");
+
+    ut({topic:'abc',type:'new'});
+    assert.equals(lb.core.events.publisher.getSubscribers().length, 0,
+                    "0 subscriber expected: remove {topic:'abc',type:'new'}");
+    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,3],
+                   "subscriber for {topic:'abc',type:'new'} must be removed");
+  }
+
+  function testPublish(){
+    var ut = new lb.core.Sandbox('testPublish').publish;
+
+    lb.core.events.publisher.getSubscribers().length = 0;
+    var events1 = [];
+    var subscriber1 = new lb.core.events.Subscriber(
+      {topic:'abc'},
+      function(event){
+        events1.push(event);
+      }
+    );
+    lb.core.events.publisher.addSubscriber(subscriber1);
+
+    var event1 = {topic:'abc',type:'new'};
+    ut(event1);
+    assert.objectEquals(events1,[event1],          "event1 must be published");
+  }
+
+  function testSend(){
+    var ut = new lb.core.Sandbox('testSend').send;
+
+    var url = '/events/';
+    var data = {name: 'message', data: [{id:1, title:'Test'}]};
+    var responses = [];
+    var callback = function(response){
+      responses.push(response);
+    };
+    ut(url, data, callback);
+
+    assert.equals( MockXmlHttp.all.length, 1, "one instance of XHR expected");
+    var xhr = MockXmlHttp.all[0];
+    assert.equals( xhr._.url, url,   "same url expected in XHR call");
+    assert.equals( xhr._.method, 'POST',      "POST method expected");
+    assert.equals( xhr._.async, true, "  asynchronous call expected");
+
+    // trigger asynchronous response
+    xhr.complete();
+    assert.objectEquals(responses, [data],      "echo of given data expected");
+  }
+
+  function testSetTimeout(){
+    var ut = new lb.core.Sandbox('testSetTimeout').setTimeout;
+
+    var originalSetTimeout = window.setTimeout;
+    var funcs = [];
+    var delays = [];
+    window.setTimeout = function(func,delay){
+      funcs.push(func);
+      delays.push(delay);
+    }
+
+    var count = 0;
+    function callback(){
+      count++;
+    }
+
+    ut(callback, 500);
+    assert.equals(funcs.length, 1,              "callback function expected");
+    funcs[0]();
+    assert.equals(count, 1,
+        "callback expected to be wrapped in function provided to setTimeout");
+    assert.arrayEquals(delays, [500],                       "delay expected");
+
+    funcs = [];
+    function failingCallback(){
+      throw new Error('Test error in setTimeout');
+    }
+    ut(failingCallback, 0);
+    assert.equals(funcs.length, 1,              "callback function expected");
+    funcs[0](); // must not fail
+
+    window.setTimeout = originalSetTimeout;
   }
 
   function testTrim(){
@@ -248,6 +369,10 @@
     testGetBox: testGetBox,
     testIsInBox: testIsInBox,
     testSubscribe: testSubscribe,
+    testUnsubscribe: testUnsubscribe,
+    testPublish: testPublish,
+    testSend: testSend,
+    testSetTimeout: testSetTimeout,
     testTrim: testTrim,
     test$: test$,
     testElement: testElement,
