@@ -37,6 +37,35 @@
     var module = new Ut({}, bezen.nix);
   }
 
+  function testGetFilter(){
+    // Unit tests for lb.core.events.Subscriber#getFilter
+
+    var filter = {};
+    var subscriber = new lb.core.events.Subscriber(filter, bezen.nix);
+    assert.equals(subscriber.getFilter(), filter,
+                                      "filter provided in callback expected");
+  }
+
+  function testIncludes(){
+    var ut = new lb.core.events.Subscriber().includes;
+
+    assert.isTrue(ut({}, {}),            "empty object include empty object");
+    assert.isTrue(ut({a:1}, {}),         "{a:1} includes {}");
+    assert.isFalse(ut({},{a:1}),         "{} !includes {a:1}");
+
+    assert.isFalse(ut({a:1},{b:1}),      "{a:1} !includes {b:1}");
+    assert.isFalse(ut({a:1},{a:2}),      "{a:1} !includes {a:2}");
+
+    assert.isTrue(ut({a:1,b:2,c:3}), {a:1},
+                                         "{a:1,b:2,c:3} includes {a:1}");
+    assert.isTrue(ut({a:1,b:2,c:3}), {a:1,b:2},
+                                         "{a:1,b:2,c:3} includes {a:1,b:2}");
+    assert.isTrue(ut({a:1,b:2,c:3}), {a:1,b:2,c:3},
+                                     "{a:1,b:2,c:3} includes {a:1,b:2,c:3}");
+
+    assert.isTrue(ut({a:false}, {a:false}),  "{a:false} includes {a:false}");
+  }
+
   function testNotify(){
     // Unit tests for lb.core.events.Subscriber#notify()
 
@@ -123,6 +152,8 @@
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
+    testGetFilter: testGetFilter,
+    testIncludes: testIncludes,
     testNotify: testNotify
   };
 

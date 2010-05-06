@@ -46,6 +46,43 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   // Define alias
   var clone = lb.base.object.clone;
 
+  function getFilter(){
+    // Function: getFilter(): object
+    // Get the associated filter object.
+    //
+    // Returns:
+    //   object, the filter provided in constructor
+    return filter;
+  }
+
+  function includes(event, filter){
+    // Function: includes(event, filter): boolean
+    // Check whether event object includes filter object.
+    //
+    // Parameters:
+    //   event - object, first filter object
+    //   filter - object, second filter object
+    //
+    // Returns:
+    //   true when every property in filter has the same value in event,
+    //   false otherwise
+    //
+    // Note:
+    // This method is intended for internal use in this module to check whether
+    // an event includes a filter; it is also used in the Sandbox, to compare
+    // the mutual inclusion of two filters and check equality.
+
+    for (var name in filter) {
+      if ( filter.hasOwnProperty(name) ){
+        if ( event[name] !== filter[name] ){
+          // difference found
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   function notify(event){
     // Function: notify(event)
     // Apply the filter to incoming event and trigger the callback if the
@@ -64,20 +101,15 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
     // The input event is cloned recursively before being provided to the
     // target callback, which can then keep it and update it freely.
 
-    for (var name in filter) {
-      if ( filter.hasOwnProperty(name) ){
-        if ( !event[name] || event[name] !== filter[name] ){
-          // event rejected
-          return;
-        }
-      }
+    if (  includes( event, getFilter() )  ){
+      // event accepted
+      callback( clone(event,true) );
     }
-
-    // event accepted
-    callback( clone(event,true) );
   }
 
   return { // Public methods
+    getFilter: getFilter,
+    includes: includes,
     notify: notify
   };
 };
