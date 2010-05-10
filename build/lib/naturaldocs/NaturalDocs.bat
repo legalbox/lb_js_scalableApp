@@ -1,4 +1,6 @@
 @echo off
+rem added by Eric B. for Legal Box:
+cd lib\naturaldocs
 
 set NaturalDocsParams=
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project name="transform" basedir="." default="build">
   <description>
   Build script for Legal Box Web Application
@@ -87,13 +87,20 @@
     <sequential>
       <echo>naturaldocs: copy configuration to @{config}</echo>
       <copy file="lib/naturaldocs/Config/Menu.txt" todir="@{config}" />
-      <echo>naturaldocs: started processing @{in} => @{out}</echo>
-      <exec executable="lib/naturaldocs/NaturalDocs" dir="${basedir}"
+      <echo>naturaldocs: started processing @{in} => @{out}</echo>
+      <exec osfamily="unix" executable="lib/naturaldocs/NaturalDocs" dir="${basedir}"
         failonerror="true"
       >
         <arg line="-i @{in}" />
         <arg line="-o HTML @{out}" />
         <arg line="-p @{config}" />
+      </exec>
+      <exec osfamily="windows" executable="lib/naturaldocs/NaturalDocs.bat" dir="${basedir}"
+        failonerror="true"
+      >
+        <arg line="-i ..\..\@{in}" />
+        <arg line="-o HTML ..\..\@{out}" />
+        <arg line="-p ..\..\@{config}" />
       </exec>
       <echo>naturaldocs: completed @{in} => @{out}</echo>
       <echo/>
