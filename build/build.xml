@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-05-10
+  Version: 2010-05-11
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -93,6 +93,7 @@
       >
         <arg line="-i @{in}" />
         <arg line="-o HTML @{out}" />
+        <arg line="-cs UTF-8" />
         <arg line="-p @{config}" />
       </exec>
       <exec osfamily="windows" executable="lib/naturaldocs/NaturalDocs.bat" dir="${basedir}"
@@ -100,6 +101,7 @@
       >
         <arg line="-i ..\..\@{in}" />
         <arg line="-o HTML ..\..\@{out}" />
+        <arg line="-cs UTF-8" />
         <arg line="-p ..\..\@{config}" />
       </exec>
       <echo>naturaldocs: completed @{in} => @{out}</echo>
