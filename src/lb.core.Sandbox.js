@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-12
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.dom.js */
@@ -195,7 +195,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function send(url, data, receive){
-    // Function; send(url, data, receive)
+    // Function: send(url, data, receive)
     // Send and receive data from the remote host.
     //
     // Parameters:
@@ -205,6 +205,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //             the server. The data provided in argument will be a valid
     //             JSON object or array.
 
+    //
     ajax.send(url, data, receive);
   }
 
