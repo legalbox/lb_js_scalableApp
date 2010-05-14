@@ -362,18 +362,17 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     dom.removeClass(element,name);
   }
 
-  function addListener(element,type,listener,useCapture){
-    // Function: addListener(element, type, listener[, useCapture])
+  function addListener(element,type,listener){
+    // Function: addListener(element, type, listener)
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
     //   element - Element, a DOM element
     //   type - string, the name of an event (without 'on') e.g. 'click'
     //   listener - function, a function to call when the event is dispatched.
-    //   useCapture - boolean, whether the callback is set for capture phase.
-    //                Optional: defaults to false.
     //
-    // Note:
+    // Notes:
+    //   The listener is set on bubbling phase.
     //   Nothing happens when element is out of the box.
 
     // Warning: element parameter hides element() function
@@ -383,7 +382,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       return;
     }
 
-    dom.addListener(element,type,listener,useCapture);
+    dom.addListener(element,type,listener);
   }
 
   function removeListener(element,type,listener,useCapture){

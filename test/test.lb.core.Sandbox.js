@@ -330,10 +330,10 @@
     var callback1 = function(event){
       events1.push(event);
     };
-    ut(div1, 'click', callback1, true);
-    var listeners1 = events.getListeners(div1, 'click', true);
+    ut(div1, 'click', callback1);
+    var listeners1 = events.getListeners(div1, 'click', false);
     assert.equals(listeners1.length, 1,
-                                   "one capturing listener expected on div1");
+                                            "one listener expected on div1");
     var event1 = {};
     listeners1[0].handleEvent(event1);
     assert.arrayEquals(events1,[event1],
@@ -344,8 +344,8 @@
     var callback2 = function(event){
       events2.push(event);
     };
-    ut(div2, 'click', callback2, true);
-    var listeners2 = events.getListeners(div2, 'click', true);
+    ut(div2, 'click', callback2);
+    var listeners2 = events.getListeners(div2, 'click', false);
     assert.equals(listeners2.length, 0,
                            "no listener expected on div2 outside of the box");
   }
