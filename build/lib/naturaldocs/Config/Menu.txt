@@ -1,23 +1,11 @@
 Format: 1.4
 
 
-# You can add a title and sub-title to your menu like this:
-# Title: [project name]
-# SubTitle: [subtitle]
-
 Title: Scalable Web Application
 SubTitle: by Legal Box
 
-# You can add a footer to your documentation like this:
-# Footer: [text]
-# If you want to add a copyright notice, this would be the place to do it.
 Footer: Copyright (c) 2010 Legal Box SAS
-
-# You can add a timestamp to your documentation like one of these:
-# Timestamp: Generated on month day, year
-# Timestamp: Updated mm/dd/yyyy
-# Timestamp: Last updated mon day
-#
+Timestamp: yyyy-dd-mm
 #   m     - One or two digit month.  January is "1"
 #   mm    - Always two digit month.  January is "01"
 #   mon   - Short month word.  January is "Jan"
@@ -28,7 +16,7 @@ Footer: Copyright (c) 2010 Legal Box SAS
 #   yy    - Two digit year.  2006 is "06"
 #   yyyy  - Four digit year.  2006 is "2006"
 #   year  - Four digit year.  2006 is "2006"
-Timestamp: yyyy-dd-mm
+
 
 # --------------------------------------------------------------------------
 # 
@@ -56,16 +44,19 @@ File: lb.base.ajax  (lb.base.ajax.js)
 File: lb.base.dom  (lb.base.dom.js)
 File: lb.base.json  (lb.base.json.js)
 File: lb.base.log  (lb.base.log.js)
+File: lb.base.object  (lb.base.object.js)
 File: lb.base.string  (lb.base.string.js)
 File: lb.core  (lb.core.js)
 File: lb.core.application  (lb.core.application.js)
+File: lb.core.dom  (lb.core.dom.js)
+File: lb.core.dom.factory  (no auto-title, lb.core.dom.factory.js)
 File: lb.core.events  (lb.core.events.js)
 File: lb.core.events.publisher  (no auto-title, lb.core.events.publisher.js)
 File: lb.core.events.Subscriber  (no auto-title, lb.core.events.Subscriber.js)
+File: lb.core.Module  (lb.core.Module.js)
+File: lb.core.Sandbox  (lb.core.Sandbox.js)
 File: lb.data  (lb.data.js)
 File: lb.ui  (lb.ui.js)
-File: lb.ui.Module  (lb.ui.Module.js)
-File: lb.ui.Sandbox  (lb.ui.Sandbox.js)
 
 Group: Index  {
 

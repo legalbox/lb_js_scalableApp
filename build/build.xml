@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-05-11
+  Version: 2010-05-14
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -49,6 +49,8 @@
     <jslint file="../src/lb.core.application.js" />
     <jslint file="../src/lb.core.Module.js" />
     <jslint file="../src/lb.core.Sandbox.js" />
+    <jslint file="../src/lb.core.dom.js" />
+    <jslint file="../src/lb.core.dom.factory.js" />
     <jslint file="../src/lb.core.events.js" />
     <jslint file="../src/lb.core.events.publisher.js" />
     <jslint file="../src/lb.core.events.Subscriber.js" />
@@ -69,6 +71,8 @@
     <jslint file="../test/test.lb.core.application.js" />
     <jslint file="../test/test.lb.core.Module.js" />
     <jslint file="../test/test.lb.core.Sandbox.js" />
+    <jslint file="../test/test.lb.core.dom.js" />
+    <jslint file="../test/test.lb.core.dom.factory.js" />
     <jslint file="../test/test.lb.core.events.js" />
     <jslint file="../test/test.lb.core.events.publisher.js" />
     <jslint file="../test/test.lb.core.events.Subscriber.js" />

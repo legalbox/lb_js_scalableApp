@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-03
+ * Version:   2010-05-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -50,6 +50,16 @@
 
   function testElement(){
     var ut = lb.base.dom.element;
+
+    // Check that nodeName/tagName always comes up in uppercase;
+    // cross-browser behavior for unknown elements is inconsistent:
+    // the tagName ends up in original case in IE, in uppercase otherwise.
+    var unknown = ut('unKnownElemenT');
+    assert.isTrue( exists(unknown),         "unknown element must be created");
+    assert.equals( unknown.nodeName, 'UNKNOWNELEMENT',
+                                    "uppercase expected for unknown nodeName");
+    assert.equals( unknown.tagName, 'UNKNOWNELEMENT',
+                                     "uppercase expected for unknown tagName");
 
     // Unit tests below taken from testElement in bezen.dom.test.js
     // part of bezen.org Javascript Library, CC-BY Eric Bréchemier

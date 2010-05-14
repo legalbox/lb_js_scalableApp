@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-14
  */
 /*requires lb.base.js */
 /*requires closure/goog.dom.js */
@@ -63,8 +63,17 @@ lb.base.dom = lb.base.dom || (function() {
     // Returns:
     //   Element, the newly created DOM element
 
-    //
-    return dom.$dom.apply(dom,arguments);
+    // clone arguments before modifying - avoid changing function arguments
+    // http://tech.groups.yahoo.com/group/jslint_com/message/11
+    var args = Array.prototype.slice.call(arguments);
+
+    // convert name to uppercase to ensure cross-browser consistency
+    // (IE keeps original case for unknown nodeName/tagName)
+    if (args[0] && args[0].toUpperCase){
+      args[0] = args[0].toUpperCase();
+    }
+
+    return dom.$dom.apply(dom,args);
   }
 
   function getClasses(element){

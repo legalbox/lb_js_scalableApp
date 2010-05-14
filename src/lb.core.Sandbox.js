@@ -13,13 +13,14 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-12
+ * 2010-05-14
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
+/*requires lb.core.application.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -42,6 +43,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       dom = lb.base.dom,
       gTrim = lb.base.string.trim,
       log = lb.base.log.print,
+      getElementFactory = lb.core.application.getElementFactory,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
 
@@ -273,11 +275,14 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function element(name,attributes){
     // Function: element(name[,attributes[,childNodes]]): DOM element
-    // Create a new DOM element.
-    // For example,
+    // Create a new DOM element using the configured element factory.
+    // For example, using the default element factory,
     // |  element('a',{href:'#here',title:'Here'},'Click here')
     // will create a new DOM element
     // |  <a href='#here' title='Here'>Click here</a>
+    //
+    // A custom element factory can be configured using
+    // <lb.core.application.setElementFactory(factory)>.
     //
     // Parameters:
     //   name - string, the name of the element
@@ -288,8 +293,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   DOM element, the newly created DOM element
 
-    //
-    return dom.element.apply(this,arguments);
+    return getElementFactory().create.apply(this,arguments);
   }
 
   function getClasses(element){

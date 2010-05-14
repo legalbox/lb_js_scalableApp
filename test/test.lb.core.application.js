@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-06
+ * Version:   2010-05-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -37,6 +37,37 @@
 
     assert.isTrue( object.exists(window,'lb','core','application'), 
                                          "lb.core.application was not found");
+  }
+
+  function testGetElementFactory(){
+    var ut = lb.core.application.getElementFactory;
+
+    assert.equals(ut(), lb.core.dom.factory,
+                                          "default element factory expected");
+  }
+
+  function testSetElementFactory(){
+    var ut = lb.core.application.setElementFactory;
+
+    var testFactory = {
+      create: bezen.nix
+    };
+
+    ut(testFactory);
+    assert.equals(lb.core.application.getElementFactory(), testFactory,
+                                          "test factory expected to be set");
+
+    ut({});
+    assert.equals(lb.core.application.getElementFactory(), testFactory,
+                "no change expected when new factory has no create property");
+
+    ut({create: 'string'});
+    assert.equals(lb.core.application.getElementFactory(), testFactory,
+                "no change expected when new factory has no create function");
+
+    ut();
+    assert.equals(lb.core.application.getElementFactory(), lb.core.dom.factory,
+                                          "default element factory expected");
   }
 
   function testGetModules(){
@@ -162,6 +193,28 @@
     assert.equals(endCounter1, 1,                 "module 1 must have ended");
     assert.equals(endCounter2, 1,                 "module 2 must have ended");
     assert.equals(endCounter3, 1,                 "module 3 must have ended");
+    assert.arrayEquals( lb.core.application.getModules(), [],
+                                                   "no more module expected");
+
+    var destroyCounter = 0;
+    var testFactory = {
+      create: bezen.nix,
+      destroy: function(){
+        destroyCounter++;
+      }
+    };
+    lb.core.application.setElementFactory(testFactory);
+    ut();
+    assert.equals(destroyCounter, 1,        "factory must have get destroyed");
+
+    var factoryWithoutDestroy = {
+      create: bezen.nix
+    };
+    lb.core.application.setElementFactory(factoryWithoutDestroy);
+    ut();
+
+    // restore default element factory
+    lb.core.application.setElementFactory();
   }
 
   function testRun(){
@@ -183,6 +236,8 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testGetElementFactory: testGetElementFactory,
+    testSetElementFactory: testSetElementFactory,
     testGetModules: testGetModules,
     testAddModule: testAddModule,
     testRemoveModule: testRemoveModule,

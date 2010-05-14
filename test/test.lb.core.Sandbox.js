@@ -3,13 +3,14 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-06
+ * Version:   2010-05-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Sandbox.js */
+/*requires lb.core.application.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
@@ -260,15 +261,24 @@
   function testElement(){
     var ut = new lb.core.Sandbox('testElement').element;
 
-    var a1 = ut('a',{href:"#first"},"first link");
-    assert.equals( a1.nodeType, ELEMENT_NODE,
-                                                "a1 must have type ELEMENT");
-    assert.equals( a1.nodeName, "A",            "a1 must have name A");
-    assert.isTrue( endsWith(a1.href,'#first'),  "a1 must have href set");
-    assert.equals( a1.childNodes.length, 1,     "a1 must have 1 child");
-    var t1 = a1.firstChild;
-    assert.equals( t1.nodeType, TEXT_NODE, "t1 must have type TEXT");
-    assert.equals( t1.data, "first link",       "t1 data must be set");
+    var capturedNames = [], capturedParams = [], capturedChildNodes = [];
+    var testFactory = {
+      create: function(name, params, childNodes){
+        capturedNames.push(name);
+        capturedParams.push(params);
+        capturedChildNodes.push(childNodes);
+      }
+    };
+    lb.core.application.setElementFactory(testFactory);
+
+    var testName = 'a';
+    var testParams = {href:"#first"};
+    var testChildNodes = ["first link"];
+    ut(testName, testParams, testChildNodes);
+    assert.arrayEquals( capturedNames, [testName],       "tag name expected");
+    assert.arrayEquals( capturedParams, [testParams],      "params expected");
+    assert.arrayEquals( capturedChildNodes, [testChildNodes],
+                                                       "childNodes expected");
   }
 
   function testGetClasses(){

@@ -11,13 +11,13 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-14
  */
 /*requires lb.base.js */
 /*requires lb.base.log.js */
 /*requires lb.base.dom.js */
 /*requires lb.core.js */
-/*requires lb.core.Module.js */
+/*requires lb.core.dom.factory.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
@@ -26,14 +26,61 @@ lb.core.application = lb.core.application || (function() {
   // Closure for lb.core.facade module
 
   // Declare aliases
-  var Module = lb.core.Module,
-      log = lb.base.log.print,
+  var log = lb.base.log.print,
       addListener = lb.base.dom.addListener,
+      defaultFactory = lb.core.dom.factory,
 
   // Private members
 
+  // object, the factory for DOM elements, defaults to lb.core.dom.factory
+      elementFactory = defaultFactory,
+
   // array, the list of modules (lb.core.Module) added in the application
       modules = [];
+
+  function getElementFactory(){
+    // Function: getElementFactory(): object
+    // Get the factory configured to create DOM elements.
+    //
+    // Returns:
+    //   object, the configured DOM element factory,
+    //   lb.core.dom.factory by default.
+
+    return elementFactory;
+  }
+
+  function setElementFactory(factory){
+    // Function: setElementFactory(factory)
+    // Configure a new factory to create DOM elements.
+    //
+    // This method is intended as an extension point for the support of Rich
+    // Internet Applications: provide a custom factory to create widgets on top
+    // of regular DOM elements. An element factory must implement the create()
+    // method which creates DOM elements, and optionally a destroy() method to
+    // destroy all components at the end of the application.
+    //
+    // See <lb.core.dom.factory>, the default Element Factory, for the expected
+    // signature of create(). The destroy() method takes no parameters.
+    //
+    // Parameter:
+    //   factory - object, optional, the new element factory. When omitted,
+    //             the default factory is restored.
+    //
+    // Note:
+    // Nothing happens in case the provided factory has no create() function.
+
+    if (!factory){
+      elementFactory = defaultFactory;
+      return;
+    }
+
+    if (typeof factory.create !== "function"){
+      log("Invalid element factory, without create function: "+factory+".");
+      return;
+    }
+
+    elementFactory = factory;
+  }
 
   function getModules(){
     // Function: getModules(): array
@@ -84,9 +131,16 @@ lb.core.application = lb.core.application || (function() {
   function endAll(){
     // Function: endAll()
     // Terminate all registered modules.
+    //
+    // All registered modules are discarded.
+    // The configured element factory is destroyed.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
+    }
+    modules.length = 0;
+    if (elementFactory.destroy){
+      elementFactory.destroy();
     }
   }
 
@@ -101,7 +155,9 @@ lb.core.application = lb.core.application || (function() {
     addListener(window, 'unload', endAll);
   }
 
-  return { // Facade API
+  return { // Public API
+    getElementFactory: getElementFactory,
+    setElementFactory: setElementFactory,
     getModules: getModules,
     addModule: addModule,
     removeModule: removeModule,
