@@ -15,7 +15,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-14
  */
 /*requires lb.core.js */
 /*requires lb.core.Sandbox.js */
@@ -46,19 +46,14 @@ lb.core.Module = lb.core.Module || function (id, creator){
   // Private fields
 
   // object, the underlying module instance
-      module,
-
-  // string, the status of underlying module
-      status;
+      module;
 
   try {
     module = creator( new Sandbox(id) );
-    status = 'created';
   } catch(creationError){
     log('ERROR: failed to create module "'+id+
         '" using creator "'+creator+
         '"; '+creationError);
-    status = 'error';
   }
 
   function getId(){
@@ -69,20 +64,6 @@ lb.core.Module = lb.core.Module || function (id, creator){
     //   string, the module identifier, as given in contructor.
 
     return id;
-  }
-
-  function getStatus(){
-    // Function: getStatus(): string
-    // Get the status of the underlying module.
-    //
-    // Returns:
-    // - 'idle' initially
-    // - 'created' after a new instance gets created with provided creator
-    // - 'started' after the module gets started
-    // - 'stopped' after the module gets stopped
-    // - 'failed' after a failure in creator(), start(), stop() or notify()
-
-    return status;
   }
 
   function start(){
@@ -100,10 +81,8 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
     try {
       module.start();
-      status = 'started';
     } catch(startError){
       log('ERROR: Failed to start module "'+id+'"; '+startError+'.');
-      status = 'error';
     }
   }
 
@@ -122,16 +101,13 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
     try {
       module.end();
-      status = 'ended';
     } catch(endError){
       log('ERROR: Failed to end module "'+id+'"; '+endError+'.');
-      status = 'error';
     }
   }
 
   return { // Public methods
     getId: getId,
-    getStatus: getStatus,
     start: start,
     end: end
   };

@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-04
+ * Version:   2010-05-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -134,41 +134,12 @@
     module.end();
   }
 
-  function testGetStatus(){
-    // Unit tests for lb.core.Module#getStatus()
-
-    var module = new lb.core.Module('lb.ui.module', createStubModule);
-    assert.equals( module.getStatus(), 'created', "wrong initial status");
-
-    module.start();
-    assert.equals( module.getStatus(), 'started',"wrong status after start()");
-
-    module.end();
-    assert.equals( module.getStatus(), 'ended', "wrong status after end()");
-
-    module = new lb.core.Module('lb.ui.fail', creatorWhichFails);
-    assert.equals( module.getStatus(), 'error',
-                                      "wrong status after failure in creator");
-
-    module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToStart);
-    module.start();
-    assert.equals( module.getStatus(), 'error',
-                                      "wrong status after failure in start");
-
-    module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToEnd);
-    module.start();
-    module.end();
-    assert.equals( module.getStatus(), 'error',
-                                      "wrong status after failure in end");
-  }
-
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
     testGetId: testGetId,
     testStart: testStart,
-    testEnd: testEnd,
-    testGetStatus: testGetStatus
+    testEnd: testEnd
   };
 
   testrunner.define(tests, "lb.core.Module");
