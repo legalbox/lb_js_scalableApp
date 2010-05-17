@@ -15,7 +15,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-17
  */
 /*requires lb.core.js */
 /*requires lb.core.Sandbox.js */
@@ -46,10 +46,14 @@ lb.core.Module = lb.core.Module || function (id, creator){
   // Private fields
 
   // object, the underlying module instance
-      module;
+      module,
+
+  // object, the sandbox object
+      sandbox;
 
   try {
-    module = creator( new Sandbox(id) );
+    sandbox = new Sandbox(id);
+    module = creator(sandbox);
   } catch(creationError){
     log('ERROR: failed to create module "'+id+
         '" using creator "'+creator+
@@ -64,6 +68,16 @@ lb.core.Module = lb.core.Module || function (id, creator){
     //   string, the module identifier, as given in contructor.
 
     return id;
+  }
+
+  function getSandbox(){
+    // Function: getSandbox(): object
+    // Get the sandbox allocated to the module.
+    //
+    // Returns:
+    //   object, the module's sandbox.
+
+    return sandbox;
   }
 
   function start(){
@@ -91,16 +105,16 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Terminate the underlying module.
     //
     // Note:
-    // Nothing happens in case the underlying module has no end() method or
-    // no underlying module is available.
+    // The end() method is optional on the underlying module; it will not be
+    // called when omitted. In any case, removeAllListeners() will be called on
+    // the sandbox to cleanup any remaining DOM listeners.
 
     //
-    if (!module || !module.end){
-      return;
-    }
-
     try {
-      module.end();
+      if (module && module.end){
+        module.end();
+      }
+      sandbox.removeAllListeners();
     } catch(endError){
       log('ERROR: Failed to end module "'+id+'"; '+endError+'.');
     }
@@ -108,6 +122,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
   return { // Public methods
     getId: getId,
+    getSandbox: getSandbox,
     start: start,
     end: end
   };

@@ -3,13 +3,14 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-14
+ * Version:   2010-05-17
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Module.js */
+/*requires bezen.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.string.js */
@@ -24,7 +25,8 @@
   var assert = bezen.assert,
       object = bezen.object,
       string = bezen.string,
-      testrunner = bezen.testrunner;
+      testrunner = bezen.testrunner,
+      $ = bezen.$;
 
   function testNamespace(){
 
@@ -80,64 +82,86 @@
     var Ut = lb.core.Module;
 
     sandboxCreated = null;
-    var module = new Ut('lb.ui.stub', createStubModule);
+    var module = new Ut('testConstructor', createStubModule);
     assert.isTrue( object.exists(sandboxCreated),
                   "underlying module must be created with a sandbox instance");
 
-    module = new lb.core.Module('lb.ui.fail', creatorWhichFails);
+    module = new lb.core.Module('testConstructor.fail', creatorWhichFails);
   }
 
   function testGetId(){
     // Unit tests for lb.core.Module#getId()
 
-    var id = 'lb.ui.stub';
+    var id = 'testGetId';
     var module = new lb.core.Module(id, createStubModule);
     assert.equals( module.getId(), id,
                      "getId expected to return the id given in constructor");
   }
 
+  function testGetSandbox(){
+    var ut = new lb.core.Module('testGetSandbox',createStubModule).getSandbox;
+
+    assert.isTrue( object.exists( ut() ),         "sandbox object expected");
+  }
+
   function testStart(){
     // Unit tests for lb.core.Module#start()
 
-    var module = new lb.core.Module('lb.ui.stub', createStubModule);
+    var module = new lb.core.Module('testStart', createStubModule);
 
     startCounter = 0;
     module.start();
     assert.equals(startCounter, 1, "Underlying module expected to be started");
 
-    module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToStart);
+    module = new lb.core.Module('testStart.fail', createModuleWhichFailsToStart);
     module.start();
 
-    module = new lb.core.Module('lb.ui.lazy', createLazyModule);
+    module = new lb.core.Module('testStart.lazy', createLazyModule);
     module.start();
   }
 
   function testEnd(){
     // Unit tests for lb.core.Module#end()
 
-    var module = new lb.core.Module('lb.ui.stub', createStubModule);
+    var module = new lb.core.Module('testEnd', createStubModule);
     module.start();
     endCounter = 0;
     module.end();
     assert.equals(endCounter, 1, "Underlying module expected to be ended");
 
-    module = new lb.core.Module('lb.ui.stub', createStubModule);
+    module = new lb.core.Module('testEnd.listeners', createStubModule);
+    var sandbox = module.getSandbox();
+    sandbox.addListener( sandbox.getBox(), 'click', bezen.nix);
+    module.end();
+    assert.arrayEquals(sandbox.getListeners(), [],
+                                              "all listeners must be removed");
+
+    module = new lb.core.Module('testEnd', createStubModule);
     endCounter = 0;
     module.end();
     assert.equals(endCounter, 1,  "end call expected, even without a start");
 
-    module = new lb.core.Module('lb.ui.fail', createModuleWhichFailsToEnd);
+    module = new lb.core.Module('testEnd.fail', createModuleWhichFailsToEnd);
     module.start();
     module.end();
 
-    module = new lb.core.Module('lb.ui.lazy', createLazyModule);
+    module = new lb.core.Module('testEnd.lazy', createLazyModule);
     module.end();
+
+    module = new lb.core.Module('testEnd.lazy.listeners', createLazyModule);
+    sandbox = module.getSandbox();
+    sandbox.addListener( sandbox.getBox(), 'click', bezen.nix);
+    module.end();
+    assert.arrayEquals(sandbox.getListeners(), [],
+                  "all listeners must be removed, even when end() is omitted");
   }
 
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
     testGetId: testGetId,
+    testGetSandbox: testGetSandbox,
+    testGetSandbox: testGetSandbox,
     testStart: testStart,
     testEnd: testEnd
   };
