@@ -13,14 +13,11 @@
  * Version:
  * 2010-05-17
  */
-/*requires lb.base.js */
+/*requires lb.core.js */
 /*requires lb.base.log.js */
 /*requires lb.base.array.js */
-/*requires lb.base.dom.js */
 /*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
-/*requires lb.core.js */
-/*requires lb.core.dom.factory.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
