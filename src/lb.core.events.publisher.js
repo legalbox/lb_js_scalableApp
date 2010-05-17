@@ -12,9 +12,10 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-17
  */
 /*requires lb.base.log.js */
+/*requires lb.base.array.js */
 /*requires lb.core.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
@@ -23,7 +24,9 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
   // Builder of
   // Closure for lb.core.events.publisher module
 
+  // Define aliases
   var log = lb.base.log.print,
+      copy = lb.base.array.copy,
 
   // Private members
 
@@ -83,7 +86,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
 
     // take a snapshot of the list of subscribers to avoid running into
     // infinite loops or skipping subscribers in case the list is modified.
-    var currentSubscribers = subscribers.concat();
+    var currentSubscribers = copy(subscribers);
 
     for (var i=0; i<currentSubscribers.length; i++){
       try {
