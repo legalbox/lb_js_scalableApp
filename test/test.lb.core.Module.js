@@ -161,7 +161,6 @@
     testConstructor: testConstructor,
     testGetId: testGetId,
     testGetSandbox: testGetSandbox,
-    testGetSandbox: testGetSandbox,
     testStart: testStart,
     testEnd: testEnd
   };
