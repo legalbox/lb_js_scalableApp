@@ -12,6 +12,7 @@
  * 2010-05-14
  */
 /*requires lb.base.dom.js */
+/*requires lb.base.array.js */
 /*requires closure/goog.dom.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
@@ -21,7 +22,8 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
   // Closure for lb.base.dom module
 
   // Declare aliases
-  var createElement = goog.dom.createDom;
+  var createElement = goog.dom.createDom,
+      toArray = lb.base.array.toArray;
 
   function create(name,attributes){
     // Function: create(name[,attributes[,childNodes]]): Element
@@ -40,7 +42,7 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
 
     // clone arguments before modifying - avoid changing function arguments
     // http://tech.groups.yahoo.com/group/jslint_com/message/11
-    var args = Array.prototype.slice.call(arguments);
+    var args = toArray(arguments);
 
     // convert name to uppercase to ensure cross-browser consistency
     // (IE keeps original case for unknown nodeName/tagName)
