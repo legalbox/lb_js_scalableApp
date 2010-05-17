@@ -16,6 +16,7 @@
  * 2010-05-17
  */
 /*requires lb.base.ajax.js */
+/*requires lb.base.array.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.dom.css.js */
 /*requires lb.base.dom.Listener.js */
@@ -42,6 +43,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Define aliases
   var ajax = lb.base.ajax,
+      empty = lb.base.array.empty,
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
@@ -453,7 +455,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     for (var i=0; i<listeners.length; i++){
       listeners[i].detach();
     }
-    listeners.length = 0;
+    empty(listeners);
   }
 
   return { // Public methods

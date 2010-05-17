@@ -11,10 +11,11 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-17
  */
 /*requires lb.base.js */
 /*requires lb.base.log.js */
+/*requires lb.base.array.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
@@ -29,6 +30,7 @@ lb.core.application = lb.core.application || (function() {
 
   // Declare aliases
   var log = lb.base.log.print,
+      empty = lb.base.array.empty,
       Listener = lb.base.dom.Listener,
       defaultFactory = lb.base.dom.factory,
 
@@ -146,7 +148,7 @@ lb.core.application = lb.core.application || (function() {
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
-    modules.length = 0;
+    empty(modules);
     if (elementFactory.destroy){
       elementFactory.destroy();
     }
