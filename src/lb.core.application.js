@@ -30,7 +30,9 @@ lb.core.application = lb.core.application || (function() {
 
   // Declare aliases
   var log = lb.base.log.print,
-      empty = lb.base.array.empty,
+      addOne = lb.base.array.addOne,
+      removeOne = lb.base.array.removeOne,
+      removeAll = lb.base.array.removeAll,
       Listener = lb.base.dom.Listener,
       defaultFactory = lb.base.dom.factory,
 
@@ -108,9 +110,11 @@ lb.core.application = lb.core.application || (function() {
     //
     // Parameter:
     //   module - object, the new module (lb.core.Module) to add
+    //
+    // Note:
+    // Nothing happens in case the same instance of module is already present.
 
-    // no check: modules may be added multiple times
-    modules.push(module);
+    addOne(modules, module);
   }
 
   function removeModule(module){
@@ -120,13 +124,7 @@ lb.core.application = lb.core.application || (function() {
     // Parameter:
     //   module - object, the module (lb.core.Module) to remove
 
-    for (var i=0; i<modules.length; i++){
-      if (modules[i]===module){
-        modules.splice(i,1);
-        i--; // index for next item decreased
-        // no return: remove duplicates if any
-      }
-    }
+    removeOne(modules, module);
   }
 
   function startAll(){
@@ -148,7 +146,7 @@ lb.core.application = lb.core.application || (function() {
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
-    empty(modules);
+    removeAll(modules);
     if (elementFactory.destroy){
       elementFactory.destroy();
     }

@@ -27,6 +27,8 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
   // Define aliases
   var log = lb.base.log.print,
       copy = lb.base.array.copy,
+      addOne = lb.base.array.addOne,
+      removeOne = lb.base.array.removeOne,
 
   // Private members
 
@@ -50,8 +52,11 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     //
     // Parameter:
     //   subscriber - object, the new subscriber (lb.core.events.Subscriber)
+    //
+    // Note:
+    // Nothing happens in case the subscriber is already present.
 
-    subscribers.push(subscriber);
+    addOne(subscribers, subscriber);
   }
 
   function removeSubscriber(subscriber){
@@ -64,12 +69,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     // Note:
     // Nothing happens in case the subscriber is not present.
 
-    for (var i=0; i<subscribers.length; i++){
-      if (subscriber === subscribers[i]){
-        subscribers.splice(i,1);
-        i--; // index for next item decreased
-      }
-    }
+    removeOne(subscribers, subscriber);
   }
 
   function publish(event){

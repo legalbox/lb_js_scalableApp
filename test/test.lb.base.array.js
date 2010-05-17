@@ -30,8 +30,40 @@
                                       "lb.base.array namespace was not found");
   }
 
-  function testEmpty(){
-    var ut = lb.base.array.empty;
+  function testAddOne(){
+    var ut = lb.base.array.addOne;
+
+    var array = [];
+    ut(array,1);
+    ut(array,2);
+    ut(array,3);
+    assert.arrayEquals(array, [1,2,3],             "each item must be added");
+
+    ut(array,1);
+    ut(array,2);
+    ut(array,3);
+    assert.arrayEquals(array, [1,2,3],           "no duplicate may be added");
+  }
+
+  function testRemoveOne(){
+    var ut = lb.base.array.removeOne;
+
+    var array = [1,2,3,2,1];
+    ut(array,2);
+    assert.arrayEquals(array, [1,3,2,1],
+         "only first item expected to be removed (not duplicate by default)");
+
+    ut(array,2);
+    assert.arrayEquals(array, [1,3,1],
+                        "second item expected to be removed on second pass");
+
+    ut(array,2);
+    assert.arrayEquals(array, [1,3,1],
+                               "no changes expected when item is not found");
+  }
+
+  function testRemoveAll(){
+    var ut = lb.base.array.removeAll;
 
     var array = ['a',2,/3/];
     ut(array);
@@ -61,7 +93,9 @@
 
   var tests = {
     testNamespace: testNamespace,
-    testEmpty: testEmpty,
+    testAddOne: testAddOne,
+    testRemoveOne: testRemoveOne,
+    testRemoveAll: testRemoveAll,
     testCopy: testCopy,
     testToArray: testToArray
   };

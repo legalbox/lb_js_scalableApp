@@ -62,6 +62,12 @@
 
     assert.arrayEquals(subscribers, [subscriber1,subscriber2,subscriber3],
                                                     "3 subscribers expected");
+
+    ut(subscriber1);
+    ut(subscriber2);
+    ut(subscriber3);
+    assert.arrayEquals(subscribers, [subscriber1,subscriber2,subscriber3],
+                                                    "no duplicate expected");
   }
 
   function testRemoveSubscriber(){
@@ -72,15 +78,14 @@
     var subscriber1 = {}, subscriber2 = {}, subscriber3 = {};
     lb.core.events.publisher.addSubscriber(subscriber1);
     lb.core.events.publisher.addSubscriber(subscriber2);
-    lb.core.events.publisher.addSubscriber(subscriber2);
 
     ut(subscriber3);
-    assert.arrayEquals(subscribers, [subscriber1,subscriber2,subscriber2],
+    assert.arrayEquals(subscribers, [subscriber1,subscriber2],
                          "No change expected when subscriber is not present");
 
     ut(subscriber2);
     assert.arrayEquals(subscribers, [subscriber1],
-                "Second subscriber expected to be removed (twice, adjacent)");
+                                  "Second subscriber expected to be removed");
 
     ut(subscriber1);
     assert.arrayEquals(subscribers, [],
@@ -148,11 +153,12 @@
 
     empty( lb.core.events.publisher.getSubscribers() );
     var events4 = [];
+    function notify4(event){
+      lb.core.events.publisher.addSubscriber({notify:notify4});
+      events4.push(event);
+    }
     var module4 = {
-      notify: function(event){
-        lb.core.events.publisher.addSubscriber(module4);
-        events4.push(event);
-      }
+      notify: notify4
     };
 
     var events5 = [];

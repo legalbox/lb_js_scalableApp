@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-14
+ * Version:   2010-05-17
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -83,15 +83,27 @@
   function testAddModule(){
     var ut = lb.core.application.addModule;
 
-    var modules = lb.core.application.getModules();
-    array.empty(modules);
+    array.empty( lb.core.application.getModules() );
 
-    ut( new Module('lb.ui.stub1',bezen.nix) );
-    assert.equals( modules.length, 1,              "one new module expected");
-    ut( new Module('lb.ui.stub2',bezen.nix) );
-    assert.equals( modules.length, 2,             "two new modules expected");
-    ut( new Module('lb.ui.stub3',bezen.nix) );
-    assert.equals( modules.length, 3,           "three new modules expected");
+    var module1 = new Module('lb.ui.stub1',bezen.nix);
+    var module2 = new Module('lb.ui.stub2',bezen.nix);
+    var module3 = new Module('lb.ui.stub3',bezen.nix);
+
+    ut(module1);
+    assert.arrayEquals( lb.core.application.getModules(), [module1],
+                                                       "one module expected");
+    ut(module2);
+    assert.arrayEquals( lb.core.application.getModules(), [module1, module2],
+                                                  "two new modules expected");
+    ut(module3);
+    assert.arrayEquals( lb.core.application.getModules(),
+                        [module1, module2, module3],
+                                                "three new modules expected");
+
+    ut(module2);
+    assert.arrayEquals( lb.core.application.getModules(),
+                        [module1, module2, module3],
+                                  "same module must not be inserted twice");
   }
 
   function testRemoveModule(){

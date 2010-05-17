@@ -23,9 +23,37 @@ lb.base.array = lb.base.array || (function() {
   // Declare alias
   var gArray = goog.array;
 
-  function empty(array){
-    // Function: empty(array)
-    // Empty the given array.
+  function addOne(array, item){
+    // Function: addOne(array, item)
+    // Add an item to the array, only once (no duplicates allowed).
+    //
+    // Parameters:
+    //   array - array, the array to modify in place
+    //   item - any, the new item to insert at end, unless already present
+
+    //
+    gArray.insert(array, item);
+  }
+
+  function removeOne(array, item){
+    // Function: removeOne(array, item])
+    // Remove the first occurence of an item from the given array.
+    // The identity operator === is used for the comparison.
+    //
+    // Parameters:
+    //   array - array, the array to modify in place
+    //   item - any, the item to remove
+    //
+    // Note:
+    // Duplicates are not removed.
+
+    //
+    gArray.remove(array,item);
+  }
+
+  function removeAll(array){
+    // Function: removeAll(array)
+    // Remove all items from the array.
 
     gArray.clear(array);
   }
@@ -57,7 +85,9 @@ lb.base.array = lb.base.array || (function() {
   }
 
   return { // public API
-    empty: empty,
+    addOne: addOne,
+    removeOne: removeOne,
+    removeAll: removeAll,
     copy: copy,
     toArray: toArray
   };

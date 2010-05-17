@@ -43,7 +43,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Define aliases
   var ajax = lb.base.ajax,
-      empty = lb.base.array.empty,
+      addOne = lb.base.array.addOne,
+      removeOne = lb.base.array.removeOne,
+      removeAll = lb.base.array.removeAll,
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
@@ -455,7 +457,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     for (var i=0; i<listeners.length; i++){
       listeners[i].detach();
     }
-    empty(listeners);
+    removeAll(listeners);
   }
 
   return { // Public methods
