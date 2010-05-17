@@ -14,6 +14,7 @@
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
+/*requires bezen.array.js */
 /*requires bezen.string.js */
 /*requires bezen.dom.js */
 /*requires bezen.assert.js */
@@ -30,6 +31,7 @@
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
+      empty = bezen.array.empty,
       testrunner = bezen.testrunner,
       $ = bezen.$,
       endsWith = bezen.string.endsWith,
@@ -102,7 +104,7 @@
   function testSubscribe(){
     var ut = new lb.core.Sandbox('testSubscribe').subscribe;
 
-    lb.core.events.publisher.getSubscribers().length = 0;
+    empty( lb.core.events.publisher.getSubscribers() );
 
     var notifiedEvents = [];
     var callback = function(event){
@@ -123,7 +125,7 @@
     var sandbox = new lb.core.Sandbox('testUnsubscribe');
     var ut = sandbox.unsubscribe;
 
-    lb.core.events.publisher.getSubscribers().length = 0;
+    empty( lb.core.events.publisher.getSubscribers() );
 
     var counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0;
     function func1(){ counter1++; }
@@ -166,7 +168,7 @@
   function testPublish(){
     var ut = new lb.core.Sandbox('testPublish').publish;
 
-    lb.core.events.publisher.getSubscribers().length = 0;
+    empty( lb.core.events.publisher.getSubscribers() );
     var events1 = [];
     var subscriber1 = new lb.core.events.Subscriber(
       {topic:'abc'},

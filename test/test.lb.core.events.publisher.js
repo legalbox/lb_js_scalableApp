@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-06
+ * Version:   2010-05-17
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -11,6 +11,7 @@
 
 /*requires lb.core.events.publisher.js */
 /*requires bezen.js */
+/*requires bezen.array.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.string.js */
@@ -25,7 +26,7 @@
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
-      array = bezen.array,
+      empty = bezen.array.empty,
       startsWith = bezen.string.startsWith,
       testrunner = bezen.testrunner;
 
@@ -41,7 +42,7 @@
     var subscribers = ut();
     assert.isTrue( object.exists(subscribers),
                                           "subscribers must exist initially");
-    subscribers.length = 0;
+    empty(subscribers);
     assert.arrayEquals( ut(), [],      "empty array of subscribers expected");
   }
 
@@ -49,7 +50,7 @@
     var ut = lb.core.events.publisher.addSubscriber;
 
     var subscribers = lb.core.events.publisher.getSubscribers();
-    subscribers.length = 0;
+    empty(subscribers);
 
     var subscriber1 = {}, subscriber2 = {}, subscriber3 = {};
     ut(subscriber1);
@@ -67,7 +68,7 @@
     var ut = lb.core.events.publisher.removeSubscriber;
 
     var subscribers = lb.core.events.publisher.getSubscribers();
-    subscribers.length = 0;
+    empty(subscribers);
     var subscriber1 = {}, subscriber2 = {}, subscriber3 = {};
     lb.core.events.publisher.addSubscriber(subscriber1);
     lb.core.events.publisher.addSubscriber(subscriber2);
@@ -92,7 +93,7 @@
   function testPublish(){
     var ut = lb.core.events.publisher.publish;
 
-    lb.core.events.publisher.getSubscribers().length = 0;
+    empty( lb.core.events.publisher.getSubscribers() );
 
     var event0 = {};
     ut(event0);
@@ -145,7 +146,7 @@
     assert.arrayEquals(events3, [event2,event3],
                                   "third module must get notified of event3");
 
-    lb.core.events.publisher.getSubscribers().length = 0;
+    empty( lb.core.events.publisher.getSubscribers() );
     var events4 = [];
     var module4 = {
       notify: function(event){
