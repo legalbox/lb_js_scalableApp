@@ -13,10 +13,12 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-17
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.dom.js */
+/*requires lb.base.dom.css.js */
+/*requires lb.base.dom.Listener.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
@@ -41,22 +43,32 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Define aliases
   var ajax = lb.base.ajax,
       dom = lb.base.dom,
+      css = lb.base.dom.css,
+      Listener = lb.base.dom.Listener,
       gTrim = lb.base.string.trim,
       log = lb.base.log.print,
-      getElementFactory = lb.core.application.getElementFactory,
+      application = lb.core.application,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
 
   // Private fields
+
+  // object, the Element Factory used to create DOM elements.
+  // A custom factory can be configured on the application.
+     elementFactory = application.getElementFactory(),
 
   // DOM element, the root of the box, carrying the module identifier.
   // Used only withing getBox(), to avoid multiple lookups of the same element.
   // Initialized on first call to getBox().
       box,
 
-  // array, the set of Subscribers created for this module. Kept locally for
-  // use in unsubscribe.
-      subscribers = [];
+  // array, the set of Subscribers created for this module.
+  // Kept locally for use in unsubscribe().
+      subscribers = [],
+
+  // array, the set of listeners created by this module
+  // Kept for removeAllListeners().
+      listeners = [];
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -101,7 +113,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     if (!box){
       log('Warning: no element "'+id+
           '" found in box. Will be created at end of body.');
-      box = dom.element('div',{'id': id});
+      box = elementFactory.create('div',{'id': id});
       document.body.appendChild(box);
     }
     return box;
@@ -288,12 +300,13 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   name - string, the name of the element
     //   attributes - object, optional arguments as a set of named properties
     //   childNodes - array or list of arguments, the optional child nodes.
-    //                Text nodes may be represented simply as strings.
+    //                Text nodes shall be represented simply as strings.
     //
     // Returns:
-    //   DOM element, the newly created DOM element
+    //   DOM element, the newly created DOM element.
 
-    return getElementFactory().create.apply(this,arguments);
+    //
+    return elementFactory.create.apply(elementFactory,arguments);
   }
 
   function getClasses(element){
@@ -305,10 +318,15 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //
     // Returns:
     //   object, a hash of CSS classes, with a boolean property set to true
-    //   for each of the CSS class names found on element.
+    //   for each of the CSS class names found on element, e.g.
+    //   | {'big':true, 'box':true}
+    //   for
+    //   | <div class='big box'></div>.
+    //   When no class attribute is present, or when it is empty, an empty
+    //   object is returned.
     //
     // Note:
-    //   an empty object is returned when the element is out of the box.
+    // When the element is out of the box, an empty object is returned as well.
 
     // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
@@ -317,7 +335,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       return {};
     }
 
-    return dom.getClasses(element);
+    return css.getClasses(element);
   }
 
   function addClass(element,name){
@@ -338,7 +356,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       return;
     }
 
-    dom.addClass(element,name);
+    css.addClass(element,name);
   }
 
   function removeClass(element,name){
@@ -359,54 +377,83 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       return;
     }
 
-    dom.removeClass(element,name);
+    css.removeClass(element,name);
   }
 
-  function addListener(element,type,listener){
-    // Function: addListener(element, type, listener)
+  function getListeners(){
+    // Function: getListeners(): array
+    // Get the list of listeners configured on DOM elements of the box.
+    // Listeners can be added with addListener() and removed one by one with
+    // removeListener(), or all at once with removeAllListeners().
+    //
+    // Returns:
+    //   array, the current list of listener objects (lb.base.dom.Listener)
+
+    return listeners;
+  }
+
+  function addListener(element,type,callback){
+    // Function: addListener(element, type, callback): Listener
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
     //   element - Element, a DOM element
     //   type - string, the name of an event (without 'on') e.g. 'click'
-    //   listener - function, a function to call when the event is dispatched.
+    //   callback - function, a function to call when the event is dispatched.
+    //
+    // Returns:
+    //   * null, when the element is outside the box (no listener added),
+    //   * object, the new listener (lb.base.dom.Listener) otherwise.
+    //     This object shall be provided to removeListener() to unregister the
+    //     listener. No other interaction is expected with this object.
     //
     // Notes:
     //   The listener is set on bubbling phase.
-    //   Nothing happens when element is out of the box.
 
     // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
       log('Warning: cannot add listener to element "'+element+
           '" outside of box "'+id+'"');
-      return;
+      return null;
     }
 
-    dom.addListener(element,type,listener);
+    var listener = new Listener(element,type,callback);
+    listeners.push(listener);
+    return listener;
   }
 
-  function removeListener(element,type,listener,useCapture){
-    // Function: removeListener(element, type, listener[, useCapture])
-    // Unregister a listener for a type of event on a DOM element of the box.
+  function removeListener(listener){
+    // Function: removeListener(listener)
+    // Unregister a listener.
     //
     // Parameters:
-    //   element - Element, a DOM element
-    //   type - string, the name of an event (without 'on') e.g. 'click'
-    //   listener - function, a function to call when the event is dispatched.
-    //   useCapture - boolean, whether the callback is set for capture phase.
-    //                Optional: defaults to false.
+    //   listener - object, a listener instance returned by addListener().
     //
     // Note:
-    //   Nothing happens when element is out of the box.
+    //   Nothing happens when the listener has already been removed.
 
-    // Warning: element parameter hides element() function
-    if ( !isInBox(element) ){
-      log('Warning: cannot remove listener from element "'+element+
-          '" outside of box "'+id+'"');
-      return;
+    for (var i=0; i<listeners.length; i++){
+      if (listeners[i]===listener){
+        listener.detach();
+        listeners.splice(i,1);
+        return;
+      }
     }
+  }
 
-    dom.removeListener(element,type,listener,useCapture);
+  function removeAllListeners(){
+    // Function: removeAllListeners()
+    // Remove all listeners configured on DOM elements of the box.
+    //
+    // All remaining listeners, previously configured with addListener(),
+    // add removed. This method is intended as a cleanup utility ; it is called
+    // automatically by the framework after the module terminates in end(),
+    // which makes its use optional for the module itself.
+
+    for (var i=0; i<listeners.length; i++){
+      listeners[i].detach();
+    }
+    listeners.length = 0;
   }
 
   return { // Public methods
@@ -424,7 +471,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     getClasses: getClasses,
     addClass: addClass,
     removeClass: removeClass,
+    getListeners: getListeners,
     addListener: addListener,
-    removeListener: removeListener
+    removeListener: removeListener,
+    removeAllListeners: removeAllListeners
   };
 };

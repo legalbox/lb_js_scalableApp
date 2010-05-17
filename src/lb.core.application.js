@@ -16,6 +16,8 @@
 /*requires lb.base.js */
 /*requires lb.base.log.js */
 /*requires lb.base.dom.js */
+/*requires lb.base.dom.factory.js */
+/*requires lb.base.dom.Listener.js */
 /*requires lb.core.js */
 /*requires lb.core.dom.factory.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -23,20 +25,26 @@
 // preserve the module, if already loaded
 lb.core.application = lb.core.application || (function() {
   // Builder of
-  // Closure for lb.core.facade module
+  // Closure for lb.core.application module
 
   // Declare aliases
   var log = lb.base.log.print,
-      addListener = lb.base.dom.addListener,
-      defaultFactory = lb.core.dom.factory,
+      Listener = lb.base.dom.Listener,
+      defaultFactory = lb.base.dom.factory,
 
   // Private members
 
-  // object, the factory for DOM elements, defaults to lb.core.dom.factory
+  // object, the factory for DOM elements, defaults to lb.base.dom.factory
       elementFactory = defaultFactory,
 
   // array, the list of modules (lb.core.Module) added in the application
-      modules = [];
+      modules = [],
+
+  // object, the onload listener (lb.base.dom.Listener)
+      loadListener,
+
+  // object, the onunload listener (lb.base.dom.Listener)
+      unloadListener;
 
   function getElementFactory(){
     // Function: getElementFactory(): object
@@ -44,7 +52,7 @@ lb.core.application = lb.core.application || (function() {
     //
     // Returns:
     //   object, the configured DOM element factory,
-    //   lb.core.dom.factory by default.
+    //   lb.base.dom.factory by default.
 
     return elementFactory;
   }
@@ -59,7 +67,7 @@ lb.core.application = lb.core.application || (function() {
     // method which creates DOM elements, and optionally a destroy() method to
     // destroy all components at the end of the application.
     //
-    // See <lb.core.dom.factory>, the default Element Factory, for the expected
+    // See <lb.base.dom.factory>, the default Element Factory, for the expected
     // signature of create(). The destroy() method takes no parameters.
     //
     // Parameter:
@@ -142,6 +150,12 @@ lb.core.application = lb.core.application || (function() {
     if (elementFactory.destroy){
       elementFactory.destroy();
     }
+    if (loadListener){
+      loadListener.detach();
+    }
+    if (unloadListener){
+      unloadListener.detach();
+    }
   }
 
   function run(){
@@ -151,8 +165,8 @@ lb.core.application = lb.core.application || (function() {
     // * startAll gets registered as listener for window 'load' event,
     // * endAll gets registered as listener for window 'unload' event.
 
-    addListener(window, 'load', startAll);
-    addListener(window, 'unload', endAll);
+    loadListener = new Listener(window, 'load', startAll);
+    unloadListener = new Listener(window, 'unload', endAll);
   }
 
   return { // Public API

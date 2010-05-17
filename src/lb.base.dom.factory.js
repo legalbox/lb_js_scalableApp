@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.core.dom.factory
- * Factory of DOM Elements for Legal Web Application
+ * Namespace: lb.base.dom.factory
+ * DOM (Document Object Model) Factory, Adapter Module for Base Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -11,21 +11,21 @@
  * Version:
  * 2010-05-14
  */
-/*requires lb.core.dom.js */
 /*requires lb.base.dom.js */
+/*requires closure/goog.dom.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb */
+/*global lb, goog */
 // preserve the module, if already loaded
-lb.core.dom.factory = lb.core.dom.factory || (function() {
+lb.base.dom.factory = lb.base.dom.factory || (function() {
   // Builder of
-  // Closure for DOM Factory
+  // Closure for lb.base.dom module
 
-  // Define aliases
-  var createElement = lb.base.dom.element;
+  // Declare aliases
+  var createElement = goog.dom.createDom;
 
   function create(name,attributes){
     // Function: create(name[,attributes[,childNodes]]): Element
-    // Create a new DOM element with given name, attributes and child nodes.
+    // Create a new element with given name, attributes and child nodes.
     //
     // Parameters:
     //   name - string, the name of the element, e.g. 'div'
@@ -38,8 +38,17 @@ lb.core.dom.factory = lb.core.dom.factory || (function() {
     // Returns:
     //   Element, the newly created DOM element
 
-    //
-    return createElement.apply(this,arguments);
+    // clone arguments before modifying - avoid changing function arguments
+    // http://tech.groups.yahoo.com/group/jslint_com/message/11
+    var args = Array.prototype.slice.call(arguments);
+
+    // convert name to uppercase to ensure cross-browser consistency
+    // (IE keeps original case for unknown nodeName/tagName)
+    if (args[0] && args[0].toUpperCase){
+      args[0] = args[0].toUpperCase();
+    }
+
+    return createElement.apply(this,args);
   }
 
   return { // public API

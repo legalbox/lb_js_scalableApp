@@ -10,7 +10,8 @@
  */
 
 /*requires lb.core.application.js */
-/*requires lb.core.Module.js */
+/*requires lb.core.application.js */
+/*requires lb.base.dom.factory.js */
 /*requires goog.events.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
@@ -42,7 +43,7 @@
   function testGetElementFactory(){
     var ut = lb.core.application.getElementFactory;
 
-    assert.equals(ut(), lb.core.dom.factory,
+    assert.equals(ut(), lb.base.dom.factory,
                                           "default element factory expected");
   }
 
@@ -66,7 +67,7 @@
                 "no change expected when new factory has no create function");
 
     ut();
-    assert.equals(lb.core.application.getElementFactory(), lb.core.dom.factory,
+    assert.equals(lb.core.application.getElementFactory(), lb.base.dom.factory,
                                           "default element factory expected");
   }
 
