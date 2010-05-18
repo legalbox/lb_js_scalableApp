@@ -10,13 +10,15 @@
  */
 
 /*requires lb.base.dom.factory.js */
+/*requires lb.base.dom.Listener.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.string.js */
 /*requires bezen.dom.js */
 /*requires bezen.testrunner.js */
+/*requires goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window, document */
+/*global lb, bezen, goog, window, document */
 (function() {
   // Builder of
   // Closure object for Test of lb.base.dom.factory
@@ -29,7 +31,8 @@
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
       $ = bezen.$,
-      element = bezen.dom.element;
+      element = bezen.dom.element,
+      events = goog.events;
 
   function testNamespace(){
 
@@ -164,9 +167,116 @@
     assert.equals( after.data, "text after",    "after data must be set");
   }
 
+  function testDestroyElement(){
+    var ut = lb.base.dom.factory.destroyElement;
+
+    var testElement = $('testElement');
+    assert.isTrue( exists( testElement.parentNode ) &&
+                   testElement.parentNode.nodeType === ELEMENT_NODE,
+                         "assert: element node expected as parent initially");
+    ut(testElement);
+    assert.isFalse( exists( testElement.parentNode ) &&
+                    testElement.parentNode.nodeType === ELEMENT_NODE,
+                                      "element must be uprooted from parent");
+
+    // no error expected when element has no parent
+    ut( element('div') );
+  }
+
+  function testCreateListener(){
+    var ut = lb.base.dom.factory.createListener;
+
+    var div = element('div');
+    var callback = bezen.nix;
+    var listener = ut(div, 'click', callback);
+    assert.isTrue( typeof listener === 'object',   "Listener object expected");
+    assert.isTrue( listener instanceof lb.base.dom.Listener,
+                                  "instance of lb.base.dom.Listener expected");
+
+    var listeners = events.getListeners(div, 'click', false);
+    assert.equals(listeners.length, 1,
+                               "one non-capturing listener expected on div");
+  }
+
+  function testDestroyListener(){
+    var ut = lb.base.dom.factory.destroyListener;
+
+    var div = element('div');
+    var listener = lb.base.dom.factory.createListener(
+      div, 'click', bezen.nix
+    );
+    var listeners = events.getListeners(div, 'click', false);
+    assert.equals(listeners.length, 1,
+                        "assert: one non-capturing listener expected on div");
+
+    ut(listener);
+
+    listeners = events.getListeners(div, 'click', false);
+    assert.equals(listeners.length, 0,
+                            "no more non-capturing listener expected on div");
+  }
+
+  function testCreateEvent(){
+    var ut = lb.base.dom.factory.createEvent;
+
+    var div = element('div');
+    var counter = 0;
+    var callback1 = function(){
+      counter++;
+    };
+    var listener1 = lb.base.dom.factory.createListener(
+      div, 'click', callback1
+    );
+    var event1 = ut(div, 'click');
+    assert.isTrue( exists(event1),      "event object expected for event 1");
+    assert.isFalse( exists(event1,'data'),    "no data expected in event 1");
+    assert.equals(counter, 1,        "one click event expected for event 1");
+
+    var capturedEvent;
+    function checkEvent(e){
+      capturedEvent = e;
+    }
+    var listener2 = lb.base.dom.factory.createListener(
+      div, 'click', checkEvent
+    );
+    var data = {id:42};
+    var event2 = ut(div, 'click', data);
+    assert.equals(event2.data, data,               "data expected in event2");
+    assert.equals(capturedEvent, event2,
+                                          "event2 expected to be dispatched");
+  }
+
+  function testDestroyEvent(){
+    var ut = lb.base.dom.factory.destroyEvent;
+
+    var div = element('div');
+    var event1 = lb.base.dom.factory.createEvent(div, 'click');
+    ut(event1);
+
+    var preventCounter = 0;
+    var stopCounter = 0;
+    var testEvent = {
+      type: 'click',
+      preventDefault: function(){
+        preventCounter++;
+      },
+      stopPropagation: function(){
+        stopCounter++;
+      }
+    };
+    ut(testEvent);
+    assert.equals(preventCounter, 1, "preventDefault() expected to be called");
+    assert.equals(stopCounter, 1,   "stopPropagation() expected to be called");
+  }
+
   var tests = {
     testNamespace: testNamespace,
-    testCreateElement: testCreateElement
+    testCreateElement: testCreateElement,
+    testDestroyElement: testDestroyElement,
+    testCreateListener: testCreateListener,
+    testDestroyListener: testDestroyListener,
+    testCreateEvent: testCreateEvent,
+    testDestroyEvent: testDestroyEvent
   };
 
   testrunner.define(tests, "lb.base.dom.factory");
