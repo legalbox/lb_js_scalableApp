@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-18
  */
 /*requires lb.base.js */
 /*requires closure/goog.dom.js */
@@ -24,14 +24,14 @@ lb.base.dom = lb.base.dom || (function() {
   var dom = goog.dom;
 
   function $(id){
-    // Function: $(id): Element
+    // Function: $(id): DOM Element
     // An alias for document.getElementById(id).
     //
     // Parameter:
     //   id - string, the identifier of an HTML element
     //
     // Returns:
-    //   Element, the DOM element with given id, if present in the document,
+    //   DOM Element, the element with given id, if present in the document,
     //   null otherwise
     //
     // Note:

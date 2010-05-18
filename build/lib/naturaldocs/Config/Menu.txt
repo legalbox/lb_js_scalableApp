@@ -1,7 +1,7 @@
 Format: 1.4
 
 
-Title: Scalable Web Application
+Title: Scalable JavaScript Application
 SubTitle: by Legal Box
 
 Footer: Copyright (c) 2010 Legal Box SAS

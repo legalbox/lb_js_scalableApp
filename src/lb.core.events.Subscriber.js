@@ -20,7 +20,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-06
+ * 2010-05-18
  */
 /*requires lb.core.events.js */
 /*requires lb.base.object.js */
@@ -41,7 +41,7 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   //              and updated freely by the target module.
   //
   // Returns:
-  //   object, the new instance of lb.core.events.Subscriber
+  //   object, the new instance of Subscriber
 
   // Define alias
   var clone = lb.base.object.clone;

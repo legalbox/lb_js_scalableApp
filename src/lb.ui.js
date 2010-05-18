@@ -1,6 +1,6 @@
 /*
  * Namespace: lb.ui
- * User Interface Modules for Legal Box Web Application
+ * User Interface Modules for Legal Box Scalable JavaScript Application
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-28
+ * 2010-05-18
  */
 /*requires lb.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */

@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.base.dom.js */
 /*requires closure/goog.events.js */
@@ -25,7 +25,7 @@ lb.base.dom.Listener = function(element, type, callback, useCapture) {
   // Create a new listener for a type of event on a DOM element.
   //
   // Parameters:
-  //   element - Element, a DOM element
+  //   element - DOM Element, an element
   //   type - string, the name of an event (without 'on') e.g. 'click'
   //   callback - function, a function to call when the event is dispatched.
   //   useCapture - boolean, whether the callback is set for capture phase.
@@ -34,8 +34,7 @@ lb.base.dom.Listener = function(element, type, callback, useCapture) {
   //
   // Reference:
   //   [1] DOM Level 2 Events: addEventListener
-  //   http://www.w3.org/TR/DOM-Level-2-Events/events.html
-  //                     #Events-EventTarget-addEventListener
+  //   <http://bit.ly/9SQoL4>
 
   // Declare aliases
   var events = goog.events,
@@ -58,8 +57,7 @@ lb.base.dom.Listener = function(element, type, callback, useCapture) {
     //
     // Reference:
     //   [1] DOM Level 2 Events: addEventListener
-    //   http://www.w3.org/TR/DOM-Level-2-Events/events.html
-    //                     #Events-EventTarget-addEventListener
+    //   <http://bit.ly/9SQoL4>
 
     events.unlistenByKey(key);
   }

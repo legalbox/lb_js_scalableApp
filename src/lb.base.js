@@ -1,6 +1,6 @@
 /*
  * Namespace: lb.base
- * Adapter Modules for Base Javascript Library
+ * Adapter Modules for Base JavaScript Library
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-04-30
+ * 2010-05-18
  */
 /*requires lb.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */

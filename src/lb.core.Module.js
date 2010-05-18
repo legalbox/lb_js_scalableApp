@@ -1,10 +1,10 @@
 /*
  * Namespace: lb.core.Module
- * Core Module of Legal Box Web Application
+ * Core Module of Legal Box Scalable JavaScript Application
  *
  * Each Module corresponds to an independent unit of functionality.
  *
- * For the purpose of this life cycle management, a new Module instance is 
+ * For the purpose of this life cycle management, a new Module instance is
  * created for each User Interface Module and each Data Model Module added on
  * the Core Application.
  *
@@ -15,7 +15,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.core.js */
 /*requires lb.core.Sandbox.js */
@@ -37,7 +37,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
   //             in the namespace 'lb.data', e.g. lb.data.myModule.
   //
   // Returns:
-  //   object, the new instance of lb.core.Module
+  //   object, the new instance of Module
 
   // Define aliases
   var log = lb.base.log.print,

@@ -12,7 +12,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.base.log.js */
 /*requires lb.base.array.js */
@@ -32,7 +32,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
 
   // Private members
 
-  // array, the list of subscribers (lb.core.events.Subscribers) subscribed to
+  // array, the list of subscribers (lb.core.events.Subscriber) subscribed to
   // event notifications
       subscribers = [];
 
@@ -41,7 +41,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     // Get the list of subscribers.
     //
     // Returns:
-    //   array, the list of subscribers (lb.core.events.Subscriber)
+    //   array, the list of subscribers (<lb.core.events.Subscriber>)
 
     return subscribers;
   }
@@ -51,7 +51,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     // Add a new subscriber to the list.
     //
     // Parameter:
-    //   subscriber - object, the new subscriber (lb.core.events.Subscriber)
+    //   subscriber - object, the new subscriber (<lb.core.events.Subscriber>)
     //
     // Note:
     // Nothing happens in case the subscriber is already present.
@@ -64,7 +64,7 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
     // Remove an existing subscriber from the list.
     //
     // Parameter:
-    //   subscriber - object, the old subscriber (lb.core.events.Subscriber)
+    //   subscriber - object, the old subscriber (<lb.core.events.Subscriber>)
     //
     // Note:
     // Nothing happens in case the subscriber is not present.

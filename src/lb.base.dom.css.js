@@ -10,7 +10,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-18
  */
 /*requires lb.base.dom.js */
 /*requires closure/goog.dom.classes.js */
@@ -29,7 +29,7 @@ lb.base.dom.css = lb.base.dom.css || (function() {
     // Get a hash of classes found on given DOM element.
     //
     // Parameters:
-    //   element - Element, a DOM element node
+    //   element - DOM Element, an element node
     //             (with or without a class atribute)
     //
     // Returns:
@@ -56,7 +56,7 @@ lb.base.dom.css = lb.base.dom.css || (function() {
     // Append a CSS class to the className of a DOM element.
     //
     // Parameters:
-    //   element - Element, a DOM element (with or without a class attribute)
+    //   element - DOM Element, an element (with or without a class attribute)
     //   name - string, the name of a new CSS class to append to existing ones
     //
     // Note:
@@ -70,7 +70,7 @@ lb.base.dom.css = lb.base.dom.css || (function() {
     // Remove a CSS class from the className of a DOM element.
     //
     // Parameters:
-    //   element - Element, a DOM element (with or without a class attribute)
+    //   element - DOM Element, an element (with or without a class attribute)
     //   name - string, the name of a CSS class to remove from existing ones
     //
     // Note:

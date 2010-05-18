@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.base.js */
 /*requires closure/goog.array.js */
@@ -81,6 +81,7 @@ lb.base.array = lb.base.array || (function() {
     // Returns:
     //   array, the pseudo-array converted to a new array instance
 
+    //
     return gArray.toArray(pseudoArray);
   }
 

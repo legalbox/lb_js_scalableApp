@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-14
+ * 2010-05-18
  */
 /*requires lb.base.dom.js */
 /*requires lb.base.array.js */
@@ -26,7 +26,7 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
       toArray = lb.base.array.toArray;
 
   function create(name,attributes){
-    // Function: create(name[,attributes[,childNodes]]): Element
+    // Function: create(name[,attributes[,childNodes]]): DOM Element
     // Create a new element with given name, attributes and child nodes.
     //
     // Parameters:
@@ -38,7 +38,7 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
     //                or as a list of arguments (after name and attributes).
     //
     // Returns:
-    //   Element, the newly created DOM element
+    //   DOM Element, the newly created element
 
     // clone arguments before modifying - avoid changing function arguments
     // http://tech.groups.yahoo.com/group/jslint_com/message/11

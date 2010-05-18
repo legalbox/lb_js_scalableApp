@@ -1,6 +1,6 @@
 /*
  * Namespace: lb.core.Sandbox
- * Sandbox for Modules of Legal Box Web Application
+ * Sandbox for Modules of Legal Box Scalable JavaScript Application
  *
  * A new instance of Sandbox gets attributed to each User Interface Module
  * and Data Model Module. It acts as a proxy to the methods of the Application
@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
@@ -39,7 +39,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //        the document, it will get created on the first call to getBox().
   //
   // Returns:
-  //   object, the new instance of lb.core.Sandbox
+  //   object, the new instance of Sandbox
 
   // Define aliases
   var ajax = lb.base.ajax,
@@ -401,7 +401,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
-    //   element - Element, a DOM element
+    //   element - DOM Element, an element of the box
     //   type - string, the name of an event (without 'on') e.g. 'click'
     //   callback - function, a function to call when the event is dispatched.
     //

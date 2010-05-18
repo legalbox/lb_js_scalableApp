@@ -11,7 +11,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-17
+ * 2010-05-18
  */
 /*requires lb.core.js */
 /*requires lb.base.log.js */
@@ -68,8 +68,14 @@ lb.core.application = lb.core.application || (function() {
     // method which creates DOM elements, and optionally a destroy() method to
     // destroy all components at the end of the application.
     //
-    // See <lb.base.dom.factory>, the default Element Factory, for the expected
-    // signature of create(). The destroy() method takes no parameters.
+    // Designing a Custom Factory:
+    // A custom factory must implement the create() method, called to create
+    // each DOM element with given tag name, attributes and child nodes, and 
+    // optionally the destroy() method, to terminate widgets at the end of the 
+    // application.
+    // * See <lb.base.dom.factory>, the default Element Factory,
+    //   for the expected signature of create().
+    // * The destroy() method takes no parameters.
     //
     // Parameter:
     //   factory - object, optional, the new element factory. When omitted,
