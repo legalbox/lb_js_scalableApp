@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-17
+ * Version:   2010-05-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -40,34 +40,33 @@
                                          "lb.core.application was not found");
   }
 
-  function testGetElementFactory(){
-    var ut = lb.core.application.getElementFactory;
+  function testGetFactory(){
+    var ut = lb.core.application.getFactory;
 
-    assert.equals(ut(), lb.base.dom.factory,
-                                          "default element factory expected");
+    assert.equals(ut(), lb.base.dom.factory,     "default factory expected");
   }
 
-  function testSetElementFactory(){
-    var ut = lb.core.application.setElementFactory;
+  function testSetFactory(){
+    var ut = lb.core.application.setFactory;
 
     var testFactory = {
       create: bezen.nix
     };
 
     ut(testFactory);
-    assert.equals(lb.core.application.getElementFactory(), testFactory,
+    assert.equals(lb.core.application.getFactory(), testFactory,
                                           "test factory expected to be set");
 
     ut({});
-    assert.equals(lb.core.application.getElementFactory(), testFactory,
+    assert.equals(lb.core.application.getFactory(), testFactory,
                 "no change expected when new factory has no create property");
 
     ut({create: 'string'});
-    assert.equals(lb.core.application.getElementFactory(), testFactory,
+    assert.equals(lb.core.application.getFactory(), testFactory,
                 "no change expected when new factory has no create function");
 
     ut();
-    assert.equals(lb.core.application.getElementFactory(), lb.base.dom.factory,
+    assert.equals(lb.core.application.getFactory(), lb.base.dom.factory,
                                           "default element factory expected");
   }
 
@@ -216,18 +215,18 @@
         destroyCounter++;
       }
     };
-    lb.core.application.setElementFactory(testFactory);
+    lb.core.application.setFactory(testFactory);
     ut();
     assert.equals(destroyCounter, 1,        "factory must have get destroyed");
 
     var factoryWithoutDestroy = {
       create: bezen.nix
     };
-    lb.core.application.setElementFactory(factoryWithoutDestroy);
+    lb.core.application.setFactory(factoryWithoutDestroy);
     ut();
 
     // restore default element factory
-    lb.core.application.setElementFactory();
+    lb.core.application.setFactory();
   }
 
   function testRun(){
@@ -249,8 +248,8 @@
 
   var tests = {
     testNamespace: testNamespace,
-    testGetElementFactory: testGetElementFactory,
-    testSetElementFactory: testSetElementFactory,
+    testGetFactory: testGetFactory,
+    testSetFactory: testSetFactory,
     testGetModules: testGetModules,
     testAddModule: testAddModule,
     testRemoveModule: testRemoveModule,

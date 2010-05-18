@@ -3,8 +3,8 @@
  * Sandbox for Modules of Legal Box Scalable JavaScript Application
  *
  * A new instance of Sandbox gets attributed to each User Interface Module
- * and Data Model Module. It acts as a proxy to the methods of the Application
- * Core.
+ * and Data Model Module. It acts both as a proxy and a facade to the
+ * application core.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -57,9 +57,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Private fields
 
-  // object, the Element Factory used to create DOM elements.
-  // A custom factory can be configured on the application.
-     elementFactory = application.getElementFactory(),
+  // object, the factory used to create DOM elements, listeners and events.
+  // A custom factory can be configured on the application core.
+     factory = application.getFactory(),
 
   // DOM element, the root of the box, carrying the module identifier.
   // Used only withing getBox(), to avoid multiple lookups of the same element.
@@ -117,7 +117,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     if (!box){
       log('Warning: no element "'+id+
           '" found in box. Will be created at end of body.');
-      box = elementFactory.create('div',{'id': id});
+      box = factory.create('div',{'id': id});
       document.body.appendChild(box);
     }
     return box;
@@ -310,7 +310,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   DOM element, the newly created DOM element.
 
     //
-    return elementFactory.create.apply(elementFactory,arguments);
+    return factory.create.apply(factory,arguments);
   }
 
   function getClasses(element){
