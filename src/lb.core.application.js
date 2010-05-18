@@ -140,9 +140,6 @@ lb.core.application = lb.core.application || (function() {
       modules[i].end();
     }
     removeAll(modules);
-    if (domFactory.destroy){
-      domFactory.destroy();
-    }
     if (loadListener){
       loadListener.detach();
     }

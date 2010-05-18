@@ -207,26 +207,6 @@
     assert.equals(endCounter3, 1,                 "module 3 must have ended");
     assert.arrayEquals( lb.core.application.getModules(), [],
                                                    "no more module expected");
-
-    var destroyCounter = 0;
-    var testFactory = {
-      create: bezen.nix,
-      destroy: function(){
-        destroyCounter++;
-      }
-    };
-    lb.core.application.setFactory(testFactory);
-    ut();
-    assert.equals(destroyCounter, 1,        "factory must have get destroyed");
-
-    var factoryWithoutDestroy = {
-      create: bezen.nix
-    };
-    lb.core.application.setFactory(factoryWithoutDestroy);
-    ut();
-
-    // restore default element factory
-    lb.core.application.setFactory();
   }
 
   function testRun(){
