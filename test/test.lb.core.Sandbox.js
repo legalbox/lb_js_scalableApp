@@ -266,7 +266,7 @@
     // test factory must be configured beforehand
     var capturedNames = [], capturedParams = [], capturedChildNodes = [];
     var testFactory = {
-      create: function(name, params, childNodes){
+      createElement: function(name, params, childNodes){
         capturedNames.push(name);
         capturedParams.push(params);
         capturedChildNodes.push(childNodes);

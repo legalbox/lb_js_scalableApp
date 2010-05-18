@@ -57,14 +57,6 @@
     assert.equals(lb.core.application.getFactory(), testFactory,
                                           "test factory expected to be set");
 
-    ut({});
-    assert.equals(lb.core.application.getFactory(), testFactory,
-                "no change expected when new factory has no create property");
-
-    ut({create: 'string'});
-    assert.equals(lb.core.application.getFactory(), testFactory,
-                "no change expected when new factory has no create function");
-
     ut();
     assert.equals(lb.core.application.getFactory(), lb.base.dom.factory,
                                           "default element factory expected");

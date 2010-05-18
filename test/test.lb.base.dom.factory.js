@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-14
+ * Version:   2010-05-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -37,8 +37,8 @@
                                "lb.base.dom.factory namespace was not found");
   }
 
-  function testCreate(){
-    var ut = lb.base.dom.factory.create;
+  function testCreateElement(){
+    var ut = lb.base.dom.factory.createElement;
 
     // Check that nodeName/tagName always comes up in uppercase;
     // cross-browser behavior for unknown elements is inconsistent:
@@ -166,7 +166,7 @@
 
   var tests = {
     testNamespace: testNamespace,
-    testCreate: testCreate
+    testCreateElement: testCreateElement
   };
 
   testrunner.define(tests, "lb.base.dom.factory");

@@ -80,11 +80,6 @@ lb.core.application = lb.core.application || (function() {
       return;
     }
 
-    if (typeof factory.create !== "function"){
-      log("Invalid element factory, without create function: "+factory+".");
-      return;
-    }
-
     domFactory = factory;
   }
 

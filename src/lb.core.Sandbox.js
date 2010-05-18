@@ -117,7 +117,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     if (!box){
       log('Warning: no element "'+id+
           '" found in box. Will be created at end of body.');
-      box = factory.create('div',{'id': id});
+      box = factory.createElement('div',{'id': id});
       document.body.appendChild(box);
     }
     return box;
@@ -310,7 +310,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   DOM element, the newly created DOM element.
 
     //
-    return factory.create.apply(factory,arguments);
+    return factory.createElement.apply(factory,arguments);
   }
 
   function getClasses(element){
