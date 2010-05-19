@@ -99,11 +99,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function getBox(){
-    // Function: getBox(): DOM element
+    // Function: getBox(): DOM Element
     // Get the root HTML element for this module.
     //
     // Returns:
-    //   DOM element, the HTML element corresponding to the module id
+    //   DOM Element, the HTML element corresponding to the module id
     //
     // Note:
     //   In case no HTML element is found in the document with the module id,
@@ -128,7 +128,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Check whether the given element is in the box.
     //
     // Parameter:
-    //   element - DOM element, an element
+    //   element - DOM Element, an element
     //
     // Returns:
     //   true if the element is a descendant of or the root of the box itself
@@ -260,7 +260,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function $(localId){
-    // Function: $(localId): DOM element
+    // Function: $(localId): DOM Element
     // Get the element of the box with given local identifier.
     //
     // Parameter:
@@ -268,7 +268,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //             See getId() for details.
     //
     // Returns:
-    //   * DOM element, the element from the box with corresponding localId
+    //   * DOM Element, the element from the box with corresponding localId
     //   * null if no element is found in the box with the localId
     //
     // Notes:
@@ -290,7 +290,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function element(name,attributes){
-    // Function: element(name[,attributes[,childNodes]]): DOM element
+    // Function: element(name[,attributes[,childNodes]]): DOM Element
     // Create a new DOM element using the configured element factory.
     // For example, using the default element factory,
     // |  element('a',{href:'#here',title:'Here'},'Click here')
@@ -307,7 +307,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //                Text nodes shall be represented simply as strings.
     //
     // Returns:
-    //   DOM element, the newly created DOM element.
+    //   DOM Element, the newly created DOM element.
 
     //
     return factory.createElement.apply(factory,arguments);
@@ -318,7 +318,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Get the CSS classes of given DOM element.
     //
     // Parameter:
-    //   element - DOM element, an element of the box
+    //   element - DOM Element, an element of the box
     //
     // Returns:
     //   object, a hash of CSS classes, with a boolean property set to true
@@ -347,7 +347,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Append a CSS class to a DOM element part of the box.
     //
     // Parameters:
-    //   element - DOM element, an element of the box
+    //   element - DOM Element, an element of the box
     //   name - string, a CSS class name
     //
     // Note:
