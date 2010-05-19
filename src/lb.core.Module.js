@@ -15,7 +15,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-05-19
  */
 /*requires lb.core.js */
 /*requires lb.core.Sandbox.js */
@@ -120,10 +120,9 @@ lb.core.Module = lb.core.Module || function (id, creator){
     }
   }
 
-  return { // Public methods
-    getId: getId,
-    getSandbox: getSandbox,
-    start: start,
-    end: end
-  };
+  // Public methods
+  this.getId = getId;
+  this.getSandbox = getSandbox;
+  this.start = start;
+  this.end = end;
 };

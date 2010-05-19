@@ -51,6 +51,7 @@
     var Ut = lb.core.Sandbox;
 
     var sandbox = new Ut('myId');
+    assert.isTrue( sandbox instanceof Ut,      "instanceof expected to work");
   }
 
   function testGetId(){

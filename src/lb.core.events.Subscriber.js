@@ -20,7 +20,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-05-19
  */
 /*requires lb.core.events.js */
 /*requires lb.base.object.js */
@@ -107,9 +107,8 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
     }
   }
 
-  return { // Public methods
-    getFilter: getFilter,
-    includes: includes,
-    notify: notify
-  };
+  // Public mthods
+  this.getFilter = getFilter;
+  this.includes = includes;
+  this.notify = notify;
 };

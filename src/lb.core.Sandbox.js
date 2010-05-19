@@ -486,26 +486,25 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     removeAll(listeners);
   }
 
-  return { // Public methods
-    getId: getId,
-    getBox: getBox,
-    isInBox: isInBox,
-    subscribe: subscribe,
-    unsubscribe: unsubscribe,
-    publish: publish,
-    send: send,
-    setTimeout: setTimeout,
-    trim: trim,
-    $: $,
-    element: element,
-    getClasses: getClasses,
-    addClass: addClass,
-    removeClass: removeClass,
-    fireEvent: fireEvent,
-    cancelEvent: cancelEvent,
-    getListeners: getListeners,
-    addListener: addListener,
-    removeListener: removeListener,
-    removeAllListeners: removeAllListeners
-  };
+  // Public methods
+  this.getId = getId;
+  this.getBox = getBox;
+  this.isInBox = isInBox;
+  this.subscribe = subscribe;
+  this.unsubscribe = unsubscribe;
+  this.publish = publish;
+  this.send = send;
+  this.setTimeout = setTimeout;
+  this.trim = trim;
+  this.$ = $;
+  this.element = element;
+  this.getClasses = getClasses;
+  this.addClass = addClass;
+  this.removeClass = removeClass;
+  this.fireEvent = fireEvent;
+  this.cancelEvent = cancelEvent;
+  this.getListeners = getListeners;
+  this.addListener = addListener;
+  this.removeListener = removeListener;
+  this.removeAllListeners = removeAllListeners;
 };

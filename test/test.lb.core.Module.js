@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-17
+ * Version:   2010-05-19
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -83,6 +83,7 @@
 
     sandboxCreated = null;
     var module = new Ut('testConstructor', createStubModule);
+    assert.isTrue( module instanceof Ut,        "instanceof expected to work");
     assert.isTrue( object.exists(sandboxCreated),
                   "underlying module must be created with a sandbox instance");
 

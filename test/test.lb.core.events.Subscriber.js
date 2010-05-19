@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-06
+ * Version:   2010-05-19
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -35,6 +35,7 @@
     var Ut = lb.core.events.Subscriber;
 
     var module = new Ut({}, bezen.nix);
+    assert.isTrue( module instanceof Ut,       "instanceof expected to work");
   }
 
   function testGetFilter(){
