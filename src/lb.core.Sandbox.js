@@ -165,7 +165,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
     //   callback - function, the associated callback function
 
-    //
     var subscriber = new Subscriber(filter,callback);
     subscribers.push(subscriber);
     publisher.addSubscriber(subscriber);
@@ -208,7 +207,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // [1] Introducing JSON (JavaScript Object Notation)
     // http://www.json.org/
 
-    //
     publisher.publish(event);
   }
 
@@ -223,7 +221,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //             the server. The data provided in argument will be a valid
     //             JSON object or array.
 
-    //
     ajax.send(url, data, receive);
   }
 
@@ -235,7 +232,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   callback - function, the function to run after a delay
     //   delay - integer, the delay in milliseconds
 
-    //
     window.setTimeout(function(){
       try {
         callback();
@@ -255,7 +251,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   string, a copy of the string with no whitespace at start and end
 
-    //
     return gTrim(string);
   }
 
@@ -280,7 +275,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   getId(), a call to $() without argument will return the root element
     //   of the box, in the same way as getBox().
 
-    //
     var element = dom.$( getId(localId) );
     if ( isInBox(element) ){
       return element;
@@ -309,7 +303,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   DOM Element, the newly created DOM element.
 
-    //
     return factory.createElement.apply(factory,arguments);
   }
 
@@ -397,6 +390,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   DOM Event, the new DOM event
 
+    // Warning: element parameter hides element() function
     return factory.createEvent(element, type, properties);
   }
 

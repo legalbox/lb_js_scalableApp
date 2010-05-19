@@ -115,7 +115,6 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // will be called on the configured factory to terminate the box element
     // and any widgets included within.
 
-    //
     try {
       if (module && module.end){
         module.end();
