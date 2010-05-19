@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-18
+ * Version:   2010-05-19
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -237,11 +237,14 @@
       capturedEvent = e;
     }
     var listener2 = lb.base.dom.factory.createListener(
-      div, 'click', checkEvent
+      div, 'click', checkEvent, true
     );
-    var data = {id:42};
-    var event2 = ut(div, 'click', data);
-    assert.equals(event2.data, data,               "data expected in event2");
+    var three = {id:3};
+    var properties = {first:1, second:'two', third:three};
+    var event2 = ut(div, 'click', properties, true);
+    assert.equals(event2.first, 1,        "first property expected in event2");
+    assert.equals(event2.second, 'two',  "second property expected in event2");
+    assert.equals(event2.third, three,    "third property expected in event2");
     assert.equals(capturedEvent, event2,
                                           "event2 expected to be dispatched");
   }
