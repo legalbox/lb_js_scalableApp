@@ -25,8 +25,8 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
   var createElement = goog.dom.createDom,
       toArray = lb.base.array.toArray;
 
-  function create(name,attributes){
-    // Function: create(name[,attributes[,childNodes]]): DOM Element
+  function createElement(name,attributes){
+    // Function: createElement(name[,attributes[,childNodes]]): DOM Element
     // Create a new element with given name, attributes and child nodes.
     //
     // Parameters:
@@ -54,6 +54,6 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
   }
 
   return { // public API
-    create: create
+    createElement: createElement
   };
 }());

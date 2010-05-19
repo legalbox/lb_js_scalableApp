@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-17
+ * Version:   2010-05-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -44,6 +44,8 @@
       events1.push(event);
     };
     var listener1 = new Ut(div1, 'click', callback1, true);
+    assert.isTrue( listener1 instanceof Ut,    "instanceof expected to work");
+
     // Note: no accessors defined for element, type, callback - at this point
 
     var listeners1 = events.getListeners(div1, 'click', true);

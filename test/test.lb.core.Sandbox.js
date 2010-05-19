@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-17
+ * Version:   2010-05-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -266,14 +266,14 @@
     // test factory must be configured beforehand
     var capturedNames = [], capturedParams = [], capturedChildNodes = [];
     var testFactory = {
-      create: function(name, params, childNodes){
+      createElement: function(name, params, childNodes){
         capturedNames.push(name);
         capturedParams.push(params);
         capturedChildNodes.push(childNodes);
       }
     };
-    lb.core.application.setElementFactory(testFactory);
-    assert.equals( lb.core.application.getElementFactory(), testFactory,
+    lb.core.application.setFactory(testFactory);
+    assert.equals( lb.core.application.getFactory(), testFactory,
                             "assert: test factory expected to be configured");
 
     var ut = new lb.core.Sandbox('testElement').element;

@@ -35,8 +35,9 @@ lb.core.application = lb.core.application || (function() {
 
   // Private members
 
-  // object, the factory for DOM elements, defaults to lb.base.dom.factory
-      elementFactory = defaultFactory,
+  // object, the factory for DOM elements, listeners and events.
+  // defaults to lb.base.dom.factory
+      domFactory = defaultFactory,
 
   // array, the list of modules (lb.core.Module) added in the application
       modules = [],
@@ -47,54 +48,39 @@ lb.core.application = lb.core.application || (function() {
   // object, the onunload listener (lb.base.dom.Listener)
       unloadListener;
 
-  function getElementFactory(){
-    // Function: getElementFactory(): object
-    // Get the factory configured to create DOM elements.
+  function getFactory(){
+    // Function: getFactory(): object
+    // Get the factory configured to create DOM elements, listeners and events.
     //
     // Returns:
-    //   object, the configured DOM element factory,
-    //   lb.base.dom.factory by default.
+    //   object, the configured factory, <lb.base.dom.factory> by default.
 
-    return elementFactory;
+    return domFactory;
   }
 
-  function setElementFactory(factory){
-    // Function: setElementFactory(factory)
-    // Configure a new factory to create DOM elements.
+  function setFactory(factory){
+    // Function: setFactory(factory)
+    // Configure a new factory to create DOM elements, listeners and events.
     //
     // This method is intended as an extension point for the support of Rich
     // Internet Applications: provide a custom factory to create widgets on top
-    // of regular DOM elements. An element factory must implement the create()
-    // method which creates DOM elements, and optionally a destroy() method to
-    // destroy all components at the end of the application.
+    // of regular DOM elements.
     //
     // Designing a Custom Factory:
-    // A custom factory must implement the create() method, called to create
-    // each DOM element with given tag name, attributes and child nodes, and 
-    // optionally the destroy() method, to terminate widgets at the end of the 
-    // application.
-    // * See <lb.base.dom.factory>, the default Element Factory,
-    //   for the expected signature of create().
-    // * The destroy() method takes no parameters.
+    // A custom factory must implement create and destroy methods for elements,
+    // listeners and events. See <lb.base.dom.factory> for default behavior and
+    // expected signatures for these functions.
     //
     // Parameter:
-    //   factory - object, optional, the new element factory. When omitted,
+    //   factory - object, optional, the new DOM factory. When omitted,
     //             the default factory is restored.
-    //
-    // Note:
-    // Nothing happens in case the provided factory has no create() function.
 
     if (!factory){
-      elementFactory = defaultFactory;
+      domFactory = defaultFactory;
       return;
     }
 
-    if (typeof factory.create !== "function"){
-      log("Invalid element factory, without create function: "+factory+".");
-      return;
-    }
-
-    elementFactory = factory;
+    domFactory = factory;
   }
 
   function getModules(){
@@ -144,15 +130,11 @@ lb.core.application = lb.core.application || (function() {
     // Terminate all registered modules.
     //
     // All registered modules are discarded.
-    // The configured element factory is destroyed.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
     removeAll(modules);
-    if (elementFactory.destroy){
-      elementFactory.destroy();
-    }
     if (loadListener){
       loadListener.detach();
     }
@@ -173,8 +155,8 @@ lb.core.application = lb.core.application || (function() {
   }
 
   return { // Public API
-    getElementFactory: getElementFactory,
-    setElementFactory: setElementFactory,
+    getFactory: getFactory,
+    setFactory: setFactory,
     getModules: getModules,
     addModule: addModule,
     removeModule: removeModule,

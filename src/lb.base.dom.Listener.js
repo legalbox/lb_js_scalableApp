@@ -32,6 +32,9 @@ lb.base.dom.Listener = function(element, type, callback, useCapture) {
   //                Optional: defaults to false.
   //                See [1] for details.
   //
+  // Returns:
+  //   object, the new instance of Listener
+  //
   // Reference:
   //   [1] DOM Level 2 Events: addEventListener
   //   <http://bit.ly/9SQoL4>
@@ -62,7 +65,6 @@ lb.base.dom.Listener = function(element, type, callback, useCapture) {
     events.unlistenByKey(key);
   }
 
-  return { // public API
-    detach: detach
-  };
+  // public API
+  this.detach = detach;
 };
