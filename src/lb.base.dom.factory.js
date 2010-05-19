@@ -139,7 +139,7 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
   }
 
   function destroyEvent(event){
-    // Function destroyEvent(event)
+    // Function: destroyEvent(event)
     // Terminate a DOM event: prevent default action and stop propagation.
     //
     // Parameter:
