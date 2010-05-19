@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-05-19
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
@@ -368,7 +368,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Remove a CSS class from a DOM element part of the box.
     //
     // Parameters:
-    //   element - DOM element, an element of the box
+    //   element - DOM Element, an element of the box
     //   name - string, a CSS class name
     //
     // Note:
@@ -382,6 +382,32 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     }
 
     css.removeClass(element,name);
+  }
+
+  function fireEvent(element, type, properties){
+    // Function: fireEvent(element, type[, properties]): DOM Event
+    // Create and dispatch a new DOM event to the given element.
+    //
+    // Parameters:
+    //   element - DOM Element, an element of the box
+    //   type - string, the name of an event (without 'on') e.g. 'click'
+    //   properties - object, optional event properties. Each property will be
+    //                copied to the new DOM event.
+    //
+    // Returns:
+    //   DOM Event, the new DOM event
+
+    return factory.createEvent(element, type, properties);
+  }
+
+  function cancelEvent(event){
+    // Function: cancelEvent(event)
+    // Cancel an event: prevent the default action and stop bubbling.
+    //
+    // Parameter:
+    //   event - DOM Event
+
+    factory.destroyEvent(event);
   }
 
   function getListeners(){
@@ -407,7 +433,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //
     // Returns:
     //   * null, when the element is outside the box (no listener added),
-    //   * object, the new listener (lb.base.dom.Listener) otherwise.
+    //   * object, the new listener otherwise.
     //     This object shall be provided to removeListener() to unregister the
     //     listener. No other interaction is expected with this object.
     //
@@ -475,6 +501,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     getClasses: getClasses,
     addClass: addClass,
     removeClass: removeClass,
+    fireEvent: fireEvent,
+    cancelEvent: cancelEvent,
     getListeners: getListeners,
     addListener: addListener,
     removeListener: removeListener,

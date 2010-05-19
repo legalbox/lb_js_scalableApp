@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-18
+ * Version:   2010-05-19
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -286,6 +286,9 @@
     assert.arrayEquals( capturedParams, [testParams],      "params expected");
     assert.arrayEquals( capturedChildNodes, [testChildNodes],
                                                        "childNodes expected");
+
+    // restore default factory
+    lb.core.application.setFactory();
   }
 
   function testGetClasses(){
@@ -327,6 +330,64 @@
     ut(div, 'two');
     assert.equals(div.className, 'one two three',
                              "no change expected when element is out of box");
+  }
+
+  function testFireEvent(){
+    // Unit tests for lb.core.Sandbox#fireEvent
+
+    var capturedElements = [],
+        capturedTypes = [],
+        capturedProperties = [],
+        capturedUseCapture = [];
+    var testFactory = {
+      createEvent: function(element, type, properties, useCapture){
+        capturedElements.push(element);
+        capturedTypes.push(type);
+        capturedProperties.push(properties);
+        capturedUseCapture.push(useCapture);
+      }
+    };
+    lb.core.application.setFactory(testFactory);
+    var ut = new lb.core.Sandbox('testFireEvent').fireEvent;
+
+    var testElement = element('div');
+    var testProperties = {
+      screenX: 300, screenY: 450,
+      clientX: 200, clientY: 150
+    };
+    ut(testElement, 'click', testProperties);
+
+    assert.arrayEquals(capturedElements, [testElement],
+                                                      "test element expected");
+    assert.arrayEquals(capturedTypes, ['click'],              "type expected");
+    assert.arrayEquals(capturedProperties, [testProperties],
+                                                  "test properties expected");
+    assert.arrayEquals(capturedUseCapture, [undefined],
+                                               "useCapture expected omitted");
+
+    // restore default factory
+    lb.core.application.setFactory();
+  }
+
+  function testCancelEvent(){
+    // Unit tests for lb.core.Sandbox#cancelEvent
+
+    var capturedEvents = [];
+    var testFactory = {
+      destroyEvent: function(event){
+        capturedEvents.push(event);
+      }
+    };
+    lb.core.application.setFactory(testFactory);
+    var ut = new lb.core.Sandbox('testCancelEvent').cancelEvent;
+
+    var testEvent = {type: 'click'};
+    ut(testEvent);
+    assert.arrayEquals(capturedEvents, [testEvent],
+                                       "test event expected on test factory");
+
+    // restore default factory
+    lb.core.application.setFactory();
   }
 
   function testGetListeners(){
@@ -451,6 +512,8 @@
     testGetClasses: testGetClasses,
     testAddClass: testAddClass,
     testRemoveClass: testRemoveClass,
+    testFireEvent: testFireEvent,
+    testCancelEvent: testCancelEvent,
     testGetListeners: testGetListeners,
     testaddListener: testAddListener,
     testRemoveListener: testRemoveListener,
