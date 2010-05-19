@@ -19,7 +19,7 @@
 // preserve the module, if already loaded
 lb.base.dom.css = lb.base.dom.css || (function() {
   // Builder of
-  // Closure for lb.base.dom module
+  // Closure for lb.base.dom.css module
 
   // Declare aliases
   var classes = goog.dom.classes;
