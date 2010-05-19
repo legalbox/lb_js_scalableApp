@@ -13,14 +13,15 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-05-19
  */
 /*requires lb.base.dom.js */
 /*requires closure/goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
-lb.base.dom.Listener = function(element, type, callback, useCapture) {
+lb.base.dom.Listener = lb.base.dom.Listener ||
+  function(element, type, callback, useCapture) {
   // Function: new Listener(element, type, callback[, useCapture])
   // Create a new listener for a type of event on a DOM element.
   //
