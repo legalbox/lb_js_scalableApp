@@ -49,8 +49,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
-      sTrim = lb.base.string.trim,
-      print = lb.base.log.print,
+      trim = lb.base.string.trim,
+      log = lb.base.log.print,
       application = lb.core.application,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
@@ -73,17 +73,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // array, the set of listeners created by this module
   // Kept for removeAllListeners().
       listeners = [];
-
-  function log(message){
-    // Function: log(message)
-    // Log a message.
-    //
-    // Log messages will be printed in the browser console, when available,
-    // and if the log output has been activated, which happens when Debug=true
-    // is included anywhere in the URL.
-
-    print(message);
-  }
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -255,18 +244,25 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     },delay);
   }
 
-  function trim(string){
-    // Function: trim(string): string
-    // Remove leading and trailing whitespace from a string.
-    //
-    // Parameter:
-    //   string - string, the string to trim
-    //
-    // Returns:
-    //   string, a copy of the string with no whitespace at start and end
+  // Function: trim(string): string
+  // Remove leading and trailing whitespace from a string.
+  //
+  // Parameter:
+  //   string - string, the string to trim
+  //
+  // Returns:
+  //   string, a copy of the string with no whitespace at start and end
 
-    return sTrim(string);
-  }
+  // Note: trim is an alias on lb.base.string.trim
+
+  // Function: log(message)
+  // Log a message.
+  //
+  // Log messages will be printed in the browser console, when available,
+  // and if the log output has been activated, which happens when Debug=true
+  // is included anywhere in the URL.
+
+  // Note: log is an alias on lb.base.log.print
 
   function $(localId){
     // Function: $(localId): DOM Element
