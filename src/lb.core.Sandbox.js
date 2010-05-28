@@ -261,6 +261,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Log messages will be printed in the browser console, when available,
   // and if the log output has been activated, which happens when Debug=true
   // is included anywhere in the URL.
+  //
+  // Parameter:
+  //   message - string, the message to log
 
   // Note: log is an alias on lb.base.log.print
 
