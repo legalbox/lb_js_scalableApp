@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-19
+ * 2010-05-28
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
@@ -49,8 +49,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
-      gTrim = lb.base.string.trim,
-      log = lb.base.log.print,
+      sTrim = lb.base.string.trim,
+      print = lb.base.log.print,
       application = lb.core.application,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
@@ -73,6 +73,17 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // array, the set of listeners created by this module
   // Kept for removeAllListeners().
       listeners = [];
+
+  function log(message){
+    // Function: log(message)
+    // Log a message.
+    //
+    // Log messages will be printed in the browser console, when available,
+    // and if the log output has been activated, which happens when Debug=true
+    // is included anywhere in the URL.
+
+    print(message);
+  }
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -163,7 +174,10 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //           * {} is a subscription to all events (no filter)
     //           * {name: 'foo'} is a subscription to all events named 'foo'
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
-    //   callback - function, the associated callback function
+    //   callback - function, the associated callback(event). The event object
+    //              contains at least the same properties as the filter. In
+    //              addition, custom properties may be defined by the creator
+    //              of the event.
 
     var subscriber = new Subscriber(filter,callback);
     subscribers.push(subscriber);
@@ -251,7 +265,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   string, a copy of the string with no whitespace at start and end
 
-    return gTrim(string);
+    return sTrim(string);
   }
 
   function $(localId){
@@ -490,6 +504,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   this.send = send;
   this.setTimeout = setTimeout;
   this.trim = trim;
+  this.log = log;
   this.$ = $;
   this.element = element;
   this.getClasses = getClasses;

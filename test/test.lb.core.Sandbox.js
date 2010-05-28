@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-19
+ * Version:   2010-05-28
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -20,6 +20,7 @@
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
+/*requires goog.debug.Logger.js */
 /*requires goog.events.js */
 /*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -38,6 +39,7 @@
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
       element = bezen.dom.element,
+      LogManager = goog.debug.LogManager,
       events = goog.events,
       MockXmlHttp = goog.net.MockXmlHttp;
 
@@ -249,6 +251,25 @@
                                      "internal whitespace must be preserved");
     assert.equals( ut('  \n\t  abcd  \n\t  '), 'abcd',
                                   "whitespace must be removed on both sides");
+  }
+
+  function testLog(){
+    var ut = new lb.core.Sandbox('testLog').log;
+
+    var logRecords = [];
+    var logHandler = function(logRecord){
+      logRecords.push(logRecord);
+    };
+
+    var rootLogger = LogManager.getRoot();
+    rootLogger.addHandler(logHandler);
+
+    var testMessage = 'Test message for sandbox.log';
+    ut(testMessage);
+
+    assert.equals(logRecords.length, 1,             "1 log record expected");
+    assert.equals(logRecords[0].getMessage(), testMessage, 
+                                      "test message expected in log record");
   }
 
   function test$(){
@@ -508,6 +529,7 @@
     testSend: testSend,
     testSetTimeout: testSetTimeout,
     testTrim: testTrim,
+    testLog: testLog,
     test$: test$,
     testElement: testElement,
     testGetClasses: testGetClasses,
