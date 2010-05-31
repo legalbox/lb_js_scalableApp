@@ -3,15 +3,14 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-18
+ * Version:   2010-05-31
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.application.js */
-/*requires lb.core.application.js */
-/*requires lb.base.dom.factory.js */
+/*requires lb.base.config.js */
 /*requires goog.events.js */
 /*requires bezen.js */
 /*requires bezen.assert.js */
@@ -32,7 +31,8 @@
       startsWith = bezen.string.startsWith,
       testrunner = bezen.testrunner,
       Module = lb.core.Module,
-      events = goog.events;
+      events = goog.events,
+      config = lb.base.config;
 
   function testNamespace(){
 
@@ -40,26 +40,21 @@
                                          "lb.core.application was not found");
   }
 
-  function testGetFactory(){
-    var ut = lb.core.application.getFactory;
-
-    assert.equals(ut(), lb.base.dom.factory,     "default factory expected");
-  }
-
-  function testSetFactory(){
-    var ut = lb.core.application.setFactory;
+  function testSetOptions(){
+    var ut = lb.core.application.setOptions;
 
     var testFactory = {
       create: bezen.nix
     };
 
-    ut(testFactory);
-    assert.equals(lb.core.application.getFactory(), testFactory,
+    ut({lbFactory:testFactory});
+    assert.equals( config.getOption('lbFactory'), testFactory,
                                           "test factory expected to be set");
 
-    ut();
-    assert.equals(lb.core.application.getFactory(), lb.base.dom.factory,
-                                          "default element factory expected");
+    var myData = {id:42};
+    ut({'myOption':myData});
+    assert.equals( config.getOption('myOption'), myData,
+                                       "custom property expected to be set");
   }
 
   function testGetModules(){
@@ -220,8 +215,7 @@
 
   var tests = {
     testNamespace: testNamespace,
-    testGetFactory: testGetFactory,
-    testSetFactory: testSetFactory,
+    testSetOptions: testSetOptions,
     testGetModules: testGetModules,
     testAddModule: testAddModule,
     testRemoveModule: testRemoveModule,
