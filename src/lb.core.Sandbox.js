@@ -13,17 +13,18 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-28
+ * 2010-05-31
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
+/*requires lb.base.config.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.dom.css.js */
+/*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
-/*requires lb.core.application.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -51,28 +52,29 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       Listener = lb.base.dom.Listener,
       trim = lb.base.string.trim,
       log = lb.base.log.print,
-      application = lb.core.application,
+      config = lb.base.config,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
 
   // Private fields
 
-  // object, the factory used to create DOM elements, listeners and events.
-  // A custom factory can be configured on the application core.
-     factory = application.getFactory(),
+    // object, the factory used to create DOM elements, listeners and events.
+    // A custom factory can be configured by setting the property lbFactory.
+    // Defaults to lb.base.dom.factory.
+    factory = config.getOption('lbFactory', lb.base.dom.factory),
 
-  // DOM element, the root of the box, carrying the module identifier.
-  // Used only withing getBox(), to avoid multiple lookups of the same element.
-  // Initialized on first call to getBox().
-      box,
+    // DOM element, the root of the box, carrying the module identifier.
+    // Used only in getBox(), to avoid multiple lookups of the same element.
+    // Initialized on first call to getBox().
+    box,
 
-  // array, the set of Subscribers created for this module.
-  // Kept locally for use in unsubscribe().
-      subscribers = [],
+    // array, the set of Subscribers created for this module.
+    // Kept locally for use in unsubscribe().
+    subscribers = [],
 
-  // array, the set of listeners created by this module
-  // Kept for removeAllListeners().
-      listeners = [];
+    // array, the set of listeners created by this module
+    // Kept for removeAllListeners().
+    listeners = [];
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -304,8 +306,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // will create a new DOM element
     // |  <a href='#here' title='Here'>Click here</a>
     //
-    // A custom element factory can be configured using
-    // <lb.core.application.setElementFactory(factory)>.
+    // A custom element factory can be configured using the property lbFactory
+    // with <lb.core.application.setOptions(options)>.
     //
     // Parameters:
     //   name - string, the name of the element

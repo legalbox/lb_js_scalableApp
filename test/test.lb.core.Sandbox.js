@@ -3,14 +3,14 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-28
+ * Version:   2010-05-31
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Sandbox.js */
-/*requires lb.core.application.js */
+/*requires lb.base.config.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
@@ -41,7 +41,8 @@
       element = bezen.dom.element,
       LogManager = goog.debug.LogManager,
       events = goog.events,
-      MockXmlHttp = goog.net.MockXmlHttp;
+      MockXmlHttp = goog.net.MockXmlHttp,
+      config = lb.base.config;
 
   function testNamespace(){
 
@@ -294,8 +295,8 @@
         capturedChildNodes.push(childNodes);
       }
     };
-    lb.core.application.setFactory(testFactory);
-    assert.equals( lb.core.application.getFactory(), testFactory,
+    config.setOptions({'lbFactory':testFactory});
+    assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
 
     var ut = new lb.core.Sandbox('testElement').element;
@@ -309,8 +310,8 @@
     assert.arrayEquals( capturedChildNodes, [testChildNodes],
                                                        "childNodes expected");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testGetClasses(){
@@ -369,7 +370,7 @@
         capturedUseCapture.push(useCapture);
       }
     };
-    lb.core.application.setFactory(testFactory);
+    config.setOptions({'lbFactory':testFactory});
     var ut = new lb.core.Sandbox('testFireEvent').fireEvent;
 
     var testElement = element('div');
@@ -387,8 +388,8 @@
     assert.arrayEquals(capturedUseCapture, [undefined],
                                                "useCapture expected omitted");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testCancelEvent(){
@@ -400,7 +401,7 @@
         capturedEvents.push(event);
       }
     };
-    lb.core.application.setFactory(testFactory);
+    config.setOptions({'lbFactory':testFactory});
     var ut = new lb.core.Sandbox('testCancelEvent').cancelEvent;
 
     var testEvent = {type: 'click'};
@@ -408,8 +409,8 @@
     assert.arrayEquals(capturedEvents, [testEvent],
                                        "test event expected on test factory");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testGetListeners(){
