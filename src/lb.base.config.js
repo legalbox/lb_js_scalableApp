@@ -50,8 +50,8 @@ lb.base.config = lb.base.config || (function() {
     // In order to avoid clashes in the names of configuration properties,
     // each property should use a prefix corresponding to the implementor of
     // the module which makes use of it. All configuration properties used in
-    // modules implemented by Legal Box will use the prefix 'lb:', e.g.
-    // 'lb:factory' for the DOM Element Factory.
+    // modules implemented by Legal Box will use the prefix 'lb', e.g.
+    // 'lbFactory' for the DOM Element Factory.
     //
     // Parameter:
     //   options - object, a set of configuration properties
