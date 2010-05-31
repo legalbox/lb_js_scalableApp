@@ -2,6 +2,17 @@
  * Namespace: lb.base.dom.factory
  * DOM (Document Object Model) Factory, Adapter Module for Base Library
  *
+ * This module provides the base implementation of a factory to create DOM
+ * elements, listeners and events. It is intended to be replaced with a custom
+ * factory creating widgets on top of regular DOM elements for the support of
+ * Rich Internet Applications.
+ *
+ * How to design a custom factory:
+ * A custom factory is an object with all the methods defined in this module,
+ * which can be used as a default implementation in the custom factory methods.
+ * The custom factory can be configured on the application core:
+ * | lb.core.application.setOptions({ lbFactory: your.customFactory })
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
