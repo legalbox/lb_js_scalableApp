@@ -1,4 +1,24 @@
 /*
+ * CSS Styles for lb.base.history unit tests
+ *
+ * Author:
+ * Eric Bréchemier <legalbox@eric.brechemier.name>
+ *
+ * Copyright:
+ * Legal Box (c) 2010, All Rights Reserved
+ *
+ * Version:
+ * 2010-06-01
+ */
+iframe.hidden {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  visibility: hidden;
+}
+/*
  * CSS Styles for bezen.org Unit Tests Runner
  *
  * author:    Eric Bréchemier <bezen@eric.brechemier.name>
