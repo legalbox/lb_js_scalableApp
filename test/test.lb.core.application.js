@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-31
+ * Version:   2010-06-02
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -163,10 +163,16 @@
     lb.core.application.addModule(module2);
     lb.core.application.addModule(module3);
 
+    // replace history.init() with stub function
+    var initCounter = 0;
+    lb.base.history.init = function(){
+      initCounter++;
+    };
     startCounter1 = 0;
     startCounter2 = 0;
     startCounter3 = 0;
     ut();
+    assert.equals(initCounter,   1,    "history manager must be initialized");
     assert.equals(startCounter1, 1,             "module 1 must have started");
     assert.equals(startCounter2, 1,             "module 2 must have started");
     assert.equals(startCounter3, 1,             "module 3 must have started");
@@ -185,10 +191,17 @@
     lb.core.application.addModule(module2);
     lb.core.application.addModule(module3);
 
+    // replace history.destroy() with stub function
+    var destroyCounter = 0;
+    lb.base.history.destroy = function(){
+      destroyCounter++;
+    };
     endCounter1 = 0;
     endCounter2 = 0;
     endCounter3 = 0;
     ut();
+    assert.equals(destroyCounter, 1,
+                                  "history manager expected to be destroyed");
     assert.equals(endCounter1, 1,                 "module 1 must have ended");
     assert.equals(endCounter2, 1,                 "module 2 must have ended");
     assert.equals(endCounter3, 1,                 "module 3 must have ended");

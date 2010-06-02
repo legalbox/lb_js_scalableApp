@@ -3,6 +3,7 @@
  * Core Application
  *
  * The Core Application manages the life cycle of modules.
+ * It also initializes and destroys the history module for local navigation.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -11,13 +12,14 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-31
+ * 2010-06-02
  */
 /*requires lb.core.js */
 /*requires lb.base.log.js */
 /*requires lb.base.array.js */
 /*requires lb.base.config.js */
 /*requires lb.base.dom.Listener.js */
+/*requires lb.base.history.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
@@ -32,6 +34,7 @@ lb.core.application = lb.core.application || (function() {
       removeAll = lb.base.array.removeAll,
       config = lb.base.config,
       Listener = lb.base.dom.Listener,
+      history = lb.base.history,
 
   // Private members
 
@@ -91,7 +94,10 @@ lb.core.application = lb.core.application || (function() {
   function startAll(){
     // Function: startAll()
     // Start all registered modules.
+    //
+    // The local navigation history will also be initialized.
 
+    history.init();
     for (var i=0; i<modules.length; i++){
       modules[i].start();
     }
@@ -102,11 +108,14 @@ lb.core.application = lb.core.application || (function() {
     // Terminate all registered modules.
     //
     // All registered modules are discarded.
+    //
+    // The local navigation history will also be destroyed.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
     removeAll(modules);
+    history.destroy();
     if (loadListener){
       loadListener.detach();
     }
