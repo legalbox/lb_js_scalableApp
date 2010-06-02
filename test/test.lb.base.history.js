@@ -44,6 +44,7 @@
          "assert: input with id 'lb.base.history.input' expected in document");
 
     ut();
+    ut(); // second call should have no effect
     lb.base.history.destroy();
 
     if ( $('lb.base.history.iframe') ){

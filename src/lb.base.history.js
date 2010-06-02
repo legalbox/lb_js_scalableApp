@@ -2,9 +2,8 @@
  * Namespace: lb.base.history
  * History (in Local Navigation) Adapter Module for Base Library
  *
- * Use of this module is optional for the Legal Box Scalable Web Application:
- * the module can be omitted or disabled (by setting the configuration property
- * 'lb:history:enabled' to false).
+ * This module provides support for local navigation, setting, getting and
+ * detecting changes in the hash, the local part of the url.
  *
  * This module requires two elements to be present in the initial document,
  * an iframe of id 'lb.base.history.iframe' and a hidden input field of id
@@ -104,12 +103,13 @@ lb.base.history = lb.base.history || (function() {
     // Function: init()
     // Initialize the history manager.
     //
-    // Note:
-    // The polling loop is only initialized when a listener is added in
-    // a call to onHashChange().
+    // Notes:
+    // Nothing happens when the history manager has already been initialized.
+    // The polling loop does not start until the first listener is added in a
+    // call to onHashChange().
 
-    // enabled by default, unless 'lb:history:enabled' is set to false.
-    if ( !getOption('lb:history:enabled',true) ){
+    if (history){
+      // already initialized
       return;
     }
 
