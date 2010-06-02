@@ -3,7 +3,7 @@
  * Core Application
  *
  * The Core Application manages the life cycle of modules.
- * It also initializes and destroys the history module for local navigation.
+ * It also initializes and destroys the local navigation history.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -95,7 +95,7 @@ lb.core.application = lb.core.application || (function() {
     // Function: startAll()
     // Start all registered modules.
     //
-    // The local navigation history will also be initialized.
+    // The local navigation history is also initialized beforehand.
 
     history.init();
     for (var i=0; i<modules.length; i++){
@@ -109,7 +109,7 @@ lb.core.application = lb.core.application || (function() {
     //
     // All registered modules are discarded.
     //
-    // The local navigation history will also be destroyed.
+    // The local navigation history is also be destroyed afterwards.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();

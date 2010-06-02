@@ -143,7 +143,7 @@
       bezen.log.info("Set Hash: "+hashSequence[currentStep]);
       lb.base.history.setHash( hashSequence[currentStep] );
       checkHash();
-    }
+    };
     checkHash = function(){
       // check that current hash has been set
       if ( !object.exists(capturedHash[currentStep]) ){
@@ -171,7 +171,7 @@
         test.endAsyncTest();
         tearDown();
       }
-    }
+    };
 
     bezen.log.info("Set Hash: "+hashSequence[currentStep]);
     lb.base.history.setHash( hashSequence[currentStep] );
