@@ -6,10 +6,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010, All Rights Reserved
+ *
+ * License:
+ * BSD License
+ * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-05-06
+ * 2010-06-03
  */
 /*requires lb.base.js */
 /*requires closure/goog.js */

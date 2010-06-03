@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/event.js to goog.events.Event.js
 // * added requires comments for goog.js and goog.Disposable.js
 

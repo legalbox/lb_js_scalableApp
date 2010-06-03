@@ -3,6 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * License:   BSD License - http://creativecommons.org/licenses/BSD/
  * Version:   2010-06-03
  *
  * Based on Test Runner from bezen.org JavaScript library

@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/structs/set.js to goog.structs.Set.js
 // * added requires comments for goog.js, goog.structs.js, goog.structs.Map.js
 

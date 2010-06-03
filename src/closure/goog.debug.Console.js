@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/console.js to goog.debug.Console.js
 // * added requires comments for goog.js, goog.debug.Logger.js,
 //   goog.debug.Formatter.js

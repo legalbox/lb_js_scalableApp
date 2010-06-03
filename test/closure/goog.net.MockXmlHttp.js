@@ -17,6 +17,7 @@
  */
 /*
  * Modifications Copyright 2010 Legal Box SAS, All Rights Reserved.
+ * Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
  * - code extracted from closure/goog/net/xhrio_test.html
  * - added goog.provide('goog.net.MockXmlHttp')
  * - added array in goog.net.MockXmlHttp.all; each new instance of MockXmlHttp

@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logger.js to goog.debug.Logger.js
 // * added requires comments for goog.js, goog.array.js, goog.debug.js,
 //   goog.debug.LogRecord.js

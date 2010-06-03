@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/dom/dom.js to goog.dom.js
 // * added requires comments for goog.js, goog.array.js, goog.dom.TagName.js,
 //   goog.dom.classes.js, goog.math.Coordinate.js, goog.math.Size.js,

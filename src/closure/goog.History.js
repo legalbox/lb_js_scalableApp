@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/history/history.js to
 //   goog.History.js
 // * added requires comment for goog.js, goog.Timer.js, goog.dom.js,

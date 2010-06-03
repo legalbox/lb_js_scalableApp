@@ -25,6 +25,7 @@
 // limitations under the License.
 
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/net/xhrio.js to goog.net.XhrIo.js
 // * added requires comments for goog.js, goog.Timer.js, goog.debug.Logger.js,
 //   goog.debug.errorHandlerWeakDep.js, goog.events.EventTarget.js,

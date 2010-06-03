@@ -3,7 +3,8 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-04-19
+ * License:   BSD License - http://creativecommons.org/licenses/BSD/
+ * Version:   2010-06-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -18,7 +19,7 @@
 (function() {
   // Builder of
   // Closure object for Test of lb.ui
- 
+
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
