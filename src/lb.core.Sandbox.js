@@ -13,7 +13,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-31
+ * 2010-06-03
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
@@ -22,6 +22,7 @@
 /*requires lb.base.dom.css.js */
 /*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
+/*requires lb.base.history.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
@@ -52,6 +53,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       Listener = lb.base.dom.Listener,
       trim = lb.base.string.trim,
       log = lb.base.log.print,
+      setHash = lb.base.history.setHash,
+      onHashChange = lb.base.history.onHashChange,
       config = lb.base.config,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
@@ -495,6 +498,59 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     removeAll(listeners);
   }
 
+  function getLocation(){
+    // Function: getLocation(): object
+    // Get the properties of the current URL location
+    //
+    // Returns:
+    //   an object with a copy of properties commonly found on window.location
+    //   and document.location:
+    //     * href - string, the absolute URL of the current document
+    //     * protocol - string, the protocol part of the URL, e.g. 'http://'
+    //     * host - string, the host and port part of the url, e.g.
+    //              'example.com:8080' or often just 'example.com'
+    //     * hostname - the host name part of the URL, e.g. 'example:com'
+    //     * port - string, the port part of the URL, e.g. '8080' or often ''
+    //     * pathname - string, the relative path, e.g. '/2010/10/31/index.php'
+    //     * search - string, the query part of the url, e.g. '?param=value'
+    //     * hash - string, the local part of the url, e.g. '#anchor'.
+    //   These properties are read-only here and not shared with other modules.
+    var location = window.location;
+    return {
+      href: location.href,
+      protocol: location.protocol,
+      host: location.host,
+      hostname: location.hostname,
+      port: location.port,
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash
+    }
+  }
+
+  // Function: setHash(hash)
+  // Jump to a new local location by replacing the hash part of the URL.
+  //
+  // This method is used for local navigation, and ensures, in collaboration
+  // with the cross-browser history adapter module, that the back button
+  // of the browser works as expected.
+  //
+  // Parameter:
+  //   hash - string, the new local location, e.g. '#local/path'
+
+  // Note: this is an alias for lb.base.history.setHash
+
+  // Function: onHashChange(callback)
+  // Observe changes in local part of the URL.
+  //
+  // Parameter:
+  //   callback - function, the callback(hash) function will be called once
+  //              with the current hash and once for each subsequent change of
+  //              hash. The hash parameter is a string, decoded, starting with
+  //              the '#' character.
+
+  // Note: this is an alias for lb.base.history.onHashChange
+
   // Public methods
   this.getId = getId;
   this.getBox = getBox;
@@ -517,4 +573,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   this.addListener = addListener;
   this.removeListener = removeListener;
   this.removeAllListeners = removeAllListeners;
+  this.getLocation = getLocation;
+  this.setHash = setHash;
+  this.onHashChange = onHashChange;
 };

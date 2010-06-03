@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-31
+ * Version:   2010-06-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -11,6 +11,7 @@
 
 /*requires lb.core.Sandbox.js */
 /*requires lb.base.config.js */
+/*requires lb.base.history.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
@@ -24,7 +25,7 @@
 /*requires goog.events.js */
 /*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window, document, goog */
+/*global lb, bezen, goog, window, document, setTimeout */
 (function() {
   // Builder of
   // Closure object for Test of User Interface Module
@@ -518,6 +519,111 @@
     ut();
   }
 
+  function testGetLocation(){
+    // Unit tests for lb.core.Sandbox#getLocation
+
+    var sandbox = new lb.core.Sandbox('testGetLocation');
+    var ut = sandbox.getLocation;
+
+    var location = ut();
+    assert.isTrue( object.exists(location),      "location object expected");
+    assert.equals( location.href, window.location.href,
+                                      "href should be the same as for window");
+    assert.equals( location.protocol, window.location.protocol,
+                                  "protocol should be the same as for window");
+    assert.equals( location.host, window.location.host,
+                                      "host should be the same as for window");
+    assert.equals( location.hostname, window.location.hostname,
+                                  "hostname should be the same as for window");
+    assert.equals( location.port, window.location.port,
+                                      "port should be the same as for window");
+    assert.equals( location.pathname, window.location.pathname,
+                                  "pathname should be the same as for window");
+    assert.equals( location.search, window.location.search,
+                                    "search should be the same as for window");
+    assert.equals( location.hash, window.location.hash,
+                                      "hash should be the same as for window");
+
+    // try modifying values - must not modify window.location
+    location.href = 'test://test.example.com:80123/test/path/?query=test#test';
+    location.protocol = 'test://';
+    location.host = 'test.example.com:80123';
+    location.hostname = 'test.example.com';
+    location.port = '80123';
+    location.pathname = '/test/path/';
+    location.search = '?query=test';
+    location.hash = '#test';
+    assert.isFalse( location.href === window.location.href,
+                                    "href must not be the same as for window");
+    assert.isFalse( location.protocol === window.location.protocol,
+                                "protocol must not be the same as for window");
+    assert.isFalse( location.host === window.location.host,
+                                   "host must not  be the same as for window");
+    assert.isFalse( location.hostname === window.location.hostname,
+                                "hostname must not be the same as for window");
+    assert.isFalse( location.port === window.location.port,
+                                   "port must not be the same as for window");
+    assert.isFalse( location.pathname === window.location.pathname,
+                               "pathname must not be the same as for window");
+    assert.isFalse( location.search === window.location.search,
+                                 "search must not be the same as for window");
+    assert.isFalse( location.hash === window.location.hash,
+                                   "hash must not be the same as for window");
+  }
+
+  function testSetHash(){
+    // Unit tests for lb.core.Sandbox#setHash
+
+    var sandbox = new lb.core.Sandbox('testSetHash');
+    var ut = sandbox.setHash;
+    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.history.init();
+
+    ut('simple');
+    assert.equals(window.location.hash, '#simple',
+                                             "simple hash expected to be set");
+
+    ut('new hash');
+    assert.equals(lb.base.history.getHash(), '#new hash',
+                                               "new hash expected to be set");
+    ut('');
+    lb.base.history.destroy();
+  }
+
+  function testOnHashChange(test){
+    // Unit tests for lb.core.Sandbox#onHashChange
+
+    var sandbox = new lb.core.Sandbox('testOnHashChange');
+    var ut = sandbox.onHashChange;
+    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.history.init();
+
+    bezen.log.on(); // debug
+    lb.base.history.setHash('start');
+    var hashes = [];
+    ut(function(hash){
+      hashes.push(hash);
+    });
+
+    test.startAsyncTest();
+    setTimeout(function(){
+      lb.base.history.setHash('one');
+      setTimeout(function(){
+        lb.base.history.setHash('two');
+        setTimeout(function(){
+          lb.base.history.setHash('three');
+          setTimeout(function(){
+            assert.arrayEquals(hashes,['#start','#one','#two','#three'],
+                                          "sequence of hash changes expected");
+            test.endAsyncTest();
+            lb.base.history.setHash('')
+            lb.base.history.destroy();
+          },200);
+        },200);
+      },200);
+    },200);
+  }
+
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
@@ -541,7 +647,10 @@
     testGetListeners: testGetListeners,
     testaddListener: testAddListener,
     testRemoveListener: testRemoveListener,
-    testRemoveAllListeners: testRemoveAllListeners
+    testRemoveAllListeners: testRemoveAllListeners,
+    testGetLocation: testGetLocation,
+    testSetHash: testSetHash,
+    testOnHashChange: testOnHashChange
   };
 
   testrunner.define(tests, "lb.core.Sandbox");
