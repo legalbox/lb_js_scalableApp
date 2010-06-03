@@ -22,8 +22,8 @@
  * 2010-06-03
  */
 /*requires lb.core.js */
-/*requires lb.core.application.js */
 /*requires lb.core.Sandbox.js */
+/*requires lb.base.config.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.log.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -48,7 +48,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
   // Define aliases
   var log = lb.base.log.print,
       Sandbox = lb.core.Sandbox,
-      getFactory = lb.core.application.getFactory,
+      getOption = lb.base.config.getOption,
       $ = lb.base.dom.$,
 
   // Private fields
@@ -123,10 +123,11 @@ lb.core.Module = lb.core.Module || function (id, creator){
       if (module && module.end){
         module.end();
       }
-      sandbox.removeAllListeners();
-      var box = $( sandbox.getId() );
-      if (box){
-        getFactory().destroyElement(box);
+      sandbox.dom.removeAllListeners();
+      var box = $( sandbox.getId() ),
+          factory = getOption('lbFactory',lb.base.dom.factory);
+      if (box && factory){
+        factory.destroyElement(box);
       }
     } catch(endError){
       log('ERROR: Failed to end module "'+id+'"; '+endError+'.');

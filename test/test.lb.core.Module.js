@@ -135,9 +135,9 @@
 
     module = new lb.core.Module('testEnd.listeners', createStubModule);
     var sandbox = module.getSandbox();
-    sandbox.addListener( sandbox.getBox(), 'click', bezen.nix);
+    sandbox.dom.addListener( sandbox.getBox(), 'click', bezen.nix);
     module.end();
-    assert.arrayEquals(sandbox.getListeners(), [],
+    assert.arrayEquals(sandbox.dom.getListeners(), [],
                                               "all listeners must be removed");
 
     module = new lb.core.Module('testEnd.destroy', createStubModule);
@@ -163,9 +163,9 @@
 
     module = new lb.core.Module('testEnd.lazy.listeners', createLazyModule);
     sandbox = module.getSandbox();
-    sandbox.addListener( sandbox.getBox(), 'click', bezen.nix);
+    sandbox.dom.addListener( sandbox.getBox(), 'click', bezen.nix);
     module.end();
-    assert.arrayEquals(sandbox.getListeners(), [],
+    assert.arrayEquals(sandbox.dom.getListeners(), [],
                   "all listeners must be removed, even when end() is omitted");
   }
 
