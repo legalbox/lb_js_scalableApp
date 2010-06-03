@@ -6,6 +6,47 @@
  * and Data Model Module. It acts both as a proxy and a facade to the
  * application core.
  *
+ * The methods related to the module itself, are defined on the Sandbox.
+ * Other methods are separated into groups of similar purpose.
+ *
+ * Module (sandbox):
+ *   - <getId([localId]):string>
+ *   - <getBox(): DOM Element>
+ *   - <isInBox(element): boolean>
+ *
+ * Cascading Style Sheets (sandbox.css):
+ *   - <css.getClasses(element): object>
+ *   - <css.addClass(element,name)>
+ *   - <css.removeClass(element,name)>
+ *
+ * Document Object Model (sandbox.dom):
+ *   - <dom.$(localId): DOM Element>
+ *   - <dom.element(name[,attributes[,childNodes]]): DOM Element>
+ *   - <dom.fireEvent(element,type[,properties]): DOM Event>
+ *   - <dom.cancelEvent(event)>
+ *   - <dom.getListeners(): array>
+ *   - <dom.addListener(element,type,callback): Listener>
+ *   - <dom.removeListener(listener)>
+ *   - <dom.removeAllListeners()>
+ *
+ * Events for loose coupling with other modules (sandbox.events):
+ *   - <events.subscribe(filter,callback)>
+ *   - <events.unsubscribe(filter)>
+ *   - <events.publish(event)>
+ *
+ * Asynchronous communication with a remote server (sandbox.server):
+ *   - <server.send(url,data,receive)>
+ *
+ * Uniform Resource Locator, local navigation (sandbox.url):
+ *   - <url.getLocation(): object>
+ *   - <url.setHash(hash)>
+ *   - <url.onHashChange(callback)>
+ *
+ * General utilities (sandbox.utils):
+ *   - <utils.setTimeout(callback,delay)>
+ *   - <utils.trim(string): string>
+ *   - <utils.log(message)>
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -276,7 +317,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function fireEvent(element, type, properties){
-    // Function: dom.fireEvent(element, type[, properties]): DOM Event
+    // Function: dom.fireEvent(element,type[,properties]): DOM Event
     // Create and dispatch a new DOM event to the given element.
     //
     // Parameters:
@@ -315,7 +356,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function addListener(element,type,callback){
-    // Function: dom.addListener(element, type, callback): Listener
+    // Function: dom.addListener(element,type,callback): Listener
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
@@ -442,7 +483,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Note: publish is an alias for lb.core.events.publisher.publish
 
-  // Function: server.send(url, data, receive)
+  // Function: server.send(url,data,receive)
   // Send and receive data from the remote host.
   //
   // Parameters:
@@ -481,7 +522,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       pathname: location.pathname,
       search: location.search,
       hash: location.hash
-    }
+    };
   }
 
   // Function: url.setHash(hash)
@@ -508,7 +549,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Note: onHashChange is an alias for lb.base.history.onHashChange
 
   function setTimeout(callback, delay){
-    // Function: utils.setTimeout(callback, delay)
+    // Function: utils.setTimeout(callback,delay)
     // Plan the delayed execution of a callback function.
     //
     // Parameters:
