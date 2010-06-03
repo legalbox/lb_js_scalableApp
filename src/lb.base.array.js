@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-05-19
  */
 /*requires lb.base.js */
 /*requires closure/goog.array.js */
@@ -31,7 +31,6 @@ lb.base.array = lb.base.array || (function() {
     //   array - array, the array to modify in place
     //   item - any, the new item to insert at end, unless already present
 
-    //
     gArray.insert(array, item);
   }
 
@@ -47,7 +46,6 @@ lb.base.array = lb.base.array || (function() {
     // Note:
     // Duplicates are not removed.
 
-    //
     gArray.remove(array,item);
   }
 
@@ -81,7 +79,6 @@ lb.base.array = lb.base.array || (function() {
     // Returns:
     //   array, the pseudo-array converted to a new array instance
 
-    //
     return gArray.toArray(pseudoArray);
   }
 

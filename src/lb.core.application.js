@@ -4,6 +4,11 @@
  *
  * The Core Application manages the life cycle of modules.
  *
+ * It also initializes and destroys the local navigation history.
+ * There are several requirements to fulfill for the local history to work in a
+ * consistent way cross-browsers. Please refer to <lb.base.history> for the
+ * details of the markup and styles needed in the document.
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -11,13 +16,14 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-18
+ * 2010-06-02
  */
 /*requires lb.core.js */
 /*requires lb.base.log.js */
 /*requires lb.base.array.js */
-/*requires lb.base.dom.factory.js */
+/*requires lb.base.config.js */
 /*requires lb.base.dom.Listener.js */
+/*requires lb.base.history.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
@@ -30,58 +36,31 @@ lb.core.application = lb.core.application || (function() {
       addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,
       removeAll = lb.base.array.removeAll,
+      config = lb.base.config,
       Listener = lb.base.dom.Listener,
-      defaultFactory = lb.base.dom.factory,
+      history = lb.base.history,
 
   // Private members
 
-  // object, the factory for DOM elements, listeners and events.
-  // defaults to lb.base.dom.factory
-      domFactory = defaultFactory,
+    // array, the list of modules (lb.core.Module) added in the application
+    modules = [],
 
-  // array, the list of modules (lb.core.Module) added in the application
-      modules = [],
+    // object, the onload listener (lb.base.dom.Listener)
+    loadListener,
 
-  // object, the onload listener (lb.base.dom.Listener)
-      loadListener,
+    // object, the onunload listener (lb.base.dom.Listener)
+    unloadListener;
 
-  // object, the onunload listener (lb.base.dom.Listener)
-      unloadListener;
+  // Function: setOptions(options)
+  // Configure a set of option properties.
+  //
+  // Note:
+  // Previous properties are preserved unless overwritten by new properties.
+  //
+  // Parameter:
+  //   options - object, a hash of configuration properties.
 
-  function getFactory(){
-    // Function: getFactory(): object
-    // Get the factory configured to create DOM elements, listeners and events.
-    //
-    // Returns:
-    //   object, the configured factory, <lb.base.dom.factory> by default.
-
-    return domFactory;
-  }
-
-  function setFactory(factory){
-    // Function: setFactory(factory)
-    // Configure a new factory to create DOM elements, listeners and events.
-    //
-    // This method is intended as an extension point for the support of Rich
-    // Internet Applications: provide a custom factory to create widgets on top
-    // of regular DOM elements.
-    //
-    // Designing a Custom Factory:
-    // A custom factory must implement create and destroy methods for elements,
-    // listeners and events. See <lb.base.dom.factory> for default behavior and
-    // expected signatures for these functions.
-    //
-    // Parameter:
-    //   factory - object, optional, the new DOM factory. When omitted,
-    //             the default factory is restored.
-
-    if (!factory){
-      domFactory = defaultFactory;
-      return;
-    }
-
-    domFactory = factory;
-  }
+  // This is an alias on lb.base.config.setOptions()
 
   function getModules(){
     // Function: getModules(): array
@@ -119,7 +98,10 @@ lb.core.application = lb.core.application || (function() {
   function startAll(){
     // Function: startAll()
     // Start all registered modules.
+    //
+    // The local navigation history is also initialized beforehand.
 
+    history.init();
     for (var i=0; i<modules.length; i++){
       modules[i].start();
     }
@@ -130,11 +112,14 @@ lb.core.application = lb.core.application || (function() {
     // Terminate all registered modules.
     //
     // All registered modules are discarded.
+    //
+    // The local navigation history is also destroyed afterwards.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
     removeAll(modules);
+    history.destroy();
     if (loadListener){
       loadListener.detach();
     }
@@ -155,8 +140,7 @@ lb.core.application = lb.core.application || (function() {
   }
 
   return { // Public API
-    getFactory: getFactory,
-    setFactory: setFactory,
+    setOptions: config.setOptions,
     getModules: getModules,
     addModule: addModule,
     removeModule: removeModule,

@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-19
  */
 /*requires lb.base.js */
 /*requires closure/goog.string.js */
@@ -34,7 +34,6 @@ lb.base.string = lb.base.string || (function() {
     //   a string with whitespace removed from start and end.
     //   The whitespace within is neither removed nor normalized.
 
-    //
     return gTrim(string);
   }
 

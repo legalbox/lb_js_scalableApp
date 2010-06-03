@@ -129,6 +129,8 @@
     endCounter = 0;
     module.end();
     assert.equals(endCounter, 1, "Underlying module expected to be ended");
+    assert.isFalse( object.exists( $('testEnd') ),
+                                          "no element 'testEnd' expected");
 
     module = new lb.core.Module('testEnd.listeners', createStubModule);
     var sandbox = module.getSandbox();
@@ -136,6 +138,15 @@
     module.end();
     assert.arrayEquals(sandbox.getListeners(), [],
                                               "all listeners must be removed");
+
+    module = new lb.core.Module('testEnd.destroy', createStubModule);
+    sandbox = module.getSandbox();
+    sandbox.getBox();
+    assert.isTrue( object.exists( $('testEnd.destroy') ),
+                                         "assert: box expected to be created");
+    module.end();
+    assert.isFalse( object.exists( $('testEnd.destroy') ),
+                           "element 'testEnd.destroy' expected to be removed");
 
     module = new lb.core.Module('testEnd', createStubModule);
     endCounter = 0;

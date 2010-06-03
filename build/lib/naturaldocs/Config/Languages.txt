@@ -142,8 +142,6 @@ Language: JavaScript
    Line Comment: //
    Block Comment: /* */
    Enum Values: Under type
-   Function Prototype Ender: {
-   Variable Prototype Enders: ; =
 
 
 Language: Perl

@@ -18,7 +18,9 @@
  * 2010-05-19
  */
 /*requires lb.core.js */
+/*requires lb.core.application.js */
 /*requires lb.core.Sandbox.js */
+/*requires lb.base.dom.js */
 /*requires lb.base.log.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
@@ -42,6 +44,8 @@ lb.core.Module = lb.core.Module || function (id, creator){
   // Define aliases
   var log = lb.base.log.print,
       Sandbox = lb.core.Sandbox,
+      getFactory = lb.core.application.getFactory,
+      $ = lb.base.dom.$,
 
   // Private fields
 
@@ -107,14 +111,19 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Note:
     // The end() method is optional on the underlying module; it will not be
     // called when omitted. In any case, removeAllListeners() will be called on
-    // the sandbox to cleanup any remaining DOM listeners.
+    // the sandbox to cleanup any remaining DOM listeners, and destroyElement()
+    // will be called on the configured factory to terminate the box element
+    // and any widgets included within.
 
-    //
     try {
       if (module && module.end){
         module.end();
       }
       sandbox.removeAllListeners();
+      var box = $( sandbox.getId() );
+      if (box){
+        getFactory().destroyElement(box);
+      }
     } catch(endError){
       log('ERROR: Failed to end module "'+id+'"; '+endError+'.');
     }

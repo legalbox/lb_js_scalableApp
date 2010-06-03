@@ -3,14 +3,14 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-05-19
+ * Version:   2010-05-31
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Sandbox.js */
-/*requires lb.core.application.js */
+/*requires lb.base.config.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*requires bezen.js */
@@ -20,6 +20,7 @@
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.testrunner.js */
+/*requires goog.debug.Logger.js */
 /*requires goog.events.js */
 /*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -38,8 +39,10 @@
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
       element = bezen.dom.element,
+      LogManager = goog.debug.LogManager,
       events = goog.events,
-      MockXmlHttp = goog.net.MockXmlHttp;
+      MockXmlHttp = goog.net.MockXmlHttp,
+      config = lb.base.config;
 
   function testNamespace(){
 
@@ -251,6 +254,25 @@
                                   "whitespace must be removed on both sides");
   }
 
+  function testLog(){
+    var ut = new lb.core.Sandbox('testLog').log;
+
+    var logRecords = [];
+    var logHandler = function(logRecord){
+      logRecords.push(logRecord);
+    };
+
+    var rootLogger = LogManager.getRoot();
+    rootLogger.addHandler(logHandler);
+
+    var testMessage = 'Test message for sandbox.log';
+    ut(testMessage);
+
+    assert.equals(logRecords.length, 1,             "1 log record expected");
+    assert.equals(logRecords[0].getMessage(), testMessage, 
+                                      "test message expected in log record");
+  }
+
   function test$(){
     var ut = new lb.core.Sandbox('test$').$;
 
@@ -273,8 +295,8 @@
         capturedChildNodes.push(childNodes);
       }
     };
-    lb.core.application.setFactory(testFactory);
-    assert.equals( lb.core.application.getFactory(), testFactory,
+    config.setOptions({'lbFactory':testFactory});
+    assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
 
     var ut = new lb.core.Sandbox('testElement').element;
@@ -288,8 +310,8 @@
     assert.arrayEquals( capturedChildNodes, [testChildNodes],
                                                        "childNodes expected");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testGetClasses(){
@@ -348,7 +370,7 @@
         capturedUseCapture.push(useCapture);
       }
     };
-    lb.core.application.setFactory(testFactory);
+    config.setOptions({'lbFactory':testFactory});
     var ut = new lb.core.Sandbox('testFireEvent').fireEvent;
 
     var testElement = element('div');
@@ -366,8 +388,8 @@
     assert.arrayEquals(capturedUseCapture, [undefined],
                                                "useCapture expected omitted");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testCancelEvent(){
@@ -379,7 +401,7 @@
         capturedEvents.push(event);
       }
     };
-    lb.core.application.setFactory(testFactory);
+    config.setOptions({'lbFactory':testFactory});
     var ut = new lb.core.Sandbox('testCancelEvent').cancelEvent;
 
     var testEvent = {type: 'click'};
@@ -387,8 +409,8 @@
     assert.arrayEquals(capturedEvents, [testEvent],
                                        "test event expected on test factory");
 
-    // restore default factory
-    lb.core.application.setFactory();
+    // restore default configuration
+    config.reset();
   }
 
   function testGetListeners(){
@@ -508,6 +530,7 @@
     testSend: testSend,
     testSetTimeout: testSetTimeout,
     testTrim: testTrim,
+    testLog: testLog,
     test$: test$,
     testElement: testElement,
     testGetClasses: testGetClasses,

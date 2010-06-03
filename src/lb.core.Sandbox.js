@@ -13,17 +13,18 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-19
+ * 2010-05-31
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
+/*requires lb.base.config.js */
 /*requires lb.base.dom.js */
 /*requires lb.base.dom.css.js */
+/*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
-/*requires lb.core.application.js */
 /*requires lb.core.events.publisher.js */
 /*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -49,30 +50,31 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
-      gTrim = lb.base.string.trim,
+      trim = lb.base.string.trim,
       log = lb.base.log.print,
-      application = lb.core.application,
+      config = lb.base.config,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
 
   // Private fields
 
-  // object, the factory used to create DOM elements, listeners and events.
-  // A custom factory can be configured on the application core.
-     factory = application.getFactory(),
+    // object, the factory used to create DOM elements, listeners and events.
+    // A custom factory can be configured by setting the property lbFactory.
+    // Defaults to lb.base.dom.factory.
+    factory = config.getOption('lbFactory', lb.base.dom.factory),
 
-  // DOM element, the root of the box, carrying the module identifier.
-  // Used only withing getBox(), to avoid multiple lookups of the same element.
-  // Initialized on first call to getBox().
-      box,
+    // DOM element, the root of the box, carrying the module identifier.
+    // Used only in getBox(), to avoid multiple lookups of the same element.
+    // Initialized on first call to getBox().
+    box,
 
-  // array, the set of Subscribers created for this module.
-  // Kept locally for use in unsubscribe().
-      subscribers = [],
+    // array, the set of Subscribers created for this module.
+    // Kept locally for use in unsubscribe().
+    subscribers = [],
 
-  // array, the set of listeners created by this module
-  // Kept for removeAllListeners().
-      listeners = [];
+    // array, the set of listeners created by this module
+    // Kept for removeAllListeners().
+    listeners = [];
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -99,11 +101,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function getBox(){
-    // Function: getBox(): DOM element
+    // Function: getBox(): DOM Element
     // Get the root HTML element for this module.
     //
     // Returns:
-    //   DOM element, the HTML element corresponding to the module id
+    //   DOM Element, the HTML element corresponding to the module id
     //
     // Note:
     //   In case no HTML element is found in the document with the module id,
@@ -128,7 +130,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Check whether the given element is in the box.
     //
     // Parameter:
-    //   element - DOM element, an element
+    //   element - DOM Element, an element
     //
     // Returns:
     //   true if the element is a descendant of or the root of the box itself
@@ -163,9 +165,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //           * {} is a subscription to all events (no filter)
     //           * {name: 'foo'} is a subscription to all events named 'foo'
     //           * {name: 'foo', id:42} filters on name==='foo' and id===42
-    //   callback - function, the associated callback function
+    //   callback - function, the associated callback(event). The event object
+    //              contains at least the same properties as the filter. In
+    //              addition, custom properties may be defined by the creator
+    //              of the event.
 
-    //
     var subscriber = new Subscriber(filter,callback);
     subscribers.push(subscriber);
     publisher.addSubscriber(subscriber);
@@ -208,7 +212,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // [1] Introducing JSON (JavaScript Object Notation)
     // http://www.json.org/
 
-    //
     publisher.publish(event);
   }
 
@@ -223,7 +226,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //             the server. The data provided in argument will be a valid
     //             JSON object or array.
 
-    //
     ajax.send(url, data, receive);
   }
 
@@ -235,7 +237,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   callback - function, the function to run after a delay
     //   delay - integer, the delay in milliseconds
 
-    //
     window.setTimeout(function(){
       try {
         callback();
@@ -245,22 +246,31 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     },delay);
   }
 
-  function trim(string){
-    // Function: trim(string): string
-    // Remove leading and trailing whitespace from a string.
-    //
-    // Parameter:
-    //   string - string, the string to trim
-    //
-    // Returns:
-    //   string, a copy of the string with no whitespace at start and end
+  // Function: trim(string): string
+  // Remove leading and trailing whitespace from a string.
+  //
+  // Parameter:
+  //   string - string, the string to trim
+  //
+  // Returns:
+  //   string, a copy of the string with no whitespace at start and end
 
-    //
-    return gTrim(string);
-  }
+  // Note: trim is an alias on lb.base.string.trim
+
+  // Function: log(message)
+  // Log a message.
+  //
+  // Log messages will be printed in the browser console, when available,
+  // and if the log output has been activated, which happens when Debug=true
+  // is included anywhere in the URL.
+  //
+  // Parameter:
+  //   message - string, the message to log
+
+  // Note: log is an alias on lb.base.log.print
 
   function $(localId){
-    // Function: $(localId): DOM element
+    // Function: $(localId): DOM Element
     // Get the element of the box with given local identifier.
     //
     // Parameter:
@@ -268,7 +278,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //             See getId() for details.
     //
     // Returns:
-    //   * DOM element, the element from the box with corresponding localId
+    //   * DOM Element, the element from the box with corresponding localId
     //   * null if no element is found in the box with the localId
     //
     // Notes:
@@ -280,7 +290,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   getId(), a call to $() without argument will return the root element
     //   of the box, in the same way as getBox().
 
-    //
     var element = dom.$( getId(localId) );
     if ( isInBox(element) ){
       return element;
@@ -290,15 +299,15 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function element(name,attributes){
-    // Function: element(name[,attributes[,childNodes]]): DOM element
+    // Function: element(name[,attributes[,childNodes]]): DOM Element
     // Create a new DOM element using the configured element factory.
     // For example, using the default element factory,
     // |  element('a',{href:'#here',title:'Here'},'Click here')
     // will create a new DOM element
     // |  <a href='#here' title='Here'>Click here</a>
     //
-    // A custom element factory can be configured using
-    // <lb.core.application.setElementFactory(factory)>.
+    // A custom element factory can be configured using the property lbFactory
+    // with <lb.core.application.setOptions(options)>.
     //
     // Parameters:
     //   name - string, the name of the element
@@ -307,9 +316,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //                Text nodes shall be represented simply as strings.
     //
     // Returns:
-    //   DOM element, the newly created DOM element.
+    //   DOM Element, the newly created DOM element.
 
-    //
     return factory.createElement.apply(factory,arguments);
   }
 
@@ -318,7 +326,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Get the CSS classes of given DOM element.
     //
     // Parameter:
-    //   element - DOM element, an element of the box
+    //   element - DOM Element, an element of the box
     //
     // Returns:
     //   object, a hash of CSS classes, with a boolean property set to true
@@ -347,7 +355,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Append a CSS class to a DOM element part of the box.
     //
     // Parameters:
-    //   element - DOM element, an element of the box
+    //   element - DOM Element, an element of the box
     //   name - string, a CSS class name
     //
     // Note:
@@ -397,6 +405,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   DOM Event, the new DOM event
 
+    // Warning: element parameter hides element() function
     return factory.createEvent(element, type, properties);
   }
 
@@ -496,6 +505,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   this.send = send;
   this.setTimeout = setTimeout;
   this.trim = trim;
+  this.log = log;
   this.$ = $;
   this.element = element;
   this.getClasses = getClasses;

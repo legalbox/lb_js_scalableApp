@@ -9,7 +9,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-03
+ * 2010-05-19
  */
 /*requires lb.base.js */
 /*requires closure/goog.json.js */
@@ -33,7 +33,6 @@ lb.base.json = lb.base.json || (function() {
     // Returns:
     //   object|array, the object or array resulting from parsing
 
-    //
     return json.parse(string);
   }
 
@@ -50,7 +49,6 @@ lb.base.json = lb.base.json || (function() {
     //   string, a string resulting from serialization of given object or array
     // (end)
 
-    //
     return json.serialize(object);
   }
 
