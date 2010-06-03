@@ -53,7 +53,7 @@
     }
     remove( $('lb.base.history.input') );
     // See details in setUp()
-    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
     ut();
     lb.base.history.destroy();
   }
@@ -69,7 +69,7 @@
   function setUp(){
     // The resource must exist. There is a favicon.ico file in the test folder,
     // while there may not be a favicon at the root of the test server.
-    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
     lb.base.history.init();
   }
 

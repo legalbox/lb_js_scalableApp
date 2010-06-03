@@ -12,7 +12,7 @@
  * prevents this module from being loaded dynamically.
  *
  * When the iframe is not present in the document, the configuration property
- * 'lb:history:cheapUrl' must be configured to the relative URL of a resource
+ * 'lbHistoryCheapUrl' must be configured to the relative URL of a resource
  * from the same domain, already loaded to avoid a new query, such as the path
  * to the favicon. The path used by default is '/favicon.ico' which is the most
  * common location for the favicon. In case the favicon is located at a
@@ -125,7 +125,7 @@ lb.base.history = lb.base.history || (function() {
       // Only used in IE when the iframe is not present.
       // Use the favicon as default, it is probably in cache already.
       // If you need to customize this path, you should create the iframe.
-      getOption('lb:history:cheapUrl','/favicon.ico'),
+      getOption('lbHistoryCheapUrl','/favicon.ico'),
       // opt_input : HTMLInputElement
       // HTML input element used to track state in all browsers.
       // Initialize with $('lb.base.history.input') (may be null).

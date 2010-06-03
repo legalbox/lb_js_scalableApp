@@ -297,7 +297,7 @@
         capturedChildNodes.push(childNodes);
       }
     };
-    config.setOptions({'lbFactory':testFactory});
+    config.setOptions({lbFactory:testFactory});
     assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
 
@@ -372,7 +372,7 @@
         capturedUseCapture.push(useCapture);
       }
     };
-    config.setOptions({'lbFactory':testFactory});
+    config.setOptions({lbFactory:testFactory});
     var ut = new lb.core.Sandbox('testFireEvent').dom.fireEvent;
 
     var testElement = element('div');
@@ -403,7 +403,7 @@
         capturedEvents.push(event);
       }
     };
-    config.setOptions({'lbFactory':testFactory});
+    config.setOptions({lbFactory:testFactory});
     var ut = new lb.core.Sandbox('testCancelEvent').dom.cancelEvent;
 
     var testEvent = {type: 'click'};
@@ -572,7 +572,7 @@
   function testSetHash(){
     var ut = new lb.core.Sandbox('testSetHash').url.setHash;
 
-    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
     lb.base.history.init();
 
     ut('simple');
@@ -589,7 +589,7 @@
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
-    lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
+    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
     lb.base.history.init();
 
     bezen.log.on(); // debug
