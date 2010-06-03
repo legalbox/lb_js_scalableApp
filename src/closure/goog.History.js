@@ -491,7 +491,6 @@ goog.History.prototype.disposeInternal = function() {
 goog.History.prototype.setEnabled = function(enable) {
 
   if (enable == this.enabled_) {
-    bezen.log.info("Already enabled");
     return;
   }
 
@@ -499,7 +498,6 @@ goog.History.prototype.setEnabled = function(enable) {
       !this.documentLoaded) {
     // Wait until the document has actually loaded before enabling the
     // object or any saved state from a previous session will be lost.
-    bezen.log.info("IE: wait until document has loaded");
     this.shouldEnable_ = enable;
     return;
   }
@@ -508,7 +506,6 @@ goog.History.prototype.setEnabled = function(enable) {
     if (goog.userAgent.OPERA) {
       // Capture events for common user input so we can restart the timer in
       // Opera if it fails. Yes, this is distasteful. See operaDefibrillator_.
-      bezen.log.info("Opera: put defibrillator in place on mouse move");
       this.eventHandler_.listen(this.window_.document,
                                 goog.History.INPUT_EVENTS_,
                                 this.operaDefibrillator_);
@@ -516,25 +513,21 @@ goog.History.prototype.setEnabled = function(enable) {
       // Firefox will not restore the correct state after navigating away from
       // and then back to the page with the history object. This can be fixed
       // by restarting the history object on the pageshow event.
-      bezen.log.info("FF: set alarm clock on pageshow");
       this.eventHandler_.listen(this.window_, 'pageshow', this.onShow_);
     }
 
     // TODO: make HTML5 and invisible history work by listening to the
     // iframe # changes instead of the window.
     if (goog.History.HAS_ONHASHCHANGE && this.userVisible_) {
-      bezen.log.info("HTML5: use native onHashChange event");
       this.eventHandler_.listen(
           this.window_, goog.events.EventType.HASHCHANGE, this.onHashChange_);
       this.enabled_ = true;
-      bezen.log.info("HTML5: dispatch initial hash: "+this.getToken());
       // [Legal-Box#02] added missing initialization of last token
       this.lastToken_ = this.getToken();
       this.dispatchEvent(new goog.History.Event(this.getToken()));
     } else if (!goog.userAgent.IE || this.documentLoaded) {
       // Start dispatching history events if all necessary loading has
       // completed (always true for browsers other than IE.)
-      bezen.log.info("Start polling hash checks");
       this.eventHandler_.listen(this.timer_, goog.Timer.TICK, this.check_);
 
       this.enabled_ = true;
@@ -542,9 +535,7 @@ goog.History.prototype.setEnabled = function(enable) {
       // Prevent the timer from dispatching an extraneous navigate event.
       // However this causes the hash to get replaced with a null token in IE.
       if (!goog.userAgent.IE) {
-        bezen.log.info("!IE: Avoid dispatching duplicate navigation event");
         this.lastToken_ = this.getToken();
-        bezen.log.info("Dispatch the initial hash");
         // [Legal-Box#01] moved from after the loop to here
         this.dispatchEvent(new goog.History.Event(this.getToken()));
       }
@@ -572,7 +563,6 @@ goog.History.prototype.setEnabled = function(enable) {
  * @protected
  */
 goog.History.prototype.onDocumentLoaded = function() {
-  bezen.log.info("Document Load Detected");
   this.documentLoaded = true;
 
   if (this.hiddenInput_.value) {
@@ -613,10 +603,7 @@ goog.History.prototype.onShow_ = function(e) {
  */
 goog.History.prototype.onHashChange_ = function(e) {
   var hash = this.getLocationFragment_(this.window_);
-  bezen.log.info('Read hash from URL: '+hash);
-  bezen.log.info('Compare with last token: '+this.lastToken_);
   if (hash != this.lastToken_) {
-    bezen.log.info('hash from URL differs: update');
     this.update_(hash);
   }
 };
@@ -716,7 +703,6 @@ goog.History.prototype.setHistoryState_ = function(token, replace, opt_title) {
       // set a suspendToken so that polling doesn't trigger a 'back'.
       this.setIframeToken_(token, replace);
       this.lockedToken_ = this.lastToken_ = this.hiddenInput_.value = token;
-      bezen.log.info("Fire event for new hidden hash");
       this.dispatchEvent(new goog.History.Event(token));
     }
   }
@@ -920,7 +906,6 @@ goog.History.prototype.update_ = function(token) {
     this.setIframeToken_(token);
   }
 
-  bezen.log.info("Update: dispatch the new hash event: "+token);
   this.dispatchEvent(new goog.History.Event(this.getToken()));
 };
 
