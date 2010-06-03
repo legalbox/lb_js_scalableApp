@@ -31,10 +31,23 @@
 //   goog.events.js, goog.events.BrowserEvent.js, goog.events.Event.js,
 //   goog.events.EventHanlder.js, goog.events.EventTarget.js, goog.string.js,
 //   goog.userAgent.js
-// * bug fix: avoid duplicate firing of initial hash
+// * bug fix: avoid duplicate firing of initial hash in IE
 //   In goog.History.prototype.setEnabled, I moved the dispatchEvent call for
-//   the initial hash to the previous block in if (!goog.userAgent.IE). The
-//   code is annotated with comments starting with Legal-Box:.
+//   the initial hash to the previous block in if (!goog.userAgent.IE).
+//   The code is annotated with comments starting with // [Legal-Box#01]
+// * bug fix: avoid duplicate firing of initial hash in FF
+//   In goog.History.prototype.setEnabled, I added an initialization of the
+//   last token before the dispatchEvent for the initial hash in HTML5 case.
+//   The code is annotated with a comment starting with // [Legal-Box#02]
+// Note:
+// this code should be refactored to avoid the same bug appearing in different
+// sets of conditions: double firing of the same event. There should be a
+// single function dispatching tokens for hash changes, with a check and update
+// of the previous token only in this function. dispatchEvent() is currently
+// called in 4 different places:
+// - twice in setEnabled()
+// - in setHistoryState_()
+// - in update_()
 
 /**
  * @fileoverview Browser history stack management class.
@@ -509,6 +522,8 @@ goog.History.prototype.setEnabled = function(enable) {
       this.eventHandler_.listen(
           this.window_, goog.events.EventType.HASHCHANGE, this.onHashChange_);
       this.enabled_ = true;
+      // [Legal-Box#02] added missing initialization of last token
+      this.lastToken_ = this.getToken();
       this.dispatchEvent(new goog.History.Event(this.getToken()));
     } else if (!goog.userAgent.IE || this.documentLoaded) {
       // Start dispatching history events if all necessary loading has
@@ -521,12 +536,12 @@ goog.History.prototype.setEnabled = function(enable) {
       // However this causes the hash to get replaced with a null token in IE.
       if (!goog.userAgent.IE) {
         this.lastToken_ = this.getToken();
-        // Legal-Box: moved from after the loop to here
+        // [Legal-Box#01] moved from after the loop to here
         this.dispatchEvent(new goog.History.Event(this.getToken()));
       }
 
       this.timer_.start();
-      // Legal-Box: moved from here to within the loop before
+      // [Legal-Box#01] moved from here to within the loop before
       // this.dispatchEvent(new goog.History.Event(this.getToken()));
     }
 

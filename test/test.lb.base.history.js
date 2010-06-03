@@ -3,7 +3,7 @@
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
- * Version:   2010-06-02
+ * Version:   2010-06-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -149,12 +149,6 @@
       if ( !object.exists(capturedHash[currentStep]) ){
         bezen.log.info('Checking captured hash: '+capturedHash[currentStep]);
 
-        // Issue: fires twice in IE for the initial hash.......
-        // The issue disappears if we wait only 150ms, appears for 200ms
-
-        // retry the check in 150ms
-        //setTimeout(checkHash, 150);
-
         // retry the check in 200ms
         setTimeout(checkHash, 200);
         return;
@@ -176,7 +170,8 @@
     bezen.log.info("Set Hash: "+hashSequence[currentStep]);
     lb.base.history.setHash( hashSequence[currentStep] );
     ut(captureHash);
-    checkHash();
+      // 200ms is greater than the goog.History polling interval (150ms)
+    setTimeout(checkHash,200);
   }
 
   var tests = {

@@ -6,6 +6,47 @@
  * and Data Model Module. It acts both as a proxy and a facade to the
  * application core.
  *
+ * The methods related to the module itself, are defined on the Sandbox.
+ * Other methods are separated into groups of similar purpose.
+ *
+ * Module (sandbox):
+ *   - <getId([localId]):string>
+ *   - <getBox(): DOM Element>
+ *   - <isInBox(element): boolean>
+ *
+ * Cascading Style Sheets (sandbox.css):
+ *   - <css.getClasses(element): object>
+ *   - <css.addClass(element,name)>
+ *   - <css.removeClass(element,name)>
+ *
+ * Document Object Model (sandbox.dom):
+ *   - <dom.$(localId): DOM Element>
+ *   - <dom.element(name[,attributes[,childNodes]]): DOM Element>
+ *   - <dom.fireEvent(element,type[,properties]): DOM Event>
+ *   - <dom.cancelEvent(event)>
+ *   - <dom.getListeners(): array>
+ *   - <dom.addListener(element,type,callback): Listener>
+ *   - <dom.removeListener(listener)>
+ *   - <dom.removeAllListeners()>
+ *
+ * Events for loose coupling with other modules (sandbox.events):
+ *   - <events.subscribe(filter,callback)>
+ *   - <events.unsubscribe(filter)>
+ *   - <events.publish(event)>
+ *
+ * Asynchronous communication with a remote server (sandbox.server):
+ *   - <server.send(url,data,receive)>
+ *
+ * Uniform Resource Locator, local navigation (sandbox.url):
+ *   - <url.getLocation(): object>
+ *   - <url.setHash(hash)>
+ *   - <url.onHashChange(callback)>
+ *
+ * General utilities (sandbox.utils):
+ *   - <utils.setTimeout(callback,delay)>
+ *   - <utils.trim(string): string>
+ *   - <utils.log(message)>
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -13,7 +54,7 @@
  * Legal Box (c) 2010, All Rights Reserved
  *
  * Version:
- * 2010-05-31
+ * 2010-06-03
  */
 /*requires lb.base.ajax.js */
 /*requires lb.base.array.js */
@@ -22,6 +63,7 @@
 /*requires lb.base.dom.css.js */
 /*requires lb.base.dom.factory.js */
 /*requires lb.base.dom.Listener.js */
+/*requires lb.base.history.js */
 /*requires lb.base.string.js */
 /*requires lb.base.log.js */
 /*requires lb.core.js */
@@ -43,15 +85,17 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   object, the new instance of Sandbox
 
   // Define aliases
-  var ajax = lb.base.ajax,
-      addOne = lb.base.array.addOne,
+  var addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,
       removeAll = lb.base.array.removeAll,
       dom = lb.base.dom,
       css = lb.base.dom.css,
       Listener = lb.base.dom.Listener,
+      send = lb.base.ajax.send,
       trim = lb.base.string.trim,
       log = lb.base.log.print,
+      setHash = lb.base.history.setHash,
+      onHashChange = lb.base.history.onHashChange,
       config = lb.base.config,
       publisher = lb.core.events.publisher,
       Subscriber = lb.core.events.Subscriber,
@@ -149,180 +193,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     return false;
   }
 
-  function subscribe(filter,callback){
-    // Function: subscribe(filter,callback)
-    // Create a new event subscription, triggering the callback only for events
-    // matching the provided filter.
-    //
-    // A new instance of Event Subscriber (lb.core.events.Subscriber) is
-    // created and added to the Event publisher (lb.core.events.publisher).
-    //
-    // Parameters:
-    //   filter - object, the event filter.
-    //           This object is similar to event objects. Any included property
-    //           will be used as a filter to restrict events part of the 
-    //           subscription. For example:
-    //           * {} is a subscription to all events (no filter)
-    //           * {name: 'foo'} is a subscription to all events named 'foo'
-    //           * {name: 'foo', id:42} filters on name==='foo' and id===42
-    //   callback - function, the associated callback(event). The event object
-    //              contains at least the same properties as the filter. In
-    //              addition, custom properties may be defined by the creator
-    //              of the event.
-
-    var subscriber = new Subscriber(filter,callback);
-    subscribers.push(subscriber);
-    publisher.addSubscriber(subscriber);
-  }
-
-  function unsubscribe(filter){
-    // Function: unsubscribe(filter)
-    // Remove all subscriptions for given filter.
-    //
-    // Parameter:
-    //   filter - object, an event filter.
-    //
-    // Note:
-    //   It is not necessary to provide the identical filter project provided
-    //   in subscribe(); all filters with the same set of properties/values
-    //   will get the corresponding subscriptions removed.
-    var i, subscriber;
-
-    for (i=0; i<subscribers.length; i++){
-      subscriber = subscribers[i];
-      // check for equality as mutual inclusion
-      if ( subscriber.includes( filter, subscriber.getFilter() ) &&
-           subscriber.includes( subscriber.getFilter(), filter ) ) {
-        publisher.removeSubscriber(subscriber);
-        subscribers.splice(i,1);
-        i--; // index for next item decreased
-      }
-    }
-  }
-
-  function publish(event){
-    // Function: publish(event)
-    // Publish a new event for broadcasting to all interested subscribers.
-    //
-    // Parameter:
-    //   event - object, the event to publish. It shall be a valid JSON [1] 
-    //           object: no methods, no circular references.
-    //
-    // Reference:
-    // [1] Introducing JSON (JavaScript Object Notation)
-    // http://www.json.org/
-
-    publisher.publish(event);
-  }
-
-  function send(url, data, receive){
-    // Function: send(url, data, receive)
-    // Send and receive data from the remote host.
-    //
-    // Parameters:
-    //   url - string, a url on remote host (must respect same origin policy)
-    //   data - object, the data to send to the server. It must be valid JSON.
-    //   receive - function, the callback with data received in response from/
-    //             the server. The data provided in argument will be a valid
-    //             JSON object or array.
-
-    ajax.send(url, data, receive);
-  }
-
-  function setTimeout(callback, delay){
-    // Function: setTimeout(callback, delay)
-    // Plan the delayed execution of a callback function.
-    //
-    // Parameters:
-    //   callback - function, the function to run after a delay
-    //   delay - integer, the delay in milliseconds
-
-    window.setTimeout(function(){
-      try {
-        callback();
-      } catch(e){
-        log('ERROR: failure in setTimeout for callback '+callback+'.');
-      }
-    },delay);
-  }
-
-  // Function: trim(string): string
-  // Remove leading and trailing whitespace from a string.
-  //
-  // Parameter:
-  //   string - string, the string to trim
-  //
-  // Returns:
-  //   string, a copy of the string with no whitespace at start and end
-
-  // Note: trim is an alias on lb.base.string.trim
-
-  // Function: log(message)
-  // Log a message.
-  //
-  // Log messages will be printed in the browser console, when available,
-  // and if the log output has been activated, which happens when Debug=true
-  // is included anywhere in the URL.
-  //
-  // Parameter:
-  //   message - string, the message to log
-
-  // Note: log is an alias on lb.base.log.print
-
-  function $(localId){
-    // Function: $(localId): DOM Element
-    // Get the element of the box with given local identifier.
-    //
-    // Parameter:
-    //   localId - string, the local identifier of the element, without prefix.
-    //             See getId() for details.
-    //
-    // Returns:
-    //   * DOM Element, the element from the box with corresponding localId
-    //   * null if no element is found in the box with the localId
-    //
-    // Notes:
-    //   This method calls getBox() internally to check that a found element
-    //   is a descendant of the box element. This may create the box element
-    //   if not already present in the document.
-    //
-    //   Since the provided localId is converted to a full identifier using
-    //   getId(), a call to $() without argument will return the root element
-    //   of the box, in the same way as getBox().
-
-    var element = dom.$( getId(localId) );
-    if ( isInBox(element) ){
-      return element;
-    }
-    log('Warning: element "'+getId(localId)+'" not part of box "'+id+'"');
-    return null;
-  }
-
-  function element(name,attributes){
-    // Function: element(name[,attributes[,childNodes]]): DOM Element
-    // Create a new DOM element using the configured element factory.
-    // For example, using the default element factory,
-    // |  element('a',{href:'#here',title:'Here'},'Click here')
-    // will create a new DOM element
-    // |  <a href='#here' title='Here'>Click here</a>
-    //
-    // A custom element factory can be configured using the property lbFactory
-    // with <lb.core.application.setOptions(options)>.
-    //
-    // Parameters:
-    //   name - string, the name of the element
-    //   attributes - object, optional arguments as a set of named properties
-    //   childNodes - array or list of arguments, the optional child nodes.
-    //                Text nodes shall be represented simply as strings.
-    //
-    // Returns:
-    //   DOM Element, the newly created DOM element.
-
-    return factory.createElement.apply(factory,arguments);
-  }
-
   function getClasses(element){
-    // Function: getClasses(element): object
+    // Function: css.getClasses(element): object
     // Get the CSS classes of given DOM element.
     //
     // Parameter:
@@ -351,7 +223,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function addClass(element,name){
-    // Function: addClass(element,name)
+    // Function: css.addClass(element,name)
     // Append a CSS class to a DOM element part of the box.
     //
     // Parameters:
@@ -372,7 +244,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function removeClass(element,name){
-    // Function: removeClass(element,name)
+    // Function: css.removeClass(element,name)
     // Remove a CSS class from a DOM element part of the box.
     //
     // Parameters:
@@ -392,8 +264,60 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     css.removeClass(element,name);
   }
 
+  function $(localId){
+    // Function: dom.$(localId): DOM Element
+    // Get the element of the box with given local identifier.
+    //
+    // Parameter:
+    //   localId - string, the local identifier of the element, without prefix.
+    //             See getId() for details.
+    //
+    // Returns:
+    //   * DOM Element, the element from the box with corresponding localId
+    //   * null if no element is found in the box with the localId
+    //
+    // Notes:
+    //   This method calls getBox() internally to check that a found element
+    //   is a descendant of the box element. This may create the box element
+    //   if not already present in the document.
+    //
+    //   Since the provided localId is converted to a full identifier using
+    //   getId(), a call to $() without argument will return the root element
+    //   of the box, in the same way as getBox().
+
+    var element = dom.$( getId(localId) );
+    if ( isInBox(element) ){
+      return element;
+    }
+    log('Warning: element "'+getId(localId)+'" not part of box "'+id+'"');
+    return null;
+  }
+
+  function element(name,attributes){
+    // Function: dom.element(name[,attributes[,childNodes]]): DOM Element
+    // Create a new DOM element using the configured element factory.
+    // For example, using the default element factory,
+    // |  element('a',{href:'#here',title:'Here'},'Click here')
+    // will create a new DOM element
+    // |  <a href='#here' title='Here'>Click here</a>
+    //
+    // A custom element factory can be configured using the property lbFactory
+    // with <lb.core.application.setOptions(options)>.
+    //
+    // Parameters:
+    //   name - string, the name of the element
+    //   attributes - object, optional arguments as a set of named properties
+    //   childNodes - array or list of arguments, the optional child nodes.
+    //                Text nodes shall be represented simply as strings.
+    //
+    // Returns:
+    //   DOM Element, the newly created DOM element.
+
+    return factory.createElement.apply(factory,arguments);
+  }
+
   function fireEvent(element, type, properties){
-    // Function: fireEvent(element, type[, properties]): DOM Event
+    // Function: dom.fireEvent(element,type[,properties]): DOM Event
     // Create and dispatch a new DOM event to the given element.
     //
     // Parameters:
@@ -410,7 +334,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function cancelEvent(event){
-    // Function: cancelEvent(event)
+    // Function: dom.cancelEvent(event)
     // Cancel an event: prevent the default action and stop bubbling.
     //
     // Parameter:
@@ -420,7 +344,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function getListeners(){
-    // Function: getListeners(): array
+    // Function: dom.getListeners(): array
     // Get the list of listeners configured on DOM elements of the box.
     // Listeners can be added with addListener() and removed one by one with
     // removeListener(), or all at once with removeAllListeners().
@@ -432,7 +356,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function addListener(element,type,callback){
-    // Function: addListener(element, type, callback): Listener
+    // Function: dom.addListener(element,type,callback): Listener
     // Register a new listener for a type of event on a DOM element of the box.
     //
     // Parameters:
@@ -462,7 +386,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function removeListener(listener){
-    // Function: removeListener(listener)
+    // Function: dom.removeListener(listener)
     // Unregister a listener.
     //
     // Parameters:
@@ -481,7 +405,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   function removeAllListeners(){
-    // Function: removeAllListeners()
+    // Function: dom.removeAllListeners()
     // Remove all listeners configured on DOM elements of the box.
     //
     // All remaining listeners, previously configured with addListener(),
@@ -495,26 +419,210 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     removeAll(listeners);
   }
 
+  function subscribe(filter,callback){
+    // Function: events.subscribe(filter,callback)
+    // Create a new event subscription, triggering the callback only for events
+    // matching the provided filter.
+    //
+    // A new instance of Event Subscriber (lb.core.events.Subscriber) is
+    // created and added to the Event publisher (lb.core.events.publisher).
+    //
+    // Parameters:
+    //   filter - object, the event filter.
+    //           This object is similar to event objects. Any included property
+    //           will be used as a filter to restrict events part of the 
+    //           subscription. For example:
+    //           * {} is a subscription to all events (no filter)
+    //           * {name: 'foo'} is a subscription to all events named 'foo'
+    //           * {name: 'foo', id:42} filters on name==='foo' and id===42
+    //   callback - function, the associated callback(event). The event object
+    //              contains at least the same properties as the filter. In
+    //              addition, custom properties may be defined by the creator
+    //              of the event.
+
+    var subscriber = new Subscriber(filter,callback);
+    subscribers.push(subscriber);
+    publisher.addSubscriber(subscriber);
+  }
+
+  function unsubscribe(filter){
+    // Function: events.unsubscribe(filter)
+    // Remove all subscriptions for given filter.
+    //
+    // Parameter:
+    //   filter - object, an event filter.
+    //
+    // Note:
+    //   It is not necessary to provide the identical filter project provided
+    //   in subscribe(); all filters with the same set of properties/values
+    //   will get the corresponding subscriptions removed.
+    var i, subscriber;
+
+    for (i=0; i<subscribers.length; i++){
+      subscriber = subscribers[i];
+      // check for equality as mutual inclusion
+      if ( subscriber.includes( filter, subscriber.getFilter() ) &&
+           subscriber.includes( subscriber.getFilter(), filter ) ) {
+        publisher.removeSubscriber(subscriber);
+        subscribers.splice(i,1);
+        i--; // index for next item decreased
+      }
+    }
+  }
+
+  // Function: events.publish(event)
+  // Publish a new event for broadcasting to all interested subscribers.
+  //
+  // Parameter:
+  //   event - object, the event to publish. It shall be a valid JSON [1] 
+  //           object: no methods, no circular references.
+  //
+  // Reference:
+  // [1] Introducing JSON (JavaScript Object Notation)
+  // http://www.json.org/
+
+  // Note: publish is an alias for lb.core.events.publisher.publish
+
+  // Function: server.send(url,data,receive)
+  // Send and receive data from the remote host.
+  //
+  // Parameters:
+  //   url - string, a url on remote host (must respect same origin policy)
+  //   data - object, the data to send to the server. It must be valid JSON.
+  //   receive - function, the callback with data received in response from/
+  //             the server. The data provided in argument will be a valid
+  //             JSON object or array.
+
+  // Note: send is an alias for lb.base.ajax.send
+
+  function getLocation(){
+    // Function: url.getLocation(): object
+    // Get the properties of the current URL location
+    //
+    // Returns:
+    //   an object with a copy of properties commonly found on window.location
+    //   and document.location:
+    //     * href - string, the absolute URL of the current document
+    //     * protocol - string, the protocol part of the URL, e.g. 'http://'
+    //     * host - string, the host and port part of the url, e.g.
+    //              'example.com:8080' or often just 'example.com'
+    //     * hostname - the host name part of the URL, e.g. 'example:com'
+    //     * port - string, the port part of the URL, e.g. '8080' or often ''
+    //     * pathname - string, the relative path, e.g. '/2010/10/31/index.php'
+    //     * search - string, the query part of the url, e.g. '?param=value'
+    //     * hash - string, the local part of the url, e.g. '#anchor'.
+    //   These properties are read-only here and not shared with other modules.
+    var location = window.location;
+    return {
+      href: location.href,
+      protocol: location.protocol,
+      host: location.host,
+      hostname: location.hostname,
+      port: location.port,
+      pathname: location.pathname,
+      search: location.search,
+      hash: location.hash
+    };
+  }
+
+  // Function: url.setHash(hash)
+  // Jump to a new local location by replacing the hash part of the URL.
+  //
+  // This method is used for local navigation, and ensures, in collaboration
+  // with the cross-browser history adapter module, that the back button
+  // of the browser works as expected.
+  //
+  // Parameter:
+  //   hash - string, the new local location, e.g. '#local/path'
+
+  // Note: setHash is an alias for lb.base.history.setHash
+
+  // Function: url.onHashChange(callback)
+  // Observe changes in local part of the URL.
+  //
+  // Parameter:
+  //   callback - function, the callback(hash) function will be called once
+  //              with the current hash and once for each subsequent change of
+  //              hash. The hash parameter is a string, decoded, starting with
+  //              the '#' character.
+
+  // Note: onHashChange is an alias for lb.base.history.onHashChange
+
+  function setTimeout(callback, delay){
+    // Function: utils.setTimeout(callback,delay)
+    // Plan the delayed execution of a callback function.
+    //
+    // Parameters:
+    //   callback - function, the function to run after a delay
+    //   delay - integer, the delay in milliseconds
+
+    window.setTimeout(function(){
+      try {
+        callback();
+      } catch(e){
+        log('ERROR: failure in setTimeout for callback '+callback+'.');
+      }
+    },delay);
+  }
+
+  // Function: utils.trim(string): string
+  // Remove leading and trailing whitespace from a string.
+  //
+  // Parameter:
+  //   string - string, the string to trim
+  //
+  // Returns:
+  //   string, a copy of the string with no whitespace at start and end
+
+  // Note: trim is an alias for lb.base.string.trim
+
+  // Function: utils.log(message)
+  // Log a message.
+  //
+  // Log messages will be printed in the browser console, when available,
+  // and if the log output has been activated, which happens when Debug=true
+  // is included anywhere in the URL.
+  //
+  // Parameter:
+  //   message - string, the message to log
+
+  // Note: log is an alias for lb.base.log.print
+
   // Public methods
   this.getId = getId;
   this.getBox = getBox;
   this.isInBox = isInBox;
-  this.subscribe = subscribe;
-  this.unsubscribe = unsubscribe;
-  this.publish = publish;
-  this.send = send;
-  this.setTimeout = setTimeout;
-  this.trim = trim;
-  this.log = log;
-  this.$ = $;
-  this.element = element;
-  this.getClasses = getClasses;
-  this.addClass = addClass;
-  this.removeClass = removeClass;
-  this.fireEvent = fireEvent;
-  this.cancelEvent = cancelEvent;
-  this.getListeners = getListeners;
-  this.addListener = addListener;
-  this.removeListener = removeListener;
-  this.removeAllListeners = removeAllListeners;
+  this.css = {
+    getClasses: getClasses,
+    addClass: addClass,
+    removeClass: removeClass
+  };
+  this.dom = {
+    $:$,
+    element: element,
+    fireEvent: fireEvent,
+    cancelEvent: cancelEvent,
+    getListeners: getListeners,
+    addListener: addListener,
+    removeListener: removeListener,
+    removeAllListeners: removeAllListeners
+  };
+  this.events = {
+    subscribe: subscribe,
+    unsubscribe: unsubscribe,
+    publish: publisher.publish
+  };
+  this.server = {
+    send: send
+  };
+  this.url = {
+    getLocation: getLocation,
+    setHash: setHash,
+    onHashChange: onHashChange
+  };
+  this.utils = {
+    setTimeout: setTimeout,
+    trim: trim,
+    log: log
+  };
 };
