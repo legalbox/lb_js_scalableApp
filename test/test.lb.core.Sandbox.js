@@ -609,7 +609,7 @@
             assert.arrayEquals(hashes,['#start','#one','#two','#three'],
                                           "sequence of hash changes expected");
             test.endAsyncTest();
-            lb.base.history.setHash('')
+            lb.base.history.setHash('');
             lb.base.history.destroy();
           },200);
         },200);
