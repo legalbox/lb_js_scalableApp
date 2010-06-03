@@ -107,7 +107,7 @@
   }
 
   function testSubscribe(){
-    var ut = new lb.core.Sandbox('testSubscribe').subscribe;
+    var ut = new lb.core.Sandbox('testSubscribe').events.subscribe;
 
     empty( lb.core.events.publisher.getSubscribers() );
 
@@ -128,7 +128,7 @@
 
   function testUnsubscribe(){
     var sandbox = new lb.core.Sandbox('testUnsubscribe');
-    var ut = sandbox.unsubscribe;
+    var ut = sandbox.events.unsubscribe;
 
     empty( lb.core.events.publisher.getSubscribers() );
 
@@ -137,10 +137,10 @@
     function func2(){ counter2++; }
     function func3(){ counter3++; }
     function func4(){ counter4++; }
-    sandbox.subscribe({},func1);
-    sandbox.subscribe({topic: 'abc'},func2);
-    sandbox.subscribe({topic: 'abc'},func3);
-    sandbox.subscribe({topic: 'abc', type: 'new'}, func4);
+    sandbox.events.subscribe({},func1);
+    sandbox.events.subscribe({topic: 'abc'},func2);
+    sandbox.events.subscribe({topic: 'abc'},func3);
+    sandbox.events.subscribe({topic: 'abc', type: 'new'}, func4);
 
     assert.equals(lb.core.events.publisher.getSubscribers().length, 4,
                                   "assert: 4 subscribers expected initially");
@@ -171,7 +171,7 @@
   }
 
   function testPublish(){
-    var ut = new lb.core.Sandbox('testPublish').publish;
+    var ut = new lb.core.Sandbox('testPublish').events.publish;
 
     empty( lb.core.events.publisher.getSubscribers() );
     var events1 = [];
@@ -189,7 +189,7 @@
   }
 
   function testSend(){
-    var ut = new lb.core.Sandbox('testSend').send;
+    var ut = new lb.core.Sandbox('testSend').server.send;
 
     var url = '/events/';
     var data = {name: 'message', data: [{id:1, title:'Test'}]};
@@ -211,7 +211,7 @@
   }
 
   function testSetTimeout(){
-    var ut = new lb.core.Sandbox('testSetTimeout').setTimeout;
+    var ut = new lb.core.Sandbox('testSetTimeout').utils.setTimeout;
 
     var originalSetTimeout = window.setTimeout;
     var funcs = [];
@@ -245,7 +245,7 @@
   }
 
   function testTrim(){
-    var ut = new lb.core.Sandbox('testTrim').trim;
+    var ut = new lb.core.Sandbox('testTrim').utils.trim;
 
     assert.equals( ut('abcd'), 'abcd',
                           "no change expected when no whitespace is present");
@@ -256,7 +256,7 @@
   }
 
   function testLog(){
-    var ut = new lb.core.Sandbox('testLog').log;
+    var ut = new lb.core.Sandbox('testLog').utils.log;
 
     var logRecords = [];
     var logHandler = function(logRecord){
@@ -275,7 +275,7 @@
   }
 
   function test$(){
-    var ut = new lb.core.Sandbox('test$').$;
+    var ut = new lb.core.Sandbox('test$').dom.$;
 
     assert.equals( ut('testId'), document.getElementById('test$.testId'),
       "$ must return same node as document.getElementById, once prefix added");
@@ -285,7 +285,7 @@
   }
 
   function testElement(){
-    // Unit tests for lb.core.Sandbox#element()
+    // Unit tests for lb.core.Sandbox#dom.element()
 
     // test factory must be configured beforehand
     var capturedNames = [], capturedParams = [], capturedChildNodes = [];
@@ -300,7 +300,7 @@
     assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
 
-    var ut = new lb.core.Sandbox('testElement').element;
+    var ut = new lb.core.Sandbox('testElement').dom.element;
 
     var testName = 'a';
     var testParams = {href:"#first"};
@@ -316,7 +316,7 @@
   }
 
   function testGetClasses(){
-    var ut = new lb.core.Sandbox('testGetClasses').getClasses;
+    var ut = new lb.core.Sandbox('testGetClasses').css.getClasses;
 
     assert.objectEquals( ut( $('testGetClasses.threeClasses') ),
                          {'one':true, 'two':true, 'three':true},
@@ -327,7 +327,7 @@
   }
 
   function testAddClass(){
-    var ut = new lb.core.Sandbox('testAddClass').addClass;
+    var ut = new lb.core.Sandbox('testAddClass').css.addClass;
 
     var div = $('testAddClass.noClass');
     ut(div, 'one');
@@ -343,7 +343,7 @@
   }
 
   function testRemoveClass(){
-    var ut = new lb.core.Sandbox('testRemoveClass').removeClass;
+    var ut = new lb.core.Sandbox('testRemoveClass').css.removeClass;
 
     var div = $('testRemoveClass.threeClasses');
     ut(div, 'two');
@@ -357,7 +357,7 @@
   }
 
   function testFireEvent(){
-    // Unit tests for lb.core.Sandbox#fireEvent
+    // Unit tests for lb.core.Sandbox#dom.fireEvent
 
     var capturedElements = [],
         capturedTypes = [],
@@ -372,7 +372,7 @@
       }
     };
     config.setOptions({'lbFactory':testFactory});
-    var ut = new lb.core.Sandbox('testFireEvent').fireEvent;
+    var ut = new lb.core.Sandbox('testFireEvent').dom.fireEvent;
 
     var testElement = element('div');
     var testProperties = {
@@ -394,7 +394,7 @@
   }
 
   function testCancelEvent(){
-    // Unit tests for lb.core.Sandbox#cancelEvent
+    // Unit tests for lb.core.Sandbox#dom.cancelEvent
 
     var capturedEvents = [];
     var testFactory = {
@@ -403,7 +403,7 @@
       }
     };
     config.setOptions({'lbFactory':testFactory});
-    var ut = new lb.core.Sandbox('testCancelEvent').cancelEvent;
+    var ut = new lb.core.Sandbox('testCancelEvent').dom.cancelEvent;
 
     var testEvent = {type: 'click'};
     ut(testEvent);
@@ -415,16 +415,16 @@
   }
 
   function testGetListeners(){
-    var ut = new lb.core.Sandbox('testGetListeners').getListeners;
+    var ut = new lb.core.Sandbox('testGetListeners').dom.getListeners;
 
     assert.arrayEquals( ut(), [],          "empty array expected initially");
   }
 
   function testAddListener(){
-    // Unit tests for lb.core.Sandbox#addListener
+    // Unit tests for lb.core.Sandbox#dom.addListener
 
     var sandbox = new lb.core.Sandbox('testAddListener');
-    var ut = sandbox.addListener;
+    var ut = sandbox.dom.addListener;
 
     var div1 = $('testAddListener.click');
     var events1 = [];
@@ -435,7 +435,7 @@
     assert.isTrue( object.exists(listener1),
                              "listener object expected for div inside box");
     var listeners1 = events.getListeners(div1, 'click', false);
-    assert.arrayEquals( sandbox.getListeners(), [listener1],
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener1],
                                 "first listener expected in getListeners()");
     assert.equals(listeners1.length, 1,
                                             "one listener expected on div1");
@@ -445,7 +445,7 @@
                             "callback expected to be triggered with event1");
 
     var listener2 = ut(div1, 'click', callback1);
-    assert.arrayEquals( sandbox.getListeners(), [listener1, listener2],
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener1, listener2],
                               "two listeners expected in getListeners()");
 
     var div2 = $('testAddListener.outsideBox');
@@ -461,10 +461,10 @@
   }
 
   function testRemoveListener(){
-    // Unit tests for lb.core.Sandbox#removeListener
+    // Unit tests for lb.core.Sandbox#dom.removeListener
 
     var sandbox = new lb.core.Sandbox('testRemoveListener');
-    var ut = sandbox.removeListener;
+    var ut = sandbox.dom.removeListener;
 
     // no failures expected
     ut();
@@ -472,21 +472,21 @@
 
     var div1 = $('testRemoveListener.click');
     var callback1 = function(){};
-    var listener1 = sandbox.addListener(div1, 'click', callback1);
-    var listener2 = sandbox.addListener(div1, 'click', callback1);
-    var listener3 = sandbox.addListener(div1, 'click', callback1);
+    var listener1 = sandbox.dom.addListener(div1, 'click', callback1);
+    var listener2 = sandbox.dom.addListener(div1, 'click', callback1);
+    var listener3 = sandbox.dom.addListener(div1, 'click', callback1);
 
     ut(listener1);
-    assert.arrayEquals( sandbox.getListeners(), [listener2,listener3],
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener2,listener3],
                                     "first listener expected to be removed.");
     ut(listener1);
-    assert.arrayEquals( sandbox.getListeners(), [listener2,listener3],
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener2,listener3],
                      "no change expected for first listner already removed.");
     ut(listener3);
-    assert.arrayEquals( sandbox.getListeners(), [listener2],
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener2],
                                     "third listener expected to be removed.");
     ut(listener2);
-    assert.arrayEquals( sandbox.getListeners(), [],
+    assert.arrayEquals( sandbox.dom.getListeners(), [],
                                     "second listener expected to be removed.");
 
     assert.arrayEquals( events.getListeners(div1,'click',false), [],
@@ -494,22 +494,22 @@
   }
 
   function testRemoveAllListeners(){
-    // Unit tests for lb.core.Sandbox#removeAllListeners
+    // Unit tests for lb.core.Sandbox#dom.removeAllListeners
 
     var sandbox = new lb.core.Sandbox('testRemoveListener');
-    var ut = sandbox.removeAllListeners;
+    var ut = sandbox.dom.removeAllListeners;
 
     // no error expected
     ut();
 
     var div1 = $('testRemoveAllListeners.click');
     var callback1 = function(){};
-    var listener1 = sandbox.addListener(div1, 'click', callback1);
-    var listener2 = sandbox.addListener(div1, 'click', callback1);
-    var listener3 = sandbox.addListener(div1, 'click', callback1);
+    var listener1 = sandbox.dom.addListener(div1, 'click', callback1);
+    var listener2 = sandbox.dom.addListener(div1, 'click', callback1);
+    var listener3 = sandbox.dom.addListener(div1, 'click', callback1);
 
     ut();
-    assert.arrayEquals( sandbox.getListeners(), [],
+    assert.arrayEquals( sandbox.dom.getListeners(), [],
                                     "all listeners expected to be removed.");
 
     assert.arrayEquals( events.getListeners(div1,'click',false), [],
@@ -520,10 +520,7 @@
   }
 
   function testGetLocation(){
-    // Unit tests for lb.core.Sandbox#getLocation
-
-    var sandbox = new lb.core.Sandbox('testGetLocation');
-    var ut = sandbox.getLocation;
+    var ut = new lb.core.Sandbox('testGetLocation').url.getLocation;
 
     var location = ut();
     assert.isTrue( object.exists(location),      "location object expected");
@@ -572,10 +569,8 @@
   }
 
   function testSetHash(){
-    // Unit tests for lb.core.Sandbox#setHash
+    var ut = new lb.core.Sandbox('testSetHash').url.setHash;
 
-    var sandbox = new lb.core.Sandbox('testSetHash');
-    var ut = sandbox.setHash;
     lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
     lb.base.history.init();
 
@@ -591,10 +586,8 @@
   }
 
   function testOnHashChange(test){
-    // Unit tests for lb.core.Sandbox#onHashChange
+    var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
-    var sandbox = new lb.core.Sandbox('testOnHashChange');
-    var ut = sandbox.onHashChange;
     lb.base.config.setOptions({'lb:history:cheapUrl':'favicon.ico'});
     lb.base.history.init();
 
@@ -624,36 +617,50 @@
     },200);
   }
 
-  var tests = {
+  testrunner.define({
     testNamespace: testNamespace,
     testConstructor: testConstructor,
     testGetId: testGetId,
     testGetBox: testGetBox,
-    testIsInBox: testIsInBox,
-    testSubscribe: testSubscribe,
-    testUnsubscribe: testUnsubscribe,
-    testPublish: testPublish,
-    testSend: testSend,
-    testSetTimeout: testSetTimeout,
-    testTrim: testTrim,
-    testLog: testLog,
-    test$: test$,
-    testElement: testElement,
+    testIsInBox: testIsInBox
+  },"lb.core.Sandbox");
+
+  testrunner.define({
     testGetClasses: testGetClasses,
     testAddClass: testAddClass,
-    testRemoveClass: testRemoveClass,
+    testRemoveClass: testRemoveClass
+  },"lb.core.Sandbox.css");
+
+  testrunner.define({
+    test$: test$,
+    testElement: testElement,
     testFireEvent: testFireEvent,
     testCancelEvent: testCancelEvent,
     testGetListeners: testGetListeners,
     testaddListener: testAddListener,
     testRemoveListener: testRemoveListener,
-    testRemoveAllListeners: testRemoveAllListeners,
+    testRemoveAllListeners: testRemoveAllListeners
+  },"lb.core.Sandbox.dom");
+
+  testrunner.define({
+    testSubscribe: testSubscribe,
+    testUnsubscribe: testUnsubscribe,
+    testPublish: testPublish
+  },"lb.core.Sandbox.events");
+
+  testrunner.define({
+    testSend: testSend
+  },"lb.core.Sandbox.server");
+
+  testrunner.define({
     testGetLocation: testGetLocation,
     testSetHash: testSetHash,
     testOnHashChange: testOnHashChange
-  };
+  },"lb.core.Sandbox.url");
 
-  testrunner.define(tests, "lb.core.Sandbox");
-  return tests;
-
+  testrunner.define({
+    testSetTimeout: testSetTimeout,
+    testTrim: testTrim,
+    testLog: testLog
+  },"lb.core.Sandbox.utils");
 }());
