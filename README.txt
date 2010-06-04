@@ -131,6 +131,6 @@ INCLUDED SOFTWARE
 
 HISTORY
 
-  2010-06-03, 1.0.0.0, Public Release on GitHub
-
+  2010-06-03, Public Release on GitHub
+  2010-06-04, v1.0.0, Introduction of Semantic Versioning [http://semver.org]
 
