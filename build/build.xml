@@ -200,10 +200,11 @@
       <file file="../src/lb.base.config.js"/>
       <file file="../src/lb.base.dom.js"/>
       <file file="../src/lb.base.dom.css.js"/>
-      <file file="../src/lb.base.dom.factory.js"/>
       <file file="../src/lb.base.dom.Listener.js"/>
+      <file file="../src/lb.base.dom.factory.js"/>
       <file file="../src/lb.base.history.js"/>
       <file file="../src/lb.base.log.js"/>
+      <file file="../src/lb.base.object.js"/>
       <file file="../src/lb.base.string.js"/>
       <file file="../src/lb.base.json.js"/>
       <file file="../src/lb.base.ajax.js"/>
