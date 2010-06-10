@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-05-31
+  Version: 2010-06-10
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -141,11 +141,83 @@
     </sequential>
   </macrodef>
 
-  <target name="combine" description="Combine JavaScript files with Combiner">
+  <target name="combine-with-combiner" description="Combine JavaScript files with Combiner">
     <mkdir dir="out/js"/>
     <fileset id="allinfiles" dir="../src" includes="*.js" />
     <pathconvert property="allin" pathsep=" " refid="allinfiles" />
     <combiner in="${allin}" out="out/js/lb-full.js" />
+  </target>
+  
+  <target name="combine" description="Combine JavaScript files using concat task">
+    <!-- Temporary replacement for Combiner to avoid issue: wrong order of dependencies -->
+    <mkdir dir="out/js"/>
+    <concat binary="true" destfile="out/js/lb-full.js">
+      <!-- Google Closure (extracts) -->
+      <file file="../src/closure/goog.js"/>
+      <file file="../src/closure/goog.array.js"/>
+      <file file="../src/closure/goog.string.js"/>
+      <file file="../src/closure/goog.object.js"/>
+      <file file="../src/closure/goog.structs.js"/>
+      <file file="../src/closure/goog.iter.js"/>
+      <file file="../src/closure/goog.structs.Map.js"/>
+      <file file="../src/closure/goog.structs.Set.js"/>
+      <file file="../src/closure/goog.debug.js"/>
+      <file file="../src/closure/goog.debug.LogRecord.js"/>
+      <file file="../src/closure/goog.debug.Logger.js"/>
+      <file file="../src/closure/goog.debug.RelativeTimeProvider.js"/>
+      <file file="../src/closure/goog.debug.Formatter.js"/>
+      <file file="../src/closure/goog.debug.Console.js"/>
+      <file file="../src/closure/goog.dom.TagName.js"/>
+      <file file="../src/closure/goog.dom.classes.js"/>
+      <file file="../src/closure/goog.math.Coordinate.js"/>
+      <file file="../src/closure/goog.math.Size.js"/>
+      <file file="../src/closure/goog.userAgent.js"/>
+      <file file="../src/closure/goog.dom.js"/>
+      <file file="../src/closure/goog.debug.errorHandlerWeakDep.js"/>
+      <file file="../src/closure/goog.Disposable.js"/>
+      <file file="../src/closure/goog.events.Event.js"/>
+      <file file="../src/closure/goog.events.BrowserEvent.js"/>
+      <file file="../src/closure/goog.events.EventWrapper.js"/>
+      <file file="../src/closure/goog.events.Listener.js"/>
+      <file file="../src/closure/goog.structs.SimplePool.js"/>
+      <file file="../src/closure/goog.userAgent.jscript.js"/>
+      <file file="../src/closure/goog.events.pools.js"/>
+      <file file="../src/closure/goog.events.js"/>
+      <file file="../src/closure/goog.events.EventTarget.js"/>
+      <file file="../src/closure/goog.Timer.js"/>
+      <file file="../src/closure/goog.events.EventHandler.js"/>
+      <file file="../src/closure/goog.History.js"/>
+      <file file="../src/closure/goog.json.js"/>
+      <file file="../src/closure/goog.net.ErrorCode.js"/>
+      <file file="../src/closure/goog.net.EventType.js"/>
+      <file file="../src/closure/goog.net.XmlHttp.js"/>
+      <file file="../src/closure/goog.net.xhrMonitor.js"/>
+      <file file="../src/closure/goog.net.XhrIo.js"/>
+      <!-- Scalable JavaScript Application -->
+      <file file="../src/lb.js"/>
+      <file file="../src/lb.base.js"/>
+      <file file="../src/lb.base.array.js"/>
+      <file file="../src/lb.base.config.js"/>
+      <file file="../src/lb.base.dom.js"/>
+      <file file="../src/lb.base.dom.css.js"/>
+      <file file="../src/lb.base.dom.factory.js"/>
+      <file file="../src/lb.base.dom.Listener.js"/>
+      <file file="../src/lb.base.history.js"/>
+      <file file="../src/lb.base.log.js"/>
+      <file file="../src/lb.base.string.js"/>
+      <file file="../src/lb.base.json.js"/>
+      <file file="../src/lb.base.ajax.js"/>
+      <file file="../src/lb.core.js"/>
+      <file file="../src/lb.core.events.js"/>
+      <file file="../src/lb.core.events.publisher.js"/>
+      <file file="../src/lb.core.events.Subscriber.js"/>
+      <file file="../src/lb.core.application.js"/>
+      <file file="../src/lb.core.Sandbox.js"/>
+      <file file="../src/lb.core.Module.js"/>
+      <file file="../src/lb.core.application.js"/>
+      <file file="../src/lb.data.js" />
+      <file file="../src/lb.ui.js" />
+    </concat>
   </target>
 
   <macrodef name="yuicompressor">
