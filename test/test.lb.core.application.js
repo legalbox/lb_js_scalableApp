@@ -155,7 +155,14 @@
     var ut = lb.core.application.startAll;
 
     array.empty( lb.core.application.getModules() );
+    // replace history.init() with stub function
+    var savedHistoryInit = lb.base.history.init;
+    var initCounter = 0;
+    lb.base.history.init = function(){
+      initCounter++;
+    };
     ut();
+    assert.equals(initCounter,   1,    "history manager must be initialized");
 
     var module1 = new Module('lb.ui.stub1', createStubModule1);
     var module2 = new Module('lb.ui.stub2', createStubModule2);
@@ -164,19 +171,16 @@
     lb.core.application.addModule(module2);
     lb.core.application.addModule(module3);
 
-    // replace history.init() with stub function
-    var initCounter = 0;
-    lb.base.history.init = function(){
-      initCounter++;
-    };
     startCounter1 = 0;
     startCounter2 = 0;
     startCounter3 = 0;
     ut();
-    assert.equals(initCounter,   1,    "history manager must be initialized");
     assert.equals(startCounter1, 1,             "module 1 must have started");
     assert.equals(startCounter2, 1,             "module 2 must have started");
     assert.equals(startCounter3, 1,             "module 3 must have started");
+
+    // restore original history.init function
+    lb.base.history.init = savedHistoryInit;
   }
 
   function testEndAll(){
