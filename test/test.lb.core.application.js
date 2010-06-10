@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-10
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -155,14 +155,7 @@
     var ut = lb.core.application.startAll;
 
     array.empty( lb.core.application.getModules() );
-    // replace history.init() with stub function
-    var savedHistoryInit = lb.base.history.init;
-    var initCounter = 0;
-    lb.base.history.init = function(){
-      initCounter++;
-    };
     ut();
-    assert.equals(initCounter,   1,    "history manager must be initialized");
 
     var module1 = new Module('lb.ui.stub1', createStubModule1);
     var module2 = new Module('lb.ui.stub2', createStubModule2);
@@ -179,8 +172,6 @@
     assert.equals(startCounter2, 1,             "module 2 must have started");
     assert.equals(startCounter3, 1,             "module 3 must have started");
 
-    // restore original history.init function
-    lb.base.history.init = savedHistoryInit;
   }
 
   function testEndAll(){
@@ -197,6 +188,7 @@
     lb.core.application.addModule(module3);
 
     // replace history.destroy() with stub function
+    var savedHistoryDestroy = lb.base.history.destroy;
     var destroyCounter = 0;
     lb.base.history.destroy = function(){
       destroyCounter++;
@@ -212,12 +204,22 @@
     assert.equals(endCounter3, 1,                 "module 3 must have ended");
     assert.arrayEquals( lb.core.application.getModules(), [],
                                                    "no more module expected");
+
+    // restore original history.destroy()
+    lb.base.history.destroy = savedHistoryDestroy;
   }
 
   function testRun(){
     var ut = lb.core.application.run;
 
+    // replace history.init() with stub function
+    var savedHistoryInit = lb.base.history.init;
+    var initCounter = 0;
+    lb.base.history.init = function(){
+      initCounter++;
+    };
     ut();
+    assert.equals(initCounter,   1,    "history manager must be initialized");
 
     var onloadListeners = events.getListeners(window, 'load', false);
     assert.equals( onloadListeners.length, 1, "one onload listener expected");
@@ -229,6 +231,9 @@
                                            "one onunload listener expected");
     assert.equals( onunloadListeners[0].listener, lb.core.application.endAll,
                                        "endAll expected as onunload handler");
+
+    // restore original history.init function
+    lb.base.history.init = savedHistoryInit;
   }
 
   var tests = {
