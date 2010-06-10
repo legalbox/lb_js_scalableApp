@@ -147,7 +147,7 @@
     <pathconvert property="allin" pathsep=" " refid="allinfiles" />
     <combiner in="${allin}" out="out/js/lb-full.js" />
   </target>
-  
+
   <target name="combine" description="Combine JavaScript files using concat task">
     <!-- Temporary replacement for Combiner to avoid issue: wrong order of dependencies -->
     <mkdir dir="out/js"/>

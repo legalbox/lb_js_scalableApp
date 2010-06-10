@@ -9,7 +9,7 @@ LANGUAGES
 DESCRIPTION
 
   The Scalable JavaScript Application framework is a client-side library
-  developped by Legal Box to create modular Web applications. It is based on
+  developed by Legal Box to create modular Web applications. It is based on
   the Scalable JavaScript Application Architecture [1] by Nicholas Zakas.
 
 FIRST STEPS
