@@ -178,7 +178,16 @@
     var ut = lb.core.application.endAll;
 
     array.empty( lb.core.application.getModules() );
+    // replace history.destroy() with stub function
+    var savedHistoryDestroy = lb.base.history.destroy;
+    var destroyCounter = 0;
+    lb.base.history.destroy = function(){
+      destroyCounter++;
+    };
+
     ut();
+    assert.equals(destroyCounter, 1,
+                                  "history manager expected to be destroyed");
 
     var module1 = new Module('lb.ui.stub1', createStubModule1);
     var module2 = new Module('lb.ui.stub2', createStubModule2);
@@ -187,18 +196,10 @@
     lb.core.application.addModule(module2);
     lb.core.application.addModule(module3);
 
-    // replace history.destroy() with stub function
-    var savedHistoryDestroy = lb.base.history.destroy;
-    var destroyCounter = 0;
-    lb.base.history.destroy = function(){
-      destroyCounter++;
-    };
     endCounter1 = 0;
     endCounter2 = 0;
     endCounter3 = 0;
     ut();
-    assert.equals(destroyCounter, 1,
-                                  "history manager expected to be destroyed");
     assert.equals(endCounter1, 1,                 "module 1 must have ended");
     assert.equals(endCounter2, 1,                 "module 2 must have ended");
     assert.equals(endCounter3, 1,                 "module 3 must have ended");
