@@ -218,6 +218,8 @@
     lb.base.history.init = function(){
       initCounter++;
     };
+    var unloadListeners = events.getListeners(window, 'unload', false);
+    var unloadListenersCountBefore = unloadListeners.length;
     ut();
     assert.equals(initCounter,   1,    "history manager must be initialized");
 
@@ -226,10 +228,11 @@
     assert.equals( onloadListeners[0].listener, lb.core.application.startAll,
                                        "startAll expected as onload handler");
 
-    var onunloadListeners = events.getListeners(window, 'unload', false);
-    assert.equals( onunloadListeners.length, 1,
+    unloadListeners = events.getListeners(window, 'unload', false);
+    assert.equals( unloadListeners.length, unloadListenersCountBefore + 1,
                                            "one onunload listener expected");
-    assert.equals( onunloadListeners[0].listener, lb.core.application.endAll,
+    assert.equals( unloadListeners[unloadListeners.length - 1].listener,
+                   lb.core.application.endAll,
                                        "endAll expected as onunload handler");
 
     // restore original history.init function
