@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-10
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -13,6 +13,7 @@
 /*requires lb.base.ajax.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
+/*requires bezen.array.js */
 /*requires bezen.testrunner.js */
 /*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -24,6 +25,7 @@
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
+      empty = bezen.array.empty,
       testrunner = bezen.testrunner,
       MockXmlHttp = goog.net.MockXmlHttp;
 
@@ -35,6 +37,8 @@
 
   function testSend(){
     var ut = lb.base.ajax.send;
+
+    empty( MockXmlHttp.all );
 
     var url = '/events/';
     var data = {name: 'message', data: [{id:1, title:'Test'}]};
