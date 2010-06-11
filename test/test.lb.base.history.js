@@ -19,7 +19,7 @@
 /*requires bezen.testrunner.js */
 /*requires goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
-/*global lb, bezen, window, setTimeout */
+/*global lb, bezen, goog, window, setTimeout, document */
 (function() {
   // Builder of
   // Closure object for Test of lb.base.history
