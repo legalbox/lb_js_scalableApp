@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>All Unit Tests running on the Minified Script</title>
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+    <meta name="DC.publisher" content="Legal Box SAS" />
+    <meta name="DC.creator" content="Eric Bréchemier" />
+    <meta name="DC.rights" content=
+    "Copyright Legal Box SAS (c) 2010, All Rights Reserved.
+     Licensed under a BSD License" />
+    <meta name="DC.rights" scheme="DCTERMS.URI"
+          content="http://creativecommons.org/licenses/BSD/" />
+    <meta name="DC.date" content="2010-06-11" />
+    <link id='favicon' rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="style/test.css" />
+  </head>
+  <body>
+    <h1>
+      All Unit Tests running on the
+      <a href="../build/out/js/lb-min.js">Minified Script</a>.
+    </h1>
+    <div class="status-text" id="bezen.test.status">0 / 0</div>
+    <div class="progress-bar">
+      <div class="progress" id="bezen.test.progress"></div>
+    </div>
+    <ul>
+      <li>
+      Back to the <a href="index.html">list of unit tests</a>.
+      </li>
+    </ul>
+    <p>
+      <em>Note:</em>
+      The output of the test is displayed in the div below.
+      You may also use 
+      <a href="https://addons.mozilla.org/fr/firefox/addon/1843" 
+         target="_blank">Firebug</a> 
+      or
+      <a href="http://www.billyreisinger.com/jash/" 
+         target="_blank">Jash</a>
+      to see the output of the test in a console.
+    </p>
+
+    <div class='console'>
+      <pre id='bezen.log'></pre>
+    </div>
+    <!--script type="text/javascript" 
+        src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
+    </script-->
+
+    <!--[if IE]>
+      <iframe id="lb.base.history.iframe" src="favicon.ico" class="hidden"
+      ></iframe>
+    <![endif]-->
+    <input id="lb.base.history.input" type="hidden" />
+
+    <div id='noClass'></div>
+    <div id='emptyClass' class=''></div>
+    <div id='oneClass' class='one'></div>
+    <div id='twoClasses' class='one two'></div>
+    <div id='threeClasses' class='one two three'></div>
+
+    <div id='testId'></div>
+    <div id='testElement'></div>
+
+    <div id='testDiv'></div>
+    <div id='div1'></div>
+    <div id='div2'></div>
+    <div id='div3'></div>
+
+    <div id='testGetBox'></div>
+
+    <div id='testIsInBox'>
+      <div id='testIsInBox.inBox'></div>
+    </div>
+    <div id='testIsInBox.outsideBox'></div>
+
+    <div id='test$'>
+      <div id='test$.testId'></div>
+    </div>
+    <div id='test$.outsideBox'></div>
+
+    <div id='testGetClasses'>
+      <div id='testGetClasses.threeClasses' class='one two three'></div>
+    </div>
+    <div id='testGetClasses.outsideBox' class='one two three'></div>
+
+    <div id='testAddClass'>
+      <div id='testAddClass.noClass'></div>
+    </div>
+    <div id='testAddClass.outsideBox' class='one two'></div>
+
+    <div id='testRemoveClass'>
+      <div id='testRemoveClass.threeClasses' class='one two three'></div>
+    </div>
+    <div id='testRemoveClass.outsideBox' class='one two three'></div>
+
+    <div id='testGetListeners'></div>
+
+    <div id='testAddListener'>
+      <div id='testAddListener.click'></div>
+    </div>
+    <div id='testAddListener.outsideBox'></div>
+
+    <div id='testRemoveListener'>
+      <div id='testRemoveListener.click'></div>
+    </div>
+
+    <div id='testRemoveAllListeners'>
+      <div id='testRemoveAllListeners.click'></div>
+    </div>
+
+    <script src="bezen.org/bezen.js"></script>
+    <script src="bezen.org/bezen.array.js"></script>
+    <script src="bezen.org/bezen.object.js"></script>
+    <script src="bezen.org/bezen.log.js"></script>
+    <script src="bezen.org/bezen.assert.js"></script>
+    <script src="bezen.org/bezen.error.js"></script>
+    <script src="bezen.org/bezen.string.js"></script>
+    <script src="bezen.org/bezen.style.js"></script>
+    <script src="bezen.org/bezen.testrunner.js"></script>
+    <script src="bezen.org/bezen.dom.js"></script>
+
+    <script src="../build/out/js/lb-min.js"></script>
+    <script src="closure/goog.net.MockXmlHttp.js"></script>
+
+    <script src="test.lb.js"></script>
+    <script src="test.lb.base.js"></script>
+    <script src="test.lb.base.ajax.js"></script>
+    <script src="test.lb.base.array.js"></script>
+    <script src="test.lb.base.config.js"></script>
+    <script src="test.lb.base.dom.js"></script>
+    <script src="test.lb.base.dom.css.js"></script>
+    <script src="test.lb.base.dom.Listener.js"></script>
+    <script src="test.lb.base.dom.factory.js"></script>
+    <script src="test.lb.base.json.js"></script>
+    <script src="test.lb.base.log.js"></script>
+    <script src="test.lb.base.object.js"></script>
+    <script src="test.lb.base.string.js"></script>
+    <script src="test.lb.core.js"></script>
+    <script src="test.lb.core.events.js"></script>
+    <script src="test.lb.core.events.publisher.js"></script>
+    <script src="test.lb.core.events.Subscriber.js"></script>
+    <script src="test.lb.core.Module.js"></script>
+    <script src="test.lb.core.Sandbox.js"></script>
+    <script src="test.lb.core.application.js"></script>
+    <script src="test.lb.data.js"></script>
+    <script src="test.lb.ui.js"></script>
+
+    <!-- These unit tests, which destroy the history manager, must run last -->
+    <script src="test.lb.base.history.js"></script>
+
+    <script>
+    bezen.testrunner.run();
+    </script>
+  </body>
+</html>
