@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-10
  */
 /*requires lb.core.js */
 /*requires lb.base.log.js */
@@ -103,9 +103,7 @@ lb.core.application = lb.core.application || (function() {
     // Function: startAll()
     // Start all registered modules.
     //
-    // The local navigation history is also initialized beforehand.
 
-    history.init();
     for (var i=0; i<modules.length; i++){
       modules[i].start();
     }
@@ -136,9 +134,16 @@ lb.core.application = lb.core.application || (function() {
     // Function: run()
     // Run the application.
     //
+    // Warning:
+    // This function must be called before the page load event, e.g. in an
+    // internal or external script included at the end of the page body. This
+    // is to avoid a page reload when the history manager is initialized.
+    //
+    // * the local navigation history is initialized,
     // * startAll gets registered as listener for window 'load' event,
     // * endAll gets registered as listener for window 'unload' event.
 
+    history.init();
     loadListener = new Listener(window, 'load', startAll);
     unloadListener = new Listener(window, 'unload', endAll);
   }

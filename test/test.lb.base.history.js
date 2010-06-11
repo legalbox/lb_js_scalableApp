@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-10
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -128,7 +128,6 @@
 
     // Callback is asynchronous in IE (synchronous in other browsers)
     test.startAsyncTest();
-    bezen.log.on(); // debug
 
     var capturedHash = [];
     function captureHash(hash){
