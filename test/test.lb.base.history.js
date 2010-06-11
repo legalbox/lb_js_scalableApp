@@ -141,6 +141,8 @@
     // window.location.hash is not a reliable check, it gets decoded in FF
     assert.equals( lb.base.history.getHash(), '#one space',
                "hash with space expected to be properly encoded and decoded");
+
+    ut('');
   }
 
   function testOnHashChange(test){
@@ -183,6 +185,7 @@
         changeHash();
       } else {
         test.endAsyncTest();
+        lb.base.history.setHash('');
       }
     };
 
