@@ -29,6 +29,7 @@
   var assert = bezen.assert,
       object = bezen.object,
       array = bezen.array,
+      last = bezen.array.last,
       startsWith = bezen.string.startsWith,
       testrunner = bezen.testrunner,
       Module = lb.core.Module,
@@ -201,19 +202,24 @@
   function testRun(){
     var ut = lb.core.application.run;
 
+    var onloadListeners = events.getListeners(window, 'load', false);
+    var onloadListenersCountBefore = onloadListeners.length;
+
     var unloadListeners = events.getListeners(window, 'unload', false);
     var unloadListenersCountBefore = unloadListeners.length;
     ut();
 
-    var onloadListeners = events.getListeners(window, 'load', false);
-    assert.equals( onloadListeners.length, 1, "one onload listener expected");
-    assert.equals( onloadListeners[0].listener, lb.core.application.startAll,
-                                       "startAll expected as onload handler");
+    onloadListeners = events.getListeners(window, 'load', false);
+    assert.equals( onloadListeners.length, onloadListenersCountBefore + 1,
+                                        "one more onload listener expected");
+    assert.equals( last(onloadListeners).listener,
+                   lb.core.application.startAll,
+                                  "startAll expected as last onload handler");
 
     unloadListeners = events.getListeners(window, 'unload', false);
     assert.equals( unloadListeners.length, unloadListenersCountBefore + 1,
                                         "one more onunload listener expected");
-    assert.equals( unloadListeners[unloadListeners.length - 1].listener,
+    assert.equals( last(unloadListeners).listener,
                    lb.core.application.endAll,
                                    "endAll expected as last unload listener");
   }
