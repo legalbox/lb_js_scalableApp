@@ -36,7 +36,6 @@ lb.core.application = lb.core.application || (function() {
       removeAll = lb.base.array.removeAll,
       config = lb.base.config,
       Listener = lb.base.dom.Listener,
-      history = lb.base.history,
 
   // Private members
 
@@ -108,14 +107,11 @@ lb.core.application = lb.core.application || (function() {
     // Terminate all registered modules.
     //
     // All registered modules are discarded.
-    //
-    // The local navigation history is also destroyed afterwards.
 
     for (var i=0; i<modules.length; i++){
       modules[i].end();
     }
     removeAll(modules);
-    history.destroy();
     if (loadListener){
       loadListener.detach();
     }
