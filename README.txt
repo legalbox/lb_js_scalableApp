@@ -31,6 +31,11 @@ FIRST STEPS
   the Sandbox build/out/doc/files/lb-core-Sandbox-js.html and the application
   build/out/files/lb-core-application-js.html
 
+  For the purpose of Semantic Versioning [3], the public API of this library
+  comprises all modules and methods in the lb.core namespace. The details of
+  the modules in lb.base, a layer for cross-browser compatibility, are
+  implementation specific and may vary from version to version.
+
 REFERENCES
 
   [1] Scalable JavaScript Application Architecture, by Nicholas Zakas
@@ -38,6 +43,9 @@ REFERENCES
 
   [2] Design Patterns for Scalable JavaScript Application by Legal Box
   ./doc/javascript-application-design-patterns.odt
+
+  [3] Semantic Versioning
+  http://semver.org
 
 REQUIREMENTS
 
@@ -132,6 +140,6 @@ INCLUDED SOFTWARE
 HISTORY
 
   2010-06-03, Public Release on GitHub
-  2010-06-04, v1.0.0, Introduction of Semantic Versioning [http://semver.org]
+  2010-06-04, v1.0.0, Introduction of Semantic Versioning [3]
   2010-06-10, v1.0.1, Minor fix: replaced Combiner with concat
 
