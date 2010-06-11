@@ -5,23 +5,17 @@
  * This module provides support for local navigation, setting, getting and
  * detecting changes in the hash, the local part of the url.
  *
- * This module requires two elements to be present in the initial document,
- * an iframe of id 'lb.base.history.iframe' and a hidden input field of id
- * 'lb.base.history.input'. In case these elements are not found (and the
- * module is enabled), they will be created using document.write, which
- * prevents this module from being loaded dynamically.
+ * This module must be loaded in a static way, e.g. part of an external script
+ * included at the end of the <body>. During its loading, it will initialize
+ * the history manager, which must be done before the page "load" event.
+ * Loading this module dynamically after the page "load" may result in the page
+ * being reset to blank.
  *
- * When the iframe is not present in the document, the configuration property
- * 'lbHistoryCheapUrl' must be configured to the relative URL of a resource
- * from the same domain, already loaded to avoid a new query, such as the path
- * to the favicon. The path used by default is '/favicon.ico' which is the most
- * common location for the favicon. In case the favicon is located at a
- * different location, or is unavailable, you must set this property to the
- * url of an existing resource. A missing resource may cause "Access is denied"
- * errors in IE when the page is refreshed and setToken() is called to set a
- * new hash, depending on unidentified conditions: in a test session, the same
- * code produced the error or not on refresh depending on previous tests and
- * the state of the browser cache.
+ * This module requires two elements to be present in the initial document,
+ * an iframe of id 'lb.base.history.iframe' (in Internet Explorer) and a hidden
+ * input field of id 'lb.base.history.input' (in all browsers, including IE).
+ * In case these elements are not found, they will be created during the module
+ * initialization using document.write.
  *
  * The two elements should be hidden. The source of the iframe can be any
  * resource on the same from the same domain as the document [1]. We advise to
@@ -36,7 +30,7 @@
  * | <![endif]-->
  * | <input id="lb.base.history.input" type="hidden" />
  *
- * The following CSS can be used to hide the iframe (in IE):
+ * The following CSS can be used to hide the iframe (in IE)
  * | iframe.hidden {
  * |   position: absolute;
  * |   top: 0;
@@ -46,12 +40,27 @@
  * |   visibility: hidden;
  * | }
  *
+ * When the iframe is not present in the document, its src attribute location
+ * is set to the expected location of the favicon:
+ * - either configured in a link part of the page <head>:
+ * |  <link rel='shortcut icon' href='favicon.ico' />
+ * - or by default '/favicon.ico', at the root of the web site.
+ *
+ * Warning:
+ * In case the resource referenced by the iframe src is missing, e.g. because
+ * the iframe was not present in the document and no favicon is present at the
+ * root of the web server, "Access is denied" errors may happen at random in IE
+ * when the page is refreshed and setToken() is called to set a new hash.
+ *
  * References:
  *   + [1] YUI 2: Browser History Manager
  *     http://developer.yahoo.com/yui/history/
  *
  *   + [2] History - Closure Library API Documentation
  *     http://closure-library.googlecode.com/svn/docs/class_goog_History.html
+ *
+ *   + [3] How to Add a Shortcut Icon to a Web Page
+ *     http://msdn.microsoft.com/en-us/library/ms537656%28VS.85%29.aspx
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -64,11 +73,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-11
  */
 /*requires lb.base.js */
-/*requires lb.base.config.js */
 /*requires lb.base.dom.js */
+/*requires lb.base.dom.Listener.js */
 /*requires closure/goog.events.js */
 /*requires closure/goog.History.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
@@ -95,46 +104,46 @@ lb.base.history = lb.base.history || (function() {
         //                                   /Global_Functions/encodeURI
       encodeHash = window.encodeURI,
       decodeHash = window.decodeURI,
-      getOption = lb.base.config.getOption,
       $ = lb.base.dom.$,
+      Listener = lb.base.dom.Listener,
 
   // Private fields
 
      // object - the underlying history manager (instance of goog.History)
-     history = null;
+     history = null,
 
-  function init(){
-    // Function: init()
-    // Initialize the history manager.
+     // object - the unload listener to destroy the history
+     //          (instance of lb.base.dom.Listener)
+     unloadListener = null;
+
+  function getFaviconUrl(){
+    // Function: getFaviconUrl(): string
+    // Get the expected url of the shortcut icon.
     //
-    // Notes:
-    // Nothing happens when the history manager has already been initialized.
-    // The polling loop does not start until the first listener is added in a
-    // call to onHashChange().
+    // Returns:
+    //   - string, the href of the first link with rel 'shortcut icon'
+    //     (case-insensitive) found in the <head>,
+    //   - or '/favicon.ico' by default
+    //
+    // Reference:
+    //   [1] How to Add a Shortcut Icon to a Web Page
+    //   http://msdn.microsoft.com/en-us/library/ms537656%28VS.85%29.aspx
 
-    if (history){
-      // already initialized
-      return;
+    var head = document.getElementsByTagName('HEAD')[0],
+        node;
+    if (head){
+      node = head.firstChild;
+      while(node){
+        if ( node.tagName === 'LINK' &&
+             node.rel && node.rel.toUpperCase() === 'SHORTCUT ICON' ){
+          return node.href;
+        }
+        node = node.nextSibling;
+      }
     }
 
-    history = new History(
-      // opt_invisible : boolean
-      // Don't hide the hash, make it visible in url
-      false,
-      // opt_blankPageUrl : string
-      // Only used in IE when the iframe is not present.
-      // Use the favicon as default, it is probably in cache already.
-      // If you need to customize this path, you should create the iframe.
-      getOption('lbHistoryCheapUrl','/favicon.ico'),
-      // opt_input : HTMLInputElement
-      // HTML input element used to track state in all browsers.
-      // Initialize with $('lb.base.history.input') (may be null).
-      $('lb.base.history.input'),
-      // opt_iframe : HTMLIFrameElement
-      // iframe used in IE to push history state changes.
-      // Initialize with $('lb.base.history.iframe') (may be null).
-      $('lb.base.history.iframe')
-    );
+    // default to '/favicon.ico' when missing
+    return '/favicon.ico';
   }
 
   function getHash(){
@@ -220,10 +229,59 @@ lb.base.history = lb.base.history || (function() {
       history.dispose();
       history = null;
     }
+    if (unloadListener){
+      unloadListener.detach();
+      unloadListener = null;
+    }
   }
 
+  // Initialize the history manager.
+  //
+  // Notes:
+  // Nothing happens when the history manager has already been initialized.
+  // The polling loop does not start until the first listener is added in a
+  // call to onHashChange().
+
+  if (history){
+    // already initialized
+    return;
+  }
+
+  history = new History(
+    // opt_invisible : boolean
+    // Don't hide the hash, make it visible in url
+    false,
+    // opt_blankPageUrl : string
+    // Only used in IE when the iframe is not present.
+    // Use the favicon as default, it is probably in cache already.
+    // If you need to customize this path, you should create the iframe,
+    // or specify the path to the favicon in a link with rel='shortcut icon'
+    // in the document <head>:
+    //   <link rel='shortcut icon' href='myicon.ico'/>
+    //
+    // Reference:
+    //   [1] Favicon - From Wikipedia, the free encyclopedia
+    //   http://en.wikipedia.org/wiki/Favicon$
+    //
+    //   [2] How to Add a Shortcut Icon to a Web Page
+    //   http://msdn.microsoft.com/en-us/library/ms537656%28VS.85%29.aspx
+    //
+    //   [3] How to Add a Favicon to your Site
+    //   http://www.w3.org/2005/10/howto-favicon
+    getFaviconUrl(),
+    // opt_input : HTMLInputElement
+    // HTML input element used to track state in all browsers.
+    // Initialize with $('lb.base.history.input') (may be null).
+    $('lb.base.history.input'),
+    // opt_iframe : HTMLIFrameElement
+    // iframe used in IE to push history state changes.
+    // Initialize with $('lb.base.history.iframe') (may be null).
+    $('lb.base.history.iframe')
+  );
+  unloadListener = new Listener(window, 'unload', destroy);
+
   return { // public API
-    init: init,
+    getFaviconUrl: getFaviconUrl,
     getHash: getHash,
     setHash: setHash,
     onHashChange: onHashChange,

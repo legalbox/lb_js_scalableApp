@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-10
+ * Version:   2010-06-11
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -15,7 +15,10 @@
 /*requires bezen.dom.js */
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
+/*requires bezen.string.js */
+/*requires bezen.array.js */
 /*requires bezen.testrunner.js */
+/*requires goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
 /*global lb, bezen, window, setTimeout */
 (function() {
@@ -25,9 +28,14 @@
   // Define aliases
   var assert = bezen.assert,
       object = bezen.object,
+      endsWith = bezen.string.endsWith,
+      last = bezen.array.last,
       testrunner = bezen.testrunner,
       $ = bezen.$,
-      remove = bezen.dom.remove;
+      element = bezen.dom.element,
+      insertBefore = bezen.dom.insertBefore,
+      remove = bezen.dom.remove,
+      events = goog.events;
 
   function testNamespace(){
 
@@ -35,51 +43,72 @@
                                    "lb.base.history namespace was not found");
   }
 
-  function testInit(){
-    var ut = lb.base.history.init;
+  function testInitialSetup(){
+    // Initialization is done automatically during script loading,
+    // so as to happen before the page load event.
 
-    // Only included in IE
-    // assert.isTrue( object.exists( $('lb.base.history.iframe') ),
-    // "assert: iframe with id 'lb.base.history.iframe' expected in document");
     assert.isTrue( object.exists( $('lb.base.history.input') ),
          "assert: input with id 'lb.base.history.input' expected in document");
 
-    ut();
-    ut(); // second call should have no effect
-    lb.base.history.destroy();
-
     if ( $('lb.base.history.iframe') ){
-      remove( $('lb.base.history.iframe') );
+      // Only present in IE, when there is no onhashchange event available
+      // check that the iframe src is set to the favicon href
+      assert.isTrue(  endsWith( $('lb.base.history.iframe').src,
+                                'favicon.ico'),
+                  "assert: favicon href expected to be set to 'favicon.ico'");
     }
-    remove( $('lb.base.history.input') );
-    // See details in setUp()
-    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
-    ut();
-    lb.base.history.destroy();
+
+    var unloadListeners = events.getListeners(window, 'unload', false);
+    var lastListener = last(unloadListeners);
+    assert.isTrue( object.exists(lastListener),   "unload listener expected");
+    assert.equals( lastListener.listener, lb.base.history.destroy,
+                                     "destroy() expected as unload listener");
   }
 
-  function testDestroy(){
-    var ut = lb.base.history.destroy;
+  function replace(element, newElement){
+    // replace a DOM element with a new DOM element
+    //
+    // Parameters:
+    //   element - DOM Element, to be removed
+    //   newElement - DOM Element, to be inserted at same position
 
-    lb.base.history.init();
-    ut(); // must not fail
-    ut(); // must not fail when already destroyed
+    insertBefore(element,newElement);
+    remove(element);
   }
 
-  function setUp(){
-    // The resource must exist. There is a favicon.ico file in the test folder,
-    // while there may not be a favicon at the root of the test server.
-    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
-    lb.base.history.init();
-  }
+  function testGetFaviconUrl(){
+    var ut = lb.base.history.getFaviconUrl;
 
-  function tearDown(){
-    lb.base.history.destroy();
+    var original = $('favicon');
+    assert.isTrue( object.exists(original),
+                           "assert: favicon link with id 'favicon' expected");
+
+    var link1 = element('link',{rel:'SHORTCUT ICON',href:'favicon-blue.ico'});
+    replace(original, link1);
+    assert.isTrue(  endsWith(ut(), 'favicon-blue.ico'),
+                          "failed to find favicon url for rel SHORTCUT ICON");
+
+    var link2 = element('link',{rel:'shortcut icon',href:'favicon-green.ico'});
+    replace(link1, link2);
+    assert.isTrue(  endsWith(ut(), 'favicon-green.ico'),
+                          "failed to find favicon url for rel shortcut icon");
+
+    var link3 = element('link',{rel:'Shortcut Icon',href:'favicon-red.ico'});
+    replace(link2, link3);
+    assert.isTrue(  endsWith(ut(), 'favicon-red.ico'),
+                          "failed to find favicon url for rel shortcut icon");
+
+    remove(link3);
+    assert.equals( ut(), '/favicon.ico',
+                              "default favicon expected when none is found");
+
+    // restore the initial favicon (now last in the head)
+    var head = document.getElementsByTagName('HEAD')[0];
+    head.appendChild(original);
   }
 
   function testGetHash(){
     var ut = lb.base.history.getHash;
-    setUp();
 
     window.location.hash = '#one';
     assert.equals( ut(), '#one',                    "'#one' expected in hash");
@@ -91,13 +120,10 @@
     window.location.hash = 'one%20space';
     assert.equals( ut(), '#one space',    "hash value expected to be decoded");
 
-    tearDown();
-    assert.equals( ut(), null,  "null expected when history manager is ended");
   }
 
   function testSetHash(){
     var ut = lb.base.history.setHash;
-    setUp();
 
     ut('#simple');
     assert.equals(window.location.hash, '#simple',
@@ -115,16 +141,10 @@
     // window.location.hash is not a reliable check, it gets decoded in FF
     assert.equals( lb.base.history.getHash(), '#one space',
                "hash with space expected to be properly encoded and decoded");
-
-    tearDown();
-    ut('ignored');
-    assert.isFalse( window.location.hash === 'ignored',
-                    "setHash() must be ignored when history manager is ended");
   }
 
   function testOnHashChange(test){
     var ut = lb.base.history.onHashChange;
-    setUp();
 
     // Callback is asynchronous in IE (synchronous in other browsers)
     test.startAsyncTest();
@@ -163,7 +183,6 @@
         changeHash();
       } else {
         test.endAsyncTest();
-        tearDown();
       }
     };
 
@@ -174,13 +193,29 @@
     setTimeout(checkHash,200);
   }
 
+  function testDestroy(){
+    // This test must run last...
+    var ut = lb.base.history.destroy;
+
+    ut();
+    assert.equals( lb.base.history.getHash(), null,
+                           "null hash expected when history manager is ended");
+
+    lb.base.history.setHash('ignored');
+    assert.isFalse( window.location.hash === 'ignored',
+                    "setHash() must be ignored when history manager is ended");
+
+    ut(); // must not fail when already destroyed
+  }
+
   var tests = {
     testNamespace: testNamespace,
-    testInit: testInit,
-    testDestroy: testDestroy,
+    testInitialSetup: testInitialSetup,
+    testGetFaviconUrl: testGetFaviconUrl,
     testGetHash: testGetHash,
     testSetHash: testSetHash,
-    testOnHashChange: testOnHashChange
+    testOnHashChange: testOnHashChange,
+    testDestroy: testDestroy
   };
 
   testrunner.define(tests, "lb.base.history");
