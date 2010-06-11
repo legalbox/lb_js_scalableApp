@@ -40,7 +40,10 @@
 //   In goog.History.prototype.setEnabled, I added an initialization of the
 //   last token before the dispatchEvent for the initial hash in HTML5 case.
 //   The code is annotated with a comment starting with // [Legal-Box#02]
-// Note:
+//
+// Notes:
+//
+// 1°)
 // this code should be refactored to avoid the same bug appearing in different
 // sets of conditions: double firing of the same event. There should be a
 // single function dispatching tokens for hash changes, with a check and update
@@ -49,6 +52,19 @@
 // - twice in setEnabled()
 // - in setHistoryState_()
 // - in update_()
+//
+// 2°)
+// I noticed another bug: the initial hash is not dispatched in a consistent
+// way cross-browser when several listeners are attached. In FF, Opera, IE,
+// only the first listener added after setEnabled gets set to true receives
+// the initial hash, not the second one, added after the call to setEnabled.
+// This is due to the fact that the initial dispatching is done directly in
+// setEnabled, in some browsers, and that setEnabled is processed only once.
+// As a fix, I would consider:
+// - to disable the initial dispatching alltogether, if possible (this seems
+//   part of the behavior of "onhashchange" event in some browsers)
+// - to detect when a new listener is added and fire the current hash for this
+//   listener only, at this point (not only once in setEnabled).
 
 /**
  * @fileoverview Browser history stack management class.
