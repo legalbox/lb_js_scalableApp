@@ -16,7 +16,6 @@
 /*requires bezen.assert.js */
 /*requires bezen.object.js */
 /*requires bezen.string.js */
-/*requires bezen.array.js */
 /*requires bezen.testrunner.js */
 /*requires goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
@@ -29,7 +28,6 @@
   var assert = bezen.assert,
       object = bezen.object,
       endsWith = bezen.string.endsWith,
-      last = bezen.array.last,
       testrunner = bezen.testrunner,
       $ = bezen.$,
       element = bezen.dom.element,
@@ -59,10 +57,10 @@
     }
 
     var unloadListeners = events.getListeners(window, 'unload', false);
-    var lastListener = last(unloadListeners);
-    assert.isTrue( object.exists(lastListener),   "unload listener expected");
-    assert.equals( lastListener.listener, lb.base.history.destroy,
-                                     "destroy() expected as unload listener");
+    var firstListener = unloadListeners[0];
+    assert.isTrue( object.exists(firstListener),   "unload listener expected");
+    assert.equals( firstListener.listener, lb.base.history.destroy,
+                                "destroy() expected in first unload listener");
   }
 
   function replace(element, newElement){
