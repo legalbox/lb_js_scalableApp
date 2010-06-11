@@ -142,4 +142,5 @@ HISTORY
   2010-06-03, Public Release on GitHub
   2010-06-04, v1.0.0, Introduction of Semantic Versioning [3]
   2010-06-10, v1.0.1, Minor fix: replaced Combiner with concat
+  2010-06-11, v1.1.0, Major fixes in history manager and local navigation
 
