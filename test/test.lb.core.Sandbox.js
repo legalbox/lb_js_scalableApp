@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-10
+ * Version:   2010-06-11
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -574,9 +574,6 @@
   function testSetHash(){
     var ut = new lb.core.Sandbox('testSetHash').url.setHash;
 
-    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
-    lb.base.history.init();
-
     ut('simple');
     assert.equals(window.location.hash, '#simple',
                                              "simple hash expected to be set");
@@ -585,14 +582,10 @@
     assert.equals(lb.base.history.getHash(), '#new hash',
                                                "new hash expected to be set");
     ut('');
-    lb.base.history.destroy();
   }
 
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
-
-    lb.base.config.setOptions({lbHistoryCheapUrl:'favicon.ico'});
-    lb.base.history.init();
 
     bezen.log.on(); // debug
     lb.base.history.setHash('start');
@@ -613,7 +606,6 @@
                                           "sequence of hash changes expected");
             test.endAsyncTest();
             lb.base.history.setHash('');
-            lb.base.history.destroy();
           },200);
         },200);
       },200);
