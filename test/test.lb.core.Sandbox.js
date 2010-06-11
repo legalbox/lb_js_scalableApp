@@ -601,7 +601,7 @@
         setTimeout(function(){
           lb.base.history.setHash('three');
           setTimeout(function(){
-            assert.arrayEquals(hashes,['#start','#one','#two','#three'],
+            assert.arrayEquals(hashes,['#one','#two','#three'],
                                           "sequence of hash changes expected");
             test.endAsyncTest();
             lb.base.history.setHash('');
