@@ -57,10 +57,13 @@
     }
 
     var unloadListeners = events.getListeners(window, 'unload', false);
-    var firstListener = unloadListeners[0];
-    assert.isTrue( object.exists(firstListener),   "unload listener expected");
-    assert.equals( firstListener.listener, lb.base.history.destroy,
-                                "destroy() expected in first unload listener");
+    var found = false;
+    for (var i=0; i<unloadListeners.length && !found; i++){
+      if ( unloadListeners[i].listener === lb.base.history.destroy ) {
+        found = true;
+      }
+    }
+    assert.isTrue(found,             "destroy() expected as unload listener");
   }
 
   function replace(element, newElement){
@@ -155,6 +158,12 @@
       capturedHash.push(hash);
     }
 
+    var capturedHash2 = [];
+    function captureHash2(hash){
+      bezen.log.info('Captured Hash2: '+hash);
+      capturedHash2.push(hash);
+    }
+
     // sequence of hashes for the test
     var hashSequence = ['#zero','#one','#two','#three'];
     var currentStep = 0;
@@ -164,11 +173,13 @@
       lb.base.history.setHash( hashSequence[currentStep] );
       checkHash();
     };
+
     checkHash = function(){
       // check that current hash has been set
-      if ( !object.exists(capturedHash[currentStep]) ){
-        bezen.log.info('Checking captured hash: '+capturedHash[currentStep]);
+      bezen.log.info('Checking captured hash: '+capturedHash[currentStep]);
+      bezen.log.info('Checking captured hash2: '+capturedHash2[currentStep]);
 
+      if ( !object.exists(capturedHash[currentStep]) ){
         // retry the check in 200ms
         setTimeout(checkHash, 200);
         return;
@@ -176,6 +187,9 @@
 
       assert.equals( capturedHash[currentStep], hashSequence[currentStep],
                       "New hash expected to be captured at step "+currentStep);
+
+      assert.equals( capturedHash2[currentStep], hashSequence[currentStep],
+   "New hash expected to be captured by second listener at step "+currentStep);
 
       // go to next step
       currentStep++;
@@ -188,8 +202,10 @@
     };
 
     bezen.log.info("Set Hash: "+hashSequence[currentStep]);
-    lb.base.history.setHash( hashSequence[currentStep] );
     ut(captureHash);
+    ut(captureHash2);
+    lb.base.history.setHash( hashSequence[currentStep] );
+
       // 200ms is greater than the goog.History polling interval (150ms)
     setTimeout(checkHash,200);
   }

@@ -5,13 +5,13 @@
  * This module provides support for local navigation, setting, getting and
  * detecting changes in the hash, the local part of the url.
  *
- * This module must be loaded in a static way, e.g. part of an external script
+ * The module must be loaded in a static way, e.g. part of an external script
  * included at the end of the <body>. During its loading, it will initialize
  * the history manager, which must be done before the page "load" event.
  * Loading this module dynamically after the page "load" may result in the page
  * being reset to blank.
  *
- * This module requires two elements to be present in the initial document,
+ * The module requires two elements to be present in the initial document,
  * an iframe of id 'lb.base.history.iframe' (in Internet Explorer) and a hidden
  * input field of id 'lb.base.history.input' (in all browsers, including IE).
  * In case these elements are not found, they will be created during the module
@@ -201,14 +201,13 @@ lb.base.history = lb.base.history || (function() {
     // Register a callback for modifications of the hash.
     //
     // Note:
-    // The callback will fire immediately with the value of the current hash.
     // The call is ignored when the underlying history manager has not been
     // initialized, or has been destroyed.
     //
     // Param:
     //   callback - function, a function callback(hash), which will be called
-    //              for each change of hash. The new hash, decoded and starting
-    //              with '#', will be provided as parameter.
+    //              for each subsequent change of hash. The new hash, decoded
+    //              and starting with '#', will be provided as parameter.
 
     if (!history){
       return;
@@ -218,7 +217,6 @@ lb.base.history = lb.base.history || (function() {
       // refactoring with getHash() possible for the hash conversion
       callback( '#'+decodeHash(event.token) );
     });
-    history.setEnabled(true);
   }
 
   function destroy(){
@@ -278,6 +276,12 @@ lb.base.history = lb.base.history || (function() {
     // Initialize with $('lb.base.history.iframe') (may be null).
     $('lb.base.history.iframe')
   );
+  // Enable immediately to avoid inconsistent cross-browser behavior when the
+  // history manager gets enabled only after the first listener is added:
+  // sometimes the initial hash is dispatched, sometimes not. Since no listener
+  // can be added before the initialization, none will get the initial hash,
+  // which can be retrieved with getHash().
+  history.setEnabled(true);
   unloadListener = new Listener(window, 'unload', destroy);
 
   return { // public API

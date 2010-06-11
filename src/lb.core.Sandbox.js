@@ -545,10 +545,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Observe changes in local part of the URL.
   //
   // Parameter:
-  //   callback - function, the callback(hash) function will be called once
-  //              with the current hash and once for each subsequent change of
-  //              hash. The hash parameter is a string, decoded, starting with
-  //              the '#' character.
+  //   callback - function, the callback(hash) function will be called once for
+  //              each subsequent change of hash. The hash parameter is a
+  //              string, decoded, starting with the '#' character.
 
   // Note: onHashChange is an alias for lb.base.history.onHashChange
 
