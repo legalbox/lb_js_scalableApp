@@ -4,11 +4,6 @@
  *
  * The Core Application manages the life cycle of modules.
  *
- * It also initializes and destroys the local navigation history.
- * There are several requirements to fulfill for the local history to work in a
- * consistent way cross-browsers. Please refer to <lb.base.history> for the
- * details of the markup and styles needed in the document.
- *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -20,14 +15,13 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-10
+ * 2010-06-11
  */
 /*requires lb.core.js */
 /*requires lb.base.log.js */
 /*requires lb.base.array.js */
 /*requires lb.base.config.js */
 /*requires lb.base.dom.Listener.js */
-/*requires lb.base.history.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
@@ -134,16 +128,9 @@ lb.core.application = lb.core.application || (function() {
     // Function: run()
     // Run the application.
     //
-    // Warning:
-    // This function must be called before the page load event, e.g. in an
-    // internal or external script included at the end of the page body. This
-    // is to avoid a page reload when the history manager is initialized.
-    //
-    // * the local navigation history is initialized,
-    // * startAll gets registered as listener for window 'load' event,
-    // * endAll gets registered as listener for window 'unload' event.
+    // * startAll gets registered as listener for window 'load' event
+    // * endAll gets registered as listener for window 'unload' event
 
-    history.init();
     loadListener = new Listener(window, 'load', startAll);
     unloadListener = new Listener(window, 'unload', endAll);
   }
