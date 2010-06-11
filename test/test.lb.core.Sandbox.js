@@ -587,7 +587,6 @@
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
-    bezen.log.on(); // debug
     lb.base.history.setHash('start');
     var hashes = [];
     ut(function(hash){
