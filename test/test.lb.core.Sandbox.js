@@ -589,12 +589,16 @@
 
     lb.base.history.setHash('start');
     var hashes = [];
-    ut(function(hash){
+    function captureHash(hash){
       hashes.push(hash);
-    });
+    }
 
     test.startAsyncTest();
     setTimeout(function(){
+      // in IE, hash change is detected after a polling,
+      // 'start' could be seen as a new hash because of the polling interval,
+      // even if the listener is actually added just after the setHash('start')
+      ut(captureHash);
       lb.base.history.setHash('one');
       setTimeout(function(){
         lb.base.history.setHash('two');
