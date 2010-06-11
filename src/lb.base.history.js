@@ -81,7 +81,7 @@
 /*requires closure/goog.events.js */
 /*requires closure/goog.History.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global lb, goog, window */
+/*global lb, goog, window, document */
 // preserve the module, if already loaded
 lb.base.history = lb.base.history || (function() {
   // Builder of
