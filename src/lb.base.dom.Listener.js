@@ -53,7 +53,7 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
 
   function getElement(){
     // Function: getElement(): DOM Element
-    // Get the target DOM Element on which the listener is attached.
+    // Get the target DOM element on which the listener is attached.
     //
     // Returns:
     //   DOM Element, the same element provided in constructor.
@@ -86,7 +86,8 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
     // Get whether the listener is set for the capture phase.
     //
     // Returns:
-    //   boolean, the useCapture flag configured in constructor.
+    //   boolean, the useCapture flag configured in constructor,
+    //   or false if none was provided.
 
     return useCapture;
   }
