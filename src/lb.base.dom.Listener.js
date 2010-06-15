@@ -17,7 +17,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-15
  */
 /*requires lb.base.dom.js */
 /*requires closure/goog.events.js */
@@ -43,12 +43,53 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
   // Reference:
   //   [1] DOM Level 2 Events: addEventListener
   //   <http://bit.ly/9SQoL4>
+  useCapture = useCapture || false;
 
   // Declare aliases
   var events = goog.events,
 
   // Private fields
       key = events.listen(element, type, callback, useCapture);
+
+  function getElement(){
+    // Function: getElement(): DOM Element
+    // Get the target DOM Element on which the listener is attached.
+    //
+    // Returns:
+    //   DOM Element, the same element provided in constructor.
+
+    return element;
+  }
+
+  function getType(){
+    // Function: getType(): string
+    // Get the type of event for which this event is registered.
+    //
+    // Returns:
+    //   string, the name of the event (without 'on') provided in constructor.
+
+    return type;
+  }
+
+  function getCallback(){
+    // Function: getCallback(): function
+    // Get the callback function associated with the listener.
+    //
+    // Returns:
+    //   function, the callback configured in constructor.
+
+    return callback;
+  }
+
+  function isUsingCapture(){
+    // Function: isUsingCapture(): boolean
+    // Get whether the listener is set for the capture phase.
+    //
+    // Returns:
+    //   boolean, the useCapture flag configured in constructor.
+
+    return useCapture;
+  }
 
   function detach(){
     // Function: detach()
@@ -71,5 +112,9 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
   }
 
   // public API
+  this.getElement = getElement;
+  this.getType = getType;
+  this.getCallback = getCallback;
+  this.isUsingCapture = isUsingCapture;
   this.detach = detach;
 };

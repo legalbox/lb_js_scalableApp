@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-15
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -47,8 +47,6 @@
     var listener1 = new Ut(div1, 'click', callback1, true);
     assert.isTrue( listener1 instanceof Ut,    "instanceof expected to work");
 
-    // Note: no accessors defined for element, type, callback - at this point
-
     var listeners1 = events.getListeners(div1, 'click', true);
     assert.equals(listeners1.length, 1,
                                    "one capturing listener expected on div1");
@@ -72,9 +70,54 @@
                             "callback expected to be triggered with event2");
   }
 
+  var testElement = element('div');
+  var testType = 'click';
+  var testCallback = function(){};
+
+  function testGetElement(){
+    // Unit tests for lb.base.dom.Listener#getElement()
+
+    var listener = new lb.base.dom.Listener(testElement,testType,testCallback);
+    assert.equals( listener.getElement(), testElement,
+                          "same element provided in constructor expected");
+  }
+
+  function testGetType(){
+    // Unit tests for lb.base.dom.Listener#getType()
+
+    var listener = new lb.base.dom.Listener(testElement,testType,testCallback);
+    assert.equals( listener.getType(), testType,
+                                "same type provided in constructor expected");
+  }
+
+  function testGetCallback(){
+    // Unit tests for lb.base.dom.Listener#getCallback()
+
+    var listener = new lb.base.dom.Listener(testElement,testType,testCallback);
+    assert.equals( listener.getCallback(), testCallback,
+                             "same callback provided in constructor expected");
+  }
+
+  function testIsUsingCapture(){
+    // Unit tests for lb.base.dom.Listener#isUsingCapture()
+
+    var listener = new lb.base.dom.Listener(testElement,testType,testCallback);
+    assert.isFalse( listener.isUsingCapture(),
+                                    "capture expected to be false by default");
+
+    listener = new lb.base.dom.Listener(testElement,testType,testCallback,
+                                        false);
+    assert.isFalse( listener.isUsingCapture(),
+                                        "capture expected to be set to false");
+
+    listener = new lb.base.dom.Listener(testElement,testType,testCallback,
+                                        true);
+    assert.isTrue( listener.isUsingCapture(),
+                                        "capture expected to be set to true");
+  }
+
   function testDetach(){
     // Unit tests for lb.base.dom.Listener#detach()
-
 
     var div1 = element('div');
     var callback1 = function(){};
@@ -98,6 +141,10 @@
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
+    testGetElement: testGetElement,
+    testGetType: testGetType,
+    testGetCallback: testGetCallback,
+    testIsUsingCapture: testIsUsingCapture,
     testDetach: testDetach
   };
 
