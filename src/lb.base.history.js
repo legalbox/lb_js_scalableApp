@@ -254,6 +254,7 @@ lb.base.history = lb.base.history || (function() {
     if (history){
       history.dispose();
       history = null;
+      navigationListeners = null;
     }
     if (unloadListener){
       unloadListener.detach();

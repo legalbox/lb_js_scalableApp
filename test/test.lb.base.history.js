@@ -244,7 +244,13 @@
     // This test must run last...
     var ut = lb.base.history.destroy;
 
+    // remove all hash change listeners remaining from previous tests
+    events.removeAll(null, NAVIGATE);
+    lb.base.history.addListener(nix);
+
     ut();
+    assert.equals( events.removeAll(null, NAVIGATE), 0,
+                                    "no more listener expected after destroy");
     assert.equals( lb.base.history.getHash(), null,
                            "null hash expected when history manager is ended");
 
