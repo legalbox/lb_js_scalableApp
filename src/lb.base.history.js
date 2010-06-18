@@ -230,7 +230,7 @@ lb.base.history = lb.base.history || (function() {
     //   callback - function, a callback previously set to addListener().
     //
     // Note:
-    // Nothing happens when the callback has not been added, or has been
+    // Nothing happens when the callback has never been added, or has been
     // removed already.
     var listener, i;
 
@@ -242,7 +242,7 @@ lb.base.history = lb.base.history || (function() {
       listener = navigationListeners[i];
       if (listener.callback === callback){
         unlisten(history, NAVIGATE, listener.wrapper);
-        navigationListeners.splice(i,1)
+        navigationListeners.splice(i,1);
       }
     }
   }
