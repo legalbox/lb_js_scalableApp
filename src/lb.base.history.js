@@ -308,7 +308,6 @@ lb.base.history = lb.base.history || (function() {
     setHash: setHash,
     addListener: addListener,
     removeListener: removeListener,
-    onHashChange: addListener, // deprecated, renamed to addListener
     destroy: destroy
   };
 }());
