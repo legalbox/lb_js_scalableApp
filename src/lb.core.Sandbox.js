@@ -548,9 +548,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   function onHashChange(callback){
     // Function: url.onHashChange(callback)
     // Set a listener to observe changes in local part of the URL.
-    // Calling this method wit a new callback will replace the listener
-    // previously set. You may call it with null to remove the current listener
-    // altogether.
+    // Calling this method with a new callback will replace the listener
+    // previously set. Calling onHashChange(null) will remove the current
+    // listener altogether.
     //
     // Parameter:
     //   callback - function, the callback(hash) function will be called once
