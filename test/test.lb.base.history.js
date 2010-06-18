@@ -146,8 +146,8 @@
     ut('');
   }
 
-  function testOnHashChange(test){
-    var ut = lb.base.history.onHashChange;
+  function testAddListener(test){
+    var ut = lb.base.history.addListener;
 
     // Callback is asynchronous in IE (synchronous in other browsers)
     test.startAsyncTest();
@@ -210,6 +210,16 @@
     setTimeout(checkHash,200);
   }
 
+  function testRemoveListener(){
+    var ut = lb.base.history.removeListener;
+
+    var testCallback = function(){};
+    lb.base.history.addListener(testCallback);
+
+
+    assert.fail('Missing tests');
+  }
+
   function testDestroy(){
     // This test must run last...
     var ut = lb.base.history.destroy;
@@ -231,7 +241,8 @@
     testGetFaviconUrl: testGetFaviconUrl,
     testGetHash: testGetHash,
     testSetHash: testSetHash,
-    testOnHashChange: testOnHashChange,
+    testAddListener: testAddListener,
+    //testRemoveListener: testRemoveListener,
     testDestroy: testDestroy
   };
 

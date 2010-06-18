@@ -150,13 +150,9 @@ lb.base.history = lb.base.history || (function() {
     // Function: getHash(): string
     // Get the hash part of current url.
     //
-    // Note:
-    // The underlying history manager must have been initialized with init(),
-    // and not destroyed yet.
-    //
     // Returns:
-    //   * null when the history manager has been destroyed or not initialized
-    //   * string, the url-decoded value of the current hash otherwise
+    //   * string, the url-decoded value of the current hash
+    //   * null when the history manager has been destroyed
 
     if (!history){
       return null;
@@ -168,16 +164,15 @@ lb.base.history = lb.base.history || (function() {
     // Function: setHash(hash)
     // Set a hash part in current url.
     //
-    // Notes:
+    // Note:
     // The hash will be encoded in this function.
-    // This call has no effect if the history manager is not initialized.
     //
     // Param:
     //   hash - string, the new hash part to set, with or without the initial
     //          hash sign, e.g. 'new-hash', '#new-hash' or '#new hash'
 
     if (!history){
-      return null;
+      return;
     }
 
     if ( hash.charAt(0) === '#' ){
@@ -196,15 +191,11 @@ lb.base.history = lb.base.history || (function() {
     );
   }
 
-  function onHashChange(callback){
-    // Function: onHashChange(callback)
+  function addListener(callback){
+    // Function: addListener(callback)
     // Register a callback for modifications of the hash.
     //
-    // Note:
-    // The call is ignored when the underlying history manager has not been
-    // initialized, or has been destroyed.
-    //
-    // Param:
+    // Parameter:
     //   callback - function, a function callback(hash), which will be called
     //              for each subsequent change of hash. The new hash, decoded
     //              and starting with '#', will be provided as parameter.
@@ -217,6 +208,20 @@ lb.base.history = lb.base.history || (function() {
       // refactoring with getHash() possible for the hash conversion
       callback( '#'+decodeHash(event.token) );
     });
+  }
+
+  function removeListener(callback){
+    // Function: removeListener(callback)
+    // Unregister a callback for hash modifications.
+    //
+    // Parameter:
+    //   callback - function, a callback previously set to addListener().
+    //
+    // Note:
+    // Nothing happens when the callback has not been added, or has been
+    // removed already.
+
+
   }
 
   function destroy(){
@@ -234,17 +239,6 @@ lb.base.history = lb.base.history || (function() {
   }
 
   // Initialize the history manager.
-  //
-  // Notes:
-  // Nothing happens when the history manager has already been initialized.
-  // The polling loop does not start until the first listener is added in a
-  // call to onHashChange().
-
-  if (history){
-    // already initialized
-    return;
-  }
-
   history = new History(
     // opt_invisible : boolean
     // Don't hide the hash, make it visible in url
@@ -288,7 +282,9 @@ lb.base.history = lb.base.history || (function() {
     getFaviconUrl: getFaviconUrl,
     getHash: getHash,
     setHash: setHash,
-    onHashChange: onHashChange,
+    addListener: addListener,
+    removeListener: removeListener,
+    onHashChange: addListener, // deprecated, renamed to addListener
     destroy: destroy
   };
 }());
