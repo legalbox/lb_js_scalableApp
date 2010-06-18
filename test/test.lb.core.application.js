@@ -4,21 +4,13 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-11
+ * Version:   2010-06-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.application.js */
-/*requires lb.base.config.js */
-/*requires goog.events.js */
-/*requires bezen.js */
-/*requires bezen.assert.js */
-/*requires bezen.object.js */
-/*requires bezen.string.js */
-/*requires bezen.array.js */
-/*requires bezen.testrunner.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window */
 (function() {
@@ -26,15 +18,25 @@
   // Closure object for Test of lb.core.application
 
   // Define aliases
+      /*requires bezen.assert.js */
   var assert = bezen.assert,
+      /*requires bezen.object.js */
       object = bezen.object,
+      /*requires bezen.array.js */
       array = bezen.array,
+      /*requires bezen.string.js */
       last = bezen.array.last,
       startsWith = bezen.string.startsWith,
+      /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
+      /*requires lb.core.Module.js */
       Module = lb.core.Module,
+      /*requires goog.events.js */
       events = goog.events,
-      config = lb.base.config;
+      /*requires lb.base.config.js */
+      config = lb.base.config,
+      /*requires bezen.js */
+      nix = bezen.nix;
 
   function testNamespace(){
 
@@ -46,7 +48,7 @@
     var ut = lb.core.application.setOptions;
 
     var testFactory = {
-      create: bezen.nix
+      create: nix
     };
 
     ut({lbFactory:testFactory});
@@ -73,9 +75,9 @@
 
     array.empty( lb.core.application.getModules() );
 
-    var module1 = new Module('lb.ui.stub1',bezen.nix);
-    var module2 = new Module('lb.ui.stub2',bezen.nix);
-    var module3 = new Module('lb.ui.stub3',bezen.nix);
+    var module1 = new Module('lb.ui.stub1',nix);
+    var module2 = new Module('lb.ui.stub2',nix);
+    var module3 = new Module('lb.ui.stub3',nix);
 
     ut(module1);
     assert.arrayEquals( lb.core.application.getModules(), [module1],
@@ -97,9 +99,9 @@
   function testRemoveModule(){
     var ut = lb.core.application.removeModule;
 
-    var module1 = new Module('lb.ui.stub1',bezen.nix);
-    var module2 = new Module('lb.ui.stub2',bezen.nix);
-    var module3 = new Module('lb.ui.stub3',bezen.nix);
+    var module1 = new Module('lb.ui.stub1',nix);
+    var module2 = new Module('lb.ui.stub2',nix);
+    var module3 = new Module('lb.ui.stub3',nix);
 
     var modules = lb.core.application.getModules();
     array.empty(modules);

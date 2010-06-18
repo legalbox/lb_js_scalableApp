@@ -13,11 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.js */
-/*requires closure/goog.object.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -26,7 +24,9 @@ lb.base.object = lb.base.object || (function() {
   // Closure for lb.base.object module
 
   // Declare alias
+      /*requires closure/goog.js */
   var deepCopy = goog.cloneObject,
+      /*requires closure/goog.object.js */
       shallowCopy = goog.object.clone;
 
   function clone(object, deep){

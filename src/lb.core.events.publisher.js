@@ -16,10 +16,8 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
-/*requires lb.base.log.js */
-/*requires lb.base.array.js */
 /*requires lb.core.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
@@ -29,7 +27,9 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
   // Closure for lb.core.events.publisher module
 
   // Define aliases
+      /*requires lb.base.log.js */
   var log = lb.base.log.print,
+      /*requires lb.base.array.js */
       copy = lb.base.array.copy,
       addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,

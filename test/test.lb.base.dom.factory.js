@@ -4,20 +4,13 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.base.dom.factory.js */
-/*requires lb.base.dom.Listener.js */
-/*requires bezen.assert.js */
-/*requires bezen.object.js */
-/*requires bezen.string.js */
-/*requires bezen.dom.js */
-/*requires bezen.testrunner.js */
-/*requires goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window, document */
 (function() {
@@ -25,15 +18,24 @@
   // Closure object for Test of lb.base.dom.factory
 
   // Define aliases
+      /*requires bezen.assert.js */
   var assert = bezen.assert,
+      /*requires bezen.object.js */
       exists = bezen.object.exists,
+      /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
+      /*requires bezen.string.js */
       endsWith = bezen.string.endsWith,
+      /*requires bezen.js */
+      $ = bezen.$,
+      /*requires bezen.dom.js */
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
-      $ = bezen.$,
       element = bezen.dom.element,
-      events = goog.events;
+      /*requires goog.events.js */
+      events = goog.events,
+      /*requires lb.base.dom.Listener.js */
+      Listener = lb.base.dom.Listener;
 
   function testNamespace(){
 
@@ -191,7 +193,7 @@
     var callback = bezen.nix;
     var listener = ut(div, 'click', callback);
     assert.isTrue( typeof listener === 'object',   "Listener object expected");
-    assert.isTrue( listener instanceof lb.base.dom.Listener,
+    assert.isTrue( listener instanceof Listener,
                                   "instance of lb.base.dom.Listener expected");
 
     var listeners = events.getListeners(div, 'click', false);

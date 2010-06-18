@@ -4,27 +4,13 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-11
+ * Version:   2010-06-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Sandbox.js */
-/*requires lb.base.config.js */
-/*requires lb.base.history.js */
-/*requires lb.core.events.publisher.js */
-/*requires lb.core.events.Subscriber.js */
-/*requires bezen.js */
-/*requires bezen.array.js */
-/*requires bezen.string.js */
-/*requires bezen.dom.js */
-/*requires bezen.assert.js */
-/*requires bezen.object.js */
-/*requires bezen.testrunner.js */
-/*requires goog.debug.Logger.js */
-/*requires goog.events.js */
-/*requires goog.net.MockXmlHttp */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window, document, setTimeout */
 (function() {
@@ -32,19 +18,36 @@
   // Closure object for Test of User Interface Module
 
   // Define aliases
+      /*requires bezen.assert.js */
   var assert = bezen.assert,
+      /*requires bezen.object.js */
       object = bezen.object,
+      /*requires bezen.array.js */
       empty = bezen.array.empty,
+      /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
+      /*requires bezen.js */
       $ = bezen.$,
+      /*requires bezen.string.js */
       endsWith = bezen.string.endsWith,
+      /*requires bezen.dom.js */
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       TEXT_NODE = bezen.dom.TEXT_NODE,
       element = bezen.dom.element,
+      /*requires goog.debug.Logger.js */
       LogManager = goog.debug.LogManager,
+      /*requires goog.events.js */
       events = goog.events,
+      /*requires goog.net.MockXmlHttp */
       MockXmlHttp = goog.net.MockXmlHttp,
-      config = lb.base.config;
+      /*requires lb.base.config.js */
+      config = lb.base.config,
+      /*requires lb.base.history.js */
+      history = lb.base.history,
+      /*requires lb.core.events.publisher.js */
+      publisher = lb.core.events.publisher,
+      /*requires lb.core.events.Subscriber.js */
+      Subscriber = lb.core.events.Subscriber;
 
   function testNamespace(){
 
@@ -110,7 +113,7 @@
   function testSubscribe(){
     var ut = new lb.core.Sandbox('testSubscribe').events.subscribe;
 
-    empty( lb.core.events.publisher.getSubscribers() );
+    empty( publisher.getSubscribers() );
 
     var notifiedEvents = [];
     var callback = function(event){
@@ -119,10 +122,10 @@
     var filter = {};
     ut(filter,callback);
 
-    assert.equals(lb.core.events.publisher.getSubscribers().length, 1,
+    assert.equals(publisher.getSubscribers().length, 1,
                                           "one new event Subscriber expected");
     var event1 = {};
-    lb.core.events.publisher.publish(event1);
+    publisher.publish(event1);
     assert.objectEquals(notifiedEvents, [event1],
                                 "callback expected to be notified of event 1");
   }
@@ -131,7 +134,7 @@
     var sandbox = new lb.core.Sandbox('testUnsubscribe');
     var ut = sandbox.events.unsubscribe;
 
-    empty( lb.core.events.publisher.getSubscribers() );
+    empty( publisher.getSubscribers() );
 
     var counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0;
     function func1(){ counter1++; }
@@ -143,30 +146,30 @@
     sandbox.events.subscribe({topic: 'abc'},func3);
     sandbox.events.subscribe({topic: 'abc', type: 'new'}, func4);
 
-    assert.equals(lb.core.events.publisher.getSubscribers().length, 4,
+    assert.equals(publisher.getSubscribers().length, 4,
                                   "assert: 4 subscribers expected initially");
-    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    publisher.publish({topic:'abc',type:'new'});
     assert.arrayEquals([counter1,counter2,counter3,counter4],[1,1,1,1],
                            "assert: all initial subscribers expected to run");
 
     ut({});
-    assert.equals(lb.core.events.publisher.getSubscribers().length, 3,
+    assert.equals(publisher.getSubscribers().length, 3,
                                          "3 subscribers expected: remove {}");
-    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    publisher.publish({topic:'abc',type:'new'});
     assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,2],
                                          "subscriber for {} must be removed");
 
     ut({topic:'abc'});
-    assert.equals(lb.core.events.publisher.getSubscribers().length, 1,
+    assert.equals(publisher.getSubscribers().length, 1,
                                 "1 subscriber expected: remove {topic:'abc'}");
-    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    publisher.publish({topic:'abc',type:'new'});
     assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,3],
                                "subscriber for {topic:'abc'} must be removed");
 
     ut({topic:'abc',type:'new'});
-    assert.equals(lb.core.events.publisher.getSubscribers().length, 0,
+    assert.equals(publisher.getSubscribers().length, 0,
                     "0 subscriber expected: remove {topic:'abc',type:'new'}");
-    lb.core.events.publisher.publish({topic:'abc',type:'new'});
+    publisher.publish({topic:'abc',type:'new'});
     assert.arrayEquals([counter1,counter2,counter3,counter4],[1,2,2,3],
                    "subscriber for {topic:'abc',type:'new'} must be removed");
   }
@@ -174,15 +177,15 @@
   function testPublish(){
     var ut = new lb.core.Sandbox('testPublish').events.publish;
 
-    empty( lb.core.events.publisher.getSubscribers() );
+    empty( publisher.getSubscribers() );
     var events1 = [];
-    var subscriber1 = new lb.core.events.Subscriber(
+    var subscriber1 = new Subscriber(
       {topic:'abc'},
       function(event){
         events1.push(event);
       }
     );
-    lb.core.events.publisher.addSubscriber(subscriber1);
+    publisher.addSubscriber(subscriber1);
 
     var event1 = {topic:'abc',type:'new'};
     ut(event1);
@@ -579,7 +582,7 @@
                                              "simple hash expected to be set");
 
     ut('new hash');
-    assert.equals(lb.base.history.getHash(), '#new hash',
+    assert.equals(history.getHash(), '#new hash',
                                                "new hash expected to be set");
     ut('');
   }
@@ -587,7 +590,7 @@
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
-    lb.base.history.setHash('start');
+    history.setHash('start');
     var hashes = [];
     function captureHash(hash){
       hashes.push(hash);
@@ -599,16 +602,16 @@
       // 'start' could be seen as a new hash because of the polling interval,
       // even if the listener is actually added just after the setHash('start')
       ut(captureHash);
-      lb.base.history.setHash('one');
+      history.setHash('one');
       setTimeout(function(){
-        lb.base.history.setHash('two');
+        history.setHash('two');
         setTimeout(function(){
-          lb.base.history.setHash('three');
+          history.setHash('three');
           setTimeout(function(){
             assert.arrayEquals(hashes,['#one','#two','#three'],
                                           "sequence of hash changes expected");
             test.endAsyncTest();
-            lb.base.history.setHash('');
+            history.setHash('');
           },200);
         },200);
       },200);

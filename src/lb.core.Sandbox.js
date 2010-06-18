@@ -58,21 +58,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
-/*requires lb.base.ajax.js */
-/*requires lb.base.array.js */
-/*requires lb.base.config.js */
-/*requires lb.base.dom.js */
-/*requires lb.base.dom.css.js */
-/*requires lb.base.dom.factory.js */
-/*requires lb.base.dom.Listener.js */
-/*requires lb.base.history.js */
-/*requires lb.base.string.js */
-/*requires lb.base.log.js */
 /*requires lb.core.js */
-/*requires lb.core.events.publisher.js */
-/*requires lb.core.events.Subscriber.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, document, window */
 // preserve the module, if already loaded
@@ -89,19 +77,30 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   object, the new instance of Sandbox
 
   // Define aliases
+      /*requires lb.base.array.js */
   var addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,
       removeAll = lb.base.array.removeAll,
+      /*requires lb.base.dom.js */
       dom = lb.base.dom,
+      /*requires lb.base.dom.css.js */
       css = lb.base.dom.css,
+      /*requires lb.base.dom.Listener.js */
       Listener = lb.base.dom.Listener,
+      /*requires lb.base.ajax.js */
       send = lb.base.ajax.send,
+      /*requires lb.base.string.js */
       trim = lb.base.string.trim,
+      /*requires lb.base.log.js */
       log = lb.base.log.print,
+      /*requires lb.base.history.js */
       setHash = lb.base.history.setHash,
       onHashChange = lb.base.history.onHashChange,
+      /*requires lb.base.config.js */
       config = lb.base.config,
+      /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
+      /*requires lb.core.events.Subscriber.js */
       Subscriber = lb.core.events.Subscriber,
 
   // Private fields
@@ -109,6 +108,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // object, the factory used to create DOM elements, listeners and events.
     // A custom factory can be configured by setting the property lbFactory.
     // Defaults to lb.base.dom.factory.
+    /*requires lb.base.dom.factory.js */
     factory = config.getOption('lbFactory', lb.base.dom.factory),
 
     // DOM element, the root of the box, carrying the module identifier.

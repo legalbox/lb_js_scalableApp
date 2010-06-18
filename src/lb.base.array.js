@@ -13,10 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.array.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -25,6 +24,7 @@ lb.base.array = lb.base.array || (function() {
   // Closure for lb.base.array module
 
   // Declare alias
+      /*requires closure/goog.array.js */
   var gArray = goog.array;
 
   function addOne(array, item){

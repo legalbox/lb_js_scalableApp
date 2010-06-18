@@ -24,10 +24,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.core.events.js */
-/*requires lb.base.object.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
@@ -48,6 +47,7 @@ lb.core.events.Subscriber = lb.core.events.Subscriber ||
   //   object, the new instance of Subscriber
 
   // Define alias
+      /*requires lb.base.object.js */
   var clone = lb.base.object.clone;
 
   function getFilter(){

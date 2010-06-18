@@ -24,13 +24,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.dom.js */
-/*requires lb.base.dom.Listener.js */
-/*requires lb.base.array.js */
-/*requires closure/goog.dom.js */
-/*requires closure/goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -39,11 +35,15 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
   // Closure for lb.base.dom.factory module
 
   // Declare aliases
+      /*requires closure/goog.dom.js */
   var createDom = goog.dom.createDom,
       removeElement = goog.dom.removeNode,
+      /*requires closure/goog.events.js */
       fireListeners = goog.events.fireListeners,
       Event = goog.events.Event,
+      /*requires lb.base.dom.Listener.js */
       Listener = lb.base.dom.Listener,
+      /*requires lb.base.array.js */
       toArray = lb.base.array.toArray;
 
   function createElement(name,attributes){

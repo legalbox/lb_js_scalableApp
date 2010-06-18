@@ -15,13 +15,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-11
+ * 2010-06-18
  */
 /*requires lb.core.js */
-/*requires lb.base.log.js */
-/*requires lb.base.array.js */
-/*requires lb.base.config.js */
-/*requires lb.base.dom.Listener.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, window */
 // preserve the module, if already loaded
@@ -30,11 +26,15 @@ lb.core.application = lb.core.application || (function() {
   // Closure for lb.core.application module
 
   // Declare aliases
+      /*requires lb.base.log.js */
   var log = lb.base.log.print,
+      /*requires lb.base.array.js */
       addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,
       removeAll = lb.base.array.removeAll,
+      /*requires lb.base.config.js */
       config = lb.base.config,
+      /*requires lb.base.dom.Listener.js */
       Listener = lb.base.dom.Listener,
 
   // Private members

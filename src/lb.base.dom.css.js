@@ -14,10 +14,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.dom.js */
-/*requires closure/goog.dom.classes.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -26,6 +25,7 @@ lb.base.dom.css = lb.base.dom.css || (function() {
   // Closure for lb.base.dom.css module
 
   // Declare aliases
+      /*requires closure/goog.dom.classes.js */
   var classes = goog.dom.classes;
 
   function getClasses(element){

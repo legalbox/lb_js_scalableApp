@@ -13,10 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.dom.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -25,6 +24,7 @@ lb.base.dom = lb.base.dom || (function() {
   // Closure for lb.base.dom module
 
   // Declare aliases
+      /*requires closure/goog.dom.js */
   var dom = goog.dom;
 
   function $(id){

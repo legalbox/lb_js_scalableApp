@@ -17,10 +17,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-15
+ * 2010-06-18
  */
 /*requires lb.base.dom.js */
-/*requires closure/goog.events.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -46,6 +45,7 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
   useCapture = useCapture || false;
 
   // Declare aliases
+      /*requires closure/goog.events.js */
   var events = goog.events,
 
   // Private fields

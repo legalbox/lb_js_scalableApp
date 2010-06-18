@@ -4,17 +4,13 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-03
+ * Version:   2010-06-18
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.base.dom.css.js */
-/*requires bezen.assert.js */
-/*requires bezen.object.js */
-/*requires bezen.dom.js */
-/*requires bezen.testrunner.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window, document */
 (function() {
@@ -22,10 +18,15 @@
   // Closure object for Test of lb.base.dom.css
 
   // Define aliases
+      /*requires bezen.assert.js */
   var assert = bezen.assert,
+      /*requires bezen.object.js */
       exists = bezen.object.exists,
+      /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
+      /*requires bezen.js */
       $ = bezen.$,
+      /*requires bezen.dom.js */
       element = bezen.dom.element;
 
   function testNamespace(){

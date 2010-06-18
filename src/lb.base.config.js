@@ -18,10 +18,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.object.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -30,6 +29,7 @@ lb.base.config = lb.base.config || (function() {
   // Closure for lb.base.config module
 
   // Declare alias
+      /*requires closure/goog.object.js */
   var gObject = goog.object,
 
   // Private fields

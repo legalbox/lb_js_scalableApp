@@ -13,10 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.json.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -25,6 +24,7 @@ lb.base.json = lb.base.json || (function() {
   // Closure for lb.base.json module
 
   // Declare alias
+      /*requires closure/goog.json.js */
   var json = goog.json;
 
   function parse(string){

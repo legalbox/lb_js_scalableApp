@@ -13,12 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires lb.base.log.js */
-/*requires lb.base.json.js */
-/*requires closure/goog.net.XhrIo.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -27,8 +24,11 @@ lb.base.ajax = lb.base.ajax || (function() {
   // Closure for lb.base.ajax module
 
   // Declare alias
+      /*requires closure/goog.net.XhrIo.js */
   var XhrIo = goog.net.XhrIo,
+      /*requires lb.base.json.js */
       json = lb.base.json,
+      /*requires lb.base.log.js */
       log = lb.base.log.print;
 
   function send(url, data, receive){

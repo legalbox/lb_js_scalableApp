@@ -13,11 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires closure/goog.debug.Logger.js*/
-/*requires closure/goog.debug.Console.js*/
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
@@ -26,7 +24,9 @@ lb.base.log = lb.base.log || (function() {
   // Closure for lb.base.log module
 
   // Define aliases
+      /*requires closure/goog.debug.Console.js*/
   var Console = goog.debug.Console,
+      /*requires closure/goog.debug.Logger.js*/
       Logger = goog.debug.Logger,
       Level  = goog.debug.Logger.Level,
 

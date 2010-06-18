@@ -73,13 +73,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-11
+ * 2010-06-18
  */
 /*requires lb.base.js */
-/*requires lb.base.dom.js */
-/*requires lb.base.dom.Listener.js */
-/*requires closure/goog.events.js */
-/*requires closure/goog.History.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb, goog, window, document */
 // preserve the module, if already loaded
@@ -88,8 +84,10 @@ lb.base.history = lb.base.history || (function() {
   // Closure for lb.base.history module
 
   // Declare aliases
+      /*requires closure/goog.History.js */
   var History = goog.History,
       NAVIGATE = History.EventType.NAVIGATE,
+      /*requires closure/goog.events.js */
       listen = goog.events.listen,
         // use encodeURI / decodeURI instead of encodeURIComponent and
         // decodeURIComponent because the hash may contain a path with slashes,
@@ -104,7 +102,9 @@ lb.base.history = lb.base.history || (function() {
         //                                   /Global_Functions/encodeURI
       encodeHash = window.encodeURI,
       decodeHash = window.decodeURI,
+      /*requires lb.base.dom.js */
       $ = lb.base.dom.$,
+      /*requires lb.base.dom.Listener.js */
       Listener = lb.base.dom.Listener,
 
   // Private fields

@@ -19,13 +19,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-18
  */
 /*requires lb.core.js */
-/*requires lb.core.Sandbox.js */
-/*requires lb.base.config.js */
-/*requires lb.base.dom.js */
-/*requires lb.base.log.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
@@ -46,9 +42,13 @@ lb.core.Module = lb.core.Module || function (id, creator){
   //   object, the new instance of Module
 
   // Define aliases
+      /*requires lb.base.log.js */
   var log = lb.base.log.print,
+      /*requires lb.core.Sandbox.js */
       Sandbox = lb.core.Sandbox,
+      /*requires lb.base.config.js */
       getOption = lb.base.config.getOption,
+      /*requires lb.base.dom.js */
       $ = lb.base.dom.$,
 
   // Private fields
