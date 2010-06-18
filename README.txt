@@ -144,4 +144,5 @@ HISTORY
   2010-06-10, v1.0.1, Minor fix: replaced Combiner with concat
   2010-06-11, v1.1.0, Major fixes in history manager and local navigation
   2010-06-15, v1.1.1, Minor additions in base DOM Listener
+  2010-06-18, v1.2.0, onHashChange listener can now be removed or replaced
 
