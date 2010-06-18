@@ -28,12 +28,15 @@
       testrunner = bezen.testrunner,
       /*requires bezen.js */
       $ = bezen.$,
+      nix = bezen.nix,
       /*requires bezen.dom.js */
       element = bezen.dom.element,
       insertBefore = bezen.dom.insertBefore,
       remove = bezen.dom.remove,
       /*requires goog.events.js */
-      events = goog.events;
+      events = goog.events,
+      /*requires goog.History.js */
+      NAVIGATE = goog.History.EventType.NAVIGATE;
 
   function testNamespace(){
 
@@ -212,12 +215,29 @@
 
   function testRemoveListener(){
     var ut = lb.base.history.removeListener;
+    // remove all hash change listeners remaining from previous tests
+    events.removeAll(null, NAVIGATE);
 
     var testCallback = function(){};
     lb.base.history.addListener(testCallback);
+    lb.base.history.addListener(testCallback); // and again
 
+    ut(testCallback);
+    assert.equals( events.removeAll(null, NAVIGATE), 0,
+                                          "no more NAVIGATE events expected");
 
-    assert.fail('Missing tests');
+    var testCallback2 = function(){};
+    lb.base.history.addListener(testCallback);
+    lb.base.history.addListener(testCallback2);
+    lb.base.history.addListener(testCallback);
+    ut(testCallback);
+    ut(testCallback2);
+
+    assert.equals( events.removeAll(null, NAVIGATE), 0,
+                                     "both callbacks expected to be removed");
+
+    ut(testCallback); // must not fail
+    ut(nix); // must not fail
   }
 
   function testDestroy(){
@@ -242,7 +262,7 @@
     testGetHash: testGetHash,
     testSetHash: testSetHash,
     testAddListener: testAddListener,
-    //testRemoveListener: testRemoveListener,
+    testRemoveListener: testRemoveListener,
     testDestroy: testDestroy
   };
 

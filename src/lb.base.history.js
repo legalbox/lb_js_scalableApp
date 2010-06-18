@@ -89,6 +89,7 @@ lb.base.history = lb.base.history || (function() {
       NAVIGATE = History.EventType.NAVIGATE,
       /*requires closure/goog.events.js */
       listen = goog.events.listen,
+      unlisten = goog.events.unlisten,
         // use encodeURI / decodeURI instead of encodeURIComponent and
         // decodeURIComponent because the hash may contain a path with slashes,
         // i.e. more than one URI component. The / character gets encoded as
@@ -111,6 +112,15 @@ lb.base.history = lb.base.history || (function() {
 
      // object - the underlying history manager (instance of goog.History)
      history = null,
+
+     // array of objects in following format:
+     // {
+     //   callback: function, the callback function provided to addListener()
+     //   wrapper: function, the listener actually registered
+     // }
+     // The pair allows to keep track of the association callback-wrapper,
+     // to unregister the wrapper associated with a given callback.
+     navigationListeners = [],
 
      // object - the unload listener to destroy the history
      //          (instance of lb.base.dom.Listener)
@@ -204,10 +214,12 @@ lb.base.history = lb.base.history || (function() {
       return;
     }
 
-    listen(history, NAVIGATE, function(event){
+    var wrapper = function(event){
       // refactoring with getHash() possible for the hash conversion
       callback( '#'+decodeHash(event.token) );
-    });
+    };
+    navigationListeners.push({wrapper: wrapper, callback: callback});
+    listen(history, NAVIGATE, wrapper);
   }
 
   function removeListener(callback){
@@ -220,8 +232,19 @@ lb.base.history = lb.base.history || (function() {
     // Note:
     // Nothing happens when the callback has not been added, or has been
     // removed already.
+    var listener, i;
 
+    if (!history){
+      return;
+    }
 
+    for (i=navigationListeners.length - 1; i>=0; i--){
+      listener = navigationListeners[i];
+      if (listener.callback === callback){
+        unlisten(history, NAVIGATE, listener.wrapper);
+        navigationListeners.splice(i,1)
+      }
+    }
   }
 
   function destroy(){
