@@ -94,8 +94,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       /*requires lb.base.log.js */
       log = lb.base.log.print,
       /*requires lb.base.history.js */
-      setHash = lb.base.history.setHash,
-      onHashChange = lb.base.history.onHashChange,
+      history = lb.base.history,
+      setHash = history.setHash,
       /*requires lb.base.config.js */
       config = lb.base.config,
       /*requires lb.core.events.publisher.js */
@@ -122,7 +122,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
     // array, the set of listeners created by this module
     // Kept for removeAllListeners().
-    listeners = [];
+    listeners = [],
+
+    // function, the current listener set to onHashChange(), which will get
+    // replaced in a new call to onHashChange().
+    hashChangeCallback = null;
 
   function getId(localId){
     // Function: getId([localId]): string
@@ -541,15 +545,26 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Note: setHash is an alias for lb.base.history.setHash
 
-  // Function: url.onHashChange(callback)
-  // Observe changes in local part of the URL.
-  //
-  // Parameter:
-  //   callback - function, the callback(hash) function will be called once for
-  //              each subsequent change of hash. The hash parameter is a
-  //              string, decoded, starting with the '#' character.
+  function onHashChange(callback){
+    // Function: url.onHashChange(callback)
+    // Set a listener to observe changes in local part of the URL.
+    // Calling this method wit a new callback will replace the listener
+    // previously set. You may call it with null to remove the current listener
+    // altogether.
+    //
+    // Parameter:
+    //   callback - function, the callback(hash) function will be called once
+    //              for each subsequent change of hash. The hash parameter is a
+    //              string, decoded, starting with the '#' character.
 
-  // Note: onHashChange is an alias for lb.base.history.onHashChange
+    if (hashChangeCallback){
+      history.removeListener(hashChangeCallback);
+    }
+    hashChangeCallback = callback;
+    if (callback){
+      history.addListener(callback);
+    }
+  }
 
   function setTimeout(callback, delay){
     // Function: utils.setTimeout(callback,delay)

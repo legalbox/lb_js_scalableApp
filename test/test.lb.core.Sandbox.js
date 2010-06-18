@@ -591,9 +591,13 @@
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
     history.setHash('start');
-    var hashes = [];
-    function captureHash(hash){
-      hashes.push(hash);
+    var hashOne = [];
+    function captureHashOne(hash){
+      hashOne.push(hash);
+    }
+    var hashTwo = [];
+    function captureHashTwo(hash){
+      hashTwo.push(hash);
     }
 
     test.startAsyncTest();
@@ -601,15 +605,25 @@
       // in IE, hash change is detected after a polling,
       // 'start' could be seen as a new hash because of the polling interval,
       // even if the listener is actually added just after the setHash('start')
-      ut(captureHash);
+      ut(captureHashOne);
       history.setHash('one');
       setTimeout(function(){
+        assert.arrayEquals(hashOne,['#one'],
+                "first hash change expected to be captured by first listener");
+        ut(captureHashTwo); // replace listener
         history.setHash('two');
         setTimeout(function(){
+          assert.arrayEquals(hashOne,['#one'],
+                          "first listener must be removed when second is set");
+          assert.arrayEquals(hashTwo,['#two'],
+              "second hash change expected to be captured by second listener");
+          ut(null); // remove listener
           history.setHash('three');
           setTimeout(function(){
-            assert.arrayEquals(hashes,['#one','#two','#three'],
-                                          "sequence of hash changes expected");
+            assert.arrayEquals(hashOne,['#one'],
+              "no more hash change expected to be captured by first listener");
+            assert.arrayEquals(hashTwo,['#two'],
+                 "third hash change must be removed by setting null listener");
             test.endAsyncTest();
             history.setHash('');
           },200);
