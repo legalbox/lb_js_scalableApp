@@ -15,7 +15,7 @@
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/base.js to goog.js
-// * added jslint and global comments for JSLint
+// * added jslint comment for JSLint
 // * moved global var COMPILED to goog.COMPILED
 // * set goog.COMPILED to true
 // * moved all constants in goog.global.* (typicall window.*) to just goog.*
@@ -24,7 +24,41 @@
 // * set CLOSURE_NO_DEPS to true
 // * fixed code indent and remove empty lines in fileoverview comment
 // * fixed code indent in goog.require function
-// * added hasOwnProperty filter in for..in loop in cloneObject function
+//
+// Per JSLint suggestion: (changes annotated with comments starting with LB)
+// * added new before Error() constructor in goog.provide, goog.require,
+//   goog.abstractMethod, goog.writeScripts_ (x2), goog.globalEval, goog.base
+// * replaced for loop with while loop in goog.getObjectByName
+// * added hasOwnProperty filter in for..in loop in goog.globalize,
+//   goog.cloneObject, goog.mixin, goog.getMsg
+// * moved initialization from end condition of for loop to the start of the
+//   loop goog.addDependency (twice)
+// * replaced subscript notation with dot notation in goog.require
+// * commented the empty 'forward declarations' of goog.CLOSURE_BASE_PATH,
+//   Object.prototype.clone, goog.cssNameMapping_
+// * capitalized ctor constructor in goog.addSingletonGetter
+// * replaced != with !== in goog.inHtmlDocument_, goog.typeOf (x4),
+//   goog.globalEval
+// * replaced == with === in goog.findBasePath_, goog.typeOf (x6),
+//   goog.propertyIsEnumerableCustom_, goog.isArray, goog.isArrayLike (x3),
+//   goog.isDateLike, goog.isString, goog.isBoolean, goog.isNumber,
+//   goog.isFunction, goog.isObject (x3), goog.cloneObject (x3),
+//   goog.globalEval
+// * replaced val != null with explicit function calls in isDefAndNotNull
+// * removed parentheses around function litteral in goog.now
+// * replaced goog.global.eval with goog.global['eval'] in goog.globalEval
+//   (eval is a reserved word)
+// * on the contratayn used dot notation instead of subscript notation for
+//   goog.global._et_ in goog.globalEval
+// * inserted Unicode character 'Word Joiner' (U+2060) in comment of
+//   goog.typedef to avoid comment embedded in comment
+// * removed unnecessary semicolon and capitalized tempCtor, childCtor and
+//   parentCtor variable/parameters representing constructors in goog.inherits
+//
+// TODO: this module definition should be wrapped in a closure scope,
+//       following JavaScript module pattern, to allow defining private
+//       variables and functions, then exported to public API in goog.*
+
 
 /**
  * @fileoverview Bootstrap for the Google JS Library (Closure).
@@ -35,7 +69,6 @@
  */
 
 /*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
-/*global goog */
 
 /**
  * Base namespace for the Closure library.  Checks to see goog is
@@ -114,7 +147,8 @@ goog.provide = function(name) {
     // variable declaration, the compiled JS should work the same as the raw
     // JS--even when the raw JS uses goog.provide incorrectly.
     if (goog.getObjectByName(name) && !goog.implicitNamespaces_[name]) {
-      throw Error('Namespace "' + name + '" already declared.');
+      // LB: added new operator before Error constructor
+      throw new Error('Namespace "' + name + '" already declared.');
     }
 
     var namespace = name;
@@ -195,12 +229,16 @@ goog.exportPath_ = function(name, opt_object, opt_objectToExportTo) {
 goog.getObjectByName = function(name, opt_obj) {
   var parts = name.split('.');
   var cur = opt_obj || goog.global;
-  for (var part; part = parts.shift(); ) {
+  // LB: replaced for loop with while loop
+  // for (var part; part = parts.shift(); ) {
+  var part = parts.shift();
+  while(part){
     if (cur[part]) {
       cur = cur[part];
     } else {
       return null;
     }
+    parts.shift();
   }
   return cur;
 };
@@ -217,7 +255,10 @@ goog.getObjectByName = function(name, opt_obj) {
 goog.globalize = function(obj, opt_global) {
   var global = opt_global || goog.global;
   for (var x in obj) {
-    global[x] = obj[x];
+    // LB: add hasOwnProperty filter
+    if ( obj.hasOwnProperty(x) ){
+      global[x] = obj[x];
+    }
   }
 };
 
@@ -235,14 +276,18 @@ goog.addDependency = function(relPath, provides, requires) {
     var provide, require;
     var path = relPath.replace(/\\/g, '/');
     var deps = goog.dependencies_;
-    for (var i = 0; provide = provides[i]; i++) {
+    for (var i = 0; provide; i++) {
+      // LB: moved initialization in end condition to start of loop
+      provide = provides[i];
       deps.nameToPath[provide] = path;
       if (!(path in deps.pathToNames)) {
         deps.pathToNames[path] = {};
       }
       deps.pathToNames[path][provide] = true;
     }
-    for (var j = 0; require = requires[j]; j++) {
+    for (var j = 0; require; j++) {
+      // LB: moved initialization in end condition to start of loop
+      require = requires[j];
       if (!(path in deps.requires)) {
         deps.requires[path] = {};
       }
@@ -278,10 +323,13 @@ goog.require = function(rule) {
       goog.writeScripts_();
     } else {
       var errorMessage = 'goog.require could not find: ' + rule;
+      // LB: FIXME unsafe check, error may not be available on the console
       if (goog.global.console) {
-        goog.global.console['error'](errorMessage);
+        // LB: replaced subscript notation with dot notation for error
+        goog.global.console.error(errorMessage);
       }
-      throw Error(errorMessage);
+      // LB: added new operator before Constructor
+      throw new Error(errorMessage);
     }
   }
 };
@@ -298,7 +346,8 @@ goog.basePath = '';
  * A hook for overriding the base path.
  * @type {string|undefined}
  */
-goog.CLOSURE_BASE_PATH;
+// LB: commented undefined expression without assignment
+//goog.CLOSURE_BASE_PATH;
 
 
 /**
@@ -345,19 +394,21 @@ goog.identityFunction = function(var_args) {
  *   overridden.
  */
 goog.abstractMethod = function() {
-  throw Error('unimplemented abstract method');
+  // LB: added new operator before Error constructor
+  throw new Error('unimplemented abstract method');
 };
 
 
 /**
  * Adds a {@code getInstance} static method that always return the same instance
  * object.
- * @param {!Function} ctor The constructor for the class to add the static
+ * @param {!Function} Ctor The constructor for the class to add the static
  *     method to.
  */
-goog.addSingletonGetter = function(ctor) {
-  ctor.getInstance = function() {
-    return ctor.instance_ || (ctor.instance_ = new ctor());
+goog.addSingletonGetter = function(Ctor) {
+  // LB: capitalized ctor following convention for constructors
+  Ctor.getInstance = function() {
+    return Ctor.instance_ || (Ctor.instance_ = new Ctor());
   };
 };
 
@@ -395,7 +446,7 @@ if (!goog.COMPILED) {
    */
   goog.inHtmlDocument_ = function() {
     var doc = goog.global.document;
-    return typeof doc != 'undefined' &&
+    return typeof doc !== 'undefined' &&
            'write' in doc;  // XULDocument misses write.
   };
 
@@ -419,7 +470,7 @@ if (!goog.COMPILED) {
     for (var i = scripts.length - 1; i >= 0; --i) {
       var src = scripts[i].src;
       var l = src.length;
-      if (src.substr(l - 7) == 'base.js') {
+      if (src.substr(l - 7) === 'base.js') {
         goog.basePath = src.substr(0, l - 7);
         return;
       }
@@ -480,7 +531,8 @@ if (!goog.COMPILED) {
             // If the required name is defined, we assume that this
             // dependency was bootstapped by other means. Otherwise,
             // throw an exception.
-            throw Error('Undefined nameToPath for ' + requireName);
+            // LB: added new before Error constructor
+            throw new Error('Undefined nameToPath for ' + requireName);
           }
         }
       }
@@ -501,7 +553,9 @@ if (!goog.COMPILED) {
       if (scripts[i]) {
         goog.writeScriptTag_(goog.basePath + scripts[i]);
       } else {
-        throw Error('Undefined script input');
+        // LB: TODO refactoring: add a fail() method to throw errors
+        // LB: added new operator in front of Error constructor
+        throw new Error('Undefined script input');
       }
     }
   };
@@ -545,7 +599,7 @@ if (!goog.COMPILED) {
  */
 goog.typeOf = function(value) {
   var s = typeof value;
-  if (s == 'object') {
+  if (s === 'object') {
     if (value) {
       // We cannot use constructor == Array or instanceof Array because
       // different frames have different Array objects. In IE6, if the iframe
@@ -577,14 +631,14 @@ goog.typeOf = function(value) {
           //   even though the ECMA spec explicitly allows it.
           (!(value instanceof Object) &&
            (Object.prototype.toString.call(
-               /** @type {Object} */ (value)) == '[object Array]') ||
+               /** @type {Object} */ (value)) === '[object Array]') ||
 
            // In IE all non value types are wrapped as objects across window
            // boundaries (not iframe though) so we have to do object detection
            // for this edge case
-           typeof value.length == 'number' &&
-           typeof value.splice != 'undefined' &&
-           typeof value.propertyIsEnumerable != 'undefined' &&
+           typeof value.length === 'number' &&
+           typeof value.splice !== 'undefined' &&
+           typeof value.propertyIsEnumerable !== 'undefined' &&
            !value.propertyIsEnumerable('splice')
 
           )) {
@@ -606,9 +660,9 @@ goog.typeOf = function(value) {
       // function.
       if (!(value instanceof Object) &&
           (Object.prototype.toString.call(
-              /** @type {Object} */ (value)) == '[object Function]' ||
-          typeof value.call != 'undefined' &&
-          typeof value.propertyIsEnumerable != 'undefined' &&
+              /** @type {Object} */ (value)) === '[object Function]' ||
+          typeof value.call !== 'undefined' &&
+          typeof value.propertyIsEnumerable !== 'undefined' &&
           !value.propertyIsEnumerable('call'))) {
         return 'function';
       }
@@ -623,7 +677,7 @@ goog.typeOf = function(value) {
   // and RegExps.  We would like to return object for those and we can
   // detect an invalid function by making sure that the function
   // object has a call method.
-  } else if (s == 'function' && typeof value.call == 'undefined') {
+  } else if (s === 'function' && typeof value.call === 'undefined') {
     return 'object';
   }
   return s;
@@ -646,7 +700,7 @@ goog.propertyIsEnumerableCustom_ = function(object, propName) {
   // Does anyone know a more efficient work around?
   if (propName in object) {
     for (var key in object) {
-      if (key == propName &&
+      if (key === propName &&
           Object.prototype.hasOwnProperty.call(object, propName)) {
         return true;
       }
@@ -706,7 +760,10 @@ goog.isNull = function(val) {
  */
 goog.isDefAndNotNull = function(val) {
   // Note that undefined == null.
-  return val != null;
+  // return val != null;
+  // LB: replaced with explicit tests using above functions
+  // LB: FIXME define local aliases for these functions to avoid lookups
+  return goog.isDef(val) && !goog.isNull(val);
 };
 
 
@@ -716,7 +773,7 @@ goog.isDefAndNotNull = function(val) {
  * @return {boolean} Whether variable is an array.
  */
 goog.isArray = function(val) {
-  return goog.typeOf(val) == 'array';
+  return goog.typeOf(val) === 'array';
 };
 
 
@@ -729,7 +786,8 @@ goog.isArray = function(val) {
  */
 goog.isArrayLike = function(val) {
   var type = goog.typeOf(val);
-  return type == 'array' || type == 'object' && typeof val.length == 'number';
+  return type === 'array' ||
+         type === 'object' && typeof val.length === 'number';
 };
 
 
@@ -740,7 +798,7 @@ goog.isArrayLike = function(val) {
  * @return {boolean} Whether variable is a like a Date.
  */
 goog.isDateLike = function(val) {
-  return goog.isObject(val) && typeof val.getFullYear == 'function';
+  return goog.isObject(val) && typeof val.getFullYear === 'function';
 };
 
 
@@ -750,7 +808,7 @@ goog.isDateLike = function(val) {
  * @return {boolean} Whether variable is a string.
  */
 goog.isString = function(val) {
-  return typeof val == 'string';
+  return typeof val === 'string';
 };
 
 
@@ -760,7 +818,7 @@ goog.isString = function(val) {
  * @return {boolean} Whether variable is boolean.
  */
 goog.isBoolean = function(val) {
-  return typeof val == 'boolean';
+  return typeof val === 'boolean';
 };
 
 
@@ -770,7 +828,7 @@ goog.isBoolean = function(val) {
  * @return {boolean} Whether variable is a number.
  */
 goog.isNumber = function(val) {
-  return typeof val == 'number';
+  return typeof val === 'number';
 };
 
 
@@ -780,7 +838,7 @@ goog.isNumber = function(val) {
  * @return {boolean} Whether variable is a function.
  */
 goog.isFunction = function(val) {
-  return goog.typeOf(val) == 'function';
+  return goog.typeOf(val) === 'function';
 };
 
 
@@ -792,7 +850,7 @@ goog.isFunction = function(val) {
  */
 goog.isObject = function(val) {
   var type = goog.typeOf(val);
-  return type == 'object' || type == 'array' || type == 'function';
+  return type === 'object' || type === 'array' || type === 'function';
 };
 
 
@@ -896,11 +954,11 @@ goog.removeHashCode = goog.removeUid;
  */
 goog.cloneObject = function(obj) {
   var type = goog.typeOf(obj);
-  if (type == 'object' || type == 'array') {
+  if (type === 'object' || type === 'array') {
     if (obj.clone) {
       return obj.clone();
     }
-    var clone = type == 'array' ? [] : {};
+    var clone = type === 'array' ? [] : {};
     for (var key in obj) {
       // LB: added if around assignment, filtering with hasOwnProperty,
       //     to avoid copying inherited properties as own properties
@@ -925,7 +983,8 @@ goog.cloneObject = function(obj) {
  *
  * @type {Function}
  */
-Object.prototype.clone;
+//LB: commented empty 'declaration' without assignment
+//Object.prototype.clone;
 
 
 /**
@@ -1006,7 +1065,9 @@ goog.partial = function(fn, var_args) {
  */
 goog.mixin = function(target, source) {
   for (var x in source) {
-    target[x] = source[x];
+    if ( source.hasOwnProperty(x) ){
+      target[x] = source[x];
+    }
   }
 
   // For IE7 or lower, the for-in-loop does not contain any properties that are
@@ -1021,11 +1082,11 @@ goog.mixin = function(target, source) {
  * @return {number} An integer value representing the number of milliseconds
  *     between midnight, January 1, 1970 and the current time.
  */
-goog.now = Date.now || (function() {
+goog.now = Date.now || function() {
   // Unary plus operator converts its operand to a number which in the case of
   // a date is done by calling getTime().
   return +new Date();
-});
+};
 
 
 /**
@@ -1038,12 +1099,14 @@ goog.now = Date.now || (function() {
 goog.globalEval = function(script) {
   if (goog.global.execScript) {
     goog.global.execScript(script, 'JavaScript');
-  } else if (goog.global.eval) {
+  } else if (goog.global['eval']) {
+    // LB: FIXME declare variable alias for goog.global['eval']
     // Test to see if eval works
-    if (goog.evalWorksForGlobals_ == null) {
-      goog.global.eval('var _et_ = 1;');
-      if (typeof goog.global['_et_'] != 'undefined') {
-        delete goog.global['_et_'];
+    if (goog.evalWorksForGlobals_ === null) {
+      goog.global['eval']('var _et_ = 1;');
+      // LB: replaced subscript notation with dot notation for _et_
+      if (typeof goog.global._et_ !== 'undefined') {
+        delete goog.global._et_;
         goog.evalWorksForGlobals_ = true;
       } else {
         goog.evalWorksForGlobals_ = false;
@@ -1051,7 +1114,7 @@ goog.globalEval = function(script) {
     }
 
     if (goog.evalWorksForGlobals_) {
-      goog.global.eval(script);
+      goog.global['eval'](script);
     } else {
       var doc = goog.global.document;
       var scriptElt = doc.createElement('script');
@@ -1064,7 +1127,8 @@ goog.globalEval = function(script) {
       doc.body.removeChild(scriptElt);
     }
   } else {
-    throw Error('goog.globalEval not available');
+    // LB: added new before Error constructor
+    throw new Error('goog.globalEval not available');
   }
 };
 
@@ -1076,7 +1140,7 @@ goog.globalEval = function(script) {
  * the name of a class, but rather it's the name of a composite type.
  *
  * For example,
- * /** @type {Array|NodeList} / goog.ArrayLike = goog.typedef;
+ * /\u2060** @type {Array|NodeList} / goog.ArrayLike = goog.typedef;
  * will tell JSCompiler to replace all appearances of goog.ArrayLike in type
  * definitions with the union of Array and NodeList.
  *
@@ -1094,7 +1158,8 @@ goog.typedef = true;
  * @private
  * @see goog.setCssNameMapping
  */
-goog.cssNameMapping_;
+// LB: commented empty forward declaration without assignment
+// goog.cssNameMapping_;
 
 
 /**
@@ -1171,7 +1236,10 @@ goog.setCssNameMapping = function(mapping) {
 goog.getMsg = function(str, opt_values) {
   var values = opt_values || {};
   for (var key in values) {
-    str = str.replace(new RegExp('\\{\\$' + key + '\\}', 'gi'), values[key]);
+    // LB: added hasOwnProperty filter
+    if ( values.hasOwnProperty(key) ){
+      str = str.replace(new RegExp('\\{\\$' + key + '\\}', 'gi'), values[key]);
+    }
   }
   return str;
 };
@@ -1247,16 +1315,16 @@ goog.exportProperty = function(object, publicName, symbol) {
  * };
  * </pre>
  *
- * @param {Function} childCtor Child class.
- * @param {Function} parentCtor Parent class.
+ * @param {Function} ChildCtor Child class.
+ * @param {Function} ParentCtor Parent class.
  */
-goog.inherits = function(childCtor, parentCtor) {
+goog.inherits = function(ChildCtor, ParentCtor) {
   /** @constructor */
-  function tempCtor() {};
-  tempCtor.prototype = parentCtor.prototype;
-  childCtor.superClass_ = parentCtor.prototype;
-  childCtor.prototype = new tempCtor();
-  childCtor.prototype.constructor = childCtor;
+  function TempCtor() {}
+  TempCtor.prototype = ParentCtor.prototype;
+  ChildCtor.superClass_ = ParentCtor.prototype;
+  ChildCtor.prototype = new TempCtor();
+  ChildCtor.prototype.constructor = ChildCtor;
 };
 
 
@@ -1311,7 +1379,8 @@ goog.base = function(me, opt_methodName, var_args) {
   if (me[opt_methodName] === caller) {
     return me.constructor.prototype[opt_methodName].apply(me, args);
   } else {
-    throw Error(
+    // LB: added new operator before Error constructor
+    throw new Error(
         'goog.base called from a method of one name ' +
         'to a method of a different name');
   }
