@@ -27,12 +27,14 @@
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/base.js to goog.js
+// * added jslint and global comments for JSLint
 // * moved global var COMPILED to goog.COMPILED
 // * set goog.COMPILED to true
 // * moved goog.global.CLOSURE_BASE_PATH to goog.CLOSURE_BASE_PATH
 // * moved goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
 // * moved all constants in goog.global.* (typicall window.*) to just goog.*
 // * set CLOSURE_NO_DEPS to true
+// * added hasOwnProperty filter in for..in loop in cloneObject function
 
 /**
  * @fileoverview Bootstrap for the Google JS Library (Closure).
@@ -43,6 +45,8 @@
  *
  */
 
+/*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
+/*global goog */
 
 /**
  * Base namespace for the Closure library.  Checks to see goog is
@@ -900,7 +904,11 @@ goog.cloneObject = function(proto) {
     }
     var clone = type == 'array' ? [] : {};
     for (var key in proto) {
-      clone[key] = goog.cloneObject(proto[key]);
+      // LB: added if around assignment, filtering with hasOwnProperty,
+      //     to avoid copying inherited properties as own properties
+      if ( proto.hasOwnProperty(key) ) {
+        clone[key] = goog.cloneObject(proto[key]);
+      }
     }
     return clone;
   }
