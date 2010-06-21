@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,10 +18,12 @@
 // * added jslint and global comments for JSLint
 // * moved global var COMPILED to goog.COMPILED
 // * set goog.COMPILED to true
-// * moved goog.global.CLOSURE_BASE_PATH to goog.CLOSURE_BASE_PATH
-// * moved goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
 // * moved all constants in goog.global.* (typicall window.*) to just goog.*
+//   - moved goog.global.CLOSURE_BASE_PATH to goog.CLOSURE_BASE_PATH
+//   - moved goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
 // * set CLOSURE_NO_DEPS to true
+// * fixed code indent and remove empty lines in fileoverview comment
+// * fixed code indent in goog.require function
 // * added hasOwnProperty filter in for..in loop in cloneObject function
 
 /**
@@ -42,7 +32,6 @@
  * In uncompiled mode base.js will write out Closure's deps file, unless the
  * global <code>CLOSURE_NO_DEPS</code> is set to true.  This allows projects to
  * include their own deps file(s) from different locations.
- *
  */
 
 /*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
@@ -263,6 +252,7 @@ goog.addDependency = function(relPath, provides, requires) {
 };
 
 
+
 /**
  * Implements a system for the dynamic resolution of dependencies
  * that works in parallel with the BUILD system. Note that all calls
@@ -273,10 +263,10 @@ goog.addDependency = function(relPath, provides, requires) {
 goog.require = function(rule) {
 
   // if the object already exists we do not need do do anything
-  // TODO: If we start to support require based on file name this has
+  // TODO(user): If we start to support require based on file name this has
   //            to change
-  // TODO: If we allow goog.foo.* this has to change
-  // TODO: If we implement dynamic load after page load we should probably
+  // TODO(user): If we allow goog.foo.* this has to change
+  // TODO(user): If we implement dynamic load after page load we should probably
   //            not remove this code for the compiled output
   if (!goog.COMPILED) {
     if (goog.getObjectByName(rule)) {
@@ -291,8 +281,7 @@ goog.require = function(rule) {
       if (goog.global.console) {
         goog.global.console['error'](errorMessage);
       }
-
-        throw Error(errorMessage);
+      throw Error(errorMessage);
     }
   }
 };
@@ -818,7 +807,7 @@ goog.isObject = function(val) {
  * @return {number} The unique ID for the object.
  */
 goog.getUid = function(obj) {
-  // TODO: Make the type stricter, do not accept null.
+  // TODO(user): Make the type stricter, do not accept null.
 
   // In IE, DOM nodes do not extend Object so they do not have this method.
   // we need to check hasOwnProperty because the proto might have this set.
@@ -839,7 +828,7 @@ goog.getUid = function(obj) {
  * @param {Object} obj The object to remove the unique ID field from.
  */
 goog.removeUid = function(obj) {
-  // TODO: Make the type stricter, do not accept null.
+  // TODO(user): Make the type stricter, do not accept null.
 
   // DOM nodes in IE are not instance of Object and throws exception
   // for delete. Instead we try to use removeAttribute
@@ -891,29 +880,38 @@ goog.removeHashCode = goog.removeUid;
 
 
 /**
- * Clone an object/array (recursively)
- * @param {Object} proto Object to clone.
- * @return {Object} Clone of x;.
+ * Clones a value. The input may be an Object, Array, or basic type. Objects and
+ * arrays will be cloned recursively.
+ *
+ * WARNINGS:
+ * <code>goog.cloneObject</code> does not detect reference loops. Objects that
+ * refer to themselves will cause infinite recursion.
+ *
+ * <code>goog.cloneObject</code> is unaware of unique identifiers, and copies
+ * UIDs created by <code>getUid</code> into cloned results.
+ *
+ * @param {*} obj The value to clone.
+ * @return {*} A clone of the input value.
+ * @deprecated goog.cloneObject is unsafe. Prefer the goog.object methods.
  */
-goog.cloneObject = function(proto) {
-  var type = goog.typeOf(proto);
+goog.cloneObject = function(obj) {
+  var type = goog.typeOf(obj);
   if (type == 'object' || type == 'array') {
-    if (proto.clone) {
-      // TODO Change to proto.clone() once # args warn is removed
-      return proto.clone.call(proto);
+    if (obj.clone) {
+      return obj.clone();
     }
     var clone = type == 'array' ? [] : {};
-    for (var key in proto) {
+    for (var key in obj) {
       // LB: added if around assignment, filtering with hasOwnProperty,
       //     to avoid copying inherited properties as own properties
-      if ( proto.hasOwnProperty(key) ) {
-        clone[key] = goog.cloneObject(proto[key]);
+      if ( obj.hasOwnProperty(key) ){
+        clone[key] = goog.cloneObject(obj[key]);
       }
     }
     return clone;
   }
 
-  return proto;
+  return obj;
 };
 
 
@@ -922,7 +920,7 @@ goog.cloneObject = function(proto) {
  * compiler can better support duck-typing constructs as used in
  * goog.cloneObject.
  *
- * TODO: Remove once the JSCompiler can infer that the check for
+ * TODO(user): Remove once the JSCompiler can infer that the check for
  * proto.clone is safe in goog.cloneObject.
  *
  * @type {Function}
@@ -1059,7 +1057,7 @@ goog.globalEval = function(script) {
       var scriptElt = doc.createElement('script');
       scriptElt.type = 'text/javascript';
       scriptElt.defer = false;
-      // NOTE: can't use .innerHTML since "t('<test>')" will fail and
+      // Note(user): can't use .innerHTML since "t('<test>')" will fail and
       // .text doesn't work in Safari 2.  Therefore we append a text node.
       scriptElt.appendChild(doc.createTextNode(script));
       doc.body.appendChild(scriptElt);
@@ -1083,6 +1081,8 @@ goog.globalEval = function(script) {
  * definitions with the union of Array and NodeList.
  *
  * Does nothing in uncompiled code.
+ *
+ * @deprecated Please use the {@code @typedef} annotation.
  */
 goog.typedef = true;
 
@@ -1316,5 +1316,20 @@ goog.base = function(me, opt_methodName, var_args) {
         'to a method of a different name');
   }
 };
+
+
+/**
+ * Allow for aliasing within scope functions.  This function exists for
+ * uncompiled code - in compiled code the calls will be inlined and the
+ * aliases applied.  In uncompiled code the function is simply run since the
+ * aliases as written are valid JavaScript.
+ * @param {function()} fn Function to call.  This function can contain aliases
+ *     to namespaces (e.g. "var dom = goog.dom") or classes
+ *    (e.g. "var Timer = goog.Timer").
+ */
+goog.scope = function(fn) {
+  fn.call(goog.global);
+};
+
 
 
