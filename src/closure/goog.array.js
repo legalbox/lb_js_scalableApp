@@ -21,9 +21,10 @@
 //
 // Per JSLint Suggestion:
 // * commented empty 'declaration' without assignment goog.array.ArrayLike
-// * replaced == with === in goog.array.indexOf, goog.array.isEmpty,
-//   goog.array.insertBefore, goog.array.removeAt
-// * replaced == null with === null || === undefined in goog.array.lastIndexOf
+// * replaced == with === in goog.array.isEmpty, goog.array.insertBefore,
+//   goog.array.removeAt
+// * replaced == null with === null || === undefined in goog.array.indexOf,
+//   goog.array.lastIndexOf
 // * replaced != with !== in goog.array.indexOf, goog.array.lastIndexOf (x2),
 //   goog.array.equals
 // * added curly braces around single-line in if in goog.array.indexOf,
@@ -93,7 +94,8 @@ goog.array.indexOf = goog.array.ARRAY_PROTOTYPE_.indexOf ?
       return goog.array.ARRAY_PROTOTYPE_.indexOf.call(arr, obj, opt_fromIndex);
     } :
     function(arr, obj, opt_fromIndex) {
-      var fromIndex = opt_fromIndex === null ?
+                      // LB: opt_fromIndex defaults to 0 for null and undefined
+      var fromIndex = opt_fromIndex === null || opt_fromIndex === undefined ?
           0 : (opt_fromIndex < 0 ?
                Math.max(0, arr.length + opt_fromIndex) : opt_fromIndex);
 
