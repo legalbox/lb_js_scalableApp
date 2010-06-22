@@ -17,12 +17,13 @@
 // * renamed file from goog/array/array.js to goog.array.js
 // * added jslint and global comments for JSLint
 // * added requires comment for goog.js
-// * ignored/removed all calls to goog.asserts (added 2010-05-19 in f3bcdf)
+// * commented all calls to goog.asserts and associated require
 //
 // Per JSLint Suggestion:
 // * commented empty 'declaration' without assignment goog.array.ArrayLike
-// * replaced == with === in goog.array.indexOf, goog.array.lastIndexOf,
-//   goog.array.isEmpty, goog.array.insertBefore, goog.array.removeAt
+// * replaced == with === in goog.array.indexOf, goog.array.isEmpty,
+//   goog.array.insertBefore, goog.array.removeAt
+// * replaced == null with === null || === undefined in goog.array.lastIndexOf
 // * replaced != with !== in goog.array.indexOf, goog.array.lastIndexOf (x2),
 //   goog.array.equals
 // * added curly braces around single-line in if in goog.array.indexOf,
@@ -41,6 +42,8 @@
 /*requires goog.js*/
 goog.provide('goog.array');
 
+// LB: disable asserts
+// goog.require('goog.asserts');
 /**
  * @typedef {Array|NodeList|Arguments|{length: number}}
  */
@@ -63,7 +66,7 @@ goog.array.peek = function(array) {
 goog.array.ARRAY_PROTOTYPE_ = Array.prototype;
 
 
-// NOTE: Since most of the array functions are generic it allows you to
+// NOTE(user): Since most of the array functions are generic it allows you to
 // pass an array-like object. Strings have a length and are considered array-
 // like. However, the 'in' operator does not work on strings so we cannot just
 // use the array path even if the browser supports indexing into strings. We
@@ -84,6 +87,9 @@ goog.array.ARRAY_PROTOTYPE_ = Array.prototype;
  */
 goog.array.indexOf = goog.array.ARRAY_PROTOTYPE_.indexOf ?
     function(arr, obj, opt_fromIndex) {
+      // LB: disabled asserts
+      //goog.asserts.assert(arr || goog.isString(arr));
+      //goog.asserts.assertNumber(arr.length);
       return goog.array.ARRAY_PROTOTYPE_.indexOf.call(arr, obj, opt_fromIndex);
     } :
     function(arr, obj, opt_fromIndex) {
@@ -123,15 +129,32 @@ goog.array.indexOf = goog.array.ARRAY_PROTOTYPE_.indexOf ?
     // LB: possible refactoring with similar code in goog.array.indexOf?
 goog.array.lastIndexOf = goog.array.ARRAY_PROTOTYPE_.lastIndexOf ?
     function(arr, obj, opt_fromIndex) {
+      // LB: disabled asserts
+      //goog.asserts.assert(arr || goog.isString(arr));
+      //goog.asserts.assertNumber(arr.length);
       // Firefox treats undefined and null as 0 in the fromIndex argument which
       // leads it to always return -1
-      // LB: above comment probably fixed by using === instead of ==
-      //     unless this comment described an intended behavior?
-      var fromIndex = opt_fromIndex === null ? arr.length - 1 : opt_fromIndex;
+      
+      // LB: clarification of comment above:
+      //     in Firefox, the second argument of Array.prototype.lastIndexOf defaults
+      //     to 0, even for undefined. This does not correspond to the sample code
+      //     described in [1], which would start at 0 for null = Number(null), but
+      //     at the end of the array for undefined (since Number(undefined) is NaN).
+      //     The decision taken here is to default both to the end of the array,
+      //     which will lead to search the whole array by default.
+      //     Reference:
+      //     [1] lastIndexOf - MDC
+      //     https://developer.mozilla.org/en/Core_JavaScript_1.5_Reference
+      //                                     /Objects/Array/lastIndexOf
+                      // LB: default to the end of the array for null and undefined
+      var fromIndex = opt_fromIndex === null || opt_fromIndex === undefined ?
+        arr.length - 1 : opt_fromIndex;
       return goog.array.ARRAY_PROTOTYPE_.lastIndexOf.call(arr, obj, fromIndex);
     } :
     function(arr, obj, opt_fromIndex) {
-      var fromIndex = opt_fromIndex === null ? arr.length - 1 : opt_fromIndex;
+                      // LB: default to the end of the array for null and undefined
+      var fromIndex = opt_fromIndex === null || opt_fromIndex === undefined ?
+        arr.length - 1 : opt_fromIndex;
 
       if (fromIndex < 0) {
         fromIndex = Math.max(0, arr.length + fromIndex);
@@ -608,6 +631,9 @@ goog.array.remove = function(arr, obj) {
  * @return {boolean} True if an element was removed.
  */
 goog.array.removeAt = function(arr, i) {
+  // LB: disable asserts
+  // goog.asserts.assert(arr || goog.isString(arr));
+  // goog.asserts.assertNumber(arr.length);
   // use generic form of splice
   // splice returns the removed items and if successful the length of that
   // will be 1
@@ -766,6 +792,9 @@ goog.array.extend = function(arr1, var_args) {
  * @return {!Array} the removed elements.
  */
 goog.array.splice = function(arr, index, howMany, var_args) {
+  // LB: disabled asserts
+  // goog.asserts.assert(arr || goog.isString(arr));
+  // goog.asserts.assertNumber(arr.length);
   return goog.array.ARRAY_PROTOTYPE_.splice.apply(
       arr, goog.array.slice(arguments, 1));
 };
@@ -783,6 +812,9 @@ goog.array.splice = function(arr, index, howMany, var_args) {
  *     array.
  */
 goog.array.slice = function(arr, start, opt_end) {
+  // LB: disabled asserts
+  // goog.asserts.assert(arr || goog.isString(arr));
+  // goog.asserts.assertNumber(arr.length);*
   // passing 1 arg to slice is not the same as passing 2 where the second is
   // null or undefined (in that case the second argument is treated as 0).
   // we could use slice on the arguments object and then use apply instead of
@@ -845,7 +877,7 @@ goog.array.removeDuplicates = function(arr, opt_rv) {
  *     array is ordered. Should take 2 arguments to compare, and return a
  *     negative integer, zero, or a positive integer depending on whether the
  *     first argument is less than, equal to, or greater than the second.
- * @return {number} Index of the target value if found, otherwise
+ * @return {number} Lowest index of the target value if found, otherwise
  *     (-(insertion point) - 1). The insertion point is where the value should
  *     be inserted into arr to preserve the sorted property.  Return value >= 0
  *     iff target is found.
@@ -872,28 +904,30 @@ goog.array.binarySearch = function(arr, target, opt_compareFn) {
  *     desired index is before, at, or after the element passed to it.
  * @param {Object=} opt_obj The object to be used as the value of 'this'
  *     within evaluator.
- * @return {number} Index of an element matched by the evaluator, if such
- *     exists; otherwise (-(insertion point) - 1).  The insertion point is the
- *     index of the first element for which the evaluator returns negative, or
- *     arr.length if no such element exists.  Return value non-negative iff a
- *     match is found.
+ * @return {number} Index of the leftmost element matched by the evaluator, if
+ *     such exists; otherwise (-(insertion point) - 1). The insertion point is
+ *     the index of the first element for which the evaluator returns negative,
+ *     or arr.length if no such element exists. The return value is non-negative
+ *     iff a match is found.
  */
 goog.array.binarySelect = function(arr, evaluator, opt_obj) {
-  var left = 0;
-  var right = arr.length - 1;
-  while (left <= right) {
-    var mid = (left + right) / 2;
-    var evalResult = evaluator.call(opt_obj, arr[mid], mid, arr);
+  var left = 0;  // inclusive
+  var right = arr.length;  // exclusive
+  var found;
+  while (left < right) {
+    var middle = (left + right) >> 1;
+    var evalResult = evaluator.call(opt_obj, arr[middle], middle, arr);
     if (evalResult > 0) {
-      left = mid + 1;
-    } else if (evalResult < 0) {
-      right = mid - 1;
+      left = middle + 1;
     } else {
-      return mid;
+      right = middle;
+      // We are looking for the lowest index so we can't return immediately.
+      found = !evalResult;
     }
   }
-  // Not found, left is the insertion point.
-  return -(left + 1);
+  // left is the index if found, or the insertion point otherwise.
+  // ~left is a shorthand for -left - 1.
+  return found ? left : ~left;
 };
 
 
@@ -915,6 +949,9 @@ goog.array.binarySelect = function(arr, evaluator, opt_obj) {
  *     first argument is less than, equal to, or greater than the second.
  */
 goog.array.sort = function(arr, opt_compareFn) {
+  // TODO(user): Update type annotation since null is not accepted.
+  // LB: disabled asserts  //goog.asserts.assert(arr || goog.isString(arr));
+  //goog.asserts.assertNumber(arr.length);
   goog.array.ARRAY_PROTOTYPE_.sort.call(
       arr, opt_compareFn || goog.array.defaultCompare);
 };
@@ -1156,6 +1193,10 @@ goog.array.flatten = function(var_args) {
  * @return {!Array.<*>} The array.
  */
 goog.array.rotate = function(array, n) {
+  // LB: disabled asserts
+  //goog.asserts.assert(array || goog.isString(array));
+  //goog.asserts.assertNumber(array.length);
+
   if (array.length) {
     n %= array.length;
     if (n > 0) {
