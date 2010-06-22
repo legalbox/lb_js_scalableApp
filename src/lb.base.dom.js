@@ -13,10 +13,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-18
+ * 2010-06-22
  */
 /*requires lb.base.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
 lb.base.dom = lb.base.dom || (function() {

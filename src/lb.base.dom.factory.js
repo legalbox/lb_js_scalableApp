@@ -24,10 +24,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-18
+ * 2010-06-22
  */
 /*requires lb.base.dom.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
 lb.base.dom.factory = lb.base.dom.factory || (function() {
@@ -143,8 +143,9 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
 
     // Note: event is actually an instance of goog.events.Event.
     // We may define our own wrapper instead if needed.
-    var event = new Event(type);
-    for (var name in properties){
+    var event = new Event(type),
+        name;
+    for (name in properties){
       if ( properties.hasOwnProperty(name) ){
         event[name] = properties[name];
       }

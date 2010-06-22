@@ -13,9 +13,9 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-22
  */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global window */
 // preserve the library, if already loaded
 window.lb = window.lb || (function() {

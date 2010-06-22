@@ -16,10 +16,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-18
+ * 2010-06-22
  */
 /*requires lb.core.events.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
 lb.core.events.publisher = lb.core.events.publisher || (function() {
@@ -90,9 +90,9 @@ lb.core.events.publisher = lb.core.events.publisher || (function() {
 
     // take a snapshot of the list of subscribers to avoid running into
     // infinite loops or skipping subscribers in case the list is modified.
-    var currentSubscribers = copy(subscribers);
-
-    for (var i=0; i<currentSubscribers.length; i++){
+    var currentSubscribers = copy(subscribers),
+        i;
+    for (i=0; i<currentSubscribers.length; i++){
       try {
         currentSubscribers[i].notify(event);
       } catch(e) {

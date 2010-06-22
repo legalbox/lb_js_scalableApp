@@ -24,10 +24,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-18
+ * 2010-06-22
  */
 /*requires lb.core.events.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
 lb.core.events.Subscriber = lb.core.events.Subscriber ||

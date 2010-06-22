@@ -13,10 +13,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-18
+ * 2010-06-22
  */
 /*requires lb.base.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
 lb.base.ajax = lb.base.ajax || (function() {
@@ -43,16 +43,15 @@ lb.base.ajax = lb.base.ajax || (function() {
     //             The response object or array, converted from JSON, will be
     //             provided as parameter.
 
-    var jsonString = json.serialize(data);
-    var callback = function(event){
-      try {
-        var response = event.target.getResponseJson();
-        receive(response);
-      } catch(e) {
-        log('ERROR: "'+e+
-            '" in response to POST "'+jsonString+'" to "'+url+'"');
-      }
-    };
+    var jsonString = json.serialize(data),
+        callback = function(event){
+          try {
+            receive( event.target.getResponseJson() );
+          } catch(e) {
+            log('ERROR: "'+e+
+                '" in response to POST "'+jsonString+'" to "'+url+'"');
+          }
+        };
     XhrIo.send(url, callback, 'POST', jsonString);
   }
 

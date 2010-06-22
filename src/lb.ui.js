@@ -13,10 +13,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-03
+ * 2010-06-22
  */
 /*requires lb.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint nomen:false, white:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
 lb.ui = lb.ui || (function() {
