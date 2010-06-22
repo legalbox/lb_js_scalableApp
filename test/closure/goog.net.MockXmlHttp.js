@@ -24,12 +24,12 @@
  *   now gets pushed to this list in constructor.
  * - code moved inside a closure to keep global scope clean
  * - added requires comments for goog.net and goog.net.XmlHttp.js
- * - added properties on this._ :
- *     * this._.url: uri provided in open()
- *     * this._.method: verb provided in open()
- *     * this._.async: async param provided in open()
- *     * this._.data: opt_data provided in send()
- * - set this.responseText to echo this._.data just before state COMPLETE
+ * - added properties on this.lb :
+ *     * this.lb.url: uri provided in open()
+ *     * this.lb.method: verb provided in open()
+ *     * this.lb.async: async param provided in open()
+ *     * this.lb.data: opt_data provided in send()
+ * - set this.responseText to echo this.lb.data just before state COMPLETE
  */
 
 /*requires goog.net*/
@@ -56,7 +56,7 @@ goog.provide('goog.net.MockXmlHttp');
   MockXmlHttp.prototype.send = function(opt_data) {
     this.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
 
-    this._.data = opt_data;
+    this.lb.data = opt_data;
 
     if (MockXmlHttp.syncSend) {
       this.complete();
@@ -75,7 +75,7 @@ goog.provide('goog.net.MockXmlHttp');
     this.onreadystatechange();
 
     // echo provided data
-    this.responseText = this._.data;
+    this.responseText = this.lb.data;
 
     this.readyState = goog.net.XmlHttp.ReadyState.COMPLETE;
     this.onreadystatechange();
@@ -83,7 +83,7 @@ goog.provide('goog.net.MockXmlHttp');
 
 
   MockXmlHttp.prototype.open = function(verb, uri, async) {
-    this._ = {
+    this.lb = {
       method: verb,
       url: uri,
       async: async

@@ -4,14 +4,14 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-18
+ * Version:   2010-06-22
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*requires lb.core.Sandbox.js */
-/*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*jslint white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window, document, setTimeout */
 (function() {
   // Builder of
@@ -207,9 +207,9 @@
 
     assert.equals( MockXmlHttp.all.length, 1, "one instance of XHR expected");
     var xhr = MockXmlHttp.all[0];
-    assert.equals( xhr._.url, url,   "same url expected in XHR call");
-    assert.equals( xhr._.method, 'POST',      "POST method expected");
-    assert.equals( xhr._.async, true, "  asynchronous call expected");
+    assert.equals( xhr.lb.url, url,   "same url expected in XHR call");
+    assert.equals( xhr.lb.method, 'POST',      "POST method expected");
+    assert.equals( xhr.lb.async, true, "  asynchronous call expected");
 
     // trigger asynchronous response
     xhr.complete();
