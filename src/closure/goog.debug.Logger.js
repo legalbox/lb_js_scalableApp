@@ -18,6 +18,7 @@
 // * added requires comments for goog.js, goog.array.js, goog.debug.js,
 //   goog.debug.LogBuffer.js, goog.debug.LogRecord.js
 // * commented out all assertions (added in f223ba) and removed requirement
+// * set goog.debug.Logger.ENABLE_HIERARCHY to false
 
 /**
  * @fileoverview Definition of the Logger class. Please minimize dependencies
@@ -107,7 +108,7 @@ goog.debug.Logger.prototype.handlers_ = null;
  *     log handlers attached to them and whether they can have their log level
  *     set. Logging is a bit faster when this is set to false.
  */
-goog.debug.Logger.ENABLE_HIERARCHY = true;
+goog.debug.Logger.ENABLE_HIERARCHY = false;
 
 
 if (!goog.debug.Logger.ENABLE_HIERARCHY) {
