@@ -5,7 +5,7 @@
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-06-10
+  Version: 2010-06-22
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -41,7 +41,7 @@
     <jslint file="../src/closure/goog.js" />
     <jslint file="../src/closure/goog.array.js" />
     -->
-    <jslint file="../src/closure/goog.debug.Console.js" />
+    <jslint file="../src/closure/goog.debug.js" />
   </target>
 
   <target name="checkSrc"
