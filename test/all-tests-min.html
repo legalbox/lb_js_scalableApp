@@ -12,7 +12,7 @@
      Licensed under a BSD License" />
     <meta name="DC.rights" scheme="DCTERMS.URI"
           content="http://creativecommons.org/licenses/BSD/" />
-    <meta name="DC.date" content="2010-06-11" />
+    <meta name="DC.date" content="2010-06-22" />
     <link id='favicon' rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="style/test.css" />
   </head>
@@ -48,12 +48,6 @@
     <!--script type="text/javascript" 
         src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
     </script-->
-
-    <!--[if IE]>
-      <iframe id="lb.base.history.iframe" src="favicon.ico" class="hidden"
-      ></iframe>
-    <![endif]-->
-    <input id="lb.base.history.input" type="hidden" />
 
     <div id='noClass'></div>
     <div id='emptyClass' class=''></div>
@@ -122,9 +116,16 @@
     <script src="bezen.org/bezen.testrunner.js"></script>
     <script src="bezen.org/bezen.dom.js"></script>
 
-    <script src="../build/out/js/lb-min.js"></script>
-    <script src="closure/goog.net.MockXmlHttp.js"></script>
+    <div id='lb-scalable-framework'>
+      <!--[if IE]>
+        <iframe id="lb.base.history.iframe" src="favicon.ico" class="hidden"
+        ></iframe>
+      <![endif]-->
+      <input id="lb.base.history.input" type="hidden" />
+      <script src="../build/out/js/lb-min.js"></script>
+    </div>
 
+    <script src="closure/goog.net.MockXmlHttp.js"></script>
     <script src="test.lb.js"></script>
     <script src="test.lb.base.js"></script>
     <script src="test.lb.base.ajax.js"></script>
