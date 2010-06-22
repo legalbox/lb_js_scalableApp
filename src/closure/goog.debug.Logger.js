@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,12 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+//
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logger.js to goog.debug.Logger.js
 // * added requires comments for goog.js, goog.array.js, goog.debug.js,
-//   goog.debug.LogRecord.js
+//   goog.debug.LogBuffer.js, goog.debug.LogRecord.js
+// * commented out all assertions (added in f223ba) and removed requirement
 
 /**
  * @fileoverview Definition of the Logger class. Please minimize dependencies
@@ -37,16 +26,20 @@
  *
  * @see ../demos/debug.html
  */
-/*requires goog.js*/
+
 goog.provide('goog.debug.LogManager');
 goog.provide('goog.debug.Logger');
 goog.provide('goog.debug.Logger.Level');
 
 /*requires goog.array.js*/
 /*requires goog.debug.js*/
+/*requires goog.debug.LogBuffer.js*/
 /*requires goog.debug.LogRecord.js*/
 goog.require('goog.array');
+//LB: disabled assertions
+//goog.require('goog.asserts');
 goog.require('goog.debug');
+goog.require('goog.debug.LogBuffer');
 goog.require('goog.debug.LogRecord');
 
 /**
@@ -107,6 +100,30 @@ goog.debug.Logger.prototype.children_ = null;
  * @private
  */
 goog.debug.Logger.prototype.handlers_ = null;
+
+
+/**
+ * @define {boolean} Toggles whether loggers other than the root logger can have
+ *     log handlers attached to them and whether they can have their log level
+ *     set. Logging is a bit faster when this is set to false.
+ */
+goog.debug.Logger.ENABLE_HIERARCHY = true;
+
+
+if (!goog.debug.Logger.ENABLE_HIERARCHY) {
+  /**
+   * @type {!Array.<Function>}
+   * @private
+   */
+  goog.debug.Logger.rootHandlers_ = [];
+
+
+  /**
+   * @type {goog.debug.Logger.Level}
+   * @private
+   */
+  goog.debug.Logger.rootLevel_;
+}
 
 
 /**
@@ -347,10 +364,18 @@ goog.debug.Logger.prototype.getName = function() {
  * @param {Function} handler Handler function to add.
  */
 goog.debug.Logger.prototype.addHandler = function(handler) {
-  if (!this.handlers_) {
-    this.handlers_ = [];
+  if (goog.debug.Logger.ENABLE_HIERARCHY) {
+    if (!this.handlers_) {
+      this.handlers_ = [];
+    }
+    this.handlers_.push(handler);
+  } else {
+    // LB: disabled assertions
+    //goog.asserts.assert(!this.name_,
+    //    'Cannot call addHandler on a non-root logger when ' +
+    //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
+    goog.debug.Logger.rootHandlers_.push(handler);
   }
-  this.handlers_.push(handler);
 };
 
 
@@ -361,7 +386,9 @@ goog.debug.Logger.prototype.addHandler = function(handler) {
  * @return {boolean} Whether the handler was removed.
  */
 goog.debug.Logger.prototype.removeHandler = function(handler) {
-  return !!this.handlers_ && goog.array.remove(this.handlers_, handler);
+  var handlers = goog.debug.Logger.ENABLE_HIERARCHY ? this.handlers_ :
+      goog.debug.Logger.rootHandlers_;
+  return !!handlers && goog.array.remove(handlers, handler);
 };
 
 
@@ -397,7 +424,15 @@ goog.debug.Logger.prototype.getChildren = function() {
  * @param {goog.debug.Logger.Level} level The new level.
  */
 goog.debug.Logger.prototype.setLevel = function(level) {
-  this.level_ = level;
+  if (goog.debug.Logger.ENABLE_HIERARCHY) {
+    this.level_ = level;
+  } else {
+    // LB: disabled assertions
+    // goog.asserts.assert(!this.name_,
+    //    'Cannot call setLevel() on a non-root logger when ' +
+    //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
+    goog.debug.Logger.rootLevel_ = level;
+  }
 };
 
 
@@ -420,12 +455,17 @@ goog.debug.Logger.prototype.getLevel = function() {
  * @return {goog.debug.Logger.Level} The level.
  */
 goog.debug.Logger.prototype.getEffectiveLevel = function() {
+  if (!goog.debug.Logger.ENABLE_HIERARCHY) {
+    return goog.debug.Logger.rootLevel_;
+  }
   if (this.level_) {
     return this.level_;
   }
   if (this.parent_) {
     return this.parent_.getEffectiveLevel();
   }
+  // LB: disabled assertions
+  // goog.asserts.fail('Root logger has no level set.');
   return null;
 };
 
@@ -438,13 +478,7 @@ goog.debug.Logger.prototype.getEffectiveLevel = function() {
  * @return {boolean} Whether the message would be logged.
  */
 goog.debug.Logger.prototype.isLoggable = function(level) {
-  if (this.level_) {
-    return level.value >= this.level_.value;
-  }
-  if (this.parent_) {
-    return this.parent_.isLoggable(level);
-  }
-  return false;
+  return level.value >= this.getEffectiveLevel().value;
 };
 
 
@@ -474,7 +508,12 @@ goog.debug.Logger.prototype.log = function(level, msg, opt_exception) {
  * @return {!goog.debug.LogRecord} A log record.
  */
 goog.debug.Logger.prototype.getLogRecord = function(level, msg, opt_exception) {
-  var logRecord = new goog.debug.LogRecord(level, String(msg), this.name_);
+  if (goog.debug.LogBuffer.isBufferingEnabled()) {
+    var logRecord =
+        goog.debug.LogBuffer.getInstance().addRecord(level, msg, this.name_);
+  } else {
+    logRecord = new goog.debug.LogRecord(level, String(msg), this.name_);
+  }
   if (opt_exception) {
     logRecord.setException(opt_exception);
     logRecord.setExceptionText(
@@ -599,10 +638,16 @@ goog.debug.Logger.prototype.logRecord = function(logRecord) {
  * @private
  */
 goog.debug.Logger.prototype.doLogRecord_ = function(logRecord) {
-  var target = this;
-  while (target) {
-    target.callPublish_(logRecord);
-    target = target.getParent();
+  if (goog.debug.Logger.ENABLE_HIERARCHY) {
+    var target = this;
+    while (target) {
+      target.callPublish_(logRecord);
+      target = target.getParent();
+    }
+  } else {
+    for (var i = 0, handler; handler = goog.debug.Logger.rootHandlers_[i++]; ) {
+      handler(logRecord);
+    }
   }
 };
 
@@ -737,14 +782,16 @@ goog.debug.LogManager.createFunctionForCatchErrors = function(opt_logger) {
 goog.debug.LogManager.createLogger_ = function(name) {
   // find parent logger
   var logger = new goog.debug.Logger(name);
-  var lastDotIndex = name.lastIndexOf('.');
-  var parentName = name.substr(0, lastDotIndex);
-  var leafName = name.substr(lastDotIndex + 1);
-  var parentLogger = goog.debug.LogManager.getLogger(parentName);
+  if (goog.debug.Logger.ENABLE_HIERARCHY) {
+    var lastDotIndex = name.lastIndexOf('.');
+    var parentName = name.substr(0, lastDotIndex);
+    var leafName = name.substr(lastDotIndex + 1);
+    var parentLogger = goog.debug.LogManager.getLogger(parentName);
 
-  // tell the parent about the child and the child about the parent
-  parentLogger.addChild_(leafName, logger);
-  logger.setParent_(parentLogger);
+    // tell the parent about the child and the child about the parent
+    parentLogger.addChild_(leafName, logger);
+    logger.setParent_(parentLogger);
+  }
 
   goog.debug.LogManager.loggers_[name] = logger;
   return logger;
