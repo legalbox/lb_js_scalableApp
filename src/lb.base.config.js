@@ -21,7 +21,7 @@
  * 2010-06-22
  */
 /*requires lb.base.js */
-/*jslint nomen:false, white:false, plusplus:false */
+/*jslint white:false, plusplus:false */
 /*global lb, goog */
 // preserve the module, if already loaded
 lb.base.config = lb.base.config || (function() {

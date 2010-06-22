@@ -76,7 +76,7 @@
  * 2010-06-22
  */
 /*requires lb.base.js */
-/*jslint nomen:false, white:false, plusplus:false */
+/*jslint white:false, plusplus:false */
 /*global lb, goog, window, document */
 // preserve the module, if already loaded
 lb.base.history = lb.base.history || (function() {

@@ -61,7 +61,7 @@
  * 2010-06-22
  */
 /*requires lb.core.js */
-/*jslint nomen:false, white:false, plusplus:false */
+/*jslint white:false, plusplus:false */
 /*global lb, document, window */
 // preserve the module, if already loaded
 lb.core.Sandbox = lb.core.Sandbox || function (id){

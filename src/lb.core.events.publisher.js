@@ -19,7 +19,7 @@
  * 2010-06-22
  */
 /*requires lb.core.events.js */
-/*jslint nomen:false, white:false, plusplus:false */
+/*jslint white:false, plusplus:false */
 /*global lb */
 // preserve the module, if already loaded
 lb.core.events.publisher = lb.core.events.publisher || (function() {

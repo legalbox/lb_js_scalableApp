@@ -15,7 +15,7 @@
  * Version:
  * 2010-06-22
  */
-/*jslint nomen:false, white:false, plusplus:false */
+/*jslint white:false, plusplus:false */
 /*global window */
 // preserve the library, if already loaded
 window.lb = window.lb || (function() {
