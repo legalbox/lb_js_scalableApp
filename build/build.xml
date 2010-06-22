@@ -35,6 +35,15 @@
     </sequential>
   </macrodef>
 
+  <target name="checkLib"
+          description="Check Google Closure source files with JSLint">
+    <!--
+    <jslint file="../src/closure/goog.js" />
+    <jslint file="../src/closure/goog.array.js" />
+    -->
+    <jslint file="../src/closure/goog.debug.Console.js" />
+  </target>
+
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
     <jslint file="../src/lb.js" />
@@ -114,7 +123,7 @@
     </sequential>
   </macrodef>
 
-  <target name="document" 
+  <target name="document"
     description="Document JavaScript source files with Natural Docs">
     <mkdir dir="out/doc/config"/>
     <naturaldocs in="../src" out="out/doc" config="out/doc/config" />
@@ -163,6 +172,7 @@
       <file file="../src/closure/goog.structs.Set.js"/>
       <file file="../src/closure/goog.debug.js"/>
       <file file="../src/closure/goog.debug.LogRecord.js"/>
+      <file file="../src/closure/goog.debug.LogBuffer.js"/>
       <file file="../src/closure/goog.debug.Logger.js"/>
       <file file="../src/closure/goog.debug.RelativeTimeProvider.js"/>
       <file file="../src/closure/goog.debug.Formatter.js"/>
