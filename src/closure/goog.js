@@ -24,6 +24,9 @@
 // * set CLOSURE_NO_DEPS to true
 // * fixed code indent and remove empty lines in fileoverview comment
 // * fixed code indent in goog.require function
+// * renamed goog.UID_PROPERTY_ from closure_uid_{random} to goog.uid.{random}
+//   to use the goog namespace (kind of). The uid still creates a second global
+//   variable as soon as an event listener is attached to the window.
 //
 // Per JSLint suggestion: (changes annotated with comments starting with LB)
 // * added new before Error() constructor in goog.provide, goog.require,
@@ -867,6 +870,13 @@ goog.isObject = function(val) {
 goog.getUid = function(obj) {
   // TODO(user): Make the type stricter, do not accept null.
 
+  // LB: the UID is used as a unique key in goog.events.listen to store
+  //     the target object in a map. As noted in description, it mutates the
+  //     the target object, adding the new property named after the property
+  //     goog.UID_PROPERTY_ e.g. 'goog.uid.ywf2m2', modified by us from the
+  //     form 'closure_uid_ywf2m2' to reuse the goog namespace (kind of) and
+  //     clarify the origin of the variable.
+
   // In IE, DOM nodes do not extend Object so they do not have this method.
   // we need to check hasOwnProperty because the proto might have this set.
   if (obj.hasOwnProperty && obj.hasOwnProperty(goog.UID_PROPERTY_)) {
@@ -907,7 +917,7 @@ goog.removeUid = function(obj) {
  * @type {string}
  * @private
  */
-goog.UID_PROPERTY_ = 'closure_uid_' +
+goog.UID_PROPERTY_ = 'goog.uid.' +
     Math.floor(Math.random() * 2147483648).toString(36);
 
 
