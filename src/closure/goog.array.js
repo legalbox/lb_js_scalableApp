@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,20 +15,36 @@
 // Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/array/array.js to goog.array.js
+// * added jslint and global comments for JSLint
 // * added requires comment for goog.js
+// * ignored/removed all calls to goog.asserts (added 2010-05-19 in f3bcdf)
+//
+// Per JSLint Suggestion:
+// * commented empty 'declaration' without assignment goog.array.ArrayLike
+// * replaced == with === in goog.array.indexOf, goog.array.lastIndexOf,
+//   goog.array.isEmpty, goog.array.insertBefore, goog.array.removeAt
+// * replaced != with !== in goog.array.indexOf, goog.array.lastIndexOf (x2),
+//   goog.array.equals
+// * added curly braces around single-line in if in goog.array.indexOf,
+//   goog.array.lastIndexOf
+// * replaced >>1 with /2 in goog.array.binarySelect
+// * removed unnecessary semicolon after function stableCompareFn declaration
+// * removed duplicated declaration of var i, and moved the declaration to
+//   start of function, in goog.array.stableSort
 
 /**
  * @fileoverview Utilities for manipulating arrays.
  *
  */
+/*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
+/*global goog */
 /*requires goog.js*/
 goog.provide('goog.array');
 
 /**
- * @type {Array|NodeList|Arguments|{length: number}}
+ * @typedef {Array|NodeList|Arguments|{length: number}}
  */
-goog.array.ArrayLike = goog.typedef;
-
+// goog.array.ArrayLike;
 
 /**
  * Returns the last element in an array without removing it.
@@ -83,21 +87,22 @@ goog.array.indexOf = goog.array.ARRAY_PROTOTYPE_.indexOf ?
       return goog.array.ARRAY_PROTOTYPE_.indexOf.call(arr, obj, opt_fromIndex);
     } :
     function(arr, obj, opt_fromIndex) {
-      var fromIndex = opt_fromIndex == null ?
+      var fromIndex = opt_fromIndex === null ?
           0 : (opt_fromIndex < 0 ?
                Math.max(0, arr.length + opt_fromIndex) : opt_fromIndex);
 
       if (goog.isString(arr)) {
         // Array.prototype.indexOf uses === so only strings should be found.
-        if (!goog.isString(obj) || obj.length != 1) {
+        if (!goog.isString(obj) || obj.length !== 1) {
           return -1;
         }
         return arr.indexOf(obj, fromIndex);
       }
 
       for (var i = fromIndex; i < arr.length; i++) {
-        if (i in arr && arr[i] === obj)
+        if (i in arr && arr[i] === obj) {
           return i;
+        }
       }
       return -1;
     };
@@ -115,15 +120,18 @@ goog.array.indexOf = goog.array.ARRAY_PROTOTYPE_.indexOf ?
  *     omitted the search starts at the end of the array.
  * @return {number} The index of the last matching array element.
  */
+    // LB: possible refactoring with similar code in goog.array.indexOf?
 goog.array.lastIndexOf = goog.array.ARRAY_PROTOTYPE_.lastIndexOf ?
     function(arr, obj, opt_fromIndex) {
       // Firefox treats undefined and null as 0 in the fromIndex argument which
       // leads it to always return -1
-      var fromIndex = opt_fromIndex == null ? arr.length - 1 : opt_fromIndex;
+      // LB: above comment probably fixed by using === instead of ==
+      //     unless this comment described an intended behavior?
+      var fromIndex = opt_fromIndex === null ? arr.length - 1 : opt_fromIndex;
       return goog.array.ARRAY_PROTOTYPE_.lastIndexOf.call(arr, obj, fromIndex);
     } :
     function(arr, obj, opt_fromIndex) {
-      var fromIndex = opt_fromIndex == null ? arr.length - 1 : opt_fromIndex;
+      var fromIndex = opt_fromIndex === null ? arr.length - 1 : opt_fromIndex;
 
       if (fromIndex < 0) {
         fromIndex = Math.max(0, arr.length + fromIndex);
@@ -131,15 +139,16 @@ goog.array.lastIndexOf = goog.array.ARRAY_PROTOTYPE_.lastIndexOf ?
 
       if (goog.isString(arr)) {
         // Array.prototype.lastIndexOf uses === so only strings should be found.
-        if (!goog.isString(obj) || obj.length != 1) {
+        if (!goog.isString(obj) || obj.length !== 1) {
           return -1;
         }
         return arr.lastIndexOf(obj, fromIndex);
       }
 
       for (var i = fromIndex; i >= 0; i--) {
-        if (i in arr && arr[i] === obj)
+        if (i in arr && arr[i] === obj) {
           return i;
+        }
       }
       return -1;
     };
@@ -502,7 +511,7 @@ goog.array.contains = function(arr, obj) {
  * @return {boolean} true if empty.
  */
 goog.array.isEmpty = function(arr) {
-  return arr.length == 0;
+  return arr.length === 0;
 };
 
 
@@ -567,7 +576,7 @@ goog.array.insertArrayAt = function(arr, elementsToAdd, opt_i) {
  */
 goog.array.insertBefore = function(arr, obj, opt_obj2) {
   var i;
-  if (arguments.length == 2 || (i = goog.array.indexOf(arr, opt_obj2)) < 0) {
+  if (arguments.length === 2 || (i = goog.array.indexOf(arr, opt_obj2)) < 0) {
     arr.push(obj);
   } else {
     goog.array.insertAt(arr, obj, i);
@@ -602,7 +611,7 @@ goog.array.removeAt = function(arr, i) {
   // use generic form of splice
   // splice returns the removed items and if successful the length of that
   // will be 1
-  return goog.array.ARRAY_PROTOTYPE_.splice.call(arr, i, 1).length == 1;
+  return goog.array.ARRAY_PROTOTYPE_.splice.call(arr, i, 1).length === 1;
 };
 
 
@@ -873,7 +882,7 @@ goog.array.binarySelect = function(arr, evaluator, opt_obj) {
   var left = 0;
   var right = arr.length - 1;
   while (left <= right) {
-    var mid = (left + right) >> 1;
+    var mid = (left + right) / 2;
     var evalResult = evaluator.call(opt_obj, arr[mid], mid, arr);
     if (evalResult > 0) {
       left = mid + 1;
@@ -929,15 +938,16 @@ goog.array.sort = function(arr, opt_compareFn) {
  *     second.
  */
 goog.array.stableSort = function(arr, opt_compareFn) {
-  for (var i = 0; i < arr.length; i++) {
+  var i;
+  for (i = 0; i < arr.length; i++) {
     arr[i] = {index: i, value: arr[i]};
   }
   var valueCompareFn = opt_compareFn || goog.array.defaultCompare;
   function stableCompareFn(obj1, obj2) {
     return valueCompareFn(obj1.value, obj2.value) || obj1.index - obj2.index;
-  };
+  }
   goog.array.sort(arr, stableCompareFn);
-  for (var i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i++) {
     arr[i] = arr[i].value;
   }
 };
@@ -977,7 +987,7 @@ goog.array.sortObjectsByKey = function(arr, key, opt_compareFn) {
  */
 goog.array.equals = function(arr1, arr2, opt_equalsFn) {
   if (!goog.isArrayLike(arr1) || !goog.isArrayLike(arr2) ||
-      arr1.length != arr2.length) {
+      arr1.length !== arr2.length) {
     return false;
   }
   var l = arr1.length;
