@@ -126,6 +126,12 @@ Language: C#
    Full Language Support: NaturalDocs::Languages::CSharp
 
 
+Language: CSS
+
+   Extension: css
+   Block Comment: /* */
+
+
 Language: Java
 
    Extension: java
