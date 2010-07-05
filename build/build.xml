@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="transform" basedir="." default="build">
+<project name="lb_js_scalableApp" basedir="." default="build">
   <description>
-  Build script for Legal Box Web Application
+  Build script for
+  The Scalable JavaScript Application Framework
+  by Legal Box, Paris
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
-  Copyright: Legal Box (c) 2010, All Rights Reserved
-  Version: 2010-06-22
+  Copyright: Legal Box SAS (c) 2010, All Rights Reserved
+  License: BSD License - http://creativecommons.org/licenses/BSD/
+  Version: 2010-07-05
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
