@@ -58,7 +58,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-07-13
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -379,7 +379,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //     listener. No other interaction is expected with this object.
     //
     // Notes:
-    //   The listener is set on bubbling phase.
+    //   * the listener is set on bubbling phase.
+    //   * the target element must be part of the box, i.e. already added to
+    //     the DOM; otherwise the call is ignored per sandbox policy.
 
     // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
