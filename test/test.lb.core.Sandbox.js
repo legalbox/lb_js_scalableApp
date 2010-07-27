@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2010-07-27
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -429,45 +429,72 @@
   function testAddListener(){
     // Unit tests for lb.core.Sandbox#dom.addListener
 
+    // test factory must be configured beforehand
+    var createdListeners = [];
+    var testFactory = {
+      createListener: function(element, type, callback, useCapture){
+        var testListener = {
+          element: element,
+          type: type,
+          callback: callback,
+          useCapture: useCapture
+        };
+        createdListeners.push(testListener);
+        return testListener;
+      }
+    };
+    config.setOptions({lbFactory:testFactory});
+
     var sandbox = new lb.core.Sandbox('testAddListener');
     var ut = sandbox.dom.addListener;
 
-    var div1 = $('testAddListener.click');
-    var events1 = [];
-    var callback1 = function(event){
-      events1.push(event);
+    var callback = function(event){
     };
-    var listener1 = ut(div1, 'click', callback1);
-    assert.isTrue( object.exists(listener1),
-                             "listener object expected for div inside box");
-    var listeners1 = events.getListeners(div1, 'click', false);
-    assert.arrayEquals( sandbox.dom.getListeners(), [listener1],
-                                "first listener expected in getListeners()");
-    assert.equals(listeners1.length, 1,
-                                            "one listener expected on div1");
-    var event1 = {};
-    listeners1[0].handleEvent(event1);
-    assert.arrayEquals(events1,[event1],
-                            "callback expected to be triggered with event1");
 
-    var listener2 = ut(div1, 'click', callback1);
+    var div0 = $('testAddListener.outsideBox');
+    assert.isFalse( object.exists( ut(div0, 'click', callback) ),
+                           "no listener object expected for div outside box");
+    assert.arrayEquals( sandbox.dom.getListeners(), [],
+                            "no listener expected to be added (not created)");
+
+    var div1 = $('testAddListener.click');
+    var listener1 = ut(div1, 'click', callback);
+    assert.objectEquals(listener1,
+           {
+              element: div1,
+              type: 'click',
+              callback: callback,
+              useCapture: undefined
+           },
+                  "test listener expected to be returned for div inside box");
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener1],
+                "created listener expected to be added to sandbox listeners");
+
+    var listener2 = ut(div1, 'click', callback);
     assert.arrayEquals( sandbox.dom.getListeners(), [listener1, listener2],
                               "two listeners expected in getListeners()");
-
-    var div2 = $('testAddListener.outsideBox');
-    var events2 = [];
-    var callback2 = function(event){
-      events2.push(event);
-    };
-    assert.isFalse( object.exists( ut(div2, 'click', callback2) ),
-                           "no listener object expected for div outside box");
-    var listeners2 = events.getListeners(div2, 'click', false);
-    assert.equals(listeners2.length, 0,
-                           "no listener expected on div2 outside of the box");
   }
 
   function testRemoveListener(){
     // Unit tests for lb.core.Sandbox#dom.removeListener
+
+    // test factory must be configured beforehand
+    var destroyedListeners = [];
+    var testFactory = {
+      createListener: function(element, type, callback, useCapture){
+        var testListener = {
+          element: element,
+          type: type,
+          callback: callback,
+          useCapture: useCapture
+        };
+        return testListener;
+      },
+      destroyListener: function(listener){
+        destroyedListeners.push(listener);
+      }
+    };
+    config.setOptions({lbFactory:testFactory});
 
     var sandbox = new lb.core.Sandbox('testRemoveListener');
     var ut = sandbox.dom.removeListener;
@@ -475,6 +502,8 @@
     // no failures expected
     ut();
     ut({});
+    assert.arrayEquals(destroyedListeners, [],
+                      "missing and unknown listener expected to be ignored");
 
     var div1 = $('testRemoveListener.click');
     var callback1 = function(){};
@@ -483,26 +512,51 @@
     var listener3 = sandbox.dom.addListener(div1, 'click', callback1);
 
     ut(listener1);
+    assert.arrayEquals(destroyedListeners, [listener1],
+                                   "first listener expected to be destroyed");
     assert.arrayEquals( sandbox.dom.getListeners(), [listener2,listener3],
-                                    "first listener expected to be removed.");
+                                         "two listeners expected to remain.");
+
     ut(listener1);
+    assert.arrayEquals(destroyedListeners, [listener1],
+                              "listener1 not expected to be destroyed twice");
     assert.arrayEquals( sandbox.dom.getListeners(), [listener2,listener3],
                      "no change expected for first listner already removed.");
-    ut(listener3);
-    assert.arrayEquals( sandbox.dom.getListeners(), [listener2],
-                                    "third listener expected to be removed.");
-    ut(listener2);
-    assert.arrayEquals( sandbox.dom.getListeners(), [],
-                                    "second listener expected to be removed.");
 
-    assert.arrayEquals( events.getListeners(div1,'click',false), [],
-               "all non-capturing listeners expected to be removed from DOM.");
+    ut(listener3);
+    assert.arrayEquals(destroyedListeners, [listener1, listener3],
+                                        "listener3 expected to be destroyed");
+    assert.arrayEquals( sandbox.dom.getListeners(), [listener2],
+                                         "one listener expected to remain.");
+    ut(listener2);
+    assert.arrayEquals(destroyedListeners, [listener1, listener3, listener2],
+                                        "listener2 expected to be destroyed");
+    assert.arrayEquals( sandbox.dom.getListeners(), [],
+                                           "no remaining listener expected.");
   }
 
   function testRemoveAllListeners(){
     // Unit tests for lb.core.Sandbox#dom.removeAllListeners
 
-    var sandbox = new lb.core.Sandbox('testRemoveListener');
+    // test factory must be configured beforehand
+    var destroyedListeners = [];
+    var testFactory = {
+      createListener: function(element, type, callback, useCapture){
+        var testListener = {
+          element: element,
+          type: type,
+          callback: callback,
+          useCapture: useCapture
+        };
+        return testListener;
+      },
+      destroyListener: function(listener){
+        destroyedListeners.push(listener);
+      }
+    };
+    config.setOptions({lbFactory:testFactory});
+
+    var sandbox = new lb.core.Sandbox('testRemoveAllListeners');
     var ut = sandbox.dom.removeAllListeners;
 
     // no error expected
@@ -515,11 +569,10 @@
     var listener3 = sandbox.dom.addListener(div1, 'click', callback1);
 
     ut();
+    assert.arrayEquals( destroyedListeners, [listener1, listener2, listener3],
+                                    "all listeners expected to be destroyed");
     assert.arrayEquals( sandbox.dom.getListeners(), [],
                                     "all listeners expected to be removed.");
-
-    assert.arrayEquals( events.getListeners(div1,'click',false), [],
-               "all non-capturing listeners expected to be removed from DOM.");
 
     // no error expected
     ut();
@@ -652,7 +705,7 @@
     testFireEvent: testFireEvent,
     testCancelEvent: testCancelEvent,
     testGetListeners: testGetListeners,
-    testaddListener: testAddListener,
+    testAddListener: testAddListener,
     testRemoveListener: testRemoveListener,
     testRemoveAllListeners: testRemoveAllListeners
   },"lb.core.Sandbox.dom");

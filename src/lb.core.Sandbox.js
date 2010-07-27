@@ -58,7 +58,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-07-13
+ * 2010-07-27
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -303,13 +303,13 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function element(name,attributes){
     // Function: dom.element(name[,attributes[,childNodes]]): DOM Element
-    // Create a new DOM element using the configured element factory.
-    // For example, using the default element factory,
+    // Create a new DOM element using the configured DOM factory.
+    // For example, using the default DOM factory,
     // |  element('a',{href:'#here',title:'Here'},'Click here')
     // will create a new DOM element
     // |  <a href='#here' title='Here'>Click here</a>
     //
-    // A custom element factory can be configured using the property lbFactory
+    // A custom DOM factory can be configured using the property lbFactory
     // with <lb.core.application.setOptions(options)>.
     //
     // Parameters:
@@ -326,7 +326,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function fireEvent(element, type, properties){
     // Function: dom.fireEvent(element,type[,properties]): DOM Event
-    // Create and dispatch a new DOM event to the given element.
+    // Create and dispatch a new DOM event to the given element,
+    // using the configured DOM factory.
     //
     // Parameters:
     //   element - DOM Element, an element of the box
@@ -343,7 +344,10 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function cancelEvent(event){
     // Function: dom.cancelEvent(event)
-    // Cancel an event: prevent the default action and stop bubbling.
+    // Cancel an event using the configured DOM factory.
+    //
+    // Using the default DOM factory, cancelling an event prevents the default
+    // action and stops bubbling.
     //
     // Parameter:
     //   event - DOM Event
@@ -365,7 +369,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function addListener(element,type,callback){
     // Function: dom.addListener(element,type,callback): Listener
-    // Register a new listener for a type of event on a DOM element of the box.
+    // Register a new listener for a type of event on a DOM element of the box
+    // using the configured DOM factory.
     //
     // Parameters:
     //   element - DOM Element, an element of the box
@@ -390,14 +395,14 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       return null;
     }
 
-    var listener = new Listener(element,type,callback);
+    var listener = factory.createListener(element,type,callback);
     listeners.push(listener);
     return listener;
   }
 
   function removeListener(listener){
     // Function: dom.removeListener(listener)
-    // Unregister a listener.
+    // Unregister a listener, using the configured DOM factory.
     //
     // Parameters:
     //   listener - object, a listener instance returned by addListener().
@@ -407,7 +412,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
     for (var i=0; i<listeners.length; i++){
       if (listeners[i]===listener){
-        listener.detach();
+        factory.destroyListener(listener);
         listeners.splice(i,1);
         return;
       }
@@ -416,7 +421,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   function removeAllListeners(){
     // Function: dom.removeAllListeners()
-    // Remove all listeners configured on DOM elements of the box.
+    // Remove all listeners configured on DOM elements of the box, using the
+    // configured DOM factory.
     //
     // All remaining listeners, previously configured with addListener(),
     // add removed. This method is intended as a cleanup utility ; it is called
@@ -424,7 +430,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // which makes its use optional for the module itself.
 
     for (var i=0; i<listeners.length; i++){
-      listeners[i].detach();
+      factory.destroyListener(listeners[i]);
     }
     removeAll(listeners);
   }

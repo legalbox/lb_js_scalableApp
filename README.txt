@@ -146,4 +146,5 @@ HISTORY
   2010-06-15, v1.1.1, Minor additions in base DOM Listener
   2010-06-18, v1.2.0, onHashChange listener can now be removed or replaced
   2010-06-22, v1.2.1, fixes and updates in Google Closure (base,array,debug)
+  2010-07-27, v1.2.2, Sandbox is now using factory to create/destroy listeners
 
