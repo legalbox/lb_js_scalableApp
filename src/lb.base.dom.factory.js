@@ -24,7 +24,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-08-09
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
@@ -158,15 +158,27 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
     // Function: destroyEvent(event)
     // Terminate a DOM event: prevent default action and stop propagation.
     //
+    // Nothing happens in case the event is undefined, or lacks both of the
+    // expected stopPropagation() and preventDefault() methods. In case only
+    // one of the methods is missing, the other will get called.
+    //
     // Parameter:
     //   event - object, the DOM Event [1]
     //
     // Reference:
     //   [1] DOM Level 2 Events: Event interface
     //   <http://bit.ly/b7KwF5>
+    if (!event){
+      return;
+    }
 
-    event.stopPropagation();
-    event.preventDefault();
+    if (event.stopPropagation){
+      event.stopPropagation();
+    }
+
+    if (event.preventDefault){
+      event.preventDefault();
+    }
   }
 
   return { // public API

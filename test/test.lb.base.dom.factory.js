@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2010-08-09
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -273,6 +273,49 @@
     ut(testEvent);
     assert.equals(preventCounter, 1, "preventDefault() expected to be called");
     assert.equals(stopCounter, 1,   "stopPropagation() expected to be called");
+
+    var preventCounter2 = 0;
+    var testEvent2 = {
+      type: 'click',
+      preventDefault: function(){
+        preventCounter2++;
+      }
+    };
+    try {
+      ut(testEvent2);
+    } catch(e2) {
+      assert.fail(
+        "No error expected when stopPropagation() is not defined: "+e2
+      );
+    }
+    assert.equals(preventCounter2, 1,
+                              "only preventDefault() expected to be called");
+
+    var stopCounter3 = 0;
+    var testEvent3 = {
+      type: 'click',
+      stopPropagation: function(){
+        stopCounter3++;
+      }
+    };
+    try {
+      ut(testEvent3);
+    } catch(e3) {
+      assert.fail(
+        "No error expected when preventDefault() is not defined: "+e3
+      );
+    }
+    assert.equals(stopCounter3, 1,
+                             "only stopPropagation() expected to be called");
+
+    var testEvent4 = {
+      type: 'click'
+    };
+    try {
+      ut(testEvent4);
+    } catch(e4) {
+      assert.fail("No error expected when both methods are missing: "+e4);
+    }
   }
 
   var tests = {
