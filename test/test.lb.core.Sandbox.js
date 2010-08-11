@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-07-27
+ * Version:   2010-08-11
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -84,8 +84,15 @@
                                "box element 'testGetBox' should be returned");
 
     sandbox = new lb.core.Sandbox('missing');
+
+    assert.equals( sandbox.getBox(false), null,
+            "null expected when box element is missing and !createIfMissing");
+    assert.equals( $('missing'), null,
+             "missing box element must not be created when !createIfMissing");
+
     var box = sandbox.getBox();
-    assert.isTrue( object.exists(box),         "missing box must be created");
+    assert.isTrue( object.exists(box),
+                                    "missing box must be created by default");
     assert.equals(box, $('missing'),   "new element must be created with id");
     assert.equals(box.nodeType,ELEMENT_NODE,
                                        "new element must be an element node");

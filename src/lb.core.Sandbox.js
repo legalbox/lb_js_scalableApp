@@ -11,7 +11,7 @@
  *
  * Module (sandbox):
  *   - <getId([localId]):string>
- *   - <getBox(): DOM Element>
+ *   - <getBox(createIfMissing): DOM Element>
  *   - <isInBox(element): boolean>
  *
  * Cascading Style Sheets (sandbox.css):
@@ -58,7 +58,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-07-27
+ * 2010-08-11
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -114,7 +114,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // DOM element, the root of the box, carrying the module identifier.
     // Used only in getBox(), to avoid multiple lookups of the same element.
     // Initialized on first call to getBox().
-    box,
+    box = null,
 
     // array, the set of Subscribers created for this module.
     // Kept locally for use in unsubscribe().
@@ -152,23 +152,29 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     }
   }
 
-  function getBox(){
-    // Function: getBox(): DOM Element
+  function getBox(createIfMissing){
+    // Function: getBox(createIfMissing): DOM Element
     // Get the root HTML element for this module.
     //
-    // Returns:
-    //   DOM Element, the HTML element corresponding to the module id
-    //
+    // Parameter:
+    //   createIfMissing - boolean, optional, defaults to true,
+    //                     Whether to create the box element if it is not found
+    //                     in the document.
     // Note:
-    //   In case no HTML element is found in the document with the module id,
-    //   a new div element is created with this id and inserted last in the
-    //   document body, and this new element is returned.
+    //   In case createIfMissing is true (by default) and no HTML element is
+    //   found in the document with the module id, a new div element is created
+    //   with this id and inserted last in the document body.
+    //
+    // Returns:
+    //   * DOM Element, the HTML element corresponding to the module id,
+    //   * or null, in case createIfMissing is false and the element is missing
+    createIfMissing = createIfMissing!==false;
 
     if (box) {
       return box;
     }
     box = dom.$(id);
-    if (!box){
+    if (!box && createIfMissing){
       log('Warning: no element "'+id+
           '" found in box. Will be created at end of body.');
       box = factory.createElement('div',{'id': id});
@@ -185,15 +191,13 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   element - DOM Element, an element
     //
     // Returns:
-    //   true if the element is a descendant of or the root of the box itself
-    //   false otherwise
-
-    // Warning: element attribute hides element() function.
+    //   * true if the element is a descendant of or the root of the box itself
+    //   * false otherwise
 
     var ancestor = element;
     while (ancestor) {
       // box must be found in ancestors or self
-      if ( ancestor === getBox() ) {
+      if ( ancestor === getBox(false) ) {
         return true;
       }
       ancestor = ancestor.parentNode;
@@ -220,7 +224,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Note:
     // When the element is out of the box, an empty object is returned as well.
 
-    // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
       log('Warning: cannot get CSS classes of element "'+element+
           '" outside of box "'+id+'"');
@@ -241,7 +244,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Note:
     //   Nothing happens if element is out of the box.
 
-    // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
       log('Warning: cannot add CSS class to element "'+element+
           '" outside of box "'+id+'"');
@@ -262,7 +264,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Note:
     //   Nothing happens if element is out of the box.
 
-    // Warning: element parameter hides element() function
     if ( !isInBox(element) ){
       log('Warning: cannot remove CSS class from element "'+element+
           '" outside of box "'+id+'"');
@@ -284,14 +285,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   * DOM Element, the element from the box with corresponding localId
     //   * null if no element is found in the box with the localId
     //
-    // Notes:
-    //   This method calls getBox() internally to check that a found element
-    //   is a descendant of the box element. This may create the box element
-    //   if not already present in the document.
-    //
-    //   Since the provided localId is converted to a full identifier using
-    //   getId(), a call to $() without argument will return the root element
-    //   of the box, in the same way as getBox().
+    // Note:
+    //   A call to $() with no argument will return the box element, similarly
+    //   to getBox(false).
 
     var element = dom.$( getId(localId) );
     if ( isInBox(element) ){
