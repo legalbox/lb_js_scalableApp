@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-08-11
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -44,7 +44,6 @@ lb.base.dom = lb.base.dom || (function() {
     // DOM Level 2 Core
     // <http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-getElBId>
 
-    //
     return dom.$(id);
   }
 
