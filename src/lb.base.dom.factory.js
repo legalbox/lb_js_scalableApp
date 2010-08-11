@@ -8,10 +8,25 @@
  * Rich Internet Applications.
  *
  * How to design a custom factory:
- * A custom factory is an object with all the methods defined in this module,
- * which can be used as a default implementation in the custom factory methods.
- * The custom factory can be configured on the application core:
+ * A custom factory is an object with the same methods defined in this module.
+ * All the methods defined in the base factory must be supported by your
+ * custom factory.
+ *
+ * The custom factory can be configured by calling setOptions on the
+ * application core:
  * | lb.core.application.setOptions({ lbFactory: your.customFactory })
+ *
+ * To develop your own custom factory, you can start by creating a new module
+ * as a closure assigned to your own namespace. You can then add all required
+ * methods, just calling the same method in the base factory to use the default
+ * implementation. You may find it handy to declare an alias for the base
+ * factory at the start of your module:
+ * | var baseFactory = lb.base.dom.factory;
+ *
+ * In addition to the mandatory methods defined by the base factory, you may
+ * optionally support the initElement method, which is an extrat extension
+ * point intended for use in custom factories:
+ * o <initElement(element)>
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -24,7 +39,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-09
+ * 2010-08-11
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
@@ -45,6 +60,27 @@ lb.base.dom.factory = lb.base.dom.factory || (function() {
       Listener = lb.base.dom.Listener,
       /*requires lb.base.array.js */
       toArray = lb.base.array.toArray;
+
+  // Function: initElement(element)
+  // (optional) Customize a newly inserted element.
+  // Not implemented in the base factory.
+  //
+  // The method differs from createElement which is responsible for the
+  // actual creation of the element node and is called before the node is
+  // inserted in the DOM. On the contrary, this method will be called on
+  // elements already part of the DOM.
+  //
+  // When available on the configured factory, this method is currently called
+  // before a module starts, with the box element at the root of the module.
+  // It is also intended to get called in a template engine, to be added in a
+  // future version of the library, after inserting new contents in the box.
+  //
+  // A custom factory may, for example, iterate recursively on the children
+  // of the given element, creating Rich Internet Application widgets when
+  // expected CSS classes are found on an element.
+  //
+  // Parameter:
+  //   element - DOM Element, an element part of the document.
 
   function createElement(name,attributes){
     // Function: createElement(name[,attributes[,childNodes]]): DOM Element
