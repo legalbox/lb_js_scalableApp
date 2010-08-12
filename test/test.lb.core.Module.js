@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2010-08-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -18,21 +18,22 @@
   // Closure object for Test of Core Module
 
   // Define aliases
-      /*requires bezen.assert.js */
-  var assert = bezen.assert,
-      /*requires bezen.object.js */
-      object = bezen.object,
-      /*requires bezen.string.js */
-      string = bezen.string,
-      /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner,
-      /*requires bezen.js */
-      $ = bezen.$;
+  var assert = bezen.assert,              /*requires bezen.assert.js */
+      object = bezen.object,              /*requires bezen.object.js */
+      string = bezen.string,              /*requires bezen.string.js */
+      testrunner = bezen.testrunner,      /*requires bezen.testrunner.js */
+      $ = bezen.$,                        /*requires bezen.js */
+      application = lb.core.application;  /*requires lb.core.application.js*/
 
   function testNamespace(){
 
     assert.isTrue( object.exists(window,'lb','core','Module'),
                                     "lb.core.Module namespace was not found");
+  }
+
+  function setUp(){
+    // remove custom factory
+    application.setOptions({lbFactory: null});
   }
 
   var sandboxCreated;
@@ -81,6 +82,7 @@
 
   function testConstructor(){
     var Ut = lb.core.Module;
+    setUp();
 
     sandboxCreated = null;
     var module = new Ut('testConstructor', createStubModule);
@@ -93,6 +95,7 @@
 
   function testGetId(){
     // Unit tests for lb.core.Module#getId()
+    setUp();
 
     var id = 'testGetId';
     var module = new lb.core.Module(id, createStubModule);
@@ -102,13 +105,14 @@
 
   function testGetSandbox(){
     var ut = new lb.core.Module('testGetSandbox',createStubModule).getSandbox;
+    setUp();
 
     assert.isTrue( object.exists( ut() ),         "sandbox object expected");
   }
 
   function testStart(){
     // Unit tests for lb.core.Module#start()
-
+    setUp();
     var module = new lb.core.Module('testStart', createStubModule);
 
     startCounter = 0;
@@ -120,10 +124,36 @@
 
     module = new lb.core.Module('testStart.lazy', createLazyModule);
     module.start();
+
+    var initialized = [];
+    var customFactory = {
+      initElement: function(element){
+        initialized.push(element);
+      }
+    };
+    application.setOptions({lbFactory: customFactory});
+    assert.equals( lb.base.config.getOption('lbFactory'), customFactory,
+                           "assert: custom factory expected to be configured");
+
+    var boxInitialized = false;
+    var checkInitModule = function(sandbox){
+      return {
+        start: function(){
+          assert.arrayEquals(initialized, [sandbox.getBox(false)],
+                                  "initElement() must be called before start");
+          boxInitialized = true;
+        }
+      };
+    };
+    module = new lb.core.Module('testStart.initEvent', checkInitModule);
+    module.start();
+    assert.isTrue( boxInitialized,
+   "initElement() must be called before module starts (using custom factory)");
   }
 
   function testEnd(){
     // Unit tests for lb.core.Module#end()
+    setUp();
 
     var module = new lb.core.Module('testEnd', createStubModule);
     module.start();

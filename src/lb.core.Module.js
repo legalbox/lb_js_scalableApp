@@ -19,7 +19,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-08-12
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -92,11 +92,24 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // Function: start()
     // Create and start the underlying module.
     //
-    // Note:
-    // Nothing happens in case the underlying module has no start() method or
-    // no underlying module is available.
+    // Notes:
+    // * the start method is optional on the underlying module; it will not be
+    //   called when omitted.
+    // * before starting the module, the initElement() method is triggered on
+    //   the configured factory with the box element of the module as argument,
+    //   if a custom factory has been configured which supports the method and
+    //   the box is present in the document.
 
-    //
+    var customFactory = getOption('lbFactory'),
+        box;
+    if (customFactory && customFactory.initElement){
+      box = getSandbox().getBox(false);
+      if (box){
+        // possible extension point for the initialization of widgets
+        customFactory.initElement(box);
+      }
+    }
+
     if (!module || !module.start){
       return;
     }

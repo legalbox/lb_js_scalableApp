@@ -148,4 +148,5 @@ HISTORY
   2010-06-22, v1.2.1, fixes and updates in Google Closure (base,array,debug)
   2010-07-27, v1.2.2, Sandbox is now using factory to create/destroy listeners
   2010-08-09, v1.2.3, more lenient destroyEvent() now ignores custom events
+  2010-08-12, v1.2.4, added initElement() extension point for custom factories
 
