@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal Box SAS (c) 2010, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2010-07-05
+  Version: 2010-08-24
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -63,6 +63,7 @@
     <jslint file="../src/lb.base.log.js" />
     <jslint file="../src/lb.base.object.js" />
     <jslint file="../src/lb.base.string.js" />
+    <jslint file="../src/lb.base.template.js" />
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.application.js" />
     <jslint file="../src/lb.core.Module.js" />
@@ -89,6 +90,7 @@
     <jslint file="../test/test.lb.base.log.js" />
     <jslint file="../test/test.lb.base.object.js" />
     <jslint file="../test/test.lb.base.string.js" />
+    <jslint file="../test/test.lb.base.template.js" />
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.application.js" />
     <jslint file="../test/test.lb.core.Module.js" />
@@ -219,6 +221,7 @@
       <file file="../src/lb.base.log.js"/>
       <file file="../src/lb.base.object.js"/>
       <file file="../src/lb.base.string.js"/>
+      <file file="../src/lb.base.template.js"/>
       <file file="../src/lb.base.json.js"/>
       <file file="../src/lb.base.ajax.js"/>
       <file file="../src/lb.core.js"/>
