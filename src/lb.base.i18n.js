@@ -94,7 +94,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-31
+ * 2010-09-03
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -302,6 +302,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   * or null if there is no such function found in suitable languages.
 
     var namePosition = arguments.length-2,
+        name,
         argsPosition = namePosition+1,
         args = arguments[argsPosition],
         properties = getLanguageVariants( getLanguage() ),
