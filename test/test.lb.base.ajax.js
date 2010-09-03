@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2010-09-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -50,9 +50,12 @@
 
     assert.equals( MockXmlHttp.all.length, 1, "one instance of XHR expected");
     var xhr = MockXmlHttp.all[0];
-    assert.equals( xhr.lb.url, url,   "same url expected in XHR call");
-    assert.equals( xhr.lb.method, 'POST',      "POST method expected");
-    assert.equals( xhr.lb.async, true, "  asynchronous call expected");
+    assert.equals( xhr.lb.url, url,          "same url expected in XHR call");
+    assert.equals( xhr.lb.method, 'POST',             "POST method expected");
+    assert.equals( xhr.lb.async, true,          "asynchronous call expected");
+    assert.equals( xhr.lb.headers['Content-Type'],
+                   'application/json;charset=utf-8',
+                                      "Content Type for JSON/UTF-8 expected");
 
     // trigger asynchronous response
     xhr.complete();

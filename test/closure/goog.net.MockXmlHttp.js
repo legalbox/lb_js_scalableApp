@@ -29,6 +29,7 @@
  *     * this.lb.method: verb provided in open()
  *     * this.lb.async: async param provided in open()
  *     * this.lb.data: opt_data provided in send()
+ *     * this.lb.headers: request headers set in setRequestHeader(key,value)
  * - set this.responseText to echo this.lb.data just before state COMPLETE
  */
 
@@ -92,7 +93,10 @@ goog.provide('goog.net.MockXmlHttp');
 
   MockXmlHttp.prototype.abort = function() {};
 
-  MockXmlHttp.prototype.setRequestHeader = function(key, value) {};
+  MockXmlHttp.prototype.setRequestHeader = function(key, value) {
+    this.lb.headers = this.lb.headers || {};
+    this.lb.headers[key] = value;
+  };
 
 
   MockXmlHttp.OptionType = goog.net.XmlHttp.OptionType;

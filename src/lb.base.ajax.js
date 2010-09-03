@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-09-03
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -52,7 +52,16 @@ lb.base.ajax = lb.base.ajax || (function() {
                 '" in response to POST "'+jsonString+'" to "'+url+'"');
           }
         };
-    XhrIo.send(url, callback, 'POST', jsonString);
+
+    XhrIo.send(
+      url,
+      callback,
+      'POST',
+      jsonString,
+      {
+        'Content-Type': 'application/json;charset=utf-8'
+      }
+    );
   }
 
   return { // public API
