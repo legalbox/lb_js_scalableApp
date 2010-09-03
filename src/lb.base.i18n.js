@@ -114,7 +114,8 @@ lb.base.i18n = lb.base.i18n || (function() {
       applicationLanguage = null,
 
       // languageVariants - array, the list of language variant objects,
-      //                    sorted by language tag.
+      //                    sorted by language tag, from less specific to
+      //                    most specific.
       //                    Each object is in the format:
       //                    | {
       //                    |    language: 'en-US', // string, language tag
@@ -199,8 +200,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     for(i=0; i<languageVariants.length; i++){
       languageVariant = languageVariants[i];
       if ( isWildcard ||
-           // selected language starts with the tag of this language variant
-           language.indexOf(languageVariant.language)===0 ){
+        // selected language starts with the tag of this language variant
+        language.indexOf(languageVariant.language)===0 ){
         languageProperties.push(languageVariant.properties);
       }
     }
@@ -226,17 +227,34 @@ lb.base.i18n = lb.base.i18n || (function() {
     if (language===undefined || language===null || !language.toLowerCase){
       return;
     }
-    languageVariants.push({
-      language: language.toLowerCase(),
-      properties: properties
-    });
-    languageVariants.sort(function(a,b){
-      if (a.language <= b.language){
-        return -1;
-      } else {
-        return 1;
+
+    // Note: array.sort does not guarantee that the order of items with the
+    // same value is preserved. This is the case in recent versions of Firefox,
+    // Opera and Chrome, but not in IE and Safari.
+    //
+    // Thus I chose to insert the new item at the highest position where
+    // the lexical order of previous language is lesser or equal, instead of
+    // adding the item to the array and calling sort().
+
+    var lowerCaseLanguage = language.toLowerCase(),
+        newLanguageVariant = {
+          language: lowerCaseLanguage,
+          properties: properties
+        },
+        length = languageVariants.length,
+        i = 0,
+        j;
+
+    // find the first suitable position for insertion
+    for (j=length-1; j>=0; j--){
+      if (lowerCaseLanguage >= languageVariants[j].language){
+        i = j+1; // insert just after
+        break;
       }
-    });
+    }
+
+    // insert at found location (possibly 0)
+    languageVariants.splice(i,0,newLanguageVariant);
   }
 
   function getProperty(){
