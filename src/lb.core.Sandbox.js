@@ -58,7 +58,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-11
+ * 2010-09-14
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -501,7 +501,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Parameters:
   //   url - string, a url on remote host (must respect same origin policy)
   //   data - object, the data to send to the server. It must be valid JSON.
-  //   receive - function, the callback with data received in response from/
+  //   receive - function, the callback with data received in response from
   //             the server. The data provided in argument will be a valid
   //             JSON object or array.
 
