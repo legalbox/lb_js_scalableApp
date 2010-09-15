@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2010-09-15
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -51,7 +51,7 @@ lb.base.log = lb.base.log || (function() {
     if (!logger){
       Console.autoInstall();
       logger = Logger.getLogger('lb');
-      logger.setLevel(Level.ALL);
+      logger.setLevel(Level.INFO);
     }
     logger.info(message);
   }

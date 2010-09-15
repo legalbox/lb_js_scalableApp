@@ -150,5 +150,6 @@ HISTORY
   2010-08-09, v1.2.3, more lenient destroyEvent() now ignores custom events
   2010-08-12, v1.2.4, added initElement() extension point for custom factories
   2010-09-03, v1.2.5, Bug fix: added content-type declaration in AJAX calls
+  2010-09-15, v1.2.6, Enhancement: disabled debug logs (too noisy in XHR)
   2010-XX-XX, v1.3.0, added support for internationalization (i18n)
 
