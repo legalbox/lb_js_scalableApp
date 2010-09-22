@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-08-11
+ * Version:   2010-09-22
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -223,15 +223,29 @@
     assert.objectEquals(responses, [data],      "echo of given data expected");
   }
 
+  function testGetTimestamp(){
+    var ut = new lb.core.Sandbox('testGetTimestamp').utils.getTimestamp;
+
+    var before = (new Date()).getTime();
+    var timestamp = ut();
+    var after = (new Date()).getTime();
+
+    assert.equals( typeof timestamp, 'number',  "timestamp must be a number");
+    assert.isTrue( before <= timestamp && timestamp <= after,
+                            "timestamp must fall in [before;after] interval");
+  }
+
   function testSetTimeout(){
     var ut = new lb.core.Sandbox('testSetTimeout').utils.setTimeout;
 
     var originalSetTimeout = window.setTimeout;
     var funcs = [];
     var delays = [];
+    var testTimeoutId = 42;
     window.setTimeout = function(func,delay){
       funcs.push(func);
       delays.push(delay);
+      return testTimeoutId;
     };
 
     var count = 0;
@@ -239,7 +253,8 @@
       count++;
     }
 
-    ut(callback, 500);
+    assert.equals( ut(callback, 500), testTimeoutId,
+                                        "timeoutId expected to be returned");
     assert.equals(funcs.length, 1,              "callback function expected");
     funcs[0]();
     assert.equals(count, 1,
@@ -255,6 +270,26 @@
     funcs[0](); // must not fail
 
     window.setTimeout = originalSetTimeout;
+  }
+
+  function testClearTimeout(){
+    var ut = new lb.core.Sandbox('testClearTimeout').utils.clearTimeout;
+
+    var originalClearTimeout = window.clearTimeout;
+    var captured = [];
+    window.clearTimeout = function(timeoutId){
+      captured.push(timeoutId);
+    };
+
+    ut(42);
+    ut(123);
+    ut(null);
+    ut(undefined);
+
+    assert.arrayEquals( captured, [42,123,null,undefined],
+                                          "4 calls to clearTimeout expected");
+
+    window.clearTimeout = originalClearTimeout;
   }
 
   function testTrim(){
@@ -734,7 +769,9 @@
   },"lb.core.Sandbox.url");
 
   testrunner.define({
+    testGetTimestamp: testGetTimestamp,
     testSetTimeout: testSetTimeout,
+    testClearTimeout: testClearTimeout,
     testTrim: testTrim,
     testLog: testLog
   },"lb.core.Sandbox.utils");

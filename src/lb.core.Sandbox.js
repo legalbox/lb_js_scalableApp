@@ -43,7 +43,9 @@
  *   - <url.onHashChange(callback)>
  *
  * General utilities (sandbox.utils):
- *   - <utils.setTimeout(callback,delay)>
+ *   - <utils.getTimestamp(): number>
+ *   - <utils.setTimeout(callback,delay): number>
+ *   - <utils.clearTimeout(timeoutId)>
  *   - <utils.trim(string): string>
  *   - <utils.log(message)>
  *
@@ -58,7 +60,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-09-14
+ * 2010-09-22
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -570,21 +572,47 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     }
   }
 
+  function getTimestamp(){
+    // Function: utils.getTimestamp(): number
+    // Get current timestamp, in milliseconds.
+    //
+    // Returns:
+    //   number, the number of milliseconds ellapsed since the epoch
+    //   (January 1st, 1970 at 00:00:00.000 UTC).
+
+    return (new Date()).getTime();
+  }
+
   function setTimeout(callback, delay){
-    // Function: utils.setTimeout(callback,delay)
+    // Function: utils.setTimeout(callback,delay): number
     // Plan the delayed execution of a callback function.
     //
     // Parameters:
     //   callback - function, the function to run after a delay
     //   delay - integer, the delay in milliseconds
+    //
+    // Returns:
+    //   number, the timeout identifier to be passed to utils.clearTimeout()
+    //   to cancel the planned execution.
 
-    window.setTimeout(function(){
+    return window.setTimeout(function(){
       try {
         callback();
       } catch(e){
         log('ERROR: failure in setTimeout for callback '+callback+'.');
       }
     },delay);
+  }
+
+  function clearTimeout(timeoutId){
+    // Function: utils.clearTimeout(timeoutId)
+    // Cancels the planned execution of a callback function.
+    //
+    // Parameter:
+    //   timeoutId - number, the identifier returned by the call to
+    //               utils.clearTimeou() to cancel.
+
+    window.clearTimeout(timeoutId);
   }
 
   // Function: utils.trim(string): string
@@ -643,7 +671,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     onHashChange: onHashChange
   };
   this.utils = {
+    getTimestamp: getTimestamp,
     setTimeout: setTimeout,
+    clearTimeout: clearTimeout,
     trim: trim,
     log: log
   };
