@@ -24,7 +24,7 @@
  * | var baseFactory = lb.base.dom.factory;
  *
  * In addition to the mandatory methods defined by the base factory, you may
- * optionally support the initElement method, which is an extrat extension
+ * optionally support the initElement method, which is an extra extension
  * point intended for use in custom factories:
  * o <initElement(element)>
  *
@@ -39,7 +39,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-11
+ * 2010-09-24
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
