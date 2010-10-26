@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-09-22
+ * Version:   2010-10-26
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -320,6 +320,31 @@
     assert.equals(logRecords.length, 1,             "1 log record expected");
     assert.equals(logRecords[0].getMessage(), testMessage, 
                                       "test message expected in log record");
+  }
+
+  function testConfirm(){
+    var ut = new lb.core.Sandbox('testConfirm').utils.confirm;
+
+    var originalWindowConfirm = window.confirm;
+    var capturedByConfirm = [];
+    var confirmResult = false;
+    window.confirm = function(text){
+      capturedByConfirm.push(text);
+      return confirmResult;
+    };
+
+    var testMessage = "Test Confirmation Message";
+    assert.isFalse( ut(testMessage),              "negative result expected");
+    assert.arrayEquals(capturedByConfirm, [testMessage],
+                                         "text argument expected (1st call)");
+
+    capturedByConfirm = [];
+    confirmResult = true;
+    assert.isTrue( ut(testMessage),               "positive result expected");
+    assert.arrayEquals(capturedByConfirm, [testMessage],
+                                         "text argument expected (2nd call)");
+
+    window.confirm = originalWindowConfirm;
   }
 
   function test$(){
@@ -773,7 +798,8 @@
     testSetTimeout: testSetTimeout,
     testClearTimeout: testClearTimeout,
     testTrim: testTrim,
-    testLog: testLog
+    testLog: testLog,
+    testConfirm: testConfirm
   },"lb.core.Sandbox.utils");
 
 }());

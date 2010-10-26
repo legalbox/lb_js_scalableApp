@@ -48,6 +48,7 @@
  *   - <utils.clearTimeout(timeoutId)>
  *   - <utils.trim(string): string>
  *   - <utils.log(message)>
+ *   - <utils.confirm(message): boolean>
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -60,7 +61,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-09-22
+ * 2010-10-26
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -638,6 +639,19 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Note: log is an alias for lb.base.log.print
 
+  function confirm(message){
+    // Function: utils.confirm(message): boolean
+    // Open a confirmation (OK/Cancel) dialog.
+    //
+    // Parameter:
+    //   message - string, the confirmation message
+    //
+    // Returns:
+    //   boolean, true if user clicked OK, false is she clicked Cancel button.
+
+    return window.confirm(message);
+  }
+
   // Public methods
   this.getId = getId;
   this.getBox = getBox;
@@ -675,6 +689,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     setTimeout: setTimeout,
     clearTimeout: clearTimeout,
     trim: trim,
-    log: log
+    log: log,
+    confirm: confirm
   };
 };
