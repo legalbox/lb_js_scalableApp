@@ -33,6 +33,19 @@
  * - a module may be responsible for saving the selected language to the server
  * through an AJAX call
  *
+ * Edit: I have now stumbled upon a use case that could justify the need to
+ * lookup a text in one language different from the application language: the
+ * selection list for languages should display each language name in the
+ * language itself, in order to always be understandable by language speakers.
+ * This could be done by defining translations for a single property, and by
+ * querying this property for each supported language in turn. Based on this
+ * use case, we should also think of ways to retrieve the list of all supported
+ * languages from the Sandbox API.
+ * This is not so simple, however: the language resources are organized as a
+ * hierarchy (tree) based on their relative specificity. A method listing
+ * language variants should take an extra argument to restrict the result to
+ * a single level, e.g. providing the length of the language code.
+ *
  * By default, before a language is selected by a module, the current language
  * is set to the language of the user's browser as returned by:
  * | var defaultLanguage = navigator.language || navigator.browserLanguage;
@@ -94,7 +107,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-09-03
+ * 2010-12-13
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
