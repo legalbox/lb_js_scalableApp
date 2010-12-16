@@ -154,4 +154,5 @@ HISTORY
   2010-09-22, v1.3.0, Added clearTimeout and getTimestamp in sandbox.utils API
   2010-10-26, v1.4.0, Added confirm method in sandbox.utils API
   2010-XX-XX, v1.5.0, ROADMAP: add support for internationalization (i18n)
+  2010-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
 
