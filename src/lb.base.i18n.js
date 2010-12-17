@@ -169,9 +169,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     // the lexical order of previous language is lesser or equal, instead of
     // adding the item to the array and calling sort().
 
-    var lowerCaseLanguage = languageCode.toLowerCase(),
+    var lowerCaseLanguageCode = languageCode.toLowerCase(),
         newLanguageVariant = {
-          code: lowerCaseLanguage,
+          code: lowerCaseLanguageCode,
           properties: languageProperties
         },
         length = languages.length,
@@ -180,7 +180,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
-      if (lowerCaseLanguage >= languages[j].code){
+      if (lowerCaseLanguageCode >= languages[j].code){
         i = j+1; // insert just after
         break;
       }
