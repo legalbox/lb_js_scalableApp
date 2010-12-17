@@ -202,36 +202,49 @@ lb.base.i18n = lb.base.i18n || (function() {
     });
   }
 
-  function getProperty(){
-    // Function: getProperty(...,name): any
+  function getProperty(name){
+    // Function: getProperty(name): any
     // Lookup the property with given name, optionally nested within
     // other properties, based on language configured in 'lbLanguage' property.
     //
-    // The last argument is the name of the property. Preceding arguments
-    // are the names of parent properties, allowing to nest a property
-    // within sections and subsections. In any case, the first property is
-    // always looked for at the top of language variants.
+    // The name argument may be a string or an array of strings, allowing to
+    // access a property nested within sections and subsections.
+    //
+    // A dotted notation may be used alternatively, which will be converted to
+    // an equivalent array: 'root.parent.property' is converted to
+    // ['root','parent','leaf'] which looks for a property 'root', then for a
+    // property 'parent' within, then for a property 'leaf' within.
     //
     // Parameters:
-    //   ... - string, the name of parent properties, starting at the top level
-    //   name - string, the name of the looked up property
+    //   name - string, the name of the looked up property,
+    //          which may be dotted to represent a nested property, or an
+    //          array of strings to represent a nested property
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
     //     variant according to the language currently selected,
     //   * or null if the property is not found in suitable languages.
+    if (name===null || name===undefined){
+      return null;
+    }
 
-    var name,
+    var path,
         properties = getLanguageVariants( getLanguage() ),
         property,
         i,
         j;
+    if (typeof name === 'string'){
+      path = name.split('.');
+    } else {
+      path = name;
+    }
+
     // for each language variant, from most specific to less specific
     for (i=properties.length-1; i>=0; i--){
       property = properties[i]; // start at top
-      for (j=0; j<arguments.length && property; j++){
-        name = arguments[j];
-        if (name in property && j===arguments.length-1){
+      for (j=0; j<path.length && property; j++){
+        name = path[j];
+        if (name in property && j===path.length-1){
           return property[name];
         }
         property = property[name];
