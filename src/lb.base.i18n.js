@@ -94,6 +94,29 @@ lb.base.i18n = lb.base.i18n || (function() {
     return getOption('lbLanguage',defaultLanguage).toLowerCase();
   }
 
+  function getLanguageCodes(){
+    // Function: getLanguageCodes(): array
+    // Get the list of language codes associated with language properties.
+    //
+    // Returns:
+    //   array of strings, the list of unique language codes with associated
+    //   language properties, sorted from less specific to most specific.
+
+    var i,
+        length,
+        languageCode,
+        previousLanguageCode = null;
+        languageCodes = [];
+    for (i=0, length=languages.length; i<length; i++){
+      languageCode = languages[i].code;
+      if (languageCode !== previousLanguageCode){
+        languageCodes.push(languageCode);
+      }
+      previousLanguageCode = languageCode;
+    }
+    return languageCodes;
+  }
+
   function getLanguageVariants(language){
     // Function: getLanguageVariants(language): array
     // Get the language variants for given language, sorted by language tag
@@ -290,6 +313,7 @@ lb.base.i18n = lb.base.i18n || (function() {
   }
 
   return { // public API
+    getLanguageCodes: getLanguageCodes,
     getLanguageVariants: getLanguageVariants,
     addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,

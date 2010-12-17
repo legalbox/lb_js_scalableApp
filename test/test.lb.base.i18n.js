@@ -45,6 +45,13 @@
     lb.base.i18n.reset();
   }
 
+  function testGetLanguageCodes(){
+    var ut = lb.base.i18n.getLanguageCodes;
+    setUp();
+
+    assert.arrayEquals( ut(), [],     "no language codes expected initially");
+  }
+
   function testGetLanguageVariants(){
     var ut = lb.base.i18n.getLanguageVariants;
     setUp();
@@ -422,13 +429,13 @@
     lb.base.i18n.addLanguageProperties('en',{});
 
     ut();
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
-                        [],
-                        "no more language variant expected after reset");
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(), [],
+                               "no more language codes expected after reset");
   }
 
   var tests = {
     testNamespace: testNamespace,
+    testGetLanguageCodes: testGetLanguageCodes,
     testGetLanguageVariants: testGetLanguageVariants,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
