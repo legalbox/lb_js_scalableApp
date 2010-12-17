@@ -175,19 +175,19 @@ lb.base.i18n = lb.base.i18n || (function() {
           properties: languageProperties
         },
         length = languages.length,
-        i = 0,
+        insertionPosition = 0,
         j;
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
       if (lowerCaseLanguageCode >= languages[j].code){
-        i = j+1; // insert just after
+        insertionPosition = j+1; // insert just after
         break;
       }
     }
 
     // insert at found location (possibly 0)
-    languages.splice(i,0,newLanguage);
+    languages.splice(insertionPosition,0,newLanguage);
   }
 
   function getProperty(){
