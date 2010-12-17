@@ -240,61 +240,6 @@ lb.base.i18n = lb.base.i18n || (function() {
     return null;
   }
 
-  function getValueOf(){
-    // Function: getValueOf(...,name,args): any
-    //
-    // Lookup the function with given name, optionally nested within
-    // other properties, based on selected language, and return the first
-    // defined result value of such a function.
-    //
-    // The last two arguments are the name of the function and arguments to be
-    // provided in calls to the function. Preceding arguments, if any, are the
-    // names of parent properties, allowing to nest the function within
-    // sections and subsections. The first property, or the function name in
-    // case no parent property is provided, is looked for at the top of
-    // language variants for the current language.
-    //
-    // Parameters:
-    //   ... - string, the name of parent properties, starting at the top level
-    //   name - string, the name of the looked up function
-    //   args - array, the list of arguments for the function
-    //
-    // Returns:
-    //   * any, the value of the most specific function found in given position
-    //     which returns a value different from null,
-    //   * or null if there is no such function found in suitable languages.
-
-    var namePosition = arguments.length-2,
-        name,
-        argsPosition = namePosition+1,
-        args = arguments[argsPosition],
-        properties = getLanguageVariants( getLanguage() ),
-        property,
-        i,
-        j,
-        func,
-        value;
-
-    // for each language variant, from most specific to less specific
-    for (i=properties.length-1; i>=0; i--){
-      property = properties[i]; // start at top
-      for (j=0; j<=namePosition && property; j++){
-        name = arguments[j];
-        if (name in property && j===namePosition){
-          func = property[name];
-          if (typeof func === 'function'){
-            value = func.apply(null,args);
-            if (value!==undefined && value!==null){
-              return value;
-            }
-          }
-        }
-        property = property[name];
-      }
-    }
-    return null;
-  }
-
   function reset(){
     // Function: reset()
     // Remove all language variants.
@@ -307,7 +252,6 @@ lb.base.i18n = lb.base.i18n || (function() {
     getLanguageVariants: getLanguageVariants,
     addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,
-    getValueOf: getValueOf,
     reset: reset
   };
 }());
