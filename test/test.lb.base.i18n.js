@@ -196,6 +196,8 @@
                         "null expected for undefined property (no language)");
     assert.equals( ut('test'), null,
                         "null expected for 'test' property (no language)");
+    assert.equals( ut('section.subsection.test'), null,
+                   "null expected for dotted property (no language)");
     assert.equals( ut('section','subsection','test'), null,
                    "null expected for nested 'test' property (no language)");
 
@@ -217,6 +219,8 @@
                          "empty string expected for empty property (root)");
     assert.equals( ut('test'), 'Root Value',
                           "Root Value expected for 'test' property (root)");
+    assert.equals( ut('section.subsection.test'), null,
+                       "null expected for dotted nested property (root)");
     assert.equals( ut('section','subsection','test'), null,
                        "null expected for nested 'test' property (root)");
 
@@ -239,7 +243,9 @@
                          "empty string expected for empty property (root,fr)");
     assert.equals( ut('test'), 'Root Value',
                           "Root Value expected for 'test' property (root,fr)");
-    assert.equals( ut('section','subsection','test'), 'French Value',
+    assert.equals( ut('section.subsection.test'), 'French Value',
+                "French Value expected for dotted nested property (root,fr)");
+    assert.equals( ut(['section','subsection','test']), 'French Value',
                 "French Value expected for nested 'test' property (root,fr)");
 
     lb.base.i18n.addLanguageProperties('fr-FR',
@@ -262,7 +268,9 @@
                   "empty string expected for empty property (root,fr,fr-FR)");
     assert.equals( ut('test'), 'First France Value',
            "First France Value expected for 'test' property (root,fr,fr-FR)");
-    assert.equals( ut('section','subsection','test'), 'Second France Value',
+    assert.equals( ut('section.subsection.test'), 'Second France Value',
+   "Second France Value expected for dotted nested property (root,fr,fr-FR)");
+    assert.equals( ut(['section','subsection','test']), 'Second France Value',
    "Second France Value expected for nested 'test' property (root,fr,fr-FR)");
   }
 
