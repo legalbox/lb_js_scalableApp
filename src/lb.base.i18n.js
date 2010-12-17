@@ -69,22 +69,20 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   // private fields
 
-      // TODO: rename to languageList or languages
-      // languageVariants - array, the list of language objects,
-      //                    sorted by language code, from less specific to
-      //                    most specific.
-      //                    Each language object is in the format:
-      //                    | {
-      //                    |    language: 'en-US', // string, language code
-      //                    |    properties: {...}  // object, properties given
-      //                    |                       // in addLanguageProperties
-      //                    | }
+      // languages - array, the list of language objects, sorted by language
+      //             code, from less specific to most specific.
+      //             Each language object is in the format:
+      //             | {
+      //             |    language: 'en-US', // string, language code
+      //             |    properties: {...}  // object, properties given
+      //             |                       // in addLanguageProperties
+      //             | }
       // Note:
       // In current implementation, the same language code may be repeated in
       // several language objects. These duplicates may be merged into a single
       // language object in a future implementation (trading less memory for
       // more computations due to added merging step).
-      languageVariants = [];
+      languages = [];
 
   function getLanguage(){
     // For internal use - refactoring in progress
@@ -129,8 +127,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     if (!isWildcard){
       language = language.toLowerCase();
     }
-    for(i=0; i<languageVariants.length; i++){
-      languageVariant = languageVariants[i];
+    for(i=0; i<languages.length; i++){
+      languageVariant = languages[i];
       if ( isWildcard ||
         // selected language starts with the tag of this language variant
         language.indexOf(languageVariant.language)===0 ){
@@ -176,20 +174,20 @@ lb.base.i18n = lb.base.i18n || (function() {
           language: lowerCaseLanguage,
           properties: languageProperties
         },
-        length = languageVariants.length,
+        length = languages.length,
         i = 0,
         j;
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
-      if (lowerCaseLanguage >= languageVariants[j].language){
+      if (lowerCaseLanguage >= languages[j].language){
         i = j+1; // insert just after
         break;
       }
     }
 
     // insert at found location (possibly 0)
-    languageVariants.splice(i,0,newLanguageVariant);
+    languages.splice(i,0,newLanguageVariant);
   }
 
   function getProperty(){
@@ -289,7 +287,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Function: reset()
     // Remove all language variants.
 
-    languageVariants.length = 0;
+    languages.length = 0;
   }
 
   return { // public API
