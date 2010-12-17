@@ -73,7 +73,7 @@ lb.base.i18n = lb.base.i18n || (function() {
       //             code, from less specific to most specific.
       //             Each language object is in the format:
       //             | {
-      //             |    language: 'en-US', // string, language code
+      //             |    code: 'en-US', // string, language code
       //             |    properties: {...}  // object, properties given
       //             |                       // in addLanguageProperties
       //             | }
@@ -131,7 +131,7 @@ lb.base.i18n = lb.base.i18n || (function() {
       languageVariant = languages[i];
       if ( isWildcard ||
         // selected language starts with the tag of this language variant
-        language.indexOf(languageVariant.language)===0 ){
+        language.indexOf(languageVariant.code)===0 ){
         languageProperties.push(languageVariant.properties);
       }
     }
@@ -171,7 +171,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
     var lowerCaseLanguage = languageCode.toLowerCase(),
         newLanguageVariant = {
-          language: lowerCaseLanguage,
+          code: lowerCaseLanguage,
           properties: languageProperties
         },
         length = languages.length,
@@ -180,7 +180,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
-      if (lowerCaseLanguage >= languages[j].language){
+      if (lowerCaseLanguage >= languages[j].code){
         i = j+1; // insert just after
         break;
       }
