@@ -170,12 +170,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     // adding the item to the array and calling sort().
 
     var lowerCaseLanguageCode = languageCode.toLowerCase(),
-        newLanguage = {
-          code: lowerCaseLanguageCode,
-          properties: languageProperties
-        },
-        length = languages.length,
         insertionPosition = 0,
+        length = languages.length,
         j;
 
     // find the first suitable position for insertion
@@ -186,8 +182,11 @@ lb.base.i18n = lb.base.i18n || (function() {
       }
     }
 
-    // insert at found location (possibly 0)
-    languages.splice(insertionPosition,0,newLanguage);
+    // insert new language at found location (possibly 0)
+    languages.splice(insertionPosition,0,{
+      code: lowerCaseLanguageCode,
+      properties: languageProperties
+    });
   }
 
   function getProperty(){
