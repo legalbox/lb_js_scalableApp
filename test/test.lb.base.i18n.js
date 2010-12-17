@@ -73,42 +73,45 @@
 
     ut(undefined,{});
     ut(null,{});
-    ut({},{});
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(), [],
-            "null, undefined and tag without toLowerCase() must be ignored");
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(), [],
+                                        "null and undefined must be ignored");
 
     ut('en',english);
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['en'],
+                                        "language 'en' expected to be added");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(), [english],
                                   "1 language variant expected to be added");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN'), [english],
-                                      "english expected with filter 'EN'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN-gb'), [english],
-                                      "english expected with filter 'EN-gb'");
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'), [english],
+                                      "english expected with filter 'en-GB'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [],
                                     "english must not match filter 'fr'");
 
     ut('',root);
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['','en'],
+                                  "language codes '','en' expected sorted");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(), [root,english],
                                   "2 language variants expected sorted");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(''), [root],
                                               "root expected for filter ''");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN'), [root,english],
-                                "root and english expected with filter 'EN'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN-gb'),
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
+                                "root and english expected with filter 'en'");
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
                         [root,english],
-                             "root and english expected with filter 'EN-gb'");
+                             "root and english expected with filter 'en-GB'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [root],
                                     "only root expected with filter 'fr'");
 
     ut('fr-FR',frenchFrance);
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['','en','fr-FR'],
+                          "3 language codes '','en','fr-FR' expected sorted");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
                         [root,english,frenchFrance],
                                   "3 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN'), [root,english],
-                            "frenchFrance not expected to match filter 'EN'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN-gb'),
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
+                            "frenchFrance not expected to match filter 'en'");
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
                         [root,english],
-                         "frenchFrance not expected to match filter 'EN-gb'");
+                         "frenchFrance not expected to match filter 'en-GB'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [root],
                             "frenchFrance not expected to match filter 'fr'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr-FR'),
@@ -116,27 +119,33 @@
                          "root and frenchFrance expected for filter 'fr-FR'");
 
     ut('fr',french);
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
+                        ['','en','fr','fr-FR'],
+                                          "4 language codes expected sorted");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
                         [root,english,french,frenchFrance],
                                   "4 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN'), [root,english],
-                                  "french not expected to match filter 'EN'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN-gb'),
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
+                                  "french not expected to match filter 'en'");
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
                         [root,english],
-                            "french not expected to match filter 'EN-gb'");
+                            "french not expected to match filter 'en-GB'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'),
                         [root,french],
                                 "root and french expected with filter 'fr'");
 
     ut('fr-CA',frenchCanada);
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
+                        ['','en','fr','fr-CA','fr-FR'],
+                                  "5 language codes expected sorted");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
                         [root,english,french,frenchCanada,frenchFrance],
                                   "5 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN'), [root,english],
-                            "frenchCanada not expected to match filter 'EN'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('EN-gb'),
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
+                            "frenchCanada not expected to match filter 'en'");
+    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
                         [root,english],
-                         "frenchCanada not expected to match filter 'EN-gb'");
+                         "frenchCanada not expected to match filter 'en-GB'");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'),
                         [root,french],
                             "frenchCanada not expected to match filter 'fr'");
@@ -145,7 +154,7 @@
                  "root, french and frenchCanada expected for filter 'fr-CA'");
 
     ut('en-GB',englishGB);
-    ut('en-USA',englishUSA);
+    ut('en-US',englishUSA);
 
     var root2 = {name:'root2'};
     var french2 = {name:'french2'};
@@ -160,9 +169,12 @@
     ut('fr-CA',frenchCanada2);
     ut('fr-FR',frenchFrance2);
     ut('en',english2);
-    ut('en-USA2',englishUSA2);
-    ut('en-GB2',englishGB2);
+    ut('en-US',englishUSA2);
+    ut('en-GB',englishGB2);
 
+    assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
+                        ['','en','en-GB','en-US','fr','fr-CA','fr-FR'],
+                   "7 language variants expected sorted, without duplicates");
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
                         [
                          root,         root2,

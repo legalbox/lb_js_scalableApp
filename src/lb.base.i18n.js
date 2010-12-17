@@ -28,7 +28,7 @@
  * substrings of the language selected for the lookup are considered.
  * For example, if the selected language is 'en-GB', 'en-GB' and 'en' are
  * considered in this order, while 'en-US', 'fr-FR', 'fr-CA' and 'fr' are left
- * out.
+ * out. Note that language codes are compared in a case-sensitive way.
  *
  * The empty string '' is the least specific language code possible, which will
  * always be considered last in the lookup process. Common default properties
@@ -91,7 +91,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     var defaultLanguage = navigator.language ||
                           navigator.browserLanguage ||
                           '';
-    return getOption('lbLanguage',defaultLanguage).toLowerCase();
+    return getOption('lbLanguage',defaultLanguage);
   }
 
   function getLanguageCodes(){
@@ -126,8 +126,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   language - string, an optional language tag, as defined in RFC5646
     //              "Tags for Identifying Languages".
     //              Omitting the language and null or undefined values
-    //              (or any value without the toLowerCase() property) act as a
-    //              wildcard to return all language variants.
+    //              act as a wildcard to return all language variants.
     //
     // Returns:
     //   * array, the list of properties objects for all language variants
@@ -141,15 +140,10 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   language variant added last is considered more specific and comes
     //   last in this list.
 
-    var isWildcard = language===undefined ||
-                     language===null ||
-                     !language.toLowerCase,
+    var isWildcard = language===undefined || language===null,
         languageProperties = [],
         i,
         languageVariant;
-    if (!isWildcard){
-      language = language.toLowerCase();
-    }
     for(i=0; i<languages.length; i++){
       languageVariant = languages[i];
       if ( isWildcard ||
@@ -176,11 +170,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   languageProperties - object, a set of language properties
     //
     // Note:
-    //   Nothing happens in case the given language code is null, undefined,
-    //   or misses the toLowerCase method.
-    if ( languageCode===undefined ||
-         languageCode===null ||
-         !languageCode.toLowerCase ){
+    //   Nothing happens in case the given language code is null or undefined.
+    if ( languageCode===undefined || languageCode===null ){
       return;
     }
 
@@ -192,14 +183,13 @@ lb.base.i18n = lb.base.i18n || (function() {
     // the lexical order of previous language is lesser or equal, instead of
     // adding the item to the array and calling sort().
 
-    var lowerCaseLanguageCode = languageCode.toLowerCase(),
-        insertionPosition = 0,
+    var insertionPosition = 0,
         length = languages.length,
         j;
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
-      if (lowerCaseLanguageCode >= languages[j].code){
+      if (languageCode >= languages[j].code){
         insertionPosition = j+1; // insert just after
         break;
       }
@@ -207,7 +197,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
     // insert new language at found location (possibly 0)
     languages.splice(insertionPosition,0,{
-      code: lowerCaseLanguageCode,
+      code: languageCode,
       properties: languageProperties
     });
   }
