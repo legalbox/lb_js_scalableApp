@@ -5,13 +5,16 @@
  * This module provides the basis for the adaptation of a web application to
  * different languages in an international context.
  *
- * The issue is addressed in a generic way in this module, which relies on a
- * set of language variants to provide properties including translation strings
- * and behaviors (formatting functions and collators) for each language.
+ * The issue is addressed in a generic way in this module, which relies on
+ * language codes associated with a set of language properties defined by the
+ * application:
+ * - string properties,
+ * - functions for localized behavior, formatting and sorting,
+ * - object properties, to group properties within. The groups may be nested.
  *
- * When a language variant is added, it is associated with a language string
- * which identifies the language, region and other variations of the language
- * as defined in RFC5646 "Tags for Identifying Languages":
+ * A language code is a string which identifies the language, region and other
+ * variations of the language as defined in RFC5646 "Tags for Identifying
+ * Languages", for example:
  * - 'en' for English,
  * - 'fr' for French,
  * - 'en-GB' for English/Great Britain,
@@ -19,82 +22,27 @@
  * - 'fr-FR' for French/France,
  * - 'fr-CA' for French/Canada.
  *
- * This module performs lookups in language variants based on the language
- * currently selected for the application. Through the Sandbox, any module can
- * access and modify the language selected for the whole application. Although
- * it was once considered to allow several languages in parallel for different
- * modules, or to perform lookups in a language different from the one selected
- * for the whole application, these features were left out because they made
- * the API more complex and were not supported by intended use cases:
- * - a module may be responsible for displaying and selecting the language for
- * the whole application, resulting in new texts displayed in all modules
- * - a module may be responsible for retrieving selected language from the
- * server through an AJAX call
- * - a module may be responsible for saving the selected language to the server
- * through an AJAX call
+ * The lookup of language properties is done from the most specific language
+ * to the less specific language, with longer language codes considered more
+ * specific than shorter language codes. Only language codes which are
+ * substrings of the language selected for the lookup are considered.
+ * For example, if the selected language is 'en-GB', 'en-GB' and 'en' are
+ * considered in this order, while 'en-US', 'fr-FR', 'fr-CA' and 'fr' are left
+ * out.
  *
- * Edit: I have now stumbled upon a use case that could justify the need to
- * lookup a text in one language different from the application language: the
- * selection list for languages should display each language name in the
- * language itself, in order to always be understandable by language speakers.
- * This could be done by defining translations for a single property, and by
- * querying this property for each supported language in turn. Based on this
- * use case, we should also think of ways to retrieve the list of all supported
- * languages from the Sandbox API.
- * This is not so simple, however: the language resources are organized as a
- * hierarchy (tree) based on their relative specificity. A method listing
- * language variants should take an extra argument to restrict the result to
- * a single level, e.g. providing the length of the language code.
+ * The empty string '' is the least specific language code possible, which will
+ * always be considered last in the lookup process. Common default properties
+ * can be associated with the empty language code '', they will be shared by
+ * all languages.
  *
- * By default, before a language is selected by a module, the current language
- * is set to the language of the user's browser as returned by:
- * | var defaultLanguage = navigator.language || navigator.browserLanguage;
- * A different default language may be configured on the application core by
- * setting the property 'lbLanguage'. For example, to configure English as the
- * default language of the application:
- * | lb.core.application.setConfig({lbLanguage:'en'});
+ * Any custom property may be defined in language properties for the needs of
+ * your application, and associated with a language code by calling
+ * addLanguageProperties(). Calling reset() removes all language properties.
+ * [Note: changes pending - rename addLanguageVariant to addLanguageProperties]
  *
- * For the lookup of a property or behavior, the selected language is compared
- * to the language tag of each language variants in a case-insensitive manner.
- * Only language variants whose tag is a substring of the selected language are
- * considered. For example, if the selected language is 'en-GB', both 'en' and
- * 'en-GB' are considered, while 'fr' and 'en-US' are left out. The variants
- * are then sorted based on the length of their language tag: longuer language
- * tags correspond to more specific language variants.
- *
- * Based on this simple algorithm, the empty string '' is considered as the
- * language tag of the root language variant, which will always be considered
- * last in the process. Initially, a single language variant is added to this
- * module, <lb.base.i18n.rootLanguageVariant>, associated to the empty
- * language tag '' to provide a default implementation of i18n behaviors.
- *
- * Additional language variants may be added by calling addLanguageVariant().
- * Calling reset() removes all language variants and restores the selected
- * language to its default value.
- *
- * There are two different types of lookup supported in this module,
- * getProperty() and getValueOf(). The former searches for any property and
- * stops as soon as the property is found; the latter searches only for
- * functions, and goes on until the function found returns a defined and not
- * null value.
- *
- * Both getProperty() and getValueOf() consider nested properties: while
- * calling getProperty('tab1') searches for 'tab1' property at the top of
- * language variants, calling getProperty('labels','mainNav','tab1') searches
- * for a 'tab1' property nested in a 'mainNav' property nested in a 'labels'
- * property at the top of language variants.
- *
- * Any custom property may be defined in language variants for the needs of
- * your application. In order the avoid potential name clashes, the name 'lb'
- * is reserved at the top level of language variants:
- * o 'lb' - object, properties and methods defined by Legal-Box
- *
- * Following the above convention, all properties and methods used in the
- * root language variant are located in the 'lb' object. You can refer to
- * <lb.base.i18n.rootLanguageVariant> for a full description. You may override
- * some of the default behaviors by adding a new language variant associated
- * with the empty language tag '', and defining your own methods, with the same
- * name as the ones you wish to override, in the 'lb' object.
+ * The list of language codes associated with language properties is returned
+ * by getLanguageCodes(). It is initially empty.
+ * [Note: changes pending - add getLanguageCodes]
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -107,7 +55,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-13
+ * 2010-12-17
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -122,10 +70,6 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   // private fields
 
-      // applicationLanguage - string, tag of current language, selected for
-      //                       the whole application
-      applicationLanguage = null,
-
       // languageVariants - array, the list of language variant objects,
       //                    sorted by language tag, from less specific to
       //                    most specific.
@@ -138,43 +82,13 @@ lb.base.i18n = lb.base.i18n || (function() {
       languageVariants = [];
 
   function getLanguage(){
-    // Function: getLanguage(): string
-    // Get the current language of the application.
-    //
-    // This method returns a language tag, in lowercase.
-    //
-    // Returns:
-    //   string, the language tag of current language, in lower case.
-    //   In this order:
-    //   * the language last selected in setLanguage()
-    //   * or the value of configuration property 'lbLanguage'
-    //   * or the language of the browser
+    // For internal use - refactoring in progress
+    // Return the default language configured with 'lbLanguage' property
 
-    if (typeof applicationLanguage==='string'){
-      return applicationLanguage;
-    }
     var defaultLanguage = navigator.language ||
                           navigator.browserLanguage ||
                           '';
     return getOption('lbLanguage',defaultLanguage).toLowerCase();
-  }
-
-  function setLanguage(language){
-    // Function: setLanguage(language)
-    // Set the current language for the application.
-    //
-    // Parameter:
-    //   language - string, the language tag, as defined in RFC5646
-    //              "Tags for Identifying Languages"
-    //
-    // Note:
-    // The language is converted to lower case. Nothing happens if the given
-    // argument has no toLowerCase() property.
-    if (language===null || language===undefined || !language.toLowerCase){
-      return;
-    }
-
-    applicationLanguage = language.toLowerCase();
   }
 
   function getLanguageVariants(language){
@@ -273,7 +187,7 @@ lb.base.i18n = lb.base.i18n || (function() {
   function getProperty(){
     // Function: getProperty(...,name): any
     // Lookup the property with given name, optionally nested within
-    // other properties, based on selected language.
+    // other properties, based on language configured in 'lbLanguage' property.
     //
     // The last argument is the name of the property. Preceding arguments
     // are the names of parent properties, allowing to nest a property
@@ -367,13 +281,10 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Function: reset()
     // Remove all language variants.
 
-    applicationLanguage = null;
     languageVariants.length = 0;
   }
 
   return { // public API
-    getLanguage: getLanguage,
-    setLanguage: setLanguage,
     getLanguageVariants: getLanguageVariants,
     addLanguageVariant: addLanguageVariant,
     getProperty: getProperty,

@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-09-03
+ * Version:   2010-12-17
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -43,62 +43,6 @@
     // all language variants are removed before each test, to make sure that
     // the behavior is consistent when these tests are run as part of all tests
     lb.base.i18n.reset();
-  }
-
-  function testGetLanguage(){
-    var ut = lb.base.i18n.getLanguage;
-    setUp();
-
-    var defaultLanguage = navigator.language || navigator.browserLanguage;
-    assert.isTrue( object.exists(defaultLanguage),
-              "assert: default language must exist, found: "+defaultLanguage);
-
-    assert.equals( ut(), defaultLanguage.toLowerCase(),
-    "default language expected when config property is not set, in lowercase");
-
-    setOptions({lbLanguage: 'nor-NO'});
-    assert.equals( ut(), 'nor-no',
-     "language set in config expected to be returned in lowercase (Norway)");
-
-    setOptions({lbLanguage: 'FIN-fi'});
-    assert.equals( ut(), 'fin-fi',
-     "language set in config expected to be returned in lowercase (Finland)");
-  }
-
-  function testSetLanguage(){
-    var ut = lb.base.i18n.setLanguage;
-    setUp();
-
-    ut('');
-    assert.equals( lb.base.i18n.getLanguage(), '',
-                                        "empty language expected to be set");
-
-    ut('fr-FR');
-    assert.equals( lb.base.i18n.getLanguage(), 'fr-fr',
-                          "French/France expected in lowercase in result");
-
-    setOptions({lbLanguage: 'FIN-fi'});
-    assert.equals( lb.base.i18n.getLanguage(), 'fr-fr',
-                  "no change expected after setting a new default language");
-
-    ut(null);
-    assert.equals( lb.base.i18n.getLanguage(), 'fr-fr',
-                            "no change expected when new language is null");
-
-    ut();
-    assert.equals( lb.base.i18n.getLanguage(), 'fr-fr',
-                        "no change expected when new language is undefined");
-
-    ut({});
-    assert.equals( lb.base.i18n.getLanguage(), 'fr-fr',
-        "no change expected when new language has no toLowerCase() property");
-
-    ut('en');
-    assert.equals( lb.base.i18n.getLanguage(), 'en',
-                            "English language in param expected in result");
-    ut('en-GB');
-    assert.equals( lb.base.i18n.getLanguage(), 'en-gb',
-   "English/Great Britain language in param expected in lowercase in result");
   }
 
   function testGetLanguageVariants(){
@@ -477,21 +421,14 @@
     lb.base.i18n.addLanguageVariant('fr',{});
     lb.base.i18n.addLanguageVariant('en',{});
 
-    lb.base.config.setOptions({lbLanguage:'en-GB'});
-    lb.base.i18n.setLanguage('fr-FR');
-
     ut();
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
                         [],
                         "no more language variant expected after reset");
-    assert.equals( lb.base.i18n.getLanguage(), 'en-gb',
-                        "language expected to be reset");
   }
 
   var tests = {
     testNamespace: testNamespace,
-    testGetLanguage: testGetLanguage,
-    testSetLanguage: testSetLanguage,
     testGetLanguageVariants: testGetLanguageVariants,
     testAddLanguageVariant: testAddLanguageVariant,
     testGetProperty: testGetProperty,
