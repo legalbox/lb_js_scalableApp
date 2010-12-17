@@ -170,7 +170,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     // adding the item to the array and calling sort().
 
     var lowerCaseLanguageCode = languageCode.toLowerCase(),
-        newLanguageVariant = {
+        newLanguage = {
           code: lowerCaseLanguageCode,
           properties: languageProperties
         },
@@ -187,7 +187,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     }
 
     // insert at found location (possibly 0)
-    languages.splice(i,0,newLanguageVariant);
+    languages.splice(i,0,newLanguage);
   }
 
   function getProperty(){
