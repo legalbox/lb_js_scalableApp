@@ -38,7 +38,6 @@
  * Any custom property may be defined in language properties for the needs of
  * your application, and associated with a language code by calling
  * addLanguageProperties(). Calling reset() removes all language properties.
- * [Note: changes pending - rename addLanguageVariant to addLanguageProperties]
  *
  * The list of language codes associated with language properties is returned
  * by getLanguageCodes(). It is initially empty.
@@ -70,15 +69,21 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   // private fields
 
-      // languageVariants - array, the list of language variant objects,
-      //                    sorted by language tag, from less specific to
+      // TODO: rename to languageList or languages
+      // languageVariants - array, the list of language objects,
+      //                    sorted by language code, from less specific to
       //                    most specific.
-      //                    Each object is in the format:
+      //                    Each language object is in the format:
       //                    | {
-      //                    |    language: 'en-US', // string, language tag
+      //                    |    language: 'en-US', // string, language code
       //                    |    properties: {...}  // object, properties given
-      //                    |                       // in addLanguageVariant()
+      //                    |                       // in addLanguageProperties
       //                    | }
+      // Note:
+      // In current implementation, the same language code may be repeated in
+      // several language objects. These duplicates may be merged into a single
+      // language object in a future implementation (trading less memory for
+      // more computations due to added merging step).
       languageVariants = [];
 
   function getLanguage(){
@@ -135,23 +140,26 @@ lb.base.i18n = lb.base.i18n || (function() {
     return languageProperties;
   }
 
-  function addLanguageVariant(language,properties){
-    // Function: addLanguageVariant(language,properties)
-    // Add a new language variant.
+  function addLanguageProperties(languageCode,languageProperties){
+    // Function: addLanguageProperties(languageCode,languageProperties)
+    // Add or replace language properties associated with given language code.
     //
-    // Properties for a language variant may be specified in multiple calls
-    // with the same language tag. In case of duplicate properties, the ones
-    // added last are considered more specific and take precedence.
+    // Language properties may be specified in multiple calls with the same
+    // language code. In case of duplicate properties, the ones last are
+    // considered more specific and take precedence over properties defined
+    // previously.
     //
     // Parameters:
-    //   language - string, the language tag identifying the language variant,
-    //              as defined in RFC5646 "Tags for Identifying Languages"
-    //   properties - object, a set of properties for the language variant
+    //   languageCode - string, the language code identifying the language,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //   languageProperties - object, a set of language properties
     //
     // Note:
-    //   Nothing happens in case the given language string is null, undefined,
+    //   Nothing happens in case the given language code is null, undefined,
     //   or misses the toLowerCase method.
-    if (language===undefined || language===null || !language.toLowerCase){
+    if ( languageCode===undefined ||
+         languageCode===null ||
+         !languageCode.toLowerCase ){
       return;
     }
 
@@ -163,10 +171,10 @@ lb.base.i18n = lb.base.i18n || (function() {
     // the lexical order of previous language is lesser or equal, instead of
     // adding the item to the array and calling sort().
 
-    var lowerCaseLanguage = language.toLowerCase(),
+    var lowerCaseLanguage = languageCode.toLowerCase(),
         newLanguageVariant = {
           language: lowerCaseLanguage,
-          properties: properties
+          properties: languageProperties
         },
         length = languageVariants.length,
         i = 0,
@@ -286,7 +294,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   return { // public API
     getLanguageVariants: getLanguageVariants,
-    addLanguageVariant: addLanguageVariant,
+    addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,
     getValueOf: getValueOf,
     reset: reset

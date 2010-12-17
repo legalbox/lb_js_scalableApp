@@ -52,8 +52,8 @@
     assert.arrayEquals( ut(), [],        "no module expected after reset()");
   }
 
-  function testAddLanguageVariant(){
-    var ut = lb.base.i18n.addLanguageVariant;
+  function testAddLanguageProperties(){
+    var ut = lb.base.i18n.addLanguageProperties;
     setUp();
 
     var root = {name:'root'};
@@ -182,7 +182,7 @@
 
     lb.base.config.setOptions({lbLanguage: 'fr-FR'});
 
-    lb.base.i18n.addLanguageVariant('',
+    lb.base.i18n.addLanguageProperties('',
       {
         name: 'root',
         empty: '',
@@ -201,7 +201,7 @@
     assert.equals( ut('section','subsection','test'), null,
                        "null expected for nested 'test' property (root)");
 
-    lb.base.i18n.addLanguageVariant('fr',
+    lb.base.i18n.addLanguageProperties('fr',
       {
         name: 'french',
         section:{
@@ -223,7 +223,7 @@
     assert.equals( ut('section','subsection','test'), 'French Value',
                 "French Value expected for nested 'test' property (root,fr)");
 
-    lb.base.i18n.addLanguageVariant('fr-FR',
+    lb.base.i18n.addLanguageProperties('fr-FR',
       {
         name: 'french-France',
         test: 'First France Value',
@@ -266,7 +266,7 @@
     lb.base.config.setOptions({lbLanguage: 'fr-FR'});
 
     var capturedByRoot = [];
-    lb.base.i18n.addLanguageVariant('',
+    lb.base.i18n.addLanguageProperties('',
       {
         name: 'root',
         notAFunction: 'not a value',
@@ -301,7 +301,7 @@
                        "null expected for nested 'test' function (root)");
 
     var capturedByFrench = [];
-    lb.base.i18n.addLanguageVariant('fr',
+    lb.base.i18n.addLanguageProperties('fr',
       {
         name: 'french',
         section:{
@@ -346,7 +346,7 @@
     capturedByFrench = [];
 
     var capturedByFrance = [];
-    lb.base.i18n.addLanguageVariant('fr-FR',
+    lb.base.i18n.addLanguageProperties('fr-FR',
       {
         name: 'french-France',
         test: function(){
@@ -417,9 +417,9 @@
     var ut = lb.base.i18n.reset;
     setUp();
 
-    lb.base.i18n.addLanguageVariant('',{});
-    lb.base.i18n.addLanguageVariant('fr',{});
-    lb.base.i18n.addLanguageVariant('en',{});
+    lb.base.i18n.addLanguageProperties('',{});
+    lb.base.i18n.addLanguageProperties('fr',{});
+    lb.base.i18n.addLanguageProperties('en',{});
 
     ut();
     assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
@@ -430,7 +430,7 @@
   var tests = {
     testNamespace: testNamespace,
     testGetLanguageVariants: testGetLanguageVariants,
-    testAddLanguageVariant: testAddLanguageVariant,
+    testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
     testGetValueOf: testGetValueOf,
     testReset: testReset
