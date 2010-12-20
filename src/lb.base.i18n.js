@@ -236,7 +236,18 @@ lb.base.i18n = lb.base.i18n || (function() {
       path = path.split('.');
     }
 
-    var properties = getLanguageVariants(languageCode),
+    var languageProperties = [],
+        i,
+        languageVariant;
+    for(i=0; i<languages.length; i++){
+      languageVariant = languages[i];
+      if ( languageCode.indexOf(languageVariant.code)===0 ){
+        // selected language starts with the tag of this language variant
+        languageProperties.push(languageVariant.properties);
+      }
+    }
+
+    var properties = languageProperties,
         property,
         i,
         j;
