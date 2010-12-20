@@ -236,31 +236,30 @@ lb.base.i18n = lb.base.i18n || (function() {
       path = path.split('.');
     }
 
-    var languageProperties = [],
+    var language,
         i,
-        languageVariant;
-    for(i=0; i<languages.length; i++){
-      languageVariant = languages[i];
-      if ( languageCode.indexOf(languageVariant.code)===0 ){
-        // selected language starts with the tag of this language variant
-        languageProperties.push(languageVariant.properties);
-      }
-    }
+        properties,
+        pathElement,
+        j,
+        length;
 
-    var properties = languageProperties,
-        property,
-        i,
-        j;
-
-    // for each language variant, from most specific to less specific
-    for (i=properties.length-1; i>=0; i--){
-      property = properties[i]; // start at top
-      for (j=0; j<path.length && property; j++){
-        name = path[j];
-        if (name in property && j===path.length-1){
-          return property[name];
+    // for each language, from most specific to less specific
+    for (i=languages.length-1; i>=0; i--){
+      language = languages[i];
+      // if the language code is found at the start of given language code
+      if ( languageCode.indexOf(language.code)===0 ){
+        // start at top of language properties
+        properties = language.properties;
+        // for each path element in the given property path
+        for (j=0, length=path.length; j<length && properties; j++){
+          pathElement = path[j];
+          // if the final path element is found
+          if (pathElement in properties && j===length-1){
+            return properties[pathElement];
+          }
+          // go on with next level (may be undefined)
+          properties = properties[pathElement];
         }
-        property = property[name];
       }
     }
     return null;
