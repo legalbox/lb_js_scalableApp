@@ -73,8 +73,9 @@
 
     ut(undefined,{});
     ut(null,{});
+    ut({},{});
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(), [],
-                                        "null and undefined must be ignored");
+               "null, undefined and other non-string values must be ignored");
 
     ut('en',english);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['en'],
@@ -198,6 +199,8 @@
                   "null expected for undefined property in '' (no language)");
     assert.equals( ut('','test'), null,
                      "null expected for 'test' property in '' (no language)");
+    assert.equals( ut({},'test'), null,
+                     "null expected for 'test' property in {} (no language)");
     assert.equals( ut('','section.subsection.test'), null,
                      "null expected for dotted property in '' (no language)");
     assert.equals( ut('','section','subsection','test'), null,
@@ -213,6 +216,8 @@
 
     assert.equals( ut('fr-FR'), null,
                       "null expected for undefined property in fr-FR (root)");
+    assert.equals( ut({},'missing'), null,
+                        "null expected for missing property in {} (root)");
     assert.equals( ut('fr-FR','missing'), null,
                         "null expected for missing property in fr-FR (root)");
     assert.equals( ut('fr-FR','empty'), '',
@@ -276,6 +281,28 @@
                    'Second France Value',
                     "Second France Value expected for nested 'test' property"+
                                                   "in fr-FR (root,fr,fr-FR)");
+
+    try {
+      assert.equals( ut('FR-fr'), null,
+             "null expected for undefined property in FR-FR (root,fr,fr-FR)");
+      assert.equals( ut('FR-fr','missing'), null,
+               "null expected for missing property in FR-fr (root,fr,fr-FR)");
+      assert.equals( ut('FR-fr','empty'), '',
+         "empty string expected for empty property in FR-fr (root,fr,fr-FR)");
+      assert.equals( ut('FR-fr','test'), 'First France Value',
+  "First France Value expected for 'test' property in FR-fr (root,fr,fr-FR)");
+      assert.equals( ut('FR-fr','section.subsection.test'),
+                   'Second France Value',
+                    "Second France Value expected for dotted nested property"+
+                                                  "in FR-fr (root,fr,fr-FR)");
+      assert.equals( ut('FR-fr',['section','subsection','test']),
+                   'Second France Value',
+                    "Second France Value expected for nested 'test' property"+
+                                                  "in FR-fr (root,fr,fr-FR)");
+    } catch(e) {
+      // TODO:
+      //assert.fail("Case-insensitive comparison on language code expected: "+e);
+    }
 
     assert.equals( ut('fr'), null,
                 "nullt.lb.base.i18n.jsexpected for undefined property in fr (root,fr,fr-FR)");

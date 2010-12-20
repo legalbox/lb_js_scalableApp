@@ -170,8 +170,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   languageProperties - object, a set of language properties
     //
     // Note:
-    //   Nothing happens in case the given language code is null or undefined.
-    if ( languageCode===undefined || languageCode===null ){
+    //   Nothing happens in case the given language code is not a string.
+    if ( typeof languageCode!=='string' ){
       return;
     }
 
@@ -228,9 +228,12 @@ lb.base.i18n = lb.base.i18n || (function() {
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
-    //     variant according to the language currently selected,
-    //   * or null if the property is not found in suitable languages.
-    if (path===null || path===undefined){
+    //     object whose language code put in lower case is a substring of the
+    //     given language code put in lower case
+    //   * or null if the property is not found in suitable languages,
+    //     if the given path is null or undefined, or if the given language
+    //     code is not a string.
+    if (path===null || path===undefined || typeof languageCode!=='string'){
       return null;
     }
     if (typeof path === 'string'){
