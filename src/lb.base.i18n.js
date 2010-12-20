@@ -202,42 +202,46 @@ lb.base.i18n = lb.base.i18n || (function() {
     });
   }
 
-  function getProperty(name){
-    // Function: getProperty(name): any
-    // Lookup the property with given name, optionally nested within
-    // other properties, based on language configured in 'lbLanguage' property.
+  // TODO: Refactoring in progress: add languageCode param
+  function getProperty(path){
+    // Function: getProperty(languageCode,path): any
+    // Get the most specific property for given language code at given path.
     //
-    // The name argument may be a string or an array of strings, allowing to
-    // access a property nested within sections and subsections.
+    // The path argument may be a string or an array of strings:
+    // - the name of a property defined at top level:
+    //   e.g. 'propertyName'
+    // - the dotted name of a nested property:
+    //   e.g. 'section.subsection.propertyName'
+    // - the list of sections and subsections:
+    //   e.g. ['section','subsection','propertyName']
     //
-    // A dotted notation may be used alternatively, which will be converted to
-    // an equivalent array: 'root.parent.property' is converted to
-    // ['root','parent','leaf'] which looks for a property 'root', then for a
-    // property 'parent' within, then for a property 'leaf' within.
+    // The last two forms are equivalent, both matching a property
+    // 'propertyName' nested in a property 'subsection' within a property
+    // 'section' at top level. The array notation allows to lookup a property
+    // which would contain a dot in its name, without the substitution to a
+    // section and subsection: ['no.substitution.done'].
     //
     // Parameters:
-    //   name - string, the name of the looked up property,
-    //          which may be dotted to represent a nested property, or an
-    //          array of strings to represent a nested property
+    //   name - string, the name of the looked up property, which may be a
+    //          dotted string or an array of strings to represent a property
+    //          nested within sections and subsections
+    //   languageCode - string, the language code to filter relevant languages
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
     //     variant according to the language currently selected,
     //   * or null if the property is not found in suitable languages.
-    if (name===null || name===undefined){
+    if (path===null || path===undefined){
       return null;
     }
+    if (typeof path === 'string'){
+      path = path.split('.');
+    }
 
-    var path,
-        properties = getLanguageVariants( getLanguage() ),
+    var properties = getLanguageVariants( getLanguage() ),
         property,
         i,
         j;
-    if (typeof name === 'string'){
-      path = name.split('.');
-    } else {
-      path = name;
-    }
 
     // for each language variant, from most specific to less specific
     for (i=properties.length-1; i>=0; i--){
