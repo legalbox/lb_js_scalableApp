@@ -117,40 +117,6 @@ lb.base.i18n = lb.base.i18n || (function() {
     return languageCodes;
   }
 
-  function getLanguageVariants(language){
-    // Function: getLanguageVariants(language): array
-    // Get the language variants for given language, sorted by language tag
-    // from less specific to most specific.
-    //
-    // Parameter:
-    //   language - string, an optional language tag, as defined in RFC5646
-    //              "Tags for Identifying Languages".
-    //
-    // Returns:
-    //   * array, the list of properties objects for all language variants
-    //     whose tag is a subset of given language, ordered by language tag,
-    //   * or if the optional language argument is omitted,
-    //     array, the list of properties objects for all language variants,
-    //     sorted by language tag.
-    //
-    // Note:
-    //   In case several language variants were added for the same tag, the
-    //   language variant added last is considered more specific and comes
-    //   last in this list.
-
-    var languageProperties = [],
-        i,
-        languageVariant;
-    for(i=0; i<languages.length; i++){
-      languageVariant = languages[i];
-      if ( language.indexOf(languageVariant.code)===0 ){
-        // selected language starts with the tag of this language variant
-        languageProperties.push(languageVariant.properties);
-      }
-    }
-    return languageProperties;
-  }
-
   function addLanguageProperties(languageCode,languageProperties){
     // Function: addLanguageProperties(languageCode,languageProperties)
     // Add or replace language properties associated with given language code.
