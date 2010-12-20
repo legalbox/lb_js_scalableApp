@@ -125,8 +125,6 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Parameter:
     //   language - string, an optional language tag, as defined in RFC5646
     //              "Tags for Identifying Languages".
-    //              Omitting the language and null or undefined values
-    //              act as a wildcard to return all language variants.
     //
     // Returns:
     //   * array, the list of properties objects for all language variants
@@ -140,15 +138,13 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   language variant added last is considered more specific and comes
     //   last in this list.
 
-    var isWildcard = language===undefined || language===null,
-        languageProperties = [],
+    var languageProperties = [],
         i,
         languageVariant;
     for(i=0; i<languages.length; i++){
       languageVariant = languages[i];
-      if ( isWildcard ||
+      if ( language.indexOf(languageVariant.code)===0 ){
         // selected language starts with the tag of this language variant
-        language.indexOf(languageVariant.code)===0 ){
         languageProperties.push(languageVariant.properties);
       }
     }
