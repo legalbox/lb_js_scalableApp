@@ -179,7 +179,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     // The last two forms are equivalent, both matching a property
     // 'propertyName' nested in a property 'subsection' within a property
     // 'section' at top level of language properties. The array notation allows
-    // to lookup a property which would contain a dot in its name, without the
+    // to look up a property which would contain a dot in its name, without the
     // substitution to a section and subsection: ['no.substitution.done'].
     //
     // Parameters:
