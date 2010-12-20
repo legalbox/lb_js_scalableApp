@@ -283,8 +283,7 @@
                     "Second France Value expected for nested 'test' property"+
                                                   "in FR-fr (root,fr,fr-FR)");
     } catch(e) {
-      //TODO:
-      //assert.fail("Case-insensitive comparison on language code expected: "+e);
+      assert.fail("Case-insensitive comparison on language code expected: "+e);
     }
 
     assert.equals( ut('fr'), null,

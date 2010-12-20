@@ -202,7 +202,8 @@ lb.base.i18n = lb.base.i18n || (function() {
       path = path.split('.');
     }
 
-    var language,
+    var lowerCaseLanguageCode = languageCode.toLowerCase(),
+        language,
         i,
         properties,
         pathElement,
@@ -213,7 +214,11 @@ lb.base.i18n = lb.base.i18n || (function() {
     for (i=languages.length-1; i>=0; i--){
       language = languages[i];
       // if the language code is found at the start of given language code
-      if ( languageCode.indexOf(language.code)===0 ){
+      // (toLowerCase() is used to compare in a case-insensitive way)
+      // Note:
+      // In case optimization is required, the lower case value of each
+      // language code may be stored in a property of the language object.
+      if ( lowerCaseLanguageCode.indexOf( language.code.toLowerCase() )===0 ){
         // start at top of language properties
         properties = language.properties;
         // for each path element in the given property path
