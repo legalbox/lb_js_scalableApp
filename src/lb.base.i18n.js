@@ -105,7 +105,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     var i,
         length,
         languageCode,
-        previousLanguageCode = null;
+        previousLanguageCode = null,
         languageCodes = [];
     for (i=0, length=languages.length; i<length; i++){
       languageCode = languages[i].code;
