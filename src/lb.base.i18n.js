@@ -23,7 +23,7 @@
  * - 'fr-CA' for French/Canada.
  *
  * The lookup of language properties is done from the most specific language
- * to the less specific language, with longer language codes considered more
+ * to the least specific language, with longer language codes considered more
  * specific than shorter language codes. Only language codes which are
  * substrings of the language selected for the lookup are considered.
  * For example, if the selected language is 'en-GB', 'en-GB' and 'en' are
@@ -70,7 +70,7 @@ lb.base.i18n = lb.base.i18n || (function() {
   // private fields
 
       // languages - array, the list of language objects, sorted by language
-      //             code, from less specific to most specific.
+      //             code, from least specific to most specific.
       //             Each language object is in the format:
       //             | {
       //             |    code: 'en-US', // string, language code
@@ -100,7 +100,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     //
     // Returns:
     //   array of strings, the list of unique language codes with associated
-    //   language properties, sorted from less specific to most specific.
+    //   language properties, sorted from least specific to most specific.
 
     var i,
         length,
@@ -209,7 +209,7 @@ lb.base.i18n = lb.base.i18n || (function() {
         j,
         length;
 
-    // for each language, from most specific to less specific
+    // for each language, from most specific to least specific
     for (i=languages.length-1; i>=0; i--){
       language = languages[i];
       // if the language code is found at the start of given language code
