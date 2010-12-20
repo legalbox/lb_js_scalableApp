@@ -232,7 +232,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   function reset(){
     // Function: reset()
-    // Remove all language variants.
+    // Remove all language properties.
 
     languages.length = 0;
   }
