@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-17
+ * 2010-12-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -202,8 +202,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     });
   }
 
-  // TODO: Refactoring in progress: add languageCode param
-  function getProperty(path){
+  function getProperty(languageCode,path){
     // Function: getProperty(languageCode,path): any
     // Get the most specific property for given language code at given path.
     //
@@ -238,7 +237,7 @@ lb.base.i18n = lb.base.i18n || (function() {
       path = path.split('.');
     }
 
-    var properties = getLanguageVariants( getLanguage() ),
+    var properties = getLanguageVariants(languageCode),
         property,
         i,
         j;

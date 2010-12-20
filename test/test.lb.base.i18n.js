@@ -193,15 +193,15 @@
     setUp();
 
     assert.equals( ut(), null,
-                        "null expected for undefined property (no language)");
-    assert.equals( ut('test'), null,
-                        "null expected for 'test' property (no language)");
-    assert.equals( ut('section.subsection.test'), null,
-                   "null expected for dotted property (no language)");
-    assert.equals( ut('section','subsection','test'), null,
-                   "null expected for nested 'test' property (no language)");
-
-    lb.base.config.setOptions({lbLanguage: 'fr-FR'});
+   "null expected for undefined property in undefined language (no language)");
+    assert.equals( ut(''), null,
+                  "null expected for undefined property in '' (no language)");
+    assert.equals( ut('','test'), null,
+                     "null expected for 'test' property in '' (no language)");
+    assert.equals( ut('','section.subsection.test'), null,
+                     "null expected for dotted property in '' (no language)");
+    assert.equals( ut('','section','subsection','test'), null,
+              "null expected for nested 'test' property in '' (no language)");
 
     lb.base.i18n.addLanguageProperties('',
       {
@@ -211,18 +211,18 @@
       }
     );
 
-    assert.equals( ut(), null,
-                            "null expected for undefined property (root)");
-    assert.equals( ut('missing'), null,
-                              "null expected for missing property (root)");
-    assert.equals( ut('empty'), '',
-                         "empty string expected for empty property (root)");
-    assert.equals( ut('test'), 'Root Value',
-                          "Root Value expected for 'test' property (root)");
-    assert.equals( ut('section.subsection.test'), null,
-                       "null expected for dotted nested property (root)");
-    assert.equals( ut('section','subsection','test'), null,
-                       "null expected for nested 'test' property (root)");
+    assert.equals( ut('fr-FR'), null,
+                      "null expected for undefined property in fr-FR (root)");
+    assert.equals( ut('fr-FR','missing'), null,
+                        "null expected for missing property in fr-FR (root)");
+    assert.equals( ut('fr-FR','empty'), '',
+                  "empty string expected for empty property in fr-FR (root)");
+    assert.equals( ut('fr-FR','test'), 'Root Value',
+                   "Root Value expected for 'test' property in fr-FR (root)");
+    assert.equals( ut('fr-FR','section.subsection.test'), null,
+                  "null expected for dotted nested property in fr-FR (root)");
+    assert.equals( ut('fr-FR','section','subsection','test'), null,
+                  "null expected for nested 'test' property in fr-FR (root)");
 
     lb.base.i18n.addLanguageProperties('fr',
       {
@@ -235,18 +235,18 @@
       }
     );
 
-    assert.equals( ut(), null,
-                            "null expected for undefined property (root,fr)");
-    assert.equals( ut('missing'), null,
-                              "null expected for missing property (root,fr)");
-    assert.equals( ut('empty'), '',
-                         "empty string expected for empty property (root,fr)");
-    assert.equals( ut('test'), 'Root Value',
-                          "Root Value expected for 'test' property (root,fr)");
-    assert.equals( ut('section.subsection.test'), 'French Value',
-                "French Value expected for dotted nested property (root,fr)");
-    assert.equals( ut(['section','subsection','test']), 'French Value',
-                "French Value expected for nested 'test' property (root,fr)");
+    assert.equals( ut('fr-FR'), null,
+                   "null expected for undefined property in fr-FR (root,fr)");
+    assert.equals( ut('fr-FR','missing'), null,
+                     "null expected for missing property in fr-FR (root,fr)");
+    assert.equals( ut('fr-FR','empty'), '',
+               "empty string expected for empty property in fr-FR (root,fr)");
+    assert.equals( ut('fr-FR','test'), 'Root Value',
+                "Root Value expected for 'test' property in fr-FR (root,fr)");
+    assert.equals( ut('fr-FR','section.subsection.test'), 'French Value',
+       "French Value expected for dotted nested property in fr-FR (root,fr)");
+    assert.equals( ut('fr-FR',['section','subsection','test']), 'French Value',
+       "French Value expected for nested 'test' property in fr-FR (root,fr)");
 
     lb.base.i18n.addLanguageProperties('fr-FR',
       {
@@ -260,18 +260,48 @@
       }
     );
 
-    assert.equals( ut(), null,
-                      "null expected for undefined property (root,fr,fr-FR)");
-    assert.equals( ut('missing'), null,
-                        "null expected for missing property (root,fr,fr-FR)");
-    assert.equals( ut('empty'), '',
-                  "empty string expected for empty property (root,fr,fr-FR)");
-    assert.equals( ut('test'), 'First France Value',
-           "First France Value expected for 'test' property (root,fr,fr-FR)");
-    assert.equals( ut('section.subsection.test'), 'Second France Value',
-   "Second France Value expected for dotted nested property (root,fr,fr-FR)");
-    assert.equals( ut(['section','subsection','test']), 'Second France Value',
-   "Second France Value expected for nested 'test' property (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR'), null,
+             "null expected for undefined property in fr-FR (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR','missing'), null,
+               "null expected for missing property in fr-FR (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR','empty'), '',
+         "empty string expected for empty property in fr-FR (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR','test'), 'First France Value',
+  "First France Value expected for 'test' property in fr-FR (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR','section.subsection.test'),
+                   'Second France Value',
+                    "Second France Value expected for dotted nested property"+
+                                                  "in fr-FR (root,fr,fr-FR)");
+    assert.equals( ut('fr-FR',['section','subsection','test']),
+                   'Second France Value',
+                    "Second France Value expected for nested 'test' property"+
+                                                  "in fr-FR (root,fr,fr-FR)");
+
+    assert.equals( ut('fr'), null,
+                "nullt.lb.base.i18n.jsexpected for undefined property in fr (root,fr,fr-FR)");
+    assert.equals( ut('fr','missing'), null,
+                  "null expected for missing property in fr (root,fr,fr-FR)");
+    assert.equals( ut('fr','empty'), '',
+            "empty string expected for empty property in fr (root,fr,fr-FR)");
+    assert.equals( ut('fr','test'), 'Root Value',
+             "Root Value expected for 'test' property in fr (root,fr,fr-FR)");
+    assert.equals( ut('fr','section.subsection.test'), 'French Value',
+    "French Value expected for dotted nested property in fr (root,fr,fr-FR)");
+    assert.equals( ut('fr',['section','subsection','test']), 'French Value',
+    "French Value expected for nested 'test' property in fr (root,fr,fr-FR)");
+
+    assert.equals( ut(''), null,
+                 "null expected for undefined property in '' (root,fr,fr-FR)");
+    assert.equals( ut('','missing'), null,
+                   "null expected for missing property in '' (root,fr,fr-FR)");
+    assert.equals( ut('','empty'), '',
+             "empty string expected for empty property in '' (root,fr,fr-FR)");
+    assert.equals( ut('','test'), 'Root Value',
+              "Root Value expected for 'test' property in '' (root,fr,fr-FR)");
+    assert.equals( ut('','section.subsection.test'), null,
+             "null expected for dotted nested property in '' (root,fr,fr-FR)");
+    assert.equals( ut('','section','subsection','test'), null,
+             "null expected for nested 'test' property in '' (root,fr,fr-FR)");
   }
 
   function testReset(){
