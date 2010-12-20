@@ -28,7 +28,7 @@
  * substrings of the language selected for the lookup are considered.
  * For example, if the selected language is 'en-GB', 'en-GB' and 'en' are
  * considered in this order, while 'en-US', 'fr-FR', 'fr-CA' and 'fr' are left
- * out. Note that language codes are compared in a case-sensitive way.
+ * out. Language codes are compared in a case-insensitive way.
  *
  * The empty string '' is the least specific language code possible, which will
  * always be considered last in the lookup process. Common default properties
