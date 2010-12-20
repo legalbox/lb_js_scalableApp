@@ -41,7 +41,6 @@
  *
  * The list of language codes associated with language properties is returned
  * by getLanguageCodes(). It is initially empty.
- * [Note: changes pending - add getLanguageCodes]
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
