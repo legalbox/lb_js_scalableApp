@@ -209,7 +209,7 @@ lb.base.i18n = lb.base.i18n || (function() {
         j,
         length;
 
-    // for each language, from most specific to least specific
+    // for each language, from most specific (last) to least specific (first)
     for (i=languages.length-1; i>=0; i--){
       language = languages[i];
       // if the language code is found at the start of given language code
