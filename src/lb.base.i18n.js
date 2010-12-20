@@ -167,7 +167,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Function: getProperty(languageCode,path): any
     // Get the most specific property for given language code at given path.
     //
-    // The path argument may be a string or an array of strings:
+    // The path argument may be a string
+    // or an array of strings:
     // - the name of a property defined at top level:
     //   e.g. 'propertyName'
     // - the dotted name of a nested property:
