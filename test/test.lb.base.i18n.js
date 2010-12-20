@@ -52,24 +52,17 @@
     assert.arrayEquals( ut(), [],     "no language codes expected initially");
   }
 
-  function testGetLanguageVariants(){
-    var ut = lb.base.i18n.getLanguageVariants;
-    setUp();
-
-    assert.arrayEquals( ut(), [],        "no module expected after reset()");
-  }
-
   function testAddLanguageProperties(){
     var ut = lb.base.i18n.addLanguageProperties;
     setUp();
 
-    var root = {name:'root'};
-    var english = {name:'english'};
-    var englishUSA = {name:'englishUSA'};
-    var englishGB = {name:'englishGB'};
-    var french = {name:'french'};
-    var frenchFrance = {name:'frenchFrance'};
-    var frenchCanada = {name:'frenchCanada'};
+    var root = {name:'Root'};
+    var english = {name:'English'};
+    var englishUSA = {name:'EnglishUSA'};
+    var englishGB = {name:'EnglishGB'};
+    var french = {name:'French'};
+    var frenchFrance = {name:'FrenchFrance'};
+    var frenchCanada = {name:'FrenchCanada'};
 
     ut(undefined,{});
     ut(null,{});
@@ -80,90 +73,73 @@
     ut('en',english);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['en'],
                                         "language 'en' expected to be added");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(), [english],
-                                  "1 language variant expected to be added");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'), [english],
-                                      "english expected with filter 'en-GB'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [],
-                                    "english must not match filter 'fr'");
+    assert.equals( lb.base.i18n.getProperty('en','name'), 'English',
+                             "English property expected to be defined in en");
+    assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'English',
+                          "English property expected to be defined in en-GB");
+    assert.equals( lb.base.i18n.getProperty('fr','name'), null,
+                         "English property not expected to be defined in fr");
 
     ut('',root);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['','en'],
-                                  "language codes '','en' expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(), [root,english],
-                                  "2 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(''), [root],
-                                              "root expected for filter ''");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
-                                "root and english expected with filter 'en'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
-                        [root,english],
-                             "root and english expected with filter 'en-GB'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [root],
-                                    "only root expected with filter 'fr'");
+                                   "language codes '','en' expected sorted");
+    assert.equals( lb.base.i18n.getProperty('','name'), 'Root',
+                               "Root property expected to be defined in ''");
+    assert.equals( lb.base.i18n.getProperty('en','name'), 'English',
+                               "Root property expected to be hidden in en");
+    assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'English',
+                            "Root property expected to be hidden in en-GB");
+    assert.equals( lb.base.i18n.getProperty('fr','name'), 'Root',
+                              "Root property expected to be defined in fr");
 
     ut('fr-FR',frenchFrance);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(), ['','en','fr-FR'],
                           "3 language codes '','en','fr-FR' expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
-                        [root,english,frenchFrance],
-                                  "3 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
-                            "frenchFrance not expected to match filter 'en'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
-                        [root,english],
-                         "frenchFrance not expected to match filter 'en-GB'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'), [root],
-                            "frenchFrance not expected to match filter 'fr'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr-FR'),
-                        [root,frenchFrance],
-                         "root and frenchFrance expected for filter 'fr-FR'");
+    assert.equals( lb.base.i18n.getProperty('fr-FR','name'), 'FrenchFrance',
+                     "FrenchFrance property expected to be defined in fr-FR");
+    assert.equals( lb.base.i18n.getProperty('','name'), 'Root',
+                    "FrenchFrance property not expected to be defined in ''");
+    assert.equals( lb.base.i18n.getProperty('en','name'), 'English',
+                    "FrenchFrance property not expected to be defined in en");
+    assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'English',
+                 "FrenchFrance property not expected to be defined in en-GB");
 
     ut('fr',french);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
                         ['','en','fr','fr-FR'],
                                           "4 language codes expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
-                        [root,english,french,frenchFrance],
-                                  "4 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
-                                  "french not expected to match filter 'en'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
-                        [root,english],
-                            "french not expected to match filter 'en-GB'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'),
-                        [root,french],
-                                "root and french expected with filter 'fr'");
+    assert.equals( lb.base.i18n.getProperty('fr','name'), 'French',
+                              "French property expected to be defined in fr");
+    assert.equals( lb.base.i18n.getProperty('en','name'), 'English',
+                              "French property expected to be defined in en");
+    assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'English',
+                           "French property expected to be defined in en-GB");
+    assert.equals( lb.base.i18n.getProperty('fr-FR','name'), 'FrenchFrance',
+                           "French property expected to be hidden in fr-FR");
 
     ut('fr-CA',frenchCanada);
     assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
                         ['','en','fr','fr-CA','fr-FR'],
                                   "5 language codes expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
-                        [root,english,french,frenchCanada,frenchFrance],
-                                  "5 language variants expected sorted");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en'), [root,english],
-                            "frenchCanada not expected to match filter 'en'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('en-GB'),
-                        [root,english],
-                         "frenchCanada not expected to match filter 'en-GB'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr'),
-                        [root,french],
-                            "frenchCanada not expected to match filter 'fr'");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants('fr-CA'),
-                        [root,french,frenchCanada],
-                 "root, french and frenchCanada expected for filter 'fr-CA'");
+    assert.equals( lb.base.i18n.getProperty('fr-CA','name'), 'FrenchCanada',
+                     "FrenchCanada property expected to be defined in fr-CA");
+    assert.equals( lb.base.i18n.getProperty('en','name'), 'English',
+                    "FrenchCanada property not expected to be defined in en");
+    assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'English',
+                 "FrenchCanada property not expected to be defined in en-GB");
+    assert.equals( lb.base.i18n.getProperty('fr','name'), 'French',
+                    "FrenchCanada property not expected to be defined in fr");
 
     ut('en-GB',englishGB);
     ut('en-US',englishUSA);
 
-    var root2 = {name:'root2'};
-    var french2 = {name:'french2'};
-    var frenchFrance2 = {name:'frenchFrance2'};
-    var frenchCanada2 = {name:'frenchCanada2'};
-    var english2 = {name:'english2'};
-    var englishUSA2 = {name:'englishUSA2'};
-    var englishGB2 = {name:'englishGB2'};
+    var root2 = {name:'Root2'};
+    var french2 = {name:'French2'};
+    var frenchFrance2 = {name:'FrenchFrance2'};
+    var frenchCanada2 = {name:'FrenchCanada2'};
+    var english2 = {name:'English2'};
+    var englishUSA2 = {name:'EnglishUSA2'};
+    var englishGB2 = {name:'EnglishGB2'};
 
     ut('',root2);
     ut('fr',french2);
@@ -173,20 +149,27 @@
     ut('en-US',englishUSA2);
     ut('en-GB',englishGB2);
 
-    assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
+    try {
+      assert.arrayEquals( lb.base.i18n.getLanguageCodes(),
                         ['','en','en-GB','en-US','fr','fr-CA','fr-FR'],
                    "7 language variants expected sorted, without duplicates");
-    assert.arrayEquals( lb.base.i18n.getLanguageVariants(),
-                        [
-                         root,         root2,
-                         english,      english2,
-                         englishGB,    englishGB2,
-                         englishUSA,   englishUSA2,
-                         french,       french2,
-                         frenchCanada, frenchCanada2,
-                         frenchFrance, frenchFrance2
-                        ],
-      "14 language variants expected sorted, last added last for duplicates");
+      assert.equals( lb.base.i18n.getProperty('','name'), 'Root2',
+                               "Root2 property expected to be defined in ''");
+      assert.equals( lb.base.i18n.getProperty('fr','name'), 'French2',
+                             "French2 property expected to be defined in fr");
+      assert.equals( lb.base.i18n.getProperty('fr-CA','name'), 'FrenchCanada2',
+                    "FrenchCanada2 property expected to be defined in fr-CA");
+      assert.equals( lb.base.i18n.getProperty('fr-FR','name'), 'FrenchFrance2',
+                    "FrenchFrance2 property expected to be defined in fr-FR");
+      assert.equals( lb.base.i18n.getProperty('en','name'), 'English2',
+                             "English2 property expected to be defined in en");
+      assert.equals( lb.base.i18n.getProperty('en-US','name'), 'EnglishUSA2',
+                      "EnglishUSA2 property expected to be defined in en-US");
+      assert.equals( lb.base.i18n.getProperty('en-GB','name'), 'EnglishGB2',
+                      "EnglishGB2 property expected to be defined in en-GB");
+    } catch(e) {
+      assert.fail("Property defined last shall hide/replace previous: "+e);
+    }
   }
 
   function testGetProperty(){
@@ -300,7 +283,7 @@
                     "Second France Value expected for nested 'test' property"+
                                                   "in FR-fr (root,fr,fr-FR)");
     } catch(e) {
-      // TODO:
+      //TODO:
       //assert.fail("Case-insensitive comparison on language code expected: "+e);
     }
 
@@ -347,7 +330,6 @@
   var tests = {
     testNamespace: testNamespace,
     testGetLanguageCodes: testGetLanguageCodes,
-    testGetLanguageVariants: testGetLanguageVariants,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
     testReset: testReset

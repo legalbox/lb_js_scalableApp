@@ -268,7 +268,6 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   return { // public API
     getLanguageCodes: getLanguageCodes,
-    getLanguageVariants: getLanguageVariants,
     addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,
     reset: reset
