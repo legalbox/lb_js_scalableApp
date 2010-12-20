@@ -121,9 +121,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Add or replace language properties associated with given language code.
     //
     // Language properties may be specified in multiple calls with the same
-    // language code. In case of duplicate properties, the ones last are
-    // considered more specific and take precedence over properties defined
-    // previously.
+    // language code. In case of duplicate properties, the properties defined
+    // last are considered more specific and take precedence over properties
+    // defined previously.
     //
     // Parameters:
     //   languageCode - string, the language code identifying the language,
