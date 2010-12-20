@@ -153,6 +153,7 @@ HISTORY
   2010-09-15, v1.2.6, Enhancement: disabled debug logs (too noisy in XHR)
   2010-09-22, v1.3.0, Added clearTimeout and getTimestamp in sandbox.utils API
   2010-10-26, v1.4.0, Added confirm method in sandbox.utils API
+  2010-12-20, v1.4.1, Refactored base i18n API: simpler yet powerful
   2010-XX-XX, v1.5.0, ROADMAP: add support for internationalization (i18n)
   2010-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
 
