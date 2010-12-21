@@ -16,7 +16,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-24
+ * 2010-12-21
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -98,7 +98,7 @@ lb.base.template = lb.base.template || (function() {
     // | }
     //
     // Parameters:
-    //   filters - array, list of function filters, ordered from less specific
+    //   filters - array, list of function filters, ordered from least specific
     //             to most specific. Each filter will be provided the same
     //             arguments present in the call to applyFilters(). Its return
     //             value is interpreted in the following way:
@@ -110,7 +110,7 @@ lb.base.template = lb.base.template || (function() {
     //   undefined or any value returned by the last filter run.
     //
     // Note:
-    // Filters are applied from last (most specific) to first (less specific).
+    // Filters are applied from last (most specific) to first (least specific).
     // Unless processing is interrupted by a filter returning a truthy value,
     // all filters will be applied in turn, in this order.
 
