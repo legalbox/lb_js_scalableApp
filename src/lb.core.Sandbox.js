@@ -602,7 +602,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //
   // The parameters to replace are surrounded by '#' characters,
   // e.g. '#param-to-replace#'. No space can appear in the name;
-  // only characters in the range [a-zA-Z0-9\-\.] are allowed.
+  // only characters in the range [a-zA-Z0-9_\-\.] are allowed.
   //
   // Replacement values are provided as properties of the data object, with
   // the same name as the parameter:
@@ -674,7 +674,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //
   // The parameter format is the same as the one used in getString();
   // parameters to replace are surrounded by '#' characters,
-  // e.g. '#param#', based on the regular expression /#([a-zA-Z0-9\-\.]+)#/g.
+  // e.g. '#param#', based on the regular expression /#([a-zA-Z0-9_\-\.]+)#/g.
   //
   // The data object contains properties with values for the replacement of
   // parameters of the same name:
