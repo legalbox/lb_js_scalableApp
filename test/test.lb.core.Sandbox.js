@@ -685,7 +685,7 @@
     ut(undefined);
     ut(null,{});
     ut({},{});
-    assert.arrayEquals( sandbox.i18n.getLanguage(), [],
+    assert.arrayEquals( sandbox.i18n.getLanguageList(), [],
        "null, undefined and non-string language code expected to be ignored");
 
     var firstLanguageCode = 'TEST-language-CODE-01';
@@ -700,7 +700,7 @@
         c: cValue
       }
     });
-    assert.arrayEquals( sandbox.i18n.getLanguages(), [firstLanguageCode],
+    assert.arrayEquals( sandbox.i18n.getLanguageList(), [firstLanguageCode],
                     "first language code expected to be added to the list");
     assert.equals( sandbox.i18n.get('a',firstLanguageCode), aValue,
                                             "'a' expected in first language");
@@ -715,7 +715,7 @@
     ut(secondLanguageCode,{
       d: dValue
     });
-    assert.arrayEquals( sandbox.i18n.getLanguages(),
+    assert.arrayEquals( sandbox.i18n.getLanguageList(),
                         [secondLanguageCode, firstLanguageCode],
                   "second language code expected to be added, in sort order");
     assert.equals( sandbox.i18n.get('d',secondLanguageCode),dValue,
