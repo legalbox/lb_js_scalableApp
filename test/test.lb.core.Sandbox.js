@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-10-26
+ * Version:   2010-12-22
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -12,7 +12,7 @@
 
 /*requires lb.core.Sandbox.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, goog, window, document, setTimeout */
+/*global lb, bezen, goog, window, navigator, document, setTimeout */
 (function() {
   // Builder of
   // Closure object for Test of User Interface Module
@@ -645,6 +645,279 @@
     ut();
   }
 
+  function testGetLanguageList(){
+    var ut = new lb.core.Sandbox('testGetLanguageList').i18n.getLanguageList;
+
+    assert.arrayEquals( ut(), [],   "language list expected empty initially");
+  }
+
+  function testGetSelectedLanguage(){
+    var sandbox = new lb.core.Sandbox('testGetSelectedLanguage');
+    var ut = sandbox.i18n.getSelectedLanguage;
+
+    lb.base.config.reset();
+    assert.equals( ut(), navigator.language || navigator.browserLanguage,
+                  "selected language expected to default to browser language");
+
+    var testLanguageCode = 'TESTlanguageCODE';
+    lb.base.config.setOptions({
+      'lbLanguage': testLanguageCode
+    });
+    assert.equals( ut(), testLanguageCode,
+            "the selected language code is the value of 'lbLanguage' option");
+  }
+
+  function testSelectLanguage(){
+    var ut = new lb.core.Sandbox('testSelectLanguage').i18n.selectLanguage;
+
+    lb.base.config.reset();
+    var testLanguageCode = 'TestLANGUAGEcode';
+    ut(testLanguageCode);
+    assert.equals( lb.base.config.getOption('lbLanguage'), testLanguageCode,
+               "selected language expected to be set to 'lbLanguage' option");
+  }
+
+  function testAddLanguageProperties(){
+    var sandbox = new lb.core.Sandbox('testAddLanguageProperties');
+    var ut = sandbox.i18n.addLanguageProperties;
+
+    ut();
+    ut(undefined);
+    ut(null,{});
+    ut({},{});
+    assert.arrayEquals( sandbox.i18n.getLanguage(), [],
+       "null, undefined and non-string language code expected to be ignored");
+
+    var firstLanguageCode = 'TEST-language-CODE-01';
+    lb.base.config.setOptions({
+      lbLanguage: firstLanguageCode
+    });
+    var aValue = function(){},
+        cValue = 'C Value';
+    ut(firstLanguageCode,{
+      a: aValue,
+      b: {
+        c: cValue
+      }
+    });
+    assert.arrayEquals( sandbox.i18n.getLanguages(), [firstLanguageCode],
+                    "first language code expected to be added to the list");
+    assert.equals( sandbox.i18n.get('a',firstLanguageCode), aValue,
+                                            "'a' expected in first language");
+    assert.equals( sandbox.i18n.get('b.c',firstLanguageCode), cValue,
+                                          "'b.c' expected in first language");
+
+    var secondLanguageCode = '';
+    lb.base.config.setOptions({
+      lbLanguage: secondLanguageCode
+    });
+    var dValue = {};
+    ut(secondLanguageCode,{
+      d: dValue
+    });
+    assert.arrayEquals( sandbox.i18n.getLanguages(),
+                        [secondLanguageCode, firstLanguageCode],
+                  "second language code expected to be added, in sort order");
+    assert.equals( sandbox.i18n.get('d',secondLanguageCode),dValue,
+                                           "'d' expected in second language");
+  }
+
+  function testGet(){
+    var ut = new lb.core.Sandbox('testGet').i18n.get;
+
+    var testLanguageCode = 'te-ST';
+    lb.base.config.setOptions({
+      lbLanguage: testLanguageCode
+    });
+    assert.equals( ut(), null,             "null expected for missing key");
+
+    var testSandbox = new lb.core.Sandbox('testGet.testSandbox');
+    var dValue = function(){
+          return 'D VALUE';
+        },
+        cValue = {
+          d: dValue
+        },
+        bValue = {
+          c: cValue
+        },
+        aValue = 'A VALUE';
+    testSandbox.addLanguageProperties(testLanguageCode,{
+      a: aValue,
+      b: bValue
+    });
+
+    assert.equals( ut(), null,                "null expected for missing key");
+    assert.equals( ut('a'), aValue,     "a value expected (default language)");
+    assert.equals( ut('b'), bValue,     "b value expected (default language)");
+    assert.equals( ut('b.c'), cValue,   "c value expected (default language)");
+    assert.equals( ut('b.c.d'), dValue, "d value expected (default language)");
+
+    lb.base.config.setOptions({
+      lbLanguage: 'OTHER-LANGUAGE-CODE'
+    });
+    assert.equals( ut('a',testLanguageCode), aValue,
+                                      "a value expected (explicit language)");
+    assert.equals( ut('b',testLanguageCode), bValue,
+                                      "b value expected (explicit language)");
+    assert.equals( ut('b.c',testLanguageCode), cValue,
+                                      "c value expected (explicit language)");
+    assert.equals( ut('b.c.d',testLanguageCode), dValue,
+                                      "d value expected (explicit language)");
+
+    assert.equals( ut(['a'],testLanguageCode), aValue,
+                      "a value expected (array notation, explicit language)");
+    assert.equals( ut(['b'],testLanguageCode), bValue,
+                      "b value expected (array notation, explicit language)");
+    assert.equals( ut(['b','c'],testLanguageCode), cValue,
+                      "c value expected (array notation, explicit language)");
+    assert.equals( ut(['b','c','d'],testLanguageCode), dValue,
+                      "d value expected (array notation, explicit language)");
+  }
+
+  function testGetString(){
+    var ut = new lb.core.Sandbox('testGetString').i18n.getString;
+
+    lb.base.config.reset();
+    assert.equals( ut(), null,              "null expected for missing key");
+    assert.equals( ut('missing'), null,   "null expected for key 'missing'");
+
+    var testLanguageCode = 'te-ST';
+    lb.base.config.setOptions({
+      lbLanguage: testLanguageCode
+    });
+
+    var testSandbox = new lb.core.Sandbox('testGetString.testSandbox');
+    var noParamValue = 'No Param Value',
+        simpleParamValue = '#simple#',
+        complexParamValue = 'Complex #param-to-replace#, #missing#';
+    testSandbox.addLanguageProperties(testLanguageCode,{
+      noParam: noParamValue,
+      simpleParam: simpleParamValue,
+      complexParam: complexParamValue
+    });
+
+    assert.equals( ut('noParam'), noParamValue,
+                          "value without param expected AS IS (no language)");
+    assert.equals( ut('simpleParam',{simple:'replacement'}), 'replacement',
+                           "simple value replacement expected (no language)");
+    assert.equals( ut('complexParam',{'param-to-replace':'value'}),
+                   'Complex value, #missing#',
+                 "one of two params expected in complex value (no language)");
+
+    lb.base.config.setOptions({
+      lbLanguage: 'OTHER-LANGUAGE-CODE'
+    });
+
+    assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
+                    "value without param expected AS IS (explicit language)");
+    assert.equals( ut('simpleParam',{simple:'replacement'},testLanguageCode),
+                   'replacement',
+                     "simple value replacement expected (explicit language)");
+    assert.equals( ut('complexParam',
+                      {'param-to-replace':'value'},
+                      testLanguageCode),
+                   'Complex value, #missing#',
+           "one of two params expected in complex value (explicit language)");
+  }
+
+  function testFilterHtml(){
+    var ut = new lb.core.Sandbox('testFilterHtml').i18n.filterHtml;
+
+    lb.base.config.reset();
+    try {
+      ut();
+      ut(null);
+    } catch(e) {
+      assert.fail("null/undefined node expected to be ignored: "+e);
+    }
+
+    var testLanguageCode = 'te-ST';
+    lb.base.config.setOptions({
+      lbLanguage: testLanguageCode
+    });
+
+    var noParamValue = 'No param replacement',
+        noParamNode = element('div',{},noParamValue),
+        simpleNodeValue = '#param#',
+        simpleNode = element('div',{},simpleNodeValue),
+        complexNode = element('div',{}, [
+          'complex ',
+          element('span',{},'#param-to-replace#'),
+          ' #missing#'
+        ]);
+
+    ut(noParamNode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+               "value without param expected to be left AS IS (no language)");
+    ut(simpleNode,{param:'value'});
+    assert.equals( simpleNode.innerHTML, 'value',
+                           "simple value replacement expected (no language)");
+    ut(complexNode,{'param-to-replace':'value'});
+    assert.equals( complexNode.innerHTML.toLowerCase(),
+                   "complex <span>value</span> #missing#",
+                 "one of two params expected in complex value (no language)");
+
+    lb.base.config.setOptions({
+      lbLanguage: 'OTHER-LANGUAGE-CODE'
+    });
+
+    noParamNode = element('div',{},noParamValue),
+    simpleNode = element('div',{},simpleNodeValue),
+    complexNode = element('div',{}, [
+      'complex ',
+      element('span',{},'#param-to-replace#'),
+      ' #missing#'
+    ]);
+
+    ut(noParamNode,testLanguageCode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+         "value without param expected to be left AS IS (explicit language)");
+    ut(simpleNode,{param:'value'},testLanguageCode);
+    assert.equals( simpleNode.innerHTML, 'value',
+                     "simple value replacement expected (explicit language)");
+    ut(complexNode,{'param-to-replace':'value'},testLanguageCode);
+    assert.equals( complexNode.innerHTML.toLowerCase(),
+                   "complex <span>value</span> #missing#",
+           "one of two params expected in complex value (explicit language)");
+
+    var listNode = element('ul',{},[
+      element('li',{lang:''},'Root'),
+      element('li',{lang:'de'},'German'),
+      element('li',{lang:'de-AT'},'German/Austria'),
+      element('li',{lang:'de-DE'},'German/Germany'),
+      element('li',{lang:'en'},'English'),
+      element('li',{lang:'en-GB'},'English/United Kingdom'),
+      element('li',{lang:'en-US'},'English/USA'),
+      element('li',{lang:'fr'},'French'),
+      element('li',{lang:'fr-CA'},'French/Canada'),
+      element('li',{lang:'fr-FR'},'French/France')
+    ]);
+    ut(listNode,{},'en-GB');
+    assert.equals( listNode.childNodes.length, 3,
+                                          "3 child nodes expected to remain");
+    assert.arrayEquals(
+      [
+        listNode.childNodes[0].nodeName,
+        listNode.childNodes[0].getAttributeValue('lang'),
+        listNode.childNodes[0].innerHTML,
+
+        listNode.childNodes[1].nodeName,
+        listNode.childNodes[1].getAttributeValue('lang'),
+        listNode.childNodes[1].innerHTML,
+
+        listNode.childNodes[2].nodeName,
+        listNode.childNodes[2].getAttributeValue('lang'),
+        listNode.childNodes[2].innerHTML
+      ],
+      [
+        'LI', '',      'Root',
+        'LI', 'en',    'English',
+        'LI', 'en-GB', 'English/United Kingdom'
+      ],  "only child nodes with lang '', 'en', 'en-GB' expected to remain "+
+                                                      "for language 'en-GB'");
+  }
+
   function testGetLocation(){
     var ut = new lb.core.Sandbox('testGetLocation').url.getLocation;
 
@@ -782,6 +1055,16 @@
     testUnsubscribe: testUnsubscribe,
     testPublish: testPublish
   },"lb.core.Sandbox.events");
+
+  testrunner.define({
+    testGetLanguageList: testGetLanguageList,
+    testGetSelectedLanguage: testGetSelectedLanguage,
+    testSelectLanguage: testSelectLanguage,
+    testAddLanguageProperties: testAddLanguageProperties,
+    testGet: testGet,
+    testGetString: testGetString,
+    testFilterHtml: testFilterHtml
+  },"lb.core.Sandbox.i18n");
 
   testrunner.define({
     testSend: testSend
