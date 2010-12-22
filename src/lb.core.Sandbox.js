@@ -34,6 +34,15 @@
  *   - <events.unsubscribe(filter)>
  *   - <events.publish(event)>
  *
+ * Internationalization through language properties (sandbox.i18n):
+ *   - <i18n.getLanguageList(): array of strings>
+ *   - <i18n.getSelectedLanguage(): string>
+ *   - <i18n.selectLanguage(languageCode)>
+ *   - <i18n.addLanguageProperties(languageCode,languageProperties)>
+ *   - <i18n.get(key[,languageCode]): any>
+ *   - <i18n.getString(key[,data[,languageCode]]): string>
+ *   - <i18n.filterHtml(htmlNode[,data[,languageCode]])>
+ *
  * Asynchronous communication with a remote server (sandbox.server):
  *   - <server.send(url,data,receive)>
  *
@@ -61,7 +70,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-10-26
+ * 2010-12-22
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -497,6 +506,184 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // http://www.json.org/
 
   // Note: publish is an alias for lb.core.events.publisher.publish
+
+  // Function: i18n.getLanguageList(): array of strings
+  // Get the list of available languages.
+  //
+  // Returns:
+  //   array of strings, the list of language codes which have associated
+  //   language properties, sorted from least specific to most specific.
+
+  // Function: i18n.getSelectedLanguage(): string
+  // Get the language currently selected for the application.
+  //
+  // Returns:
+  //   string, the value of the 'lbLanguage' configuration property,
+  //   or when it is missing, the value of the browser language found in
+  //   navigator.language or navigator.browserLanguage.
+
+  // Function: i18n.selectLanguage(languageCode)
+  // Select the language of the application, shared by all modules.
+  //
+  // The language code of selected language is stored in the property
+  // 'lbLanguage' of the configuration options of the core application. It is
+  // used as a default when the language code is omitted in calls to i18n
+  // methods where language code is optional:
+  // i18n.get(), i18n.getString(), i18n.filterHtml().
+  //
+  // Parameter:
+  //   languageCode - string, the language code of the selected language
+  //
+  // Reference:
+  //   RFC5646 - Tags for Identifying Languages
+  //   http://tools.ietf.org/html/rfc5646
+
+  // Function: i18n.addLanguageProperties(languageCode,languageProperties)
+  // Define or replace properties for given language.
+  //
+  // Language properties are inherited by all languages whose language code
+  // starts with the given language code:
+  // * all languages inherit from the language '' (empty string)
+  // * 'en-GB' and 'en-US' inherit from 'en'
+  // * 'en-GB-Scotland' inherits from 'en-GB'
+  //
+  // Parameters:
+  //   languageCode - string, the language code identifying the language,
+  //                  as defined in RFC5646 "Tags for Identifying Languages"
+  //   languageProperties - object, a JSON-like structure with language
+  //                        properties, which may be several levels deep and
+  //                        contain values of any type including functions.
+  //
+  // Reference:
+  //   RFC5646 - Tags for Identifying Languages
+  //   http://tools.ietf.org/html/rfc5646
+
+  // Function: i18n.get(key[,languageCode]): any
+  // Get the value of the property identified by given key.
+  //
+  // Parameters:
+  //   key - string or array, the key identifiying the property:
+  //         * a property name: 'name' (at top level of language properties)
+  //         * a dotted name: 'section.subsection.name' (nested property)
+  //         * an array: ['section','subsection','name'] (alternate form for
+  //                                                      nested properties)
+  //   languageCode - string, optional, language code for lookup in a specific
+  //                  language. Defaults to the language selected for the whole
+  //                  application, as returned in getSelectedLanguage().
+  //
+  // Returns:
+  //   * any, the value of the corresponding property in the most specific
+  //     language available,
+  //   * or null if not found
+
+  // Function: i18n.getString(key[,data[,languageCode]]): string
+  // Get a string computed by replacing data values in the most specific string
+  // template found for given key.
+  //
+  // The parameters to replace are surrounded by '#' characters,
+  // e.g. '#param-to-replace#'. No space can appear in the name;
+  // only characters in the range [a-zA-Z0-9\-\.] are allowed.
+  //
+  // Replacement values are provided as properties of the data object, with
+  // the same name as the parameter:
+  // | {
+  // |   'param-to-replace': 'value'
+  // | }
+  //
+  // Dotted parameter names, e.g. '#section.subsection.name', are replaced with
+  // values nested within sections and subsections of the data object:
+  // | {
+  // |   section: {
+  // |     subsection: {
+  // |       name: 'value'
+  // |     }
+  // |   }
+  // | }
+  //
+  // Parameters:
+  //   key - string or array, the key identifiying the property:
+  //         * a property name: 'name' (at top level of language properties)
+  //         * a dotted name: 'section.subsection.name' (nested property)
+  //         * an array: ['section','subsection','name'] (alternate form for
+  //                                                      nested properties)
+  //   data - object, optional, replacement values for parameters, which may be
+  //          nested within sections and subsections. Defaults to an empty
+  //          object, leaving all parameters unreplaced.
+  //   languageCode - string, optional, language code for lookup in a specific
+  //                  language. Defaults to the language selected for the whole
+  //                  application, as returned in getSelectedLanguage().
+  //
+  // Returns:
+  //   * string, the value of corresponding property, in the most specific
+  //     language available, with parameters replaced with the value of
+  //     corresponding properties found in data object
+  //   * or null if the property is not found
+
+  // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
+  // Replace parameters and trim nodes based on html 'lang' attribute.
+  //
+  // The given HTML node is modified in place. You should clone it beforehand
+  // if you wish to preserve the original version.
+  //
+  // Instead of looking for language properties associated with language codes
+  // using addLanguageProperties(), this method relies on HTML markup for
+  // translations. Multiple translations may be included in the same HTML node,
+  // and only relevant translations will be kept, based on 'lang' attribute:
+  // | <div lang=''>
+  // |   <span lang='de'>Hallo #firstName#!</span>
+  // |   <span lang='en'>Hi #firstName#!</span>
+  // |   <span lang='fr'>Salut #firstName# !</span>
+  // |   <span lang='jp'>こんにちは#lastName#!</span>
+  // | </div>
+  //
+  // The nodes are filtered according to the languageCode argument, or if it
+  // is omitted, the language code of the application as returned by
+  // getSelectedLanguage(). Filtering the HTML from the above example for the
+  // language 'en-GB' would result in:
+  // | <div lang=''>
+  // |   <span lang='en'>Hi #firstName#!</span>
+  // | </div>
+  //
+  // The 'lang' attribute is inherited from ancestors, including ancestors
+  // of the given HTML node, unless it has a 'lang' attribute itself. The root
+  // element of the HTML node will be removed from its parent as well if its
+  // language does not match the language code used for filtering. Elements
+  // within the scope of the empty language '' or in the scope of no language
+  // attribute are preserved by the filtering. 
+  //
+  // The parameter format is the same as the one used in getString();
+  // parameters to replace are surrounded by '#' characters,
+  // e.g. '#param#', based on the regular expression /#([a-zA-Z0-9\-\.]+)#/g.
+  //
+  // The data object contains properties with values for the replacement of
+  // parameters of the same name:
+  // | {
+  // |   firstName: 'Jane',
+  // |   lastName: 'Doe'
+  // | }
+  //
+  // After parameter replacement, the HTML node of the above example would end
+  // up as:
+  // | <div lang=''>
+  // |   <span lang='en'>Hi Jane!</span>
+  // | </div>
+  //
+  // Parameters:
+  //   key - string or array, the key identifiying the property:
+  //         * a property name: 'name' (at top level of language properties)
+  //         * a dotted name: 'section.subsection.name' (nested property)
+  //         * an array: ['section','subsection','name'] (alternate form for
+  //                                                      nested properties)
+  //   data - object, optional, replacement values for parameters found in
+  //          attributes and text of the HTML node. Defaults to an empty
+  //          object, leaving all parameters unreplaced.
+  //   languageCode - string, optional, language code for lookup in a specific
+  //                  language. Defaults to the language selected for the whole
+  //                  application, as returned in getSelectedLanguage().
+  //
+  // Reference:
+  //   Specifying the language of content: the lang attribute
+  //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
 
   // Function: server.send(url,data,receive)
   // Send and receive data from the remote host.
