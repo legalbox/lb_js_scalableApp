@@ -53,7 +53,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-20
+ * 2010-12-22
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -62,9 +62,6 @@
 lb.base.i18n = lb.base.i18n || (function() {
   // Builder of
   // Closure for lb.base.i18n module
-
-  // Declare aliases
-  var getOption = lb.base.config.getOption,
 
   // private fields
 
@@ -81,17 +78,7 @@ lb.base.i18n = lb.base.i18n || (function() {
       // several language objects. These duplicates may be merged into a single
       // language object in a future implementation (trading less memory for
       // more computations due to added merging step).
-      languages = [];
-
-  function getLanguage(){
-    // For internal use - refactoring in progress
-    // Return the default language configured with 'lbLanguage' property
-
-    var defaultLanguage = navigator.language ||
-                          navigator.browserLanguage ||
-                          '';
-    return getOption('lbLanguage',defaultLanguage);
-  }
+  var languages = [];
 
   function getLanguageCodes(){
     // Function: getLanguageCodes(): array
