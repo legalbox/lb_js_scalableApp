@@ -110,6 +110,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       setHash = history.setHash,
       /*requires lb.base.config.js */
       config = lb.base.config,
+      /*requires lb.base.i18n.js */
+      i18n = lb.base.i18n,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -514,6 +516,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   array of strings, the list of language codes which have associated
   //   language properties, sorted from least specific to most specific.
 
+  // Note: getLanguageList is an alias for lb.base.i18n.getLanguageCodes
+
   // Function: i18n.getSelectedLanguage(): string
   // Get the language currently selected for the application.
   //
@@ -521,6 +525,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   string, the value of the 'lbLanguage' configuration property,
   //   or when it is missing, the value of the browser language found in
   //   navigator.language or navigator.browserLanguage.
+  function getSelectedLanguage(){
+    return config.getOption('lbLanguage', i18n.getBrowserLanguage() );
+  }
 
   // Function: i18n.selectLanguage(languageCode)
   // Select the language of the application, shared by all modules.
@@ -537,6 +544,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Reference:
   //   RFC5646 - Tags for Identifying Languages
   //   http://tools.ietf.org/html/rfc5646
+  function selectLanguage(languageCode){
+    config.setOptions({
+      lbLanguage: languageCode
+    });
+  }
 
   // Function: i18n.addLanguageProperties(languageCode,languageProperties)
   // Define or replace properties for given language.
@@ -558,6 +570,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   RFC5646 - Tags for Identifying Languages
   //   http://tools.ietf.org/html/rfc5646
 
+  // Note: This is an alias for lb.base.i8n.addLanguageProperties
+
   // Function: i18n.get(key[,languageCode]): any
   // Get the value of the property identified by given key.
   //
@@ -575,6 +589,12 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   * any, the value of the corresponding property in the most specific
   //     language available,
   //   * or null if not found
+  function get(key,languageCode){
+    if ( typeof languageCode !== 'string' ){
+      languageCode = getSelectedLanguage();
+    }
+    return i18n.getProperty(languageCode,key);
+  }
 
   // Function: i18n.getString(key[,data[,languageCode]]): string
   // Get a string computed by replacing data values in the most specific string
@@ -618,6 +638,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //     language available, with parameters replaced with the value of
   //     corresponding properties found in data object
   //   * or null if the property is not found
+
 
   // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
   // Replace parameters and trim nodes based on html 'lang' attribute.
@@ -862,6 +883,13 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     subscribe: subscribe,
     unsubscribe: unsubscribe,
     publish: publisher.publish
+  };
+  this.i18n = {
+    getLanguageList: i18n.getLanguageCodes,
+    getSelectedLanguage: getSelectedLanguage,
+    selectLanguage: selectLanguage,
+    addLanguageProperties: i18n.addLanguageProperties,
+    get: get
   };
   this.server = {
     send: send
