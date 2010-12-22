@@ -742,7 +742,7 @@
           c: cValue
         },
         aValue = 'A VALUE';
-    testSandbox.addLanguageProperties(testLanguageCode,{
+    testSandbox.i18n.addLanguageProperties(testLanguageCode,{
       a: aValue,
       b: bValue
     });
@@ -792,7 +792,7 @@
         simpleParamValue = '#simple#',
         dottedParamValue = '#dotted.param#',
         complexParamValue = 'Complex #param-to-replace#, #missing#';
-    testSandbox.addLanguageProperties(testLanguageCode,{
+    testSandbox.i18n.addLanguageProperties(testLanguageCode,{
       noParam: noParamValue,
       simpleParam: simpleParamValue,
       dottedParam: dottedParamValue,
