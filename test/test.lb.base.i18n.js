@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-20
+ * Version:   2010-12-22
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -43,6 +43,15 @@
     // all language variants are removed before each test, to make sure that
     // the behavior is consistent when these tests are run as part of all tests
     lb.base.i18n.reset();
+  }
+
+  function testGetBrowserLanguage(){
+    var ut = lb.base.i18n.getBrowserLanguage;
+    setUp();
+
+    assert.equals( ut(), navigator.language || navigator.browserLanguage,
+                                          "browser language expected to be "+
+                           "navigator.language or navigator.browserLanguage");
   }
 
   function testGetLanguageCodes(){
@@ -328,6 +337,7 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testGetBrowserLanguage: testGetBrowserLanguage,
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,

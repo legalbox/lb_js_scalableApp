@@ -80,6 +80,24 @@ lb.base.i18n = lb.base.i18n || (function() {
       // more computations due to added merging step).
   var languages = [];
 
+  function getBrowserLanguage(){
+    // Function: getBrowserLanguage(): string
+    // Get the browser's language.
+    //
+    // Returns:
+    //   string, the language code of the browser's language, as retrieved in
+    //   navigator.language or navigator.browserLanguage.
+    //
+    // References:
+    //   window.navigator.language - MDC Doc Center
+    //   https://developer.mozilla.org/En/Navigator.language
+    //
+    //   navigator Object - MSDN
+    //   http://msdn.microsoft.com/en-us/library/ms535867%28VS.85%29.aspx
+
+    return navigator.language || navigator.browserLanguage;
+  }
+
   function getLanguageCodes(){
     // Function: getLanguageCodes(): array
     // Get the list of language codes associated with language properties.
@@ -231,6 +249,7 @@ lb.base.i18n = lb.base.i18n || (function() {
   }
 
   return { // public API
+    getBrowserLanguage: getBrowserLanguage,
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,
