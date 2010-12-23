@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-22
+ * Version:   2010-12-23
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -36,7 +36,38 @@
   function testReplaceParams(){
     var ut = lb.base.template.string.replaceParams;
 
-    assert.fail("Missing tests");
+    var noParam = 'No param to replace';
+    assert.equals( ut(noParam,{}), noParam,
+                              "no change expected without params to replace");
+
+    var noParamReally = 'No #param, #here!#really$#';
+    assert.equals( ut(noParamReally,{}), noParamReally,
+                      "no change expected without params to replace, really");
+
+    var rangeParam = '#abc-xyz_ABC-XYZ_0-9#';
+    assert.equals( ut(rangeParam,{'abc-xyz_ABC-XYZ_0-9':'value'}), 'value',
+                       "replacement expected for parameter with large range "+
+                                    "with large range of characters in name");
+
+    var nestedParam = '#a.b.c.d#';
+    assert.equals( ut(nestedParam,{a:{b:{c:{d:'value'}}}}),'value',
+                              "replacement expected for nested param value");
+
+    var paramInText = 'Before #param# after';
+    assert.equals( ut(paramInText,{param:'value'}), 'Before value after',
+                               "parameter in text expectec to be replaced");
+
+    var missingParam = '#missing#';
+    assert.equals( ut(missingParam,{}), missingParam,
+                          "missing parameter expected to be left unreplaced");
+
+    var multipleParams = 'Before#param1##param2##param3#After'
+    assert.equals( ut(multipleParams,{
+                     param1: ';value1;',
+                     param2: '',
+                     param3: ';value3;'
+                   }), 'Before;value1;;value3;After',
+        "multiple parameters expected to be replaced, including empty string");
   }
 
   var tests = {
