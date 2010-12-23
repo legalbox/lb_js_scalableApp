@@ -2,7 +2,7 @@
  * Namespace: lb.base.template
  * Base Template Module
  *
- * This module provides the basis for HTML templates using a set of functions
+ * This module provides the basis for templates using a set of functions
  * as filters to modify the input. See applyFilters() for details.
  *
  * Author:
@@ -16,7 +16,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-21
+ * 2010-12-22
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
