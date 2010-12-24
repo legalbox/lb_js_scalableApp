@@ -166,7 +166,6 @@
     }
 
     var node = element('span',{},'Welcome #name#');
-bezen.log.info( node.innerHTML, true);
 
     ut(
       node,
@@ -175,7 +174,6 @@ bezen.log.info( node.innerHTML, true);
       },
       [ topDownParsing, replaceParams]
     );
-bezen.log.info( node.innerHTML, true);
 
     var TEXT_NODE = 3;
     assert.arrayEquals(
