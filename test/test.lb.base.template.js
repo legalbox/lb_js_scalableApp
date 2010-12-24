@@ -68,27 +68,49 @@
                                   filters],
                                      "9 arguments expected to be captured");
 
-    function returnFalse(){
-      return false;
-    }
-    function returnTrue(){
-      return true;
-    }
-    function returnUndefined(){
-      return;
+    function constant(value){
+      // Function: constant(value): function
+      // Get a function always returning the given value.
+
+      return function(){
+        return value;
+      };
     }
 
+    var returnFalse = constant(false),
+        returnTrue = constant(true),
+        returnUndefined = constant(),
+        returnNull = constant(null),
+        returnZero = constant(0),
+        returnEmptyString = constant('');
+
     captured = [];
+    // filters are applied from right to left:
+    //                    <-----------
     filters = [catchFilter, returnTrue];
-    ut(filters);
+    assert.equals( ut(filters), true,  "true value expected to be returned");
     assert.arrayEquals(captured,[],
             "processing expected to stop when previous filter returns true");
 
-    captured = [];
     filters = [catchFilter, returnFalse];
-    ut(filters);
-    assert.equals(captured.length, 1,
-         "processing expected to continue when previous filter returns false");
+    assert.equals( ut(filters), false, "false value expected to be returned");
+    assert.arrayEquals(captured, [],
+           "processing expected to stop when previous filter returns false");
+
+    filters = [catchFilter, returnEmptyString];
+    assert.equals( ut(filters), '',   "empty string expected to be returned");
+    assert.arrayEquals(captured, [],
+               "processing expected to stop when previous filter returns ''");
+
+    filters = [catchFilter, returnZero];
+    assert.equals( ut(filters), 0,              "0 expected to be returned");
+    assert.arrayEquals(captured, [],
+                "processing expected to stop when previous filter returns 0");
+
+    filters = [catchFilter, returnNull];
+    assert.equals( ut(filters), null,         "null expected to be returned");
+    assert.arrayEquals(captured, [],
+             "processing expected to stop when previous filter returns null");
 
     captured = [];
     filters = [catchFilter, returnUndefined];
@@ -99,16 +121,16 @@
     captured = [];
     filters = [
                  catchFilter,
-                 returnTrue,
-                 catchFilter,
-                 returnFalse,
+                 constant('value'),
                  catchFilter,
                  returnUndefined,
+                 catchFilter,
                  catchFilter
               ];
-    ut(filters);
+    assert.equals( ut(filters), 'value',     "value expected to be returned");
     assert.equals(captured.length, 3,
-                   "filters expected to be triggered until one returns true");
+              "filters expected to be triggered until one returns any value "+
+                                                  "different from undefined");
 
     // Test functions defined in documentation of the method
     var applyFilters = ut;
@@ -185,6 +207,9 @@ bezen.log.info( node.innerHTML, true);
     );
     assert.equals( greeting, 'Welcome John Doe',
                          "value expected to be replaced in string greeting");
+
+    assert.equals( ut('#empty#',{empty:''},[replaceParamsInString]), '',
+                   "empty string expected to be returned after replacement");
   }
 
   var tests = {

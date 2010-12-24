@@ -107,12 +107,14 @@ lb.base.template = lb.base.template || (function() {
     //             o undefined or any falsy value to continue with next filter
     //
     // Returns:
-    //   undefined or any value returned by the last filter run.
+    //   * the first value different from undefined returned by a filter; the
+    //     following filters are not run
+    //   * undefined after running all filters, when all returned undefined
     //
     // Note:
     // Filters are applied from last (most specific) to first (least specific).
-    // Unless processing is interrupted by a filter returning a truthy value,
-    // all filters will be applied in turn, in this order.
+    // Unless processing is interrupted by a filter returning a value different
+    // from undefined, all filters will be applied in turn, in this order.
 
     var filters = arguments[arguments.length-1];
     if (!filters){
@@ -121,7 +123,7 @@ lb.base.template = lb.base.template || (function() {
     var i, result;
     for (i=filters.length-1; i>=0; i--){
       result = filters[i].apply(this,arguments);
-      if (result){
+      if (result !== undefined){
         return result;
       }
     }
