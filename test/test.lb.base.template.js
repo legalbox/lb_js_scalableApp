@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-08-24
+ * Version:   2010-12-24
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -55,17 +55,17 @@
 
     var arg1 = {}, arg2 = 'XYZ', arg3 = /abc/g;
     var filters = [catchFilter];
-    ut(filters,arg1,arg2,arg3);
-    assert.arrayEquals(captured, [filters,arg1,arg2,arg3],
+    ut(arg1,arg2,arg3,filters);
+    assert.arrayEquals(captured, [arg1,arg2,arg3,filters],
                                      "3 arguments expected to be captured");
 
     captured = [];
     filters = [catchFilter];
-    ut(filters, arg1,arg2,arg3, arg1,arg2,arg3, arg1,arg2,arg3);
-    assert.arrayEquals(captured, [filters,
+    ut(arg1,arg2,arg3, arg1,arg2,arg3, arg1,arg2,arg3, filters);
+    assert.arrayEquals(captured, [arg1,arg2,arg3,
                                   arg1,arg2,arg3,
                                   arg1,arg2,arg3,
-                                  arg1,arg2,arg3],
+                                  filters],
                                      "9 arguments expected to be captured");
 
     function returnFalse(){
@@ -113,23 +113,23 @@
     // Test functions defined in documentation of the method
     var applyFilters = ut;
     var ELEMENT_NODE = 1;
-    function topDownParsing(filters,node,context){
+    function topDownParsing(node,context,filters){
       if (!node || node.nodeType!==ELEMENT_NODE){
         return;
       }
       var i, length, attribute, child;
       for (i=0, length=node.attributes.length; i<length; i++){
         attribute = node.attributes[i];
-        applyFilters(filters,attribute,context);
+        applyFilters(attribute,context,filters);
       }
       for (i=0, length=node.childNodes.length; i<length; i++){
         child = node.childNodes[i];
-        applyFilters(filters,child,context);
+        applyFilters(child,context,filters);
       }
     }
 
     var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
-    function replaceParams(filters,node,context){
+    function replaceParams(node,context){
       if ( !node || !node.nodeValue || !node.nodeValue.replace ||
            !context || !context.data){
         return;
@@ -147,11 +147,11 @@
 bezen.log.info( node.innerHTML, true);
 
     ut(
-      [ topDownParsing, replaceParams],
       node,
       {data:
         {name:'John Doe'}
-      }
+      },
+      [ topDownParsing, replaceParams]
     );
 bezen.log.info( node.innerHTML, true);
 
@@ -172,16 +172,16 @@ bezen.log.info( node.innerHTML, true);
         'Welcome John Doe'
       ],      "input node expected to be updated with param value replaced");
 
-    function replaceParamsInString(filters, string, data){
+    function replaceParamsInString(string, data){
       return string.replace(PARAM_REGEXP, function(match,param){
         return data[param];
       });
     }
 
     var greeting = ut(
-      [replaceParamsInString],
       'Welcome #name#',
-      {name: 'John Doe'}
+      {name: 'John Doe'},
+      [replaceParamsInString]
     );
     assert.equals( greeting, 'Welcome John Doe',
                          "value expected to be replaced in string greeting");

@@ -16,7 +16,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-22
+ * 2010-12-24
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -26,9 +26,9 @@ lb.base.template = lb.base.template || (function() {
   // Builder of
   // Closure for lb.base.template module
 
-  function applyFilters(filters,input){
-    // Function: applyFilters(filters,input...): any
-    // Apply filters successively to input made of following arguments.
+  function applyFilters(){
+    // Function: applyFilters(input...,filters): any
+    // Apply filters successively to input made of preceding arguments.
     //
     // This method may be applied to several types of input, e.g. strings or
     // DOM nodes, using different sets of filters according to expected types.
@@ -38,7 +38,6 @@ lb.base.template = lb.base.template || (function() {
     // The input would be a DOM node and an optional context object.
     // | var node = element('span',{},'Welcome #name#');
     // | applyFilters(
-    // |   filters,
     // |   node,
     // |   {
     // |     language:'en-US',
@@ -46,27 +45,28 @@ lb.base.template = lb.base.template || (function() {
     // |     {
     // |       name:'John Doe'
     // |     }
-    // |   }
+    // |   },
+    // |   filters
     // | );
     // The first filter may implement top-down parsing in the following way:
     // | var ELEMENT_NODE = 1;
-    // | function topDownParsing(filters,node,context){
+    // | function topDownParsing(node,context,filters){
     // |   if (!node || node.nodeType!==ELEMENT_NODE){
     // |     return;
     // |   }
     // |   var i, length, attribute, child;
     // |   for (i=0, length=node.attributes.length; i<length; i++){
     // |     attribute = node.attributes[i];
-    // |     applyFilters(filters,attribute,context);
+    // |     applyFilters(attribute,context,filters);
     // |   }
     // |   for (i=0, length=node.childNodes.length; i<length; i++){
     // |     child = node.childNodes[i];
-    // |     applyFilters(filters,child,context);
+    // |     applyFilters(child,context,filters);
     // |   }
     // | }
     // A more specific filter may operate the replacement of parameter values:
     // | var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
-    // | function replaceParams(filters,node,context){
+    // | function replaceParams(node,context){
     // |   if ( !node || !node.nodeValue || !node.nodeValue.replace ||
     // |        !context || !context.data){
     // |     return;
@@ -83,28 +83,28 @@ lb.base.template = lb.base.template || (function() {
     // This is an alternate template system, using as input a string and an
     // optional object for values of parameters to replace in the string.
     // | var greeting = applyFilters(
-    // |                  filters,
     // |                  'Welcome #name#',
-    // |                  {name: 'John Doe'}
+    // |                  {name: 'John Doe'},
+    // |                  filters
     // |                );
     //
     // A single filter may be provided here to operate the replacement,
     // rewriting replaceParams from the previous example to adapt it to the new
     // input types:
-    // | function replaceParamsInString(filters, string, data){
+    // | function replaceParamsInString(string, data){
     // |   return string.replace(PARAM_REGEXP, function(match,param){
     // |     return data[param];
     // |   });
     // | }
     //
     // Parameters:
+    //   input... - variable number of arguments for input or context
     //   filters - array, list of function filters, ordered from least specific
     //             to most specific. Each filter will be provided the same
     //             arguments present in the call to applyFilters(). Its return
     //             value is interpreted in the following way:
     //             o true or any truthy value to stop the processing
     //             o undefined or any falsy value to continue with next filter
-    //   input... - variable number of arguments for input or context
     //
     // Returns:
     //   undefined or any value returned by the last filter run.
@@ -114,6 +114,7 @@ lb.base.template = lb.base.template || (function() {
     // Unless processing is interrupted by a filter returning a truthy value,
     // all filters will be applied in turn, in this order.
 
+    var filters = arguments[arguments.length-1];
     if (!filters){
       return;
     }
