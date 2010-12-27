@@ -168,7 +168,13 @@
     var ut = lb.base.i18n.setLanguage;
     setUp();
 
-    assert.fail("Missing tests");
+    ut('en-GB');
+    assert.equals( document.documentElement.lang, 'en-GB',
+                          "'en-GB' expected to be set to document language");
+
+    ut('other');
+    assert.equals( document.documentElement.lang, 'other',
+                          "'other' expected to be set to document language");
   }
 
   function testGetLanguageCodes(){
