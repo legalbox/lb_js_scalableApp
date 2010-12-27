@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-22
+ * Version:   2010-12-27
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -23,10 +23,7 @@
       /*requires bezen.object.js */
       object = bezen.object,
       /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner,
-      /*requires lb.base.config.js */
-      resetConfig = lb.base.config.reset,
-      setOptions = lb.base.config.setOptions;
+      testrunner = bezen.testrunner;
 
   function testNamespace(){
 
@@ -35,9 +32,6 @@
   }
 
   function setUp(){
-
-    // reset configuration to delete 'lbLanguage' property
-    resetConfig();
 
     // Note:
     // all language variants are removed before each test, to make sure that
@@ -52,6 +46,20 @@
     assert.equals( ut(), navigator.language || navigator.browserLanguage,
                                           "browser language expected to be "+
                            "navigator.language or navigator.browserLanguage");
+  }
+
+  function testGetLanguage(){
+    var ut = lb.base.i18n.getLanguage;
+    setUp();
+
+    assert.fail("Missing tests");
+  }
+
+  function testSetLanguage(){
+    var ut = lb.base.i18n.setLanguage;
+    setUp();
+
+    assert.fail("Missing tests");
   }
 
   function testGetLanguageCodes(){
@@ -338,6 +346,8 @@
   var tests = {
     testNamespace: testNamespace,
     testGetBrowserLanguage: testGetBrowserLanguage,
+    //testGetLanguage: testGetLanguage,
+    //testSetLanguage: testSetLanguage,
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
