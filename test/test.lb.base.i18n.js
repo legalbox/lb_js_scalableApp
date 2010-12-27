@@ -22,6 +22,9 @@
   var assert = bezen.assert,
       /*requires bezen.object.js */
       object = bezen.object,
+      /*requires bezen.dom.js */
+      element = bezen.dom.element,
+      hasAttribute = bezen.dom.hasAttribute,
       /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner;
 
@@ -32,6 +35,11 @@
   }
 
   function setUp(){
+
+    // Unset the root language of the document, if any
+    document.documentElement.removeAttribute('lang');
+    assert.isFalse( hasAttribute(document.documentElement,'lang'),
+                  "assert: no lang attribute expected on root HTML element");
 
     // Note:
     // all language variants are removed before each test, to make sure that
@@ -52,7 +60,108 @@
     var ut = lb.base.i18n.getLanguage;
     setUp();
 
-    assert.fail("Missing tests");
+    assert.equals( ut(), '', "document language expected unknown initially");
+    assert.equals( ut(null), '',        "Unknown expected for missing node");
+
+    var testLanguageCode = 'te-ST';
+    document.documentElement.lang = testLanguageCode;
+    assert.equals( ut(), testLanguageCode,
+                            "document language code expected to be returned");
+
+    var noLanguageElement = element('div',{title:'No Language'},'Text');
+    assert.equals( ut(noLanguageElement), '',
+                              "Unknown expected for element in no language");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), '',
+                              "Unknown expected for attribute in no language");
+    assert.equals( ut(noLanguageElement.firstChild), '',
+                              "Unknown expected for text in no language");
+
+    var emptyLangElement = element('div',{lang:'',title:'Unknown Language'});
+    assert.equals( ut(emptyLangElement), '',
+                         "Unknown expected for element in unknown language");
+    assert.equals( ut(emptyLangElement.getAttributeNode('title')), '',
+                       "Unknown expected for attribute in unknown language");
+    assert.equals( ut(emptyLangElement.firstChild), '',
+                            "Unknown expected for text in unknown language");
+
+    var frenchElement =
+      element('div',{lang:'fr',title:'French'},'Texte français');
+    assert.equals( ut(frenchElement), 'fr',
+                           "French expected for element in French language");
+    assert.equals( ut(frenchElement.getAttributeNode('title')), 'fr',
+                       "French expected for attribute in French language");
+    assert.equals( ut(frenchElement.firstChild), 'fr',
+                             "French expected for text in French language");
+
+    var frenchFranceElement =
+      element('div',{lang:'fr-FR',title:'French/France'},'Texte de France');
+    assert.equals( ut(frenchFranceElement), 'fr-FR',
+            "French/France expected for element in French/France language");
+    assert.equals( ut(frenchFranceElement.getAttributeNode('title')), 'fr-FR',
+          "French/France expected for attribute in French/France language");
+    assert.equals( ut(frenchFranceElement.firstChild), 'fr-FR',
+               "French/France expected for text in French/France language");
+
+    var englishElement = element('div',{lang:'en',title:'English'},'Text');
+    assert.equals( ut(englishElement), 'en',
+                        "English expected for element in English language");
+    assert.equals( ut(englishElement.getAttributeNode('title')), 'en',
+                       "English expected for attribute in English language");
+    assert.equals( ut(englishElement.firstChild), 'en',
+                            "English expected for text in English language");
+
+    // no-lang > no-lang
+    var noLanguageEither = element('div',{title:'No Language either'},'Text');
+    noLanguageEither.appendChild(noLanguageElement);
+    assert.equals( ut(noLanguageElement), '',
+                   "Unknown expected for element in no language (inherited)");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), '',
+                 "Unknown expected for attribute in no language (inherited)");
+    assert.equals( ut(noLanguageElement.firstChild), '',
+                      "Unknown expected for text in no language (inherited)");
+
+    // lang='' > no-lang > no-lang
+    emptyLangElement.appendChild(noLanguageEither);
+    assert.equals( ut(noLanguageElement), '',
+             "Unknown expected for element in unknown language (inherited)");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), '',
+           "Unknown expected for attribute in unknown language (inherited)");
+    assert.equals( ut(noLanguageElement.firstChild), '',
+                "Unknown expected for text in unknown language (inherited)");
+
+    // lang='fr' > lang='' > no-lang > no-lang
+    frenchElement.appendChild(emptyLangElement);
+    assert.equals( ut(noLanguageElement), '',
+    "Unknown expected for element in unknown language (French not inherited)");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), '',
+  "Unknown expected for attribute in unknown language (French not inherited)");
+    assert.equals( ut(noLanguageElement.firstChild), '',
+       "Unknown expected for text in unknown language (French not inherited)");
+
+    // lang='fr' > no-lang > no-lang
+    frenchElement.appendChild(noLanguageEither);
+    assert.equals( ut(noLanguageElement), 'fr',
+        "French expected for element in unknown language (French inherited)");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), 'fr',
+      "French expected for attribute in unknown language (French inherited)");
+    assert.equals( ut(noLanguageElement.firstChild), 'fr',
+           "French expected for text in unknown language (French inherited)");
+
+    // lang='en' > lang='fr' > no-lang > no-lang
+    englishElement.appendChild(frenchElement);
+    assert.equals( ut(noLanguageElement), 'fr',
+    "French expected for element in unknown language (English not inherited)");
+    assert.equals( ut(noLanguageElement.getAttributeNode('title')), 'fr',
+  "French expected for attribute in unknown language (English not inherited)");
+    assert.equals( ut(noLanguageElement.firstChild), 'fr',
+       "French expected for text in unknown language (English not inherited)");
+
+    assert.equals( ut(frenchElement), 'fr',
+    "French expected for element in French language (English not inherited)");
+    assert.equals( ut(frenchElement.getAttributeNode('title')), 'fr',
+  "French expected for attribute in French language (English not inherited)");
+    assert.equals( ut(frenchElement.firstChild), 'fr',
+       "French expected for text in French language (English not inherited)");
   }
 
   function testSetLanguage(){
@@ -346,8 +455,8 @@
   var tests = {
     testNamespace: testNamespace,
     testGetBrowserLanguage: testGetBrowserLanguage,
-    //testGetLanguage: testGetLanguage,
-    //testSetLanguage: testSetLanguage,
+    testGetLanguage: testGetLanguage,
+    testSetLanguage: testSetLanguage,
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
