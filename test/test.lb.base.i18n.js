@@ -185,6 +185,17 @@
     ut('ja-JP',div);
     assert.equals( div.lang, 'ja-JP',
                               "'ja-JP' expected to be set to div language");
+
+    try {
+      ut('en',div.getAttribute('lang'));
+      ut(null);
+      ut({},div);
+      ut('en',undefined);
+    } catch(e){
+      assert.fail("No error expected for arguments to ignore: "+e);
+    }
+    assert.equals( div.lang, 'ja-JP',
+      "Non-string language code and non-element node expected to be ignored");
   }
 
   function testGetLanguageCodes(){
