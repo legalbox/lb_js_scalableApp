@@ -188,9 +188,8 @@
 
     try {
       ut('en',div.getAttribute('lang'));
-      ut(null);
+      ut(null,div);
       ut({},div);
-      ut('en',undefined);
     } catch(e){
       assert.fail("No error expected for arguments to ignore: "+e);
     }
