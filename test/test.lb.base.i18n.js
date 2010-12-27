@@ -175,6 +175,15 @@
     ut('other');
     assert.equals( document.documentElement.lang, 'other',
                           "'other' expected to be set to document language");
+
+    var div = element('div');
+    ut('fr-FR',div);
+    assert.equals( div.lang, 'fr-FR',
+                              "'fr-FR' expected to be set to div language");
+
+    ut('ja-JP',div);
+    assert.equals( div.lang, 'ja-JP',
+                              "'ja-JP' expected to be set to div language");
   }
 
   function testGetLanguageCodes(){
