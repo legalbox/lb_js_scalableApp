@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2010-12-27
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -33,6 +33,15 @@
                                         "lb.base.dom namespace was not found");
   }
 
+  function testConstants(){
+
+    assert.equals( lb.base.dom.ELEMENT_NODE, 1,
+                                            "ELEMENT_NODE constant expected");
+    assert.equals( lb.base.dom.ATTRIBUTE_NODE, 2,
+                                          "ATTRIBUTE_NODE constant expected");
+    assert.equals( lb.base.dom.TEXT_NODE, 3,   "TEXT_NODE constant expected");
+  }
+
   function test$(){
     var ut = lb.base.dom.$;
 
@@ -44,6 +53,7 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testConstants: testConstants,
     test$: test$
   };
 
