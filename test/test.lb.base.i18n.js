@@ -62,6 +62,7 @@
 
     assert.equals( ut(), '', "document language expected unknown initially");
     assert.equals( ut(null), '',        "Unknown expected for missing node");
+    assert.equals( ut(document), '',   "unknown expected for document node");
 
     var testLanguageCode = 'te-ST';
     document.documentElement.lang = testLanguageCode;
