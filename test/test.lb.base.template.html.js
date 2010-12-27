@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-23
+ * Version:   2010-12-24
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -42,9 +42,43 @@
   function testFilterByLanguage(){
     var ut = lb.base.template.html.filterByLanguage;
 
-    var filters = [];
+    assert.equals( ut(), null, "no function expected for undefined language");
+    assert.equals( ut(null), null,
+                                    "no function expected for null language");
+    assert.equals( ut({}), null,
+                   "no function expected for language which is not a string");
+
+    var filter = ut('fr-FR');
+    assert.equals( typeof filter, 'function',     "function filter expected");
+
+    var noLanguageElement = element('div');
+    var emptyLangElement = element('div',{lang:''});
+    var frenchElement = element('div',{lang:'fr'});
+    var frenchFranceElement = element('div',{lang:'fr-FR'});
+    var englishElement = element('div',{lang:'en'});
+    var englishUKElement = element('div',{lang:'en-GB'});
+
+    var context = {};
+    filter(noLanguageElement,context);
+    assert.objectEquals(context,{lbLang:''},
+                              "empty language code expected (no language)");
+
+    filter(emptyLangElement,context);
+    assert.objectEquals(context,{lbLang:''},
+                              "empty language code expected (no language)");
+
+    filter(noLanguageElement,context);
+    assert.objectEquals(context,{lbLang:''},
+                      "empty language code expected (back to no language)");
+
+
     var attValue = 'Test Attribute Value';
-    var textValue = 'Text Text Value';
+    var textValue = 'Test Text Value';
+
+    var node = element('div');
+    var context = {};
+    ut(node,{},context);
+    assert.objectEquals(context,{}, "context missing");
 
     assert.fail("Missing tests: lbLowerCaseFilterLanguageCode must be added to context");
     assert.fail("Missing tests: lbLowerCaseLanguageCode must be added to context if missing");
@@ -52,7 +86,6 @@
 
     var frenchNode = element('div',{id:attValue,lang:'fr'},textValue);
     ut(
-      filters,
       frenchNode.getAttributeNode('id'),
       {},
       {lbFilterByLanguage:'en-GB'}
@@ -61,7 +94,6 @@
                                "attibute node expected to be left unchanged");
 
     ut(
-      filters,
       frenchNode.firstChild,
       {},
       {lbFilterByLanguage:'en-GB'}
@@ -71,7 +103,6 @@
 
     var parent = element('div',{},frenchNode);
     ut(
-      filters,
       frenchNode,
       {},
       {lbFilterByLanguage:'fr-FR'}
@@ -80,7 +111,6 @@
              "element with language matching filter must be left in parent");
 
     ut(
-      filters,
       frenchNode,
       {},
       {lbFilterByLanguage:'en-GB'}
@@ -97,10 +127,8 @@
   function testReplaceParams(){
     var ut = lb.base.template.html.replaceParams;
 
-    var filters = [];
-
     var htmlNode = element('div',{id:'theOne',title:'#param1#'},'#param2#');
-    ut(filters,htmlNode,{param1:'value1',param2:'value2'});
+    ut(htmlNode,{param1:'value1',param2:'value2'});
     assert.arrayEquals([
       htmlNode.nodeName,
       htmlNode.getAttribute('id'),
@@ -115,7 +143,6 @@
     ],                  "no replacement expected at the element node level");
 
     ut(
-      filters,
       htmlNode.getAttributeNode('id'),
       {param1:'value1',param2:'value2'}
     );
@@ -133,7 +160,6 @@
     ],                    "parameter in attribute expected to be replaced");
 
     ut(
-      filters,
       htmlNode.firstChild,
       {param1:'value1',param2:'value2'}
     );
