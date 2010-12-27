@@ -70,7 +70,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-22
+ * 2010-12-27
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -207,6 +207,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   * true if the element is a descendant of or the root of the box itself
     //   * false otherwise
+
+    // Note:
+    // if optimization or reuse is needed, isInBox() could rely on a new method
+    // to add to base DOM API: contains(ancestorElement,descendantElement)
+    // (available as goog.dom.contains(parent,descendant) in Closure library)
 
     var ancestor = element;
     while (ancestor) {
