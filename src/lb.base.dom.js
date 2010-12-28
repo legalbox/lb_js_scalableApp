@@ -47,6 +47,46 @@ lb.base.dom = lb.base.dom || (function() {
     return dom.$(id);
   }
 
+  function hasAttribute(element, attributeName){
+    // Function: hasAttribute(element, attributeName): boolean
+    // Check whether an attribute with given name has been specified on
+    // given element.
+    //
+    // The native hasAttribute() function is used when available. When missing,
+    // it is emulated by checking DOM level 2 property 'specified' of the
+    // attribute node.
+    //
+    // Parameters:
+    //   element - DOM Element, the element to check for given attribute
+    //   attributeName - string, an attribute name
+    //
+    // Returns:
+    //   * true if the attribute has been defined on the element,
+    //   * false otherwise
+    //
+    // Note:
+    // When the behavior is emulated, in IE, the attribute may not have been
+    // defined in the original document or through JavaScript, but may be an
+    // optional attribute set to its default value.
+    //
+    // Source:
+    // Adapted from bezen.dom.hasAttribute() in bezen.org JavaScript library,
+    // CC-BY: Eric Bréchemier - http://bezen.org/javascript/
+    if (!element || !element.getAttributeNode){
+      return false;
+    }
+
+    if (element.hasAttribute) {
+      return element.hasAttribute(attributeName);
+    }
+
+    var attributeNode = element.getAttributeNode(attributeName);
+    if (attributeNode === null) {
+      return false;
+    }
+    return attributeNode.specified;
+  }
+
   return {
     // public constants
 
@@ -61,6 +101,7 @@ lb.base.dom = lb.base.dom || (function() {
     TEXT_NODE: 3,
 
     // public API
-    $:$
+    $:$,
+    hasAttribute: hasAttribute
   };
 }());

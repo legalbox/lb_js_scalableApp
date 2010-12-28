@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-27
+ * Version:   2010-12-28
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -38,7 +38,7 @@
     assert.equals( lb.base.dom.ELEMENT_NODE, 1,
                                             "ELEMENT_NODE constant expected");
     assert.equals( lb.base.dom.ATTRIBUTE_NODE, 2,
-                                          "ATTRIBUTE_NODE constant expected");
+        "ATTRIBUTE_NODE constant expected");
     assert.equals( lb.base.dom.TEXT_NODE, 3,   "TEXT_NODE constant expected");
   }
 
@@ -46,15 +46,40 @@
     var ut = lb.base.dom.$;
 
     assert.equals( ut('testId'), document.getElementById('testId'),
-                        "$ must return same node as document.getElementById");
+        "$ must return same node as document.getElementById");
 
     assert.equals( ut('missing'), null,  "$ must return null for missing id");
+  }
+
+  function testHasAttribute(){
+    var ut = lb.base.dom.hasAttribute;
+
+    try {
+      ut(null);
+      ut({});
+      ut( document.createTextNode('Text') );
+    } catch(e) {
+      assert.fail("No error expected on null or non-element node: "+e);
+    }
+
+    // Unit tests extracted from bezen.org JavaScript library
+    // CC-BY: Eric Bréchemier - http://bezen.org/javascript/
+    var element = $('testHasAttribute');
+    assert.isFalse( ut(element,'dir'),       "no dir attribute expected");
+    assert.isFalse( ut(element,'class'),     "no class attribute expected");
+    assert.isFalse( ut(element,'style'),     "no style attribute expected");
+
+    assert.isTrue( ut(element,'id'),         "id attribute expected");
+    assert.isTrue( ut(element, 'title'),     "title attribute expected");
+    assert.isTrue( ut(element, 'lang'),      "lang attribute expected");
+    assert.isTrue( ut(element, 'xml:lang'),  "xml:lang attribute expected");
   }
 
   var tests = {
     testNamespace: testNamespace,
     testConstants: testConstants,
-    test$: test$
+    test$: test$,
+    testHasAttribute: testHasAttribute
   };
 
   testrunner.define(tests, "lb.base.dom");
