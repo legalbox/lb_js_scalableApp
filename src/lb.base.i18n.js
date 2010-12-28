@@ -136,6 +136,7 @@ lb.base.i18n = lb.base.i18n || (function() {
       if ( hasAttribute(ancestorOrSelf,'lang') ){
         return ancestorOrSelf.lang;
       }
+      ancestorOrSelf = ancestorOrSelf.parentNode;
     }
     return '';
   }
