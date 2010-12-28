@@ -53,7 +53,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-27
+ * 2010-12-28
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -63,10 +63,12 @@ lb.base.i18n = lb.base.i18n || (function() {
   // Builder of
   // Closure for lb.base.i18n module
 
-  // Private constants
+  // Define aliases
 
-      // document.ELEMENT_NODE is not available in IE
-  var ELEMENT_NODE = 1,
+      /*requires lb.base.dom.js */
+  var dom = lb.base.dom,
+      hasAttribute = dom.hasAttribute,
+      ELEMENT_NODE = dom.ELEMENT_NODE,
 
   // private fields
 
