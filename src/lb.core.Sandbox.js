@@ -2,11 +2,12 @@
  * Namespace: lb.core.Sandbox
  * Sandbox for Modules of Legal Box Scalable JavaScript Application
  *
- * A new instance of Sandbox gets attributed to each User Interface Module
- * and Data Model Module. It acts both as a proxy and a facade to the
- * application core.
+ * A new instance of Sandbox gets attributed to each instance of Module. It
+ * acts both as a proxy and a facade to the application core, restricting
+ * modifications to the box assigned to the module, an HTML element which
+ * encloses the module.
  *
- * The methods related to the module itself, are defined on the Sandbox.
+ * The methods related to the module itself are defined on the Sandbox.
  * Other methods are separated into groups of similar purpose.
  *
  * Module (sandbox):
