@@ -72,6 +72,13 @@ lb.base.dom = lb.base.dom || (function() {
     // Source:
     // Adapted from bezen.dom.hasAttribute() in bezen.org JavaScript library,
     // CC-BY: Eric Bréchemier - http://bezen.org/javascript/
+    //
+    // References:
+    //   hasAttribute - introduced in DOM Level 2
+    //   http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-ElHasAttr
+    //
+    //   specified - Interface Attr
+    //   http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-637646024
     if (!element || !element.getAttributeNode){
       return false;
     }
