@@ -718,12 +718,11 @@
   }
 
   function testGet(){
-    var ut = new lb.core.Sandbox('testGet').i18n.get;
+    var sandbox = new lb.core.Sandbox('testGet');
+    var ut = sandbox.i18n.get;
 
     var testLanguageCode = 'te-ST';
-    lb.base.config.setOptions({
-      lbLanguage: testLanguageCode
-    });
+    sandbox.i18n.selectLanguage(testLanguageCode);
     assert.equals( ut(), null,             "null expected for missing key");
 
     var testSandbox = new lb.core.Sandbox('testGet.testSandbox');
@@ -748,9 +747,7 @@
     assert.equals( ut('b.c'), cValue,   "c value expected (default language)");
     assert.equals( ut('b.c.d'), dValue, "d value expected (default language)");
 
-    lb.base.config.setOptions({
-      lbLanguage: 'OTHER-LANGUAGE-CODE'
-    });
+    sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
     assert.equals( ut('a',testLanguageCode), aValue,
                                       "a value expected (explicit language)");
     assert.equals( ut('b',testLanguageCode), bValue,
@@ -771,16 +768,15 @@
   }
 
   function testGetString(){
-    var ut = new lb.core.Sandbox('testGetString').i18n.getString;
+    var sandbox = new lb.core.Sandbox('testGetString');
+    var ut = sandbox.i18n.getString;
 
-    lb.base.config.reset();
+    document.documentElement.removeAttribute('lang');
     assert.equals( ut(), null,              "null expected for missing key");
     assert.equals( ut('missing'), null,   "null expected for key 'missing'");
 
     var testLanguageCode = 'te-ST';
-    lb.base.config.setOptions({
-      lbLanguage: testLanguageCode
-    });
+    sandbox.i18n.selectLanguage(testLanguageCode);
 
     var testSandbox = new lb.core.Sandbox('testGetString.testSandbox');
     var noParamValue = 'No Param Value',
@@ -809,9 +805,7 @@
                    'Complex value, #missing#',
                  "one of two params expected in complex value (no language)");
 
-    lb.base.config.setOptions({
-      lbLanguage: 'OTHER-LANGUAGE-CODE'
-    });
+    sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
 
     assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
                     "value without param expected AS IS (explicit language)");
@@ -833,9 +827,10 @@
   }
 
   function testFilterHtml(){
-    var ut = new lb.core.Sandbox('testFilterHtml').i18n.filterHtml;
+    var sandbox = new lb.core.Sandbox('testFilterHtml');
+    var ut = sandbox.i18n.filterHtml;
 
-    lb.base.config.reset();
+    document.documentElement.removeAttribute('lang');
     try {
       ut();
       ut(null);
@@ -844,9 +839,7 @@
     }
 
     var testLanguageCode = 'te-ST';
-    lb.base.config.setOptions({
-      lbLanguage: testLanguageCode
-    });
+    sandbox.i18n.selectLanguage(testLanguageCode);
 
     var noParamValue = 'No param replacement',
         noParamNode = element('div',{},noParamValue),
@@ -877,9 +870,7 @@
              "complex <span id='attribute value'>text value</span> #missing#",
                  "two replacements expected in complex value (no language)");
 
-    lb.base.config.setOptions({
-      lbLanguage: 'OTHER-LANGUAGE-CODE'
-    });
+    sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
 
     noParamNode = element('div',{},noParamValue),
     simpleNode = element('div',{},simpleNodeValue),
