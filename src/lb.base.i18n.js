@@ -128,6 +128,7 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Returns:
     //   string, the value of the first 'lang' attribute found on the node or
     //   its closest ancestor element, or the empty string '' by default.
+    htmlNode = htmlNode || document.documentElement;
 
     var ancestorOrSelf = htmlNode;
     while(ancestorOrSelf){
