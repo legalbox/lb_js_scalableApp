@@ -113,6 +113,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       config = lb.base.config,
       /*requires lb.base.i18n.js */
       i18n = lb.base.i18n,
+      /*requires lb.base.i18n.data.js */
+      i18nData = i18n.data,
+      getProperty = i18nData.getProperty,
       /*requires lb.base.template.string.js */
       replaceParamsInString = lb.base.template.string.replaceParams,
       /*requires lb.core.events.publisher.js */
@@ -524,7 +527,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   array of strings, the list of language codes which have associated
   //   language properties, sorted from least specific to most specific.
 
-  // Note: getLanguageList is an alias for lb.base.i18n.getLanguageCodes
+  // Note: getLanguageList is an alias for lb.base.i18n.data.getLanguageCodes
 
   // Function: i18n.getSelectedLanguage(): string
   // Get the language currently selected for the application.
@@ -579,7 +582,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   RFC5646 - Tags for Identifying Languages
   //   http://tools.ietf.org/html/rfc5646
 
-  // Note: This is an alias for lb.base.i8n.addLanguageProperties
+  // Note: This is an alias for lb.base.i8n.data.addLanguageProperties
 
   // Function: i18n.get(key[,languageCode]): any
   // Get the value of the property identified by given key.
@@ -602,7 +605,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     if ( typeof languageCode !== 'string' ){
       languageCode = getSelectedLanguage();
     }
-    return i18n.getProperty(languageCode,key);
+    return getProperty(languageCode,key);
   }
 
   // Function: i18n.getString(key[,data[,languageCode]]): string
@@ -653,7 +656,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       languageCode = getSelectedLanguage();
     }
 
-    var value = i18n.getProperty(languageCode,key);
+    var value = getProperty(languageCode,key);
     if (value===null){
       return value;
     }
@@ -905,10 +908,10 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     publish: publisher.publish
   };
   this.i18n = {
-    getLanguageList: i18n.getLanguageCodes,
+    getLanguageList: i18nData.getLanguageCodes,
     getSelectedLanguage: getSelectedLanguage,
     selectLanguage: selectLanguage,
-    addLanguageProperties: i18n.addLanguageProperties,
+    addLanguageProperties: i18nData.addLanguageProperties,
     get: get,
     getString: getString
   };
