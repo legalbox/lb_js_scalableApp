@@ -70,7 +70,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-27
+ * 2010-12-28
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -527,20 +527,20 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Get the language currently selected for the application.
   //
   // Returns:
-  //   string, the value of the 'lbLanguage' configuration property,
-  //   or when it is missing, the value of the browser language found in
-  //   navigator.language or navigator.browserLanguage.
+  //   string, the value of the 'lang' attribute of the root HTML element,
+  //   or when it is missing or the empty string '', the value of the browser
+  //   language found in navigator.language or navigator.browserLanguage.
   function getSelectedLanguage(){
-    return config.getOption('lbLanguage', i18n.getBrowserLanguage() );
+
+    return i18n.getLanguage() || i18n.getBrowserLanguage();
   }
 
   // Function: i18n.selectLanguage(languageCode)
   // Select the language of the application, shared by all modules.
   //
-  // The language code of selected language is stored in the property
-  // 'lbLanguage' of the configuration options of the core application. It is
-  // used as a default when the language code is omitted in calls to i18n
-  // methods where language code is optional:
+  // The language code of selected language is stored in the 'lang' attribute
+  // of the root HTML element. It is used as a default when the language code
+  // is omitted in calls to i18n methods where language code is optional:
   // i18n.get(), i18n.getString(), i18n.filterHtml().
   //
   // Parameter:
@@ -550,9 +550,10 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   RFC5646 - Tags for Identifying Languages
   //   http://tools.ietf.org/html/rfc5646
   function selectLanguage(languageCode){
-    config.setOptions({
-      lbLanguage: languageCode
-    });
+    // I use and explicit call instead of aliasing to restrict the call to
+    // the single argument version. If setting the language of a DOM element is
+    // allowed, it should be checked that it is part of the box beforehand.
+    i18n.setLanguage(languageCode);
   }
 
   // Function: i18n.addLanguageProperties(languageCode,languageProperties)
