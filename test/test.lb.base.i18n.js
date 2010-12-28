@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-27
+ * Version:   2010-12-28
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -77,7 +77,8 @@
     assert.equals( ut(noLanguageElement.firstChild), '',
                               "Unknown expected for text in no language");
 
-    var emptyLangElement = element('div',{lang:'',title:'Unknown Language'});
+    var emptyLangElement =
+      element('div',{lang:'',title:'Unknown Language'},'Text');
     assert.equals( ut(emptyLangElement), '',
                          "Unknown expected for element in unknown language");
     assert.equals( ut(emptyLangElement.getAttributeNode('title')), '',
