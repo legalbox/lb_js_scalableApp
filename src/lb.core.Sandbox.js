@@ -112,6 +112,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       config = lb.base.config,
       /*requires lb.base.i18n.js */
       i18n = lb.base.i18n,
+      /*requires lb.base.template.string.js */
+      replaceParamsInString = lb.base.template.string.replaceParams,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -644,7 +646,18 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //     language available, with parameters replaced with the value of
   //     corresponding properties found in data object
   //   * or null if the property is not found
+  function getString(key,data,languageCode){
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = getSelectedLanguage();
+    }
 
+    var value = i18n.getProperty(languageCode,key);
+    if (value===null){
+      return value;
+    }
+    return replaceParamsInString(value,data);
+  }
 
   // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
   // Replace parameters and trim nodes based on html 'lang' attribute.
@@ -895,7 +908,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     getSelectedLanguage: getSelectedLanguage,
     selectLanguage: selectLanguage,
     addLanguageProperties: i18n.addLanguageProperties,
-    get: get
+    get: get,
+    getString: getString
   };
   this.server = {
     send: send
