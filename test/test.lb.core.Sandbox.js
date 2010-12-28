@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-22
+ * Version:   2010-12-28
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -655,26 +655,25 @@
     var sandbox = new lb.core.Sandbox('testGetSelectedLanguage');
     var ut = sandbox.i18n.getSelectedLanguage;
 
-    lb.base.config.reset();
+    document.documentElement.removeAttribute('lang');
     assert.equals( ut(), navigator.language || navigator.browserLanguage,
                   "selected language expected to default to browser language");
 
     var testLanguageCode = 'TESTlanguageCODE';
-    lb.base.config.setOptions({
-      'lbLanguage': testLanguageCode
-    });
+    document.documentElement.lang = testLanguageCode;
     assert.equals( ut(), testLanguageCode,
-            "the selected language code is the value of 'lbLanguage' option");
+     "value of 'lang' attribute of root HTML element expected to be returned");
   }
 
   function testSelectLanguage(){
     var ut = new lb.core.Sandbox('testSelectLanguage').i18n.selectLanguage;
 
-    lb.base.config.reset();
+    document.documentElement.removeAttribute('lang');
     var testLanguageCode = 'TestLANGUAGEcode';
     ut(testLanguageCode);
-    assert.equals( lb.base.config.getOption('lbLanguage'), testLanguageCode,
-               "selected language expected to be set to 'lbLanguage' option");
+    assert.equals( document.documentElement.lang, testLanguageCode,
+                  "selected language expected to be set to 'lang' attribute "+
+                                                      "of root HTML element");
   }
 
   function testAddLanguageProperties(){
@@ -689,9 +688,7 @@
        "null, undefined and non-string language code expected to be ignored");
 
     var firstLanguageCode = 'TEST-language-CODE-01';
-    lb.base.config.setOptions({
-      lbLanguage: firstLanguageCode
-    });
+    sandbox.i18n.selectLanguage(firstLanguageCode);
     var aValue = function(){},
         cValue = 'C Value';
     ut(firstLanguageCode,{
@@ -708,9 +705,7 @@
                                           "'b.c' expected in first language");
 
     var secondLanguageCode = '';
-    lb.base.config.setOptions({
-      lbLanguage: secondLanguageCode
-    });
+    sandbox.i18n.selectLanguage(secondLanguageCode);
     var dValue = {};
     ut(secondLanguageCode,{
       d: dValue
