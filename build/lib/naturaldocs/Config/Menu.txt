@@ -37,7 +37,13 @@ Timestamp: yyyy-dd-mm
 # 
 # --------------------------------------------------------------------------
 
+Group: Sandbox API {
+  Text: sandboxed API, for use in your modules
+  File: lb.core.Sandbox  (no auto-title, lb.core.Sandbox.js)
+}
+
 Group: Core API {
+  Text: public API, for use in your applications to create and manage modules
   File: lb.core.application  (no auto-title, lb.core.application.js)
   File: lb.core.dom  (no auto-title, lb.core.dom.js)
   File: lb.core.dom.factory  (no auto-title, no auto-title, lb.core.dom.factory.js)
@@ -45,10 +51,10 @@ Group: Core API {
   File: lb.core.events.publisher  (no auto-title, lb.core.events.publisher.js)
   File: lb.core.events.Subscriber (no auto-title, lb.core.events.Subscriber.js)
   File: lb.core.Module  (no auto-title, lb.core.Module.js)
-  File: lb.core.Sandbox  (no auto-title, lb.core.Sandbox.js)
 }
 
 Group: Base API {
+  Text: private API, an adaptation layer on top of the cross-browser library, for use in the core
   File: lb.base.ajax  (no auto-title, lb.base.ajax.js)
   File: lb.base.array  (no auto-title, lb.base.array.js)
   File: lb.base.config (no auto-title, lb.base.config.js)
@@ -69,6 +75,7 @@ Group: Base API {
 }
 
 Group: Namespaces {
+  Text: empty modules defining a namespace
   File: lb  (no auto-title, lb.js)
   File: lb.base  (no auto-title, lb.base.js)
   File: lb.core  (no auto-title, lb.core.js)
@@ -77,9 +84,8 @@ Group: Namespaces {
 }
 
 Group: Index  {
-
-   Index: All
-   Class Index: Modules
-   Function Index: Methods
-   }  # Group: Index
+  Index: All
+  Class Index: Modules
+  Function Index: Methods
+}
 
