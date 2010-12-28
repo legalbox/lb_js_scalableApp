@@ -5,12 +5,8 @@
  * This module provides the basis for the adaptation of a web application to
  * different languages in an international context.
  *
- * The issue is addressed in a generic way in this module, which relies on
- * language codes associated with a set of language properties defined by the
- * application:
- * - string properties,
- * - functions for localized behavior, formatting and sorting,
- * - object properties, to group properties within. The groups may be nested.
+ * This module collects utility methods related to the language of the browser,
+ * the language of DOM elements, and comparison of language codes.
  *
  * A language code is a string which identifies the language, region and other
  * variations of the language as defined in RFC5646 "Tags for Identifying
@@ -22,25 +18,8 @@
  * - 'fr-FR' for French/France,
  * - 'fr-CA' for French/Canada.
  *
- * The lookup of language properties is done from the most specific language
- * to the least specific language, with longer language codes considered more
- * specific than shorter language codes. Only language codes which are
- * substrings of the language selected for the lookup are considered.
- * For example, if the selected language is 'en-GB', 'en-GB' and 'en' are
- * considered in this order, while 'en-US', 'fr-FR', 'fr-CA' and 'fr' are left
- * out. Language codes are compared in a case-insensitive way.
- *
- * The empty string '' is the least specific language code possible, which will
- * always be considered last in the lookup process. Common default properties
- * can be associated with the empty language code '', they will be shared by
- * all languages.
- *
- * Any custom property may be defined in language properties for the needs of
- * your application, and associated with a language code by calling
- * addLanguageProperties(). Calling reset() removes all language properties.
- *
- * The list of language codes associated with language properties is returned
- * by getLanguageCodes(). It is initially empty.
+ * The definition and lookup of language properties associated with language
+ * codes is managed in <lb.base.i18n.data>.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
