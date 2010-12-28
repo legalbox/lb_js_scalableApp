@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-08-11
+ * 2010-12-28
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -47,7 +47,20 @@ lb.base.dom = lb.base.dom || (function() {
     return dom.$(id);
   }
 
-  return { // public API
+  return {
+    // public constants
+
+    // constant: ELEMENT_NODE
+    // The nodeType value of element nodes: 1.
+    ELEMENT_NODE: 1,
+    // constant: ATTRIBUTE_NODE
+    // The nodeType value of attribute nodes: 2.
+    ATTRIBUTE_NODE: 2,
+    // constant: TEXT_NODE
+    // The nodeType value of text nodes: 3.
+    TEXT_NODE: 3,
+
+    // public API
     $:$
   };
 }());
