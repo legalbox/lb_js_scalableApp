@@ -105,9 +105,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     return navigator.language || navigator.browserLanguage;
   }
 
-  function getLanguage(htmlNode){
-    // Function: getLanguage([htmlNode]): string
-    // Get the language of given HTML node.
+  function getLanguage(htmlElement){
+    // Function: getLanguage([htmlElement]): string
+    // Get the language of given HTML element.
     //
     // The language is computed by looking at the value of the 'lang' attribute
     // of the node itself, then looking for a value inherited from the closest
@@ -122,21 +122,25 @@ lb.base.i18n = lb.base.i18n || (function() {
     // document element.
     //
     // Parameter:
-    //   htmlNode - DOM Node, optional, defaults to the root HTML element,
-    //              any DOM node.
+    //   htmlElement - DOM Node, optional, defaults to the root HTML element,
+    //                 a DOM element.
     //
     // Returns:
     //   string, the value of the first 'lang' attribute found on the node or
     //   its closest ancestor element, or the empty string '' by default.
-    htmlNode = htmlNode || document.documentElement;
+    htmlElement = htmlElement || document.documentElement;
 
-    var ancestorOrSelf = htmlNode;
+    var ancestorOrSelf = htmlElement;
     while(ancestorOrSelf){
       // IE returns '' by default even when no lang attribute was set.
-      // hasAttribute() checks whether the attribute was set explicitly.
+      // hasAttribute() checks whether the attribute 'lang' was set explicitly.
       if ( hasAttribute(ancestorOrSelf,'lang') ){
         return ancestorOrSelf.lang;
       }
+
+      // Note: this implementation cannot offer getLanguage() cross-browser
+      // on any kind of node due to the lack of ownerElement property in IE:
+      // there is no link back from attribute nodes to their parent element.
       ancestorOrSelf = ancestorOrSelf.parentNode;
     }
     return '';
