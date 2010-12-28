@@ -314,9 +314,9 @@
     var ut = lb.base.i18n.data.reset;
     setUp();
 
-    lb.base.i18n.addLanguageProperties('',{});
-    lb.base.i18n.addLanguageProperties('fr',{});
-    lb.base.i18n.addLanguageProperties('en',{});
+    lb.base.i18n.data.addLanguageProperties('',{});
+    lb.base.i18n.data.addLanguageProperties('fr',{});
+    lb.base.i18n.data.addLanguageProperties('en',{});
 
     ut();
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(), [],
