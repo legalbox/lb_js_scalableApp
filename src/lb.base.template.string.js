@@ -3,7 +3,8 @@
  * Base String Template Module
  *
  * This module provides the basis for String templates using a set of functions
- * as filters to modify the input. See applyFilters() for details.
+ * as filters to modify the input.
+ * See <lb.base.template.applyFilters(input...,filters):any> for details.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -16,7 +17,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-23
+ * 2010-12-28
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
