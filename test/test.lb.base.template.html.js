@@ -61,25 +61,25 @@
 
     try {
       assert.equals(
-        ut( document.createElement('div'), [catchFilter] ),
+        ut( document.createElement('div'), [ut,catchFilter] ),
         undefined,
                                   "no processing expected on single element");
       assert.equals(
-        ut( document.createAttribute('title'), [catchFilter] ),
+        ut( document.createAttribute('title'), [ut,catchFilter] ),
         undefined,
                                 "no processing expected on single attribute");
       assert.equals(
-        ut( document.createTextNode('Text'), [catchFilter] ),
+        ut( document.createTextNode('Text'), [ut,catchFilter] ),
         undefined,
                                 "no processing expected on single text node");
 
       assert.equals(
-        ut( document.createComment('Text'), [catchFilter] ),
+        ut( document.createComment('Text'), [ut,catchFilter] ),
         undefined,
                              "no processing expected on single comment node");
 
       assert.equals(
-        ut( document.createDocumentFragment(), [catchFilter] ),
+        ut( document.createDocumentFragment(), [ut,catchFilter] ),
         undefined,
                    "no processing expected on single document fragment node");
 
@@ -99,7 +99,7 @@
       capturedNames[attribute.name] = true;
     }
 
-    var filters = [catchFilter,catchAttributes];
+    var filters = [ut,catchFilter,catchAttributes];
     var elementWithAttributesOnly = element('div',
       {id:'id value',title:'title value',lang:'lang value'}
     );
@@ -122,19 +122,20 @@
     assert.objectEquals(capturedNames,{id:true,title:true,lang:true},
                     "attributes id, title and lang expected to be processed");
 
-    var capturedTitles = [];
-    function captureTitles(element){
-      capturedTitles.push(element.title);
+    var capturedNames = [];
+    function captureNames(node){
+      capturedNames.push(node.nodeName);
     }
 
     var deepElement =
-      element('div',{title:'1'},
-        element('div',{title:'1.1'},
-          element('div',{title:'1.1.1'})
+      element('h1',{},
+        element('h2',{},
+          element('h3',{})
         )
       );
+
     captured = [];
-    filters = [catchFilter,captureTitles];
+    filters = [ut,catchFilter,captureNames];
     ut(deepElement,one,two,three,filters);
     assert.equals( captured.length, 2,
                                  "2 elements deep expected to be processed");
@@ -150,17 +151,17 @@
           one, two, three, filters
         ],   "params and filters expected in each call (elements deep only)");
     }
-    assert.arrayEquals(capturedTitles, ['1.1','1.1.1'],
-                         "titles of two nodes deep expected to be processed");
+    assert.arrayEquals(capturedNames, ['H2','H3'],
+                          "names of two nodes deep expected to be processed");
 
     var wideElement =
-      element('div',{title:'1'},
-        element('div',{title:'1.a'}),
-        element('div',{title:'1.b'}),
-        element('div',{title:'1.c'})
+      element('div',{},
+        element('h1'),
+        element('h2'),
+        element('h3')
       );
     captured = [];
-    capturedTitles = [];
+    capturedNames = [];
     ut(wideElement,one,two,three,filters);
     assert.equals( captured.length, 3,
                                  "3 elements wide expected to be processed");
@@ -176,29 +177,29 @@
           one, two, three, filters
         ],   "params and filters expected in each call (elements wide only)");
     }
-    assert.arrayEquals(capturedTitles, ['1.a','1.b','1.c'],
-                      "titles of three nodes wide expected to be processed");
+    assert.arrayEquals(capturedNames, ['H1','H2','H3'],
+                       "names of three nodes wide expected to be processed");
 
     var wideAndDeepElement =
-      element('div',{title:'1'},
-        element('div',{title:'1.a'},
-          element('div',{title:'1.a.1'}),
-          element('div',{title:'1.a.2'}),
-          element('div',{title:'1.a.3'})
+      element('div',{},
+        element('h1',{},
+          element('a'),
+          element('b'),
+          element('cite')
         ),
-        element('div',{id:'1.b'},
-          element('div',{title:'1.b.1'}),
-          element('div',{title:'1.b.2'}),
-          element('div',{title:'1.b.3'})
+        element('h2',{},
+          element('dd'),
+          element('em'),
+          element('form')
         ),
-        element('div',{id:'1.c'},
-          element('div',{title:'1.c.1'}),
-          element('div',{title:'1.c.2'}),
-          element('div',{title:'1.c.3'})
+        element('h3',{},
+          element('h4'),
+          element('h5'),
+          element('h6')
         )
       );
     captured = [];
-    capturedTitles = [];
+    capturedNames = [];
     ut(wideAndDeepElement,one,two,three,filters);
     assert.equals( captured.length, 12,
                         "12 elements expected to be processed wide and deep");
@@ -215,13 +216,13 @@
         ],
          "params and filters expected in each call (elements wide and deep)");
     }
-    assert.arrayEquals(capturedTitles,
-      ['1.a',
-         '1.a.1','1.a.2','1.a.3',
-       '1.b',
-         '1.b.1','1.b.2','1.b.3',
-       '1.c',
-         '1.c.1','1.c.2','1.c.3'
+    assert.arrayEquals(capturedNames,
+      ['H1',
+         'A','B','CITE',
+       'H2',
+         'DD','EM','FORM',
+       'H3',
+         'H4','H5','H6'
       ],
                  "titles of 12 nodes expected to be processed wide and deep");
 
@@ -229,7 +230,7 @@
     function captureNodeTypes(node){
       capturedNodeTypes.push(node.nodeType);
     }
-    filters = [catchFilter,captureNodeTypes];
+    filters = [ut,catchFilter,captureNodeTypes];
 
     var mixedElement =
       element('div',{id:'id',title:'title',lang:'lang'},
