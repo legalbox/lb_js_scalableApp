@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-28
+ * Version:   2010-12-29
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -47,6 +47,19 @@
     setUp();
 
     assert.arrayEquals( ut(), [],     "no language codes expected initially");
+
+    lb.base.i18n.data.addLanguageProperties('fr-Fr',{});
+    lb.base.i18n.data.addLanguageProperties('en',{});
+    lb.base.i18n.data.addLanguageProperties('fr-fr',{});
+    lb.base.i18n.data.addLanguageProperties('fr',{});
+    lb.base.i18n.data.addLanguageProperties('en-us',{});
+    lb.base.i18n.data.addLanguageProperties('en-GB',{});
+    lb.base.i18n.data.addLanguageProperties('',{});
+    lb.base.i18n.data.addLanguageProperties('en-US',{});
+    lb.base.i18n.data.addLanguageProperties('EN',{});
+    assert.arrayEquals( ut(), ['','en','en-GB','en-us','fr','fr-Fr'],
+                                  "unique list of language codes expected, "+
+              " duplicates in a case-insensitive comparison must be ignored");
   }
 
   function testAddLanguageProperties(){
@@ -139,12 +152,12 @@
     var englishGB2 = {name:'EnglishGB2'};
 
     ut('',root2);
-    ut('fr',french2);
-    ut('fr-CA',frenchCanada2);
-    ut('fr-FR',frenchFrance2);
-    ut('en',english2);
-    ut('en-US',englishUSA2);
-    ut('en-GB',englishGB2);
+    ut('FR',french2);
+    ut('FR-ca',frenchCanada2);
+    ut('fr-fr',frenchFrance2);
+    ut('EN',english2);
+    ut('en-us',englishUSA2);
+    ut('En-Gb',englishGB2);
 
     try {
       assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(),

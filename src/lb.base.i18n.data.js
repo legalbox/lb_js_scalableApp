@@ -64,6 +64,11 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   // Builder of
   // Closure for lb.base.i18n.data module
 
+  // Declare aliases
+  var i18n = lb.base.i18n,
+      equals = i18n.equals,
+      languageCompare = i18n.languageCompare,
+
   // private fields
 
       // languages - array, the list of language objects, sorted by language
@@ -79,7 +84,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       // several language objects. These duplicates may be merged into a single
       // language object in a future implementation (trading less memory for
       // more computations due to added merging step).
-  var languages = [];
+      languages = [];
 
   function getLanguageCodes(){
     // Function: getLanguageCodes(): array
@@ -88,6 +93,13 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     // Returns:
     //   array of strings, the list of unique language codes with associated
     //   language properties, sorted in case-insensitive lexical order.
+    //
+    // Notes:
+    // Language codes are returned AS IS, but in case the same language code
+    // has been registered several times, comparing in a case-insensitive
+    // manner, duplicates are not included in the list. Language codes are not
+    // currently normalized to a lower case form in the resulting list; this
+    // may be done in a future implementation.
 
     var i,
         length,
@@ -96,7 +108,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
         languageCodes = [];
     for (i=0, length=languages.length; i<length; i++){
       languageCode = languages[i].code;
-      if (languageCode !== previousLanguageCode){
+      if ( !equals(languageCode,previousLanguageCode) ){
         languageCodes.push(languageCode);
       }
       previousLanguageCode = languageCode;
@@ -138,7 +150,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
 
     // find the first suitable position for insertion
     for (j=length-1; j>=0; j--){
-      if (languageCode >= languages[j].code){
+      if ( languageCompare(languageCode,languages[j].code)>=0 ){
         insertionPosition = j+1; // insert just after
         break;
       }
