@@ -208,9 +208,10 @@ lb.base.i18n = lb.base.i18n || (function() {
     //                  as defined in RFC5646 "Tags for Identifying Languages"
     //
     // Returns:
-    //   * true if languageCode2, put in lower case, is found at the start of
-    //     languageCode1, put in lower case, and the next character is an
-    //     hyphen, or if languageCode2 is the empty string.
+    //   * true if languageCode2 is the empty string ''
+    //   * true if the two language codes are equal (case-insensitive)
+    //   * true if languageCode2 put in lower case is found at the start of
+    //     languageCode1 put in lower case and the next character is an hyphen
     //   * false otherwise
     //
     // Note:
@@ -228,6 +229,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     }
     languageCode1 = languageCode1.toLowerCase();
     languageCode2 = languageCode2.toLowerCase();
+    if (languageCode1 === languageCode2){
+      return true;
+    }
     var position = languageCode1.indexOf(languageCode2);
     return position===0 && languageCode1.charAt(languageCode2.length)==='-';
   }

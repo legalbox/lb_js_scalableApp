@@ -347,6 +347,7 @@
       assert.fail("No error expected when comparing non-string values: "+e);
     }
 
+    // strict inclusion
     assert.isTrue( ut('fr-Ca-Quebec','fr-CA'),
                                           "Expected: Quebec contains Canada");
     assert.isTrue( ut('fr-Ca-Quebec','fr'),
@@ -356,9 +357,25 @@
     assert.isTrue( ut('FR-ca','fr'),      "Expected: Canada contains French");
     assert.isTrue( ut('Fr',''),               "Expected: French contains ''");
 
+    // difference
     assert.isFalse( ut('test','abcd'),           "same length is not enough");
     assert.isFalse( ut('te-st','test'),         "hyphen must not be ignored");
     assert.isFalse( ut('test','te'),               "substring is not enough");
+
+    // case-insensitive equality
+    assert.isTrue( ut('',''),                 "Expected: '' contains itself");
+    assert.isTrue( ut('fr','fr'),         "Expected: French contains itself");
+    assert.isTrue( ut('fr','FR') && ut('FR','fr') && ut('fR','Fr'),
+                              "Expected: French contains itself in any case");
+    assert.isTrue( ut('fr-CA', 'fr-CA'),    "Expected Canada contains itself");
+    assert.isTrue( ut('fr-ca', 'fr-CA') && ut('fr-CA','FR-ca') &&
+                   ut('fR-Ca','Fr-Ca') && ut('FR-CA','fr-ca'),
+                               "Expected Canada contains itself in any case");
+    assert.isTrue( ut('fr-Ca-Quebec','fr-Ca-Quebec'),
+                                          "Expected: Quebec contains itself");
+    assert.isTrue( ut('fr-ca-quebec','FR-CA-QUEBEC') &&
+                   ut('Fr-Ca-Quebec','fr-CA-quebec'),
+                              "Expected: Quebec contains itself in any case");
   }
 
   var tests = {
