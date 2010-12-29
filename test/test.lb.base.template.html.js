@@ -268,6 +268,21 @@
   function testReplaceParams(){
     var ut = lb.base.template.html.replaceParams;
 
+    try {
+      ut();
+      ut(null);
+      ut(null,null);
+      ut(null,[]);
+    } catch (e0) {
+     assert.fail("No error expected when required arguments are missing: "+e0);
+    }
+
+    try {
+      ut({},[]);
+    } catch (e1) {
+      assert.fail("No error expected when given node is not a node: "+e1);
+    }
+
     var htmlNode = element('div',{id:'theOne',title:'#param1#'},'#param2#');
     ut(htmlNode,{param1:'value1',param2:'value2'});
     assert.arrayEquals([
