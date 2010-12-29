@@ -16,7 +16,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-24
+ * 2010-12-29
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -35,46 +35,43 @@ lb.base.template = lb.base.template || (function() {
     //
     // Design of HTML Templates:
     // Here is a proposed solution for HTML Templates using this method.
-    // The input would be a DOM node and an optional context object.
+    // The input would be a DOM node and a data object with named properties
+    // providing values for the replacement of parameters in attributes and
+    // text nodes.
     // | var node = element('span',{},'Welcome #name#');
     // | applyFilters(
     // |   node,
     // |   {
-    // |     language:'en-US',
-    // |     data:
-    // |     {
-    // |       name:'John Doe'
-    // |     }
+    // |     name:'John Doe'
     // |   },
     // |   filters
     // | );
     // The first filter may implement top-down parsing in the following way:
     // | var ELEMENT_NODE = 1;
-    // | function topDownParsing(node,context,filters){
+    // | function topDownParsing(node,data,filters){
     // |   if (!node || node.nodeType!==ELEMENT_NODE){
     // |     return;
     // |   }
     // |   var i, length, attribute, child;
     // |   for (i=0, length=node.attributes.length; i<length; i++){
     // |     attribute = node.attributes[i];
-    // |     applyFilters(attribute,context,filters);
+    // |     applyFilters(attribute,data,filters);
     // |   }
     // |   for (i=0, length=node.childNodes.length; i<length; i++){
     // |     child = node.childNodes[i];
-    // |     applyFilters(child,context,filters);
+    // |     applyFilters(child,data,filters);
     // |   }
     // | }
-    // A more specific filter may operate the replacement of parameter values:
+    // A more specific filter may replace parameters with corresponding values:
     // | var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
-    // | function replaceParams(node,context){
-    // |   if ( !node || !node.nodeValue || !node.nodeValue.replace ||
-    // |        !context || !context.data){
+    // | function replaceParams(node,data){
+    // |   if ( !node || !node.nodeValue || !node.nodeValue.replace || !data ){
     // |     return;
     // |   }
     // |   node.nodeValue = node.nodeValue.replace(
     // |     PARAM_REGEXP,
     // |     function(match,param){
-    // |       return context.data[param];
+    // |       return data[param];
     // |     }
     // |   );
     // | }

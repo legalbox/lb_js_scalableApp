@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-24
+ * Version:   2010-12-29
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -135,32 +135,31 @@
     // Test functions defined in documentation of the method
     var applyFilters = ut;
     var ELEMENT_NODE = 1;
-    function topDownParsing(node,context,filters){
+    function topDownParsing(node,data,filters){
       if (!node || node.nodeType!==ELEMENT_NODE){
         return;
       }
       var i, length, attribute, child;
       for (i=0, length=node.attributes.length; i<length; i++){
         attribute = node.attributes[i];
-        applyFilters(attribute,context,filters);
+        applyFilters(attribute,data,filters);
       }
       for (i=0, length=node.childNodes.length; i<length; i++){
         child = node.childNodes[i];
-        applyFilters(child,context,filters);
+        applyFilters(child,data,filters);
       }
     }
 
     var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
-    function replaceParams(node,context){
-      if ( !node || !node.nodeValue || !node.nodeValue.replace ||
-           !context || !context.data){
+    function replaceParams(node,data){
+      if ( !node || !node.nodeValue || !node.nodeValue.replace || !data ){
         return;
       }
 
       node.nodeValue = node.nodeValue.replace(
         PARAM_REGEXP,
         function(match,param){
-          return context.data[param];
+          return data[param];
         }
       );
     }
@@ -169,9 +168,7 @@
 
     ut(
       node,
-      {data:
-        {name:'John Doe'}
-      },
+      {name:'John Doe'},
       [ topDownParsing, replaceParams]
     );
 
