@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-28
+ * Version:   2010-12-29
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -185,114 +185,114 @@
 
     // simple equality
     assert.equals( ut('',''), 0,                         "Expected: '' = ''");
+    assert.equals( ut('fr','fr'), 0,                 "Expected: 'fr' = 'fr'");
     assert.equals( ut('abc','abc'), 0,             "Expected: 'abc' = 'abc'");
     assert.equals( ut('abc-def','abc-def'), 0,
                                            "Expected: 'abc-def' = 'abc-def'");
 
     // case-insensitive equality
-    assert.equals( ut('fr','fr'), 0,                 "Expected: 'fr' = 'fr'");
     assert.equals( ut('fr','FR'), 0,                 "Expected: 'fr' = 'FR'");
     assert.equals( ut('Fr','fR'), 0,                 "Expected: 'Fr' = 'fR'");
     assert.equals( ut('en-GB','en-gb'), 0,     "Expected: 'en-GB' = 'en-gb'");
     assert.equals( ut('EN-GB','EN-gb'), 0,     "Expected: 'EN-GB' = 'EN-gb'");
 
-    // lexical order, case-insensitive <2
-    assert.equals( ut('','abc'), -2,                 "Expected: '' <2 'abc'");
-    assert.equals( ut('','ABC'), -2,                 "Expected: '' <2 'ABC'");
-    assert.equals( ut('abc','d'), -2,               "Expected: 'abc' <2 'd'");
-    assert.equals( ut('abc','D'), -2,               "Expected: 'abc' <2 'D'");
-    assert.equals( ut('ABC','d'), -2,               "Expected: 'ABC' <2 'd'");
-    assert.equals( ut('d','def'), -2,               "Expected: 'd' <2 'def'");
-    assert.equals( ut('D','def'), -2,               "Expected: 'D' <2 'def'");
-    assert.equals( ut('d','DEF'), -2,               "Expected: 'd' <2 'DEF'");
+    // lexical order, case-insensitive <
+    assert.isTrue( ut('abc','d') < 0,               "Expected: 'abc' < 'd'");
+    assert.isTrue( ut('abc','D') < 0,               "Expected: 'abc' < 'D'");
+    assert.isTrue( ut('ABC','d') < 0,               "Expected: 'ABC' < 'd'");
+    assert.isTrue( ut('d','def') < 0,               "Expected: 'd' < 'def'");
+    assert.isTrue( ut('D','def') < 0,               "Expected: 'D' < 'def'");
+    assert.isTrue( ut('d','DEF') < 0,               "Expected: 'd' < 'DEF'");
 
-    // transitivity: lexical order, case-insensitive <2
-    assert.equals( ut('','d'), -2,                    "Expected: '' <2 'd'");
-    assert.equals( ut('','D'), -2,                    "Expected: '' <2 'D'");
-    assert.equals( ut('','def'), -2,                "Expected: '' <2 'def'");
-    assert.equals( ut('','DEF'), -2,                "Expected: '' <2 'DEF'");
-    assert.equals( ut('ABC','def'), -2,          "Expected: 'ABC' <2 'def'");
-    assert.equals( ut('abc','DEF'), -2,          "Expected: 'abc' <2 'DEF'");
+    // transitivity: lexical order, case-insensitive <
+    assert.isTrue( ut('ABC','def') < 0,          "Expected: 'ABC' < 'def'");
+    assert.isTrue( ut('abc','DEF') < 0,          "Expected: 'abc' < 'DEF'");
 
-    // symmetry: lexical order, case-insensitive >2
-    assert.equals( ut('abc',''), 2,                 "Expected: 'abc' >2 ''");
-    assert.equals( ut('aBC',''), 2,                 "Expected: 'aBC' >2 ''");
-    assert.equals( ut('d','abc'), 2,               "Expected: 'd' >2 'abc'");
-    assert.equals( ut('D','abc'), 2,               "Expected: 'D' >2 'abc'");
-    assert.equals( ut('d','ABC'), 2,               "Expected: 'd' >2 'ABC'");
-    assert.equals( ut('def','d'), 2,               "Expected: 'def' >2 'd'");
-    assert.equals( ut('DEF','d'), 2,               "Expected: 'DEF' >2 'd'");
-    assert.equals( ut('def','D'), 2,               "Expected: 'def' >2 'D'");
+    // symmetry: lexical order, case-insensitive >
+    assert.isTrue( ut('d','abc') > 0,               "Expected: 'd' > 'abc'");
+    assert.isTrue( ut('D','abc') > 0,               "Expected: 'D' > 'abc'");
+    assert.isTrue( ut('d','ABC') > 0,               "Expected: 'd' > 'ABC'");
+    assert.isTrue( ut('def','d') > 0,               "Expected: 'def' > 'd'");
+    assert.isTrue( ut('DEF','d') > 0,               "Expected: 'DEF' > 'd'");
+    assert.isTrue( ut('def','D') > 0,               "Expected: 'def' > 'D'");
 
-    // transitivity: lexical order, case-insensitive >2
-    assert.equals( ut('d',''), 2,                    "Expected: 'd' >2 ''");
-    assert.equals( ut('D',''), 2,                    "Expected: 'D' >2 ''");
-    assert.equals( ut('def',''), 2,                "Expected: 'def' >2 ''");
-    assert.equals( ut('DEF',''), 2,                "Expected: 'DEF' >2 ''");
-    assert.equals( ut('def','ABC'), 2,          "Expected: 'def' >2 'ABC'");
-    assert.equals( ut('DEF','abc'), 2,          "Expected: 'DEF' >2 'abc'");
+    // transitivity: lexical order, case-insensitive >
+    assert.isTrue( ut('def','ABC') > 0,          "Expected: 'def' > 'ABC'");
+    assert.isTrue( ut('DEF','abc') > 0,          "Expected: 'DEF' > 'abc'");
 
-    // hyphen-separated case-insensitive substrings: <1
-    assert.equals( ut('','fr'), -1,                  "Expected: '' <1 'fr'");
-    assert.equals( ut('','FR'), -1,                  "Expected: '' <1 'FR'");
-    assert.equals( ut('','fR'), -1,                  "Expected: '' <1 'fR'");
-    assert.equals( ut('fr','fr-ca'), -1,        "Expected: 'fr' <1 'fr-ca'");
-    assert.equals( ut('FR','fr-ca'), -1,        "Expected: 'FR' <1 'fr-ca'");
-    assert.equals( ut('fr','fr-CA'), -1,        "Expected: 'fr' <1 'fr-CA'");
-    assert.equals( ut('fr-ca','fr-ca-quebec'), -1,
-                                      "Expected: 'fr-ca' <1 'fr-ca-quebec'");
-    assert.equals( ut('FR-CA','fr-ca-quebec'), -1,
-                                      "Expected: 'FR-CA' <1 'fr-ca-quebec'");
-    assert.equals( ut('fr-ca','Fr-Ca-Quebec'), -1,
-                                      "Expected: 'fr-ca' <1 'Fr-Ca-Quebec'");
+    // hyphen-separated case-insensitive substrings: <
+    assert.isTrue( ut('','abc') < 0,                 "Expected: '' < 'abc'");
+    assert.isTrue( ut('','ABC') < 0,                 "Expected: '' < 'ABC'");
+    assert.isTrue( ut('','fr') < 0,                  "Expected: '' < 'fr'");
+    assert.isTrue( ut('','FR') < 0,                  "Expected: '' < 'FR'");
+    assert.isTrue( ut('','fR') < 0,                  "Expected: '' < 'fR'");
+    assert.isTrue( ut('fr','fr-ca') < 0,        "Expected: 'fr' < 'fr-ca'");
+    assert.isTrue( ut('FR','fr-ca') < 0,        "Expected: 'FR' < 'fr-ca'");
+    assert.isTrue( ut('fr','fr-CA') < 0,        "Expected: 'fr' < 'fr-CA'");
+    assert.isTrue( ut('fr-ca','fr-ca-quebec') < 0,
+                                      "Expected: 'fr-ca' < 'fr-ca-quebec'");
+    assert.isTrue( ut('FR-CA','fr-ca-quebec') < 0,
+                                      "Expected: 'FR-CA' < 'fr-ca-quebec'");
+    assert.isTrue( ut('fr-ca','Fr-Ca-Quebec') < 0,
+                                      "Expected: 'fr-ca' < 'Fr-Ca-Quebec'");
 
     // transitivity: hyphen-separated case-insensitive substrings: <1
-    assert.equals( ut('','fr-ca'), -1,            "Expected: '' <1 'fr-ca'");
-    assert.equals( ut('','fr-CA'), -1,            "Expected: '' <1 'fr-CA'");
-    assert.equals( ut('','FR-ca'), -1,            "Expected: '' <1 'FR-ca'");
-    assert.equals( ut('','fr-ca-quebec'), -1,
-                                           "Expected: '' <1 'fr-ca-quebec'");
-    assert.equals( ut('','FR-ca-quebec'), -1,
-                                           "Expected: '' <1 'FR-ca-quebec'");
-    assert.equals( ut('','fr-CA-Quebec'), -1,
-                                           "Expected: '' <1 'fr-CA-Quebec'");
-    assert.equals( ut('FR','fr-ca-quebec'), -1,
-                                         "Expected: 'FR' <1 'fr-ca-quebec'");
-    assert.equals( ut('fr','FR-ca-quebec'), -1,
-                                         "Expected: 'fr' <1 'FR-ca-quebec'");
-    assert.equals( ut('fR','fr-CA-Quebec'), -1,
-                                           "Expected: '' <1 'fr-CA-Quebec'");
+    assert.isTrue( ut('','d') < 0,                    "Expected: '' < 'd'");
+    assert.isTrue( ut('','D') < 0,                    "Expected: '' < 'D'");
+    assert.isTrue( ut('','def') < 0,                "Expected: '' < 'def'");
+    assert.isTrue( ut('','DEF') < 0,                "Expected: '' < 'DEF'");
+    assert.isTrue( ut('','fr-ca') < 0,            "Expected: '' < 'fr-ca'");
+    assert.isTrue( ut('','fr-CA') < 0,            "Expected: '' < 'fr-CA'");
+    assert.isTrue( ut('','FR-ca') < 0,            "Expected: '' < 'FR-ca'");
+    assert.isTrue( ut('','fr-ca-quebec') < 0,
+                                           "Expected: '' < 'fr-ca-quebec'");
+    assert.isTrue( ut('','FR-ca-quebec') < 0,
+                                           "Expected: '' < 'FR-ca-quebec'");
+    assert.isTrue( ut('','fr-CA-Quebec') < 0,
+                                           "Expected: '' < 'fr-CA-Quebec'");
+    assert.isTrue( ut('FR','fr-ca-quebec') < 0,
+                                         "Expected: 'FR' < 'fr-ca-quebec'");
+    assert.isTrue( ut('fr','FR-ca-quebec') < 0,
+                                         "Expected: 'fr' < 'FR-ca-quebec'");
+    assert.isTrue( ut('fR','fr-CA-Quebec') < 0,
+                                           "Expected: '' < 'fr-CA-Quebec'");
 
-    // hyphen-separated case-insensitive substrings: >1
-    assert.equals( ut('fr',''), 1,                  "Expected: 'fr' >1 ''");
-    assert.equals( ut('FR',''), 1,                  "Expected: 'FR' >1 ''");
-    assert.equals( ut('fR',''), 1,                  "Expected: 'fR' >1 ''");
-    assert.equals( ut('fr-ca',''), 1,          "Expected: 'fr-ca' >1 'fr'");
-    assert.equals( ut('fr-ca','FR'), 1,        "Expected: 'fr-ca' >1 'FR'");
-    assert.equals( ut('fr-CA','fr'), 1,        "Expected: 'fr-CA' >1 'fr'");
-    assert.equals( ut('fr-ca-quebec','fr-ca'), 1,
-                                     "Expected: 'fr-ca-quebec' >1 'fr-ca'");
-    assert.equals( ut('fr-ca-quebec','FR-CA'), 1,
-                                     "Expected: 'fr-ca-quebec' >1 'FR-CA'");
-    assert.equals( ut('Fr-Ca-Quebec','fr-ca'), 1,
-                                     "Expected: 'Fr-Ca-Quebec' >1 'fr-ca'");
+    // symmetry: hyphen-separated case-insensitive substrings: >
+    assert.isTrue( ut('abc','') > 0,                 "Expected: 'abc' > ''");
+    assert.isTrue( ut('aBC','') > 0,                 "Expected: 'aBC' > ''");
+    assert.isTrue( ut('fr','') > 0,                  "Expected: 'fr' > ''");
+    assert.isTrue( ut('FR','') > 0,                  "Expected: 'FR' > ''");
+    assert.isTrue( ut('fR','') > 0,                  "Expected: 'fR' > ''");
+    assert.isTrue( ut('fr-ca','') > 0,          "Expected: 'fr-ca' > 'fr'");
+    assert.isTrue( ut('fr-ca','FR') > 0,        "Expected: 'fr-ca' > 'FR'");
+    assert.isTrue( ut('fr-CA','fr') > 0,        "Expected: 'fr-CA' > 'fr'");
+    assert.isTrue( ut('fr-ca-quebec','fr-ca') > 0,
+                                     "Expected: 'fr-ca-quebec' > 'fr-ca'");
+    assert.isTrue( ut('fr-ca-quebec','FR-CA') > 0,
+                                     "Expected: 'fr-ca-quebec' > 'FR-CA'");
+    assert.isTrue( ut('Fr-Ca-Quebec','fr-ca') > 0,
+                                     "Expected: 'Fr-Ca-Quebec' > 'fr-ca'");
 
-    // transitivity: hyphen-separated case-insensitive substrings: >1
-    assert.equals( ut('fr-ca',''), 1,            "Expected: 'fr-ca' >1 ''");
-    assert.equals( ut('fr-CA',''), 1,            "Expected: 'fr-CA' >1 ''");
-    assert.equals( ut('FR-ca',''), 1,            "Expected: 'FR-ca' >1 ''");
-    assert.equals( ut('fr-ca-quebec',''), 1,
-                                           "Expected: 'fr-ca-quebec' >1 ''");
-    assert.equals( ut('FR-ca-quebec',''), 1,
-                                           "Expected: 'FR-ca-quebec' >1 ''");
-    assert.equals( ut('fr-CA-Quebec',''), 1,
-                                           "Expected: 'fr-CA-Quebec' >1 ''");
-    assert.equals( ut('fr-ca-quebec','FR'), 1,
-                                         "Expected: 'fr-ca-quebec' >1 'FR'");
-    assert.equals( ut('FR-ca-quebec','fr'), 1,
-                                         "Expected: 'FR-ca-quebec' >1 'fr'");
-    assert.equals( ut('fr-CA-Quebec','fR'), 1,
-                                         "Expected: 'fr-CA-Quebec' >1 'fR'");
+    // transitivity: hyphen-separated case-insensitive substrings: >
+    assert.isTrue( ut('d','') > 0,                    "Expected: 'd' > ''");
+    assert.isTrue( ut('D','') > 0,                    "Expected: 'D' > ''");
+    assert.isTrue( ut('def','') > 0,                "Expected: 'def' > ''");
+    assert.isTrue( ut('DEF','') > 0,                "Expected: 'DEF' > ''");
+    assert.isTrue( ut('fr-ca','') > 0,            "Expected: 'fr-ca' > ''");
+    assert.isTrue( ut('fr-CA','') > 0,            "Expected: 'fr-CA' > ''");
+    assert.isTrue( ut('FR-ca','') > 0,            "Expected: 'FR-ca' > ''");
+    assert.isTrue( ut('fr-ca-quebec','') > 0,
+                                           "Expected: 'fr-ca-quebec' > ''");
+    assert.isTrue( ut('FR-ca-quebec','') > 0,
+                                           "Expected: 'FR-ca-quebec' > ''");
+    assert.isTrue( ut('fr-CA-Quebec','') > 0,
+                                           "Expected: 'fr-CA-Quebec' > ''");
+    assert.isTrue( ut('fr-ca-quebec','FR') > 0,
+                                         "Expected: 'fr-ca-quebec' > 'FR'");
+    assert.isTrue( ut('FR-ca-quebec','fr') > 0,
+                                         "Expected: 'FR-ca-quebec' > 'fr'");
+    assert.isTrue( ut('fr-CA-Quebec','fR') > 0,
+                                         "Expected: 'fr-CA-Quebec' > 'fR'");
   }
 
   function testEquals(){
