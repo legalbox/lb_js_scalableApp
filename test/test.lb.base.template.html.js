@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-24
+ * Version:   2010-12-29
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -25,7 +25,10 @@
       /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
       /*requires bezen.dom.js*/
-      element = bezen.dom.element;
+      element = bezen.dom.element,
+      ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
+      ATTRIBUTE_NODE = bezen.dom.ATTRIBUTE_NODE,
+      TEXT_NODE = bezen.dom.TEXT_NODE;
 
   function testNamespace(){
 
@@ -36,92 +39,223 @@
   function testTopDownParsing(){
     var ut = lb.base.template.html.topDownParsing;
 
-    assert.fail("Missing tests");
-  }
+    var captured = [];
+    var catchFilter = function(){
+      captured.push(arguments);
+    };
 
-  function testFilterByLanguage(){
-    var ut = lb.base.template.html.filterByLanguage;
+    try {
+      ut();
+      ut(null);
+      ut(null,null);
+      ut(null,[]);
+    } catch (e0) {
+      assert.fail("No error expected when required arguments are missing: "+e);
+    }
 
-    assert.equals( ut(), null, "no function expected for undefined language");
-    assert.equals( ut(null), null,
-                                    "no function expected for null language");
-    assert.equals( ut({}), null,
-                   "no function expected for language which is not a string");
+    try {
+      assert.equals(
+        ut( document.createElement('div'), [catchFilter] ),
+        undefined,
+                                  "no processing expected on single element");
+      assert.equals(
+        ut( document.createAttribute('title'), [catchFilter] ),
+        undefined,
+                                "no processing expected on single attribute");
+      assert.equals(
+        ut( document.createTextNode('Text'), [catchFilter] ),
+        undefined,
+                                "no processing expected on single text node");
 
-    var filter = ut('fr-FR');
-    assert.equals( typeof filter, 'function',     "function filter expected");
+      assert.equals(
+        ut( document.createComment('Text'), [catchFilter] ),
+        undefined,
+                             "no processing expected on single comment node");
 
-    var noLanguageElement = element('div');
-    var emptyLangElement = element('div',{lang:''});
-    var frenchElement = element('div',{lang:'fr'});
-    var frenchFranceElement = element('div',{lang:'fr-FR'});
-    var englishElement = element('div',{lang:'en'});
-    var englishUKElement = element('div',{lang:'en-GB'});
+      assert.equals(
+        ut( document.createDocumentFragment(), [catchFilter] ),
+        undefined,
+                   "no processing expected on single document fragment node");
 
-    var context = {};
-    filter(noLanguageElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                              "empty language code expected (no language)");
+      // Operations not supported in FF,Chrome,Safari,IE:
+      //   * document.createCDATASection('Text')
+      //   * document.createProcessingInstruction('target','data')
+      // Only supported in Opera.
 
-    filter(emptyLangElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                              "empty language code expected (no language)");
+    } catch(e) {
+      assert.fail("top down parsing must not fail on any type of node: "+e);
+    }
+    assert.arrayEquals( captured, [],
+                                   "no recursion expected for single nodes");
 
-    filter(noLanguageElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                      "empty language code expected (back to no language)");
+    var capturedNames = {};
+    function catchAttributes(attribute){
+      capturedNames[attribute.name] = true;
+    }
 
-
-    var attValue = 'Test Attribute Value';
-    var textValue = 'Test Text Value';
-
-    var node = element('div');
-    var context = {};
-    ut(node,{},context);
-    assert.objectEquals(context,{}, "context missing");
-
-    assert.fail("Missing tests: lbLowerCaseFilterLanguageCode must be added to context");
-    assert.fail("Missing tests: lbLowerCaseLanguageCode must be added to context if missing");
-    assert.fail("Missing tests: lbLowerCaseLanguageCode must be preserved when present");
-
-    var frenchNode = element('div',{id:attValue,lang:'fr'},textValue);
-    ut(
-      frenchNode.getAttributeNode('id'),
-      {},
-      {lbFilterByLanguage:'en-GB'}
+    var filters = [catchFilter,catchAttributes];
+    var elementWithAttributesOnly = element('div',
+      {id:'id value',title:'title value',lang:'lang value'}
     );
-    assert.equals( frenchNode.getAttribute('id'), attValue,
-                               "attibute node expected to be left unchanged");
+    var one = {}, two = 2, three = 'three';
+    ut(elementWithAttributesOnly, one, two, three, filters);
+    assert.equals( captured.length, 3,
+                                    "3 attributes expected to be processed");
+    for(var i=0; i<captured.length; i++){
+      assert.arrayEquals(
+        [
+          captured[i][1],
+          captured[i][2],
+          captured[i][3],
+          captured[i][4]
+        ],
+        [
+          one, two, three, filters
+        ],      "params and filters expected in each call (attributes only)");
+    }
+    assert.objectEquals(capturedNames,{id:true,title:true,lang:true},
+                    "attributes id, title and lang expected to be processed");
 
-    ut(
-      frenchNode.firstChild,
-      {},
-      {lbFilterByLanguage:'en-GB'}
-    );
-    assert.equals( frenchNode.innerHTML, textValue,
-                                 "text node expected to be left unchanged");
+    var capturedTitles = [];
+    function captureTitles(element){
+      capturedTitles.push(element.title);
+    }
 
-    var parent = element('div',{},frenchNode);
-    ut(
-      frenchNode,
-      {},
-      {lbFilterByLanguage:'fr-FR'}
-    );
-    assert.equals( frenchNode.parentNode, parent,
-             "element with language matching filter must be left in parent");
+    var deepElement =
+      element('div',{title:'1'},
+        element('div',{title:'1.1'},
+          element('div',{title:'1.1.1'})
+        )
+      );
+    captured = [];
+    filters = [catchFilter,captureTitles];
+    ut(deepElement,one,two,three,filters);
+    assert.equals( captured.length, 2,
+                                 "2 elements deep expected to be processed");
+    for (i=0; i<captured.length; i++){
+      assert.arrayEquals(
+        [
+          captured[i][1],
+          captured[i][2],
+          captured[i][3],
+          captured[i][4]
+        ],
+        [
+          one, two, three, filters
+        ],   "params and filters expected in each call (elements deep only)");
+    }
+    assert.arrayEquals(capturedTitles, ['1.1','1.1.1'],
+                         "titles of two nodes deep expected to be processed");
 
-    ut(
-      frenchNode,
-      {},
-      {lbFilterByLanguage:'en-GB'}
-    );
+    var wideElement =
+      element('div',{title:'1'},
+        element('div',{title:'1.a'}),
+        element('div',{title:'1.b'}),
+        element('div',{title:'1.c'})
+      );
+    captured = [];
+    capturedTitles = [];
+    ut(wideElement,one,two,three,filters);
+    assert.equals( captured.length, 3,
+                                 "3 elements wide expected to be processed");
+    for (i=0; i<captured.length; i++){
+      assert.arrayEquals(
+        [
+          captured[i][1],
+          captured[i][2],
+          captured[i][3],
+          captured[i][4]
+        ],
+        [
+          one, two, three, filters
+        ],   "params and filters expected in each call (elements wide only)");
+    }
+    assert.arrayEquals(capturedTitles, ['1.a','1.b','1.c'],
+                      "titles of three nodes wide expected to be processed");
 
+    var wideAndDeepElement =
+      element('div',{title:'1'},
+        element('div',{title:'1.a'},
+          element('div',{title:'1.a.1'}),
+          element('div',{title:'1.a.2'}),
+          element('div',{title:'1.a.3'})
+        ),
+        element('div',{id:'1.b'},
+          element('div',{title:'1.b.1'}),
+          element('div',{title:'1.b.2'}),
+          element('div',{title:'1.b.3'})
+        ),
+        element('div',{id:'1.c'},
+          element('div',{title:'1.c.1'}),
+          element('div',{title:'1.c.2'}),
+          element('div',{title:'1.c.3'})
+        )
+      );
+    captured = [];
+    capturedTitles = [];
+    ut(wideAndDeepElement,one,two,three,filters);
+    assert.equals( captured.length, 12,
+                        "12 elements expected to be processed wide and deep");
+    for (i=0; i<captured.length; i++){
+      assert.arrayEquals(
+        [
+          captured[i][1],
+          captured[i][2],
+          captured[i][3],
+          captured[i][4]
+        ],
+        [
+          one, two, three, filters
+        ],
+         "params and filters expected in each call (elements wide and deep)");
+    }
+    assert.arrayEquals(capturedTitles,
+      ['1.a',
+         '1.a.1','1.a.2','1.a.3',
+       '1.b',
+         '1.b.1','1.b.2','1.b.3',
+       '1.c',
+         '1.c.1','1.c.2','1.c.3'
+      ],
+                 "titles of 12 nodes expected to be processed wide and deep");
 
-    assert.fail("Missing tests: element with lang != filter is removed from parent");
+    var capturedNodeTypes = [];
+    function captureNodeTypes(node){
+      capturedNodeTypes.push(node.nodeType);
+    }
+    filters = [catchFilter,captureNodeTypes];
 
-    assert.fail("Missing tests: element with no inherited lang left in parent");
-    assert.fail("Missing tests: element with inherited lang === filter is left in parent");
-    assert.fail("Missing tests: element with inherited lang != filter is removed from parent");
+    var mixedElement =
+      element('div',{id:'id',title:'title',lang:'lang'},
+          'text1',
+          element('div'),
+          'text2',
+          element('div'),
+          'text3',
+          element('div')
+      );
+    captured = [];
+    ut(mixedElement,one,two,three,filters);
+    assert.equals( captured.length, 9,
+                "9 nodes expected to be processed in mixed content element");
+    for (i=0; i<captured.length; i++){
+      assert.arrayEquals(
+        [
+          captured[i][1],
+          captured[i][2],
+          captured[i][3],
+          captured[i][4]
+        ],
+        [
+          one, two, three, filters
+        ],       "params and filters expected in each call (mixed content)");
+    }
+    assert.arrayEquals(capturedNodeTypes,
+      [ATTRIBUTE_NODE,ATTRIBUTE_NODE,ATTRIBUTE_NODE,
+       TEXT_NODE,ELEMENT_NODE,
+       TEXT_NODE,ELEMENT_NODE,
+       TEXT_NODE,ELEMENT_NODE],
+           "node types of 9 nodes expected to be processed (mixed content)");
   }
 
   function testReplaceParams(){
@@ -180,7 +314,6 @@
   var tests = {
     testNamespace: testNamespace,
     testTopDownParsing: testTopDownParsing,
-    testFilterByLanguage: testFilterByLanguage,
     testReplaceParams: testReplaceParams
   };
 
