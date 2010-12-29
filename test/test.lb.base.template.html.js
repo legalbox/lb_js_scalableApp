@@ -50,7 +50,13 @@
       ut(null,null);
       ut(null,[]);
     } catch (e0) {
-      assert.fail("No error expected when required arguments are missing: "+e);
+     assert.fail("No error expected when required arguments are missing: "+e0);
+    }
+
+    try {
+      ut({},[]);
+    } catch (e1) {
+      assert.fail("No error expected when given node is not a node: "+e1);
     }
 
     try {
