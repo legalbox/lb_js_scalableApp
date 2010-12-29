@@ -299,7 +299,7 @@
     ],                  "no replacement expected at the element node level");
 
     ut(
-      htmlNode.getAttributeNode('id'),
+      htmlNode.getAttributeNode('title'),
       {param1:'value1',param2:'value2'}
     );
     assert.arrayEquals([
@@ -313,7 +313,7 @@
       'theOne',
       'value1',
       '#param2#'
-    ],                    "parameter in attribute expected to be replaced");
+    ],                "parameter in title attribute expected to be replaced");
 
     ut(
       htmlNode.firstChild,
