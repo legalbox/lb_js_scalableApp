@@ -32,7 +32,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-28
+ * 2010-12-29
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -137,9 +137,107 @@ lb.base.i18n = lb.base.i18n || (function() {
     htmlElement.lang = languageCode;
   }
 
+  function languageCompare(languageCode1,languageCode2){
+    // Function: languageCompare(languageCode1, languageCode2): integer
+    // A comparator function suitable for use in array.sort().
+    //
+    // Languages are compared in a case-insensitive way. They are then sorted
+    // in lexical order. This ensures that in each family, language codes are
+    // sorted from least specific (shortest) to most specific (longest).
+    //
+    // Parameters:
+    //   languageCode1 - string, the first language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //   languageCode2 - string, the second language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //
+    // Returns:
+    //   * a strictly negative integer value if languageCode1 < languageCode2
+    //   * 0 if languageCode1 = languageCode2
+    //   * a strictly positive integer value if languageCode1 > languageCode2
+    //
+    // Note:
+    // The result is undefined in case one or both of given language codes is
+    // not a string.
+    if ( typeof languageCode1 !== 'string' ||
+         typeof languageCode2 !== 'string' ){
+      return;
+    }
+    return languageCode1.toLowerCase()
+                        .localeCompare( languageCode2.toLowerCase() );
+  }
+
+  function equals(languageCode1, languageCode2) {
+    // Function: equals(languageCode1, languageCode2): boolean
+    // Check whether two language codes are considered equal.
+    //
+    // Language codes are compared in a case-insensitive way.
+    //
+    // Parameters:
+    //   languageCode1 - string, the first language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //   languageCode2 - string, the second language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //
+    // Returns:
+    //   * true if two language codes are equal when put in lower case
+    //   * false otherwise
+    //
+    // Note:
+    // The result is undefined in case one or both language codes is not a
+    // string.
+    if ( typeof languageCode1 !== 'string' ||
+         typeof languageCode2 !== 'string' ){
+      return;
+    }
+    return languageCode1.toLowerCase() === languageCode2.toLowerCase();
+  }
+
+  function contains(languageCode1, languageCode2){
+    // Function: contains(languageCode1, languageCode2): boolean
+    // Check whether second language code inherits from first language code.
+    //
+    // Language codes are compared in a case-insensitive way. A language code
+    // is considered as heir of another when it is found as an hyphen-separated
+    // substring at the start of the other language code.
+    //
+    // Parameters:
+    //   languageCode1 - string, the first language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //   languageCode2 - string, the second language code for the comparison,
+    //                  as defined in RFC5646 "Tags for Identifying Languages"
+    //
+    // Returns:
+    //   * true if languageCode2, put in lower case, is found at the start of
+    //     languageCode1, put in lower case, and the next character is an
+    //     hyphen, or if languageCode2 is the empty string.
+    //   * false otherwise
+    //
+    // Note:
+    // The result is undefined in case one or both language codes is not a
+    // string.
+    if ( typeof languageCode1 !== 'string' ||
+         typeof languageCode2 !== 'string' ){
+      return;
+    }
+    if (languageCode2 === ''){
+      return true;
+    }
+    if (languageCode1 === ''){
+      return false;
+    }
+    languageCode1 = languageCode1.toLowerCase();
+    languageCode2 = languageCode2.toLowerCase();
+    var position = languageCode1.indexOf(languageCode2);
+    return position===0 && languageCode1.charAt(languageCode2.length)==='-';
+  }
+
   return { // public API
     getBrowserLanguage: getBrowserLanguage,
     getLanguage: getLanguage,
-    setLanguage: setLanguage
+    setLanguage: setLanguage,
+    languageCompare: languageCompare,
+    equals: equals,
+    contains: contains
   };
 }());
