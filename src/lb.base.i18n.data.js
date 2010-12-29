@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-28
+ * 2010-12-29
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -67,7 +67,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   // private fields
 
       // languages - array, the list of language objects, sorted by language
-      //             code, from least specific to most specific.
+      //             code, in case-insensitive lexical order.
       //             Each language object is in the format:
       //             | {
       //             |    code: 'en-US', // string, language code
@@ -87,7 +87,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     //
     // Returns:
     //   array of strings, the list of unique language codes with associated
-    //   language properties, sorted from least specific to most specific.
+    //   language properties, sorted in case-insensitive lexical order.
 
     var i,
         length,
@@ -206,6 +206,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       // Note:
       // In case optimization is required, the lower case value of each
       // language code may be stored in a property of the language object.
+
+      // TODO: replace with i18n.contains(languageCode, language.code)
       if ( lowerCaseLanguageCode.indexOf( language.code.toLowerCase() )===0 ){
         // start at top of language properties
         properties = language.properties;
