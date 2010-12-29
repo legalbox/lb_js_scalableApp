@@ -68,6 +68,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   var i18n = lb.base.i18n,
       equals = i18n.equals,
       languageCompare = i18n.languageCompare,
+      contains = i18n.contains,
 
   // private fields
 
@@ -202,8 +203,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       path = path.split('.');
     }
 
-    var lowerCaseLanguageCode = languageCode.toLowerCase(),
-        language,
+    var language,
         i,
         properties,
         pathElement,
@@ -213,14 +213,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     // for each language, from most specific (last) to least specific (first)
     for (i=languages.length-1; i>=0; i--){
       language = languages[i];
-      // if the language code is found at the start of given language code
-      // (toLowerCase() is used to compare in a case-insensitive way)
-      // Note:
-      // In case optimization is required, the lower case value of each
-      // language code may be stored in a property of the language object.
-
-      // TODO: replace with i18n.contains(languageCode, language.code)
-      if ( lowerCaseLanguageCode.indexOf( language.code.toLowerCase() )===0 ){
+      // does selected language inherit properties from this language ?
+      if ( contains(languageCode,language.code) ){
         // start at top of language properties
         properties = language.properties;
         // for each path element in the given property path

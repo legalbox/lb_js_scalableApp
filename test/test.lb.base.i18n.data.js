@@ -246,6 +246,13 @@
     assert.equals( ut('fr-FR',['section','subsection','test']), 'French Value',
        "French Value expected for nested 'test' property in fr-FR (root,fr)");
 
+    lb.base.i18n.data.addLanguageProperties('frog',
+      {
+      }
+    );
+    assert.equals( ut('frog','name'), 'root',
+           "'frog' must not inherit 'name' property from 'fr' (root,fr,frog)");
+
     lb.base.i18n.data.addLanguageProperties('fr-FR',
       {
         name: 'french-France',
