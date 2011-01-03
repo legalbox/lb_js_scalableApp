@@ -69,6 +69,8 @@
     document.documentElement.removeAttribute('lang');
     // reset subscribers to notifications
     empty( publisher.getSubscribers() );
+    // restore default configuration
+    config.reset();
   }
 
   function testGetId(){
@@ -490,10 +492,6 @@
                                                   "test properties expected");
     assert.arrayEquals(capturedUseCapture, [undefined],
                                                "useCapture expected omitted");
-
-    // TODO: move to setUp()
-    // restore default configuration
-    config.reset();
   }
 
   function testCancelEvent(){
@@ -513,10 +511,6 @@
     ut(testEvent);
     assert.arrayEquals(capturedEvents, [testEvent],
                                        "test event expected on test factory");
-
-    // TODO: move to setUp()
-    // restore default configuration
-    config.reset();
   }
 
   function testGetListeners(){
