@@ -184,10 +184,12 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     // substitution to a section and subsection: ['no.substitution.done'].
     //
     // Parameters:
-    //   name - string, the name of the looked up property, which may be a
-    //          dotted string or an array of strings to represent a property
-    //          nested within sections and subsections
     //   languageCode - string, the language code to filter relevant languages
+    //   path - string, the name of the looked up property such as 'name',
+    //          or string, a dotted string such as 'section.subsection.name',
+    //          or an array of strings to represent a path to a property
+    //          such as ['section','subsection','name'] nested within sections
+    //          and subsections
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
