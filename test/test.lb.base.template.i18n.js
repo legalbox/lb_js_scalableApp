@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-29
+ * Version:   2011-01-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -42,9 +42,6 @@
     assert.equals( ut({}), null,
                    "no function expected for language which is not a string");
 
-    var filter = ut('fr-FR');
-    assert.equals( typeof filter, 'function',     "function filter expected");
-
     var noLanguageElement = element('div');
     var emptyLangElement = element('div',{lang:''});
     var frenchElement = element('div',{lang:'fr'});
@@ -52,75 +49,88 @@
     var englishElement = element('div',{lang:'en'});
     var englishUKElement = element('div',{lang:'en-GB'});
 
-    var context = {};
-    filter(noLanguageElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                              "empty language code expected (no language)");
+    var parent = element('div');
+    function setChild(parent,node){
+      // set the given node as only child of given parent
 
-    filter(emptyLangElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                              "empty language code expected (no language)");
+      // remove previous child nodes
+      parent.innerHTML = '';
+      parent.appendChild(node);
+      assert.equals( parent.firstChild, node,
+                      "assert: target node expected to be set to first child");
+    }
 
-    filter(noLanguageElement,context);
-    assert.objectEquals(context,{lbLang:''},
-                      "empty language code expected (back to no language)");
+    function assertFilterPreserves(filterLanguage,filter,node){
+      // assert that given filter function preserves the node in test parent
 
+      setParent(parent,node);
+      filter(node);
+      assert.equals(node.parentNode,parent,
+                                              "filter for '"+filterLanguage+
+                                  "' expected to preserve node with lang '"+
+                                                              node.lang+"'");
+    }
 
-    var attValue = 'Test Attribute Value';
-    var textValue = 'Test Text Value';
+    function assertFilterRemoves(filterLanguage,filter,node){
+      // assert that given filter function removes the node from test parent
 
-    var node = element('div');
-    var context = {};
-    ut(node,{},context);
-    assert.objectEquals(context,{}, "context missing");
+      setParent(parent,node);
+      filter(node);
+      assert.isFalse( node.parentNode===parent,
+                                               "filter for '"+filterLanguage+
+                                     "' expected to remove node with lang '"+
+                                                              node.lang+"'");
+    }
 
-    assert.fail("Missing tests: lbLowerCaseFilterLanguageCode must be added to context");
-    assert.fail("Missing tests: lbLowerCaseLanguageCode must be added to context if missing");
-    assert.fail("Missing tests: lbLowerCaseLanguageCode must be preserved when present");
+    function assertDoesNotFail(filterLanguage,filter){
+      // assert that the filter does not fail on null/undefined, other
+      // data types, other kinds of nodes, nor on element without parent.
 
-    var frenchNode = element('div',{id:attValue,lang:'fr'},textValue);
-    ut(
-      frenchNode.getAttributeNode('id'),
-      {},
-      {lbFilterByLanguage:'en-GB'}
-    );
-    assert.equals( frenchNode.getAttribute('id'), attValue,
-                               "attibute node expected to be left unchanged");
+      try {
+        filter();
+        filter(null);
+      } catch(e1){
+        assert.fail(
+            "Filter for '"+filterLanguage+"' failed on null/undefined: "+e1);
+      }
 
-    ut(
-      frenchNode.firstChild,
-      {},
-      {lbFilterByLanguage:'en-GB'}
-    );
-    assert.equals( frenchNode.innerHTML, textValue,
-                                 "text node expected to be left unchanged");
+      try {
+        filter({});
+        filter(new Date());
+      } catch(e2){
+        assert.fail(
+           "Filter for '"+filterLanguage+"' failed on other data types: "+e2);
+      }
 
-    var parent = element('div',{},frenchNode);
-    ut(
-      frenchNode,
-      {},
-      {lbFilterByLanguage:'fr-FR'}
-    );
-    assert.equals( frenchNode.parentNode, parent,
-             "element with language matching filter must be left in parent");
+      try {
+        filter(document.createAttributeNode('test'));
+        filter(document.createTextNode('Text'));
+        filter(document.createDocumentFragment());
+        filter(document.createCommentNode('Text'));
+      } catch(e3){
+        assert.fail(
+           "Filter for '"+filterLanguage+"' failed on other data types: "+e3);
+      }
 
-    ut(
-      frenchNode,
-      {},
-      {lbFilterByLanguage:'en-GB'}
-    );
+      try {
+        filter( element('div',{lang:'other'}) );
+      } catch(e4){
+        assert.fail(
+           "Filter for '"+filterLanguage+"' failed on missing parent: "+e4);
+      }
+    }
+  }
 
+  function testSetLanguage(){
+    var ut = lb.base.template.i18n.setLanguage;
 
-    assert.fail("Missing tests: element with lang != filter is removed from parent");
-
-    assert.fail("Missing tests: element with no inherited lang left in parent");
-    assert.fail("Missing tests: element with inherited lang === filter is left in parent");
-    assert.fail("Missing tests: element with inherited lang != filter is removed from parent");
+    assert.fail("Missing tests");
   }
 
   var tests = {
     testNamespace: testNamespace,
-    testFilterByLanguage: testFilterByLanguage
+    testFilterByLanguage: testFilterByLanguage,
+    testSetLanguage: testSetLanguage
   };
 
   testrunner.define(tests, "lb.base.template.i18n");
