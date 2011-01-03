@@ -2,7 +2,7 @@
  * test.lb.base.template.i18n.js - Unit Tests of lb.base.template.i18n module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
  * Version:   2011-01-03
  *
@@ -48,6 +48,13 @@
     var frenchFranceElement = element('div',{lang:'fr-FR'});
     var englishElement = element('div',{lang:'en'});
     var englishUKElement = element('div',{lang:'en-GB'});
+
+    function assertIsFunction(filterLanguage,filter){
+      // assert that given filter is a function
+
+      assert.equals( typeof filter, 'function',
+                   "function filter expected for language: "+filterLanguage);
+    }
 
     var parent = element('div');
     function setChild(parent,node){
@@ -119,10 +126,52 @@
            "Filter for '"+filterLanguage+"' failed on missing parent: "+e4);
       }
     }
+
+    var noLanguageFilter = ut('');
+    assertIsFunction('',noLanguageFilter);
+    assertDoesNotFail('',noLanguageFilter);
+    assertFilterPreserves('',noLanguageFilter,noLanguageElement);
+    assertFilterPreserves('',noLanguageFilter,emptyLangElement);
+    assertFilterRemoves('',noLanguageFilter,frenchElement);
+    assertFilterRemoves('',noLanguageFilter,frenchFranceElement);
+    assertFilterRemoves('',noLanguageFilter,englishElement);
+    assertFilterRemoves('',noLanguageFilter,englishUKElement);
+
+    var frenchFilter = ut('fr');
+    assertIsFunction('fr',frenchFilter);
+    assertDoesNotFail('fr',frenchFilter);
+    assertFilterPreserves('fr',frenchFilter,noLanguageElement);
+    assertFilterPreserves('fr',frenchFilter,emptyLangElement);
+    assertFilterPreserves('fr',frenchFilter,frenchElement);
+    assertFilterRemoves('fr',frenchFilter,frenchFranceElement);
+    assertFilterRemoves('fr',frenchFilter,englishElement);
+    assertFilterRemoves('fr',frenchFilter,englishUKElement);
+
+    var frenchFranceFilter = ut('FR-fr');
+    assertIsFunction('FR-fr',frenchFranceFilter);
+    assertDoesNotFail('FR-fr',frenchFranceFilter);
+    assertFilterPreserves('FR-fr',frenchFranceFilter,noLanguageElement);
+    assertFilterPreserves('FR-fr',frenchFranceFilter,emptyLangElement);
+    assertFilterPreserves('FR-fr',frenchFranceFilter,frenchElement);
+    assertFilterRemoves('FR-fr',frenchFranceFilter,frenchFranceElement);
+    assertFilterRemoves('FR-fr',frenchFranceFilter,englishElement);
+    assertFilterRemoves('FR-fr',frenchFranceFilter,englishUKElement);
+
+    var englishFilter = ut('EN');
+    assertIsFunction('EN',englishFilter);
+    assertDoesNotFail('EN',englishFilter);
+    assertFilterPreserves('EN',englishFilter,noLanguageElement);
+    assertFilterPreserves('EN',englishFilter,emptyLangElement);
+    assertFilterRemoves('EN',englishFilter,frenchElement);
+    assertFilterRemoves('EN',englishFilter,frenchFranceElement);
+    assertFilterPreserves('EN',englishFilter,englishElement);
+    assertFilterRemoves('EN',englishFilter,englishUKElement);
   }
 
   function testSetLanguage(){
     var ut = lb.base.template.i18n.setLanguage;
+
+
 
     assert.fail("Missing tests");
   }
