@@ -92,6 +92,7 @@
                                "box element 'testGetBox' should be returned");
 
     sandbox = new lb.core.Sandbox('missing');
+    ut = sandbox.getBox;
 
     assert.equals( ut(false), null,
             "null expected when box element is missing and !createIfMissing");
