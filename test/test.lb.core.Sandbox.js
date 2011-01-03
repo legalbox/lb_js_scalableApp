@@ -65,7 +65,10 @@
   function setUp(){
     // Set up to restore a neutral state before each unit test
 
+    // reset document language
     document.documentElement.removeAttribute('lang');
+    // reset subscribers to notifications
+    empty( publisher.getSubscribers() );
   }
 
   function testGetId(){
@@ -133,8 +136,6 @@
     var ut = new lb.core.Sandbox('testSubscribe').events.subscribe;
 
     setUp();
-    // TODO: move to setUp()
-    empty( publisher.getSubscribers() );
 
     var notifiedEvents = [];
     var callback = function(event){
@@ -156,8 +157,6 @@
     var ut = sandbox.events.unsubscribe;
 
     setUp();
-    // TODO: move to setup()
-    empty( publisher.getSubscribers() );
 
     var counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0;
     function func1(){ counter1++; }
@@ -201,8 +200,6 @@
     var ut = new lb.core.Sandbox('testPublish').events.publish;
 
     setUp();
-    // TODO: move to setUp()
-    empty( publisher.getSubscribers() );
 
     var events1 = [];
     var subscriber1 = new Subscriber(
@@ -1004,6 +1001,7 @@
   function testGetLocation(){
     var ut = new lb.core.Sandbox('testGetLocation').url.getLocation;
 
+    setUp();
     var location = ut();
     assert.isTrue( object.exists(location),      "location object expected");
     assert.equals( location.href, window.location.href,
@@ -1053,6 +1051,7 @@
   function testSetHash(){
     var ut = new lb.core.Sandbox('testSetHash').url.setHash;
 
+    setUp();
     ut('simple');
     assert.equals(window.location.hash, '#simple',
                                              "simple hash expected to be set");
@@ -1066,6 +1065,7 @@
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
+    setUp();
     history.setHash('start');
     var hashOne = [];
     function captureHashOne(hash){
