@@ -920,11 +920,11 @@
     noParamNode = element('div',{},noParamValue),
     simpleNode = element('div',{},simpleNodeValue),
     dottedNode = element('div',{},dottedNodeValue),
-    complexNode = element('div',{},[
+    complexNode = element('div',{},
       'complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
       ' #missing#'
-    ]);
+    );
 
     ut(noParamNode,testLanguageCode);
     assert.equals( noParamNode.innerHTML, noParamValue,
