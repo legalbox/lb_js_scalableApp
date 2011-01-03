@@ -25,14 +25,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-29
+ * 2011-01-03
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -132,7 +132,7 @@ lb.base.i18n = lb.base.i18n || (function() {
 
     if ( typeof languageCode !== 'string' ||
          htmlElement.nodeType !== ELEMENT_NODE ){
-      return '';
+      return;
     }
     htmlElement.lang = languageCode;
   }
