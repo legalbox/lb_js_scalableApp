@@ -70,33 +70,35 @@
 
   function testGetId(){
     // Unit tests for lb.core.Sandbox#getId()
-
     var testId = 'lb.ui.myModule';
     var sandbox = new lb.core.Sandbox(testId);
-    assert.equals( sandbox.getId(), testId,
+    var ut = sandbox.getId;
+
+    assert.equals( ut(), testId,
                                   "id must match value given in constructor");
     assert.isFalse( object.exists( $('lb.ui.myModule') ),
                     "box element must not be created until getBox is called");
 
-    assert.equals( sandbox.getId('testId'), 'lb.ui.myModule.testId',
+    assert.equals( ut('testId'), 'lb.ui.myModule.testId',
                     "conversion to full id must add prefix and separator");
   }
 
   function testGetBox(){
     // Unit tests for lb.core.Sandbox#getBox()
-
     var sandbox = new lb.core.Sandbox('testGetBox');
-    assert.equals( sandbox.getBox(), $('testGetBox'),
+    var ut = sandbox.getBox;
+
+    assert.equals( ut(), $('testGetBox'),
                                "box element 'testGetBox' should be returned");
 
     sandbox = new lb.core.Sandbox('missing');
 
-    assert.equals( sandbox.getBox(false), null,
+    assert.equals( ut(false), null,
             "null expected when box element is missing and !createIfMissing");
     assert.equals( $('missing'), null,
              "missing box element must not be created when !createIfMissing");
 
-    var box = sandbox.getBox();
+    var box = ut();
     assert.isTrue( object.exists(box),
                                     "missing box must be created by default");
     assert.equals(box, $('missing'),   "new element must be created with id");
@@ -365,9 +367,10 @@
 
   function testElement(){
     // Unit tests for lb.core.Sandbox#dom.element()
-
     // test factory must be configured beforehand
-    var capturedNames = [], capturedParams = [], capturedChildNodes = [];
+    var capturedNames = [],
+        capturedParams = [],
+        capturedChildNodes = [];
     var testFactory = {
       createElement: function(name, params, childNodes){
         capturedNames.push(name);
@@ -378,7 +381,6 @@
     config.setOptions({lbFactory:testFactory});
     assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
-
     var ut = new lb.core.Sandbox('testElement').dom.element;
 
     var testName = 'a';
@@ -437,7 +439,7 @@
 
   function testFireEvent(){
     // Unit tests for lb.core.Sandbox#dom.fireEvent
-
+    // Test factory must be configured beforehand
     var capturedElements = [],
         capturedTypes = [],
         capturedProperties = [],
@@ -474,7 +476,7 @@
 
   function testCancelEvent(){
     // Unit tests for lb.core.Sandbox#dom.cancelEvent
-
+    // Test factory must be configured beforehand
     var capturedEvents = [];
     var testFactory = {
       destroyEvent: function(event){
@@ -501,8 +503,7 @@
 
   function testAddListener(){
     // Unit tests for lb.core.Sandbox#dom.addListener
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var createdListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
@@ -517,7 +518,6 @@
       }
     };
     config.setOptions({lbFactory:testFactory});
-
     var sandbox = new lb.core.Sandbox('testAddListener');
     var ut = sandbox.dom.addListener;
 
@@ -550,8 +550,7 @@
 
   function testRemoveListener(){
     // Unit tests for lb.core.Sandbox#dom.removeListener
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var destroyedListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
@@ -568,7 +567,6 @@
       }
     };
     config.setOptions({lbFactory:testFactory});
-
     var sandbox = new lb.core.Sandbox('testRemoveListener');
     var ut = sandbox.dom.removeListener;
 
@@ -610,8 +608,7 @@
 
   function testRemoveAllListeners(){
     // Unit tests for lb.core.Sandbox#dom.removeAllListeners
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var destroyedListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
