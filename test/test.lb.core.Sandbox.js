@@ -2,9 +2,9 @@
  * test.lb.core.Sandbox.js - Unit Tests of Sandbox for Modules
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-28
+ * Version:   2011-01-03
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -60,6 +60,12 @@
 
     var sandbox = new Ut('myId');
     assert.isTrue( sandbox instanceof Ut,      "instanceof expected to work");
+  }
+
+  function setUp(){
+    // Set up to restore a neutral state before each unit test
+
+    document.documentElement.removeAttribute('lang');
   }
 
   function testGetId(){
@@ -655,7 +661,7 @@
     var sandbox = new lb.core.Sandbox('testGetSelectedLanguage');
     var ut = sandbox.i18n.getSelectedLanguage;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     assert.equals( ut(), navigator.language || navigator.browserLanguage,
                   "selected language expected to default to browser language");
 
@@ -668,7 +674,7 @@
   function testSelectLanguage(){
     var ut = new lb.core.Sandbox('testSelectLanguage').i18n.selectLanguage;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     var testLanguageCode = 'TestLANGUAGEcode';
     ut(testLanguageCode);
     assert.equals( document.documentElement.lang, testLanguageCode,
@@ -680,6 +686,7 @@
     var sandbox = new lb.core.Sandbox('testAddLanguageProperties');
     var ut = sandbox.i18n.addLanguageProperties;
 
+    setUp();
     ut();
     ut(undefined);
     ut(null,{});
@@ -721,6 +728,7 @@
     var sandbox = new lb.core.Sandbox('testGet');
     var ut = sandbox.i18n.get;
 
+    setUp();
     var testLanguageCode = 'te-ST';
     sandbox.i18n.selectLanguage(testLanguageCode);
     assert.equals( ut(), null,             "null expected for missing key");
@@ -771,7 +779,7 @@
     var sandbox = new lb.core.Sandbox('testGetString');
     var ut = sandbox.i18n.getString;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     assert.equals( ut(), null,              "null expected for missing key");
     assert.equals( ut('missing'), null,   "null expected for key 'missing'");
 
@@ -830,7 +838,7 @@
     var sandbox = new lb.core.Sandbox('testFilterHtml');
     var ut = sandbox.i18n.filterHtml;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     try {
       ut();
       ut(null);
