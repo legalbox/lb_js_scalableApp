@@ -171,9 +171,100 @@
   function testSetLanguage(){
     var ut = lb.base.template.i18n.setLanguage;
 
+    try {
+      ut(null);
+      ut(undefined);
+      ut({});
+      ut(new Date());
+    } catch(e1) {
+      assert.fail("Must not fail on missing and wrong type of argument: "+e1);
+    }
 
+    try {
+      ut( document.createTextNode('Text') );
+      ut( document.createAttributeNode('test') );
+      ut( document.createCommentNode('Comment') );
+      ut( document.createDocumentFragment() );
+    } catch(e2) {
+      assert.fail("Other types of nodes must be ignored: "+e2);
+    }
 
-    assert.fail("Missing tests");
+    var noLangElement = element('div');
+    var emptyLangElement = element('div',{lang:''});
+    var frenchElement = element('div',{lang:'fr'});
+    var englishElement = element('div',{lang:'en'});
+    var englishUKElement = element('div',{lang:'en-GB'});
+
+    ut(noLangElement);
+    assert.equals( noLangElement.lang, '',
+                                        "empty language expected (no lang)");
+    assert.isTrue( noLangElement.lang.specified,
+                    "lang attribute must be explicitly specified (no lang)");
+
+    ut(emptyLangElement);
+    assert.equals( emptyLangElement.lang, '',
+                "existing lang value expected to be preserved (empty lang)");
+    assert.isTrue( emptyLangElement.lang.specified,
+         "assert: lang attribute must be explicitly specified (empty lang)");
+
+    ut(frenchElement);
+    assert.equals( frenchElement.lang, 'fr',
+                         "existing lang value expected to be preserved (fr)");
+
+    ut(englishElement);
+    assert.equals( englishElement.lang, 'en',
+                         "existing lang value expected to be preserved (en)");
+
+    ut(englishUKElement);
+    assert.equals( englishUKElement.lang, 'en-GB',
+                      "existing lang value expected to be preserved (en-GB)");
+
+    // X >> 'fr' >> '' >> 'en' >> X
+    var root = element('div',{},
+      element('div',{},
+        element('div',{lang:'fr'},
+          element('div',{},
+            element('div',{lang:''},
+              element('div',{},
+                element('div',{lang:'en'},
+                  element('div')
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+    var missing1 = root.firstChild,
+        french = missing1.firstChild,
+        missing2 = french.firstChild,
+        noLang = missing2.firstChild,
+        missing3 = noLang.firstChild,
+        english = missing3.firstChild,
+        missing4 = english.firstChild;
+
+    ut(root);
+    assert.equals(root.lang, '', "empty language expected to be set to root");
+    ut(missing1);
+    assert.equals(missing1.lang, '',
+                           "empty language expected to be set to missing #1");
+    ut(french);
+    assert.equals(french.lang, 'fr',    "lang 'fr' expected to be preserved");
+    ut(missing2);
+    assert.equals(missing2.lang, 'fr',
+                                "lang 'fr' expected to be set to missing #2");
+    ut(noLang);
+    assert.equals(noLang.lang,'',     "language '' expected to be preserved");
+    ut(missing3);
+    assert.equals(missing3.lang, '',
+                                  "lang '' expected to be set to missing #3");
+    assert.isTrue(missing3.lang.specified,
+                       "lang '' expected to be set explicitly on missing #3");
+    ut(english);
+    assert.equals(english.lang,'en',    "lang 'en' expected to be preserved");
+    ut(missing4);
+    assert.equals(missing4.lang,'en',
+                                "lang 'en' expected to be set to missing #4");
   }
 
   var tests = {
