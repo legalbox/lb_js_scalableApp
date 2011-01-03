@@ -877,7 +877,7 @@
         dottedNodeValue = '#dotted.param#',
         dottedNode = element('div',{},dottedNodeValue),
         complexNode = element('div',{},
-          'complex ',
+          'Complex ',
           element('span',{id:'#attributeParam#'},'#text-to-replace#'),
           ' #missing#'
         );
@@ -895,16 +895,32 @@
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
     });
-    assert.equals( complexNode.innerHTML.toLowerCase().replace('"',"'",'g'),
-             "complex <span id='attribute value'>text value</span> #missing#",
-                 "two replacements expected in complex value (no language)");
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],          "two replacements expected in complex value (no language)");
 
     sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
 
     noParamNode = element('div',{},noParamValue),
     simpleNode = element('div',{},simpleNodeValue),
     dottedNode = element('div',{},dottedNodeValue),
-    complexNode = element('div',{}, [
+    complexNode = element('div',{},[
       'complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
       ' #missing#'
