@@ -153,7 +153,7 @@
     assertFilterPreserves('FR-fr',frenchFranceFilter,noLanguageElement);
     assertFilterPreserves('FR-fr',frenchFranceFilter,emptyLangElement);
     assertFilterPreserves('FR-fr',frenchFranceFilter,frenchElement);
-    assertFilterRemoves('FR-fr',frenchFranceFilter,frenchFranceElement);
+    assertFilterPreserves('FR-fr',frenchFranceFilter,frenchFranceElement);
     assertFilterRemoves('FR-fr',frenchFranceFilter,englishElement);
     assertFilterRemoves('FR-fr',frenchFranceFilter,englishUKElement);
 
