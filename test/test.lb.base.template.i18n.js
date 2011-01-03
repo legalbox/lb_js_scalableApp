@@ -110,10 +110,10 @@
       }
 
       try {
-        filter(document.createAttributeNode('test'));
+        filter(document.createAttribute('test'));
         filter(document.createTextNode('Text'));
         filter(document.createDocumentFragment());
-        filter(document.createCommentNode('Text'));
+        filter(document.createComment('Text'));
       } catch(e3){
         assert.fail(
            "Filter for '"+filterLanguage+"' failed on other data types: "+e3);
@@ -182,8 +182,8 @@
 
     try {
       ut( document.createTextNode('Text') );
-      ut( document.createAttributeNode('test') );
-      ut( document.createCommentNode('Comment') );
+      ut( document.createAttribute('test') );
+      ut( document.createComment('Comment') );
       ut( document.createDocumentFragment() );
     } catch(e2) {
       assert.fail("Other types of nodes must be ignored: "+e2);
