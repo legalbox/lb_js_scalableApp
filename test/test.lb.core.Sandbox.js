@@ -921,7 +921,7 @@
     simpleNode = element('div',{},simpleNodeValue),
     dottedNode = element('div',{},dottedNodeValue),
     complexNode = element('div',{},
-      'complex ',
+      'Complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
       ' #missing#'
     );
@@ -939,9 +939,25 @@
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
     },testLanguageCode);
-    assert.equals( complexNode.innerHTML.toLowerCase().replace('"',"'",'g'),
-             "complex <span id='attribute value'>text value</span> #missing#",
-           "two replacements expected in complex value (explicit language)");
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],    "two replacements expected in complex value (explicit language)");
 
     var listNode = element('ul',{},
       element('li',{},'No Language'),
