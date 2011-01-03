@@ -876,11 +876,11 @@
         simpleNode = element('div',{},simpleNodeValue),
         dottedNodeValue = '#dotted.param#',
         dottedNode = element('div',{},dottedNodeValue),
-        complexNode = element('div',{}, [
+        complexNode = element('div',{},
           'complex ',
           element('span',{id:'#attributeParam#'},'#text-to-replace#'),
           ' #missing#'
-        ]);
+        );
 
     ut(noParamNode);
     assert.equals( noParamNode.innerHTML, noParamValue,
@@ -927,7 +927,7 @@
              "complex <span id='attribute value'>text value</span> #missing#",
            "two replacements expected in complex value (explicit language)");
 
-    var listNode = element('ul',{},[
+    var listNode = element('ul',{},
       element('li',{},'No Language'),
       element('li',{lang:''},'Root'),
       element('li',{lang:'de'},'German'),
@@ -939,7 +939,7 @@
       element('li',{lang:'fr'},'French'),
       element('li',{lang:'fr-CA'},'French/Canada'),
       element('li',{lang:'fr-FR'},'French/France')
-    ]);
+    );
     ut(listNode,{},'en-GB');
     assert.equals( listNode.childNodes.length, 4,
                                           "4 child nodes expected to remain");
