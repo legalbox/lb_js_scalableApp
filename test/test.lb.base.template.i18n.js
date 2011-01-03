@@ -57,7 +57,7 @@
     }
 
     var parent = element('div');
-    function setChild(parent,node){
+    function setOnlyChild(parent,node){
       // set the given node as only child of given parent
 
       // remove previous child nodes
@@ -70,7 +70,7 @@
     function assertFilterPreserves(filterLanguage,filter,node){
       // assert that given filter function preserves the node in test parent
 
-      setParent(parent,node);
+      setOnlyChild(parent,node);
       filter(node);
       assert.equals(node.parentNode,parent,
                                               "filter for '"+filterLanguage+
@@ -81,7 +81,7 @@
     function assertFilterRemoves(filterLanguage,filter,node){
       // assert that given filter function removes the node from test parent
 
-      setParent(parent,node);
+      setOnlyChild(parent,node);
       filter(node);
       assert.isFalse( node.parentNode===parent,
                                                "filter for '"+filterLanguage+
