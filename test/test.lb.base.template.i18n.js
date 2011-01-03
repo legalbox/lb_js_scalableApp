@@ -25,7 +25,8 @@
       /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
       /*requires bezen.dom.js*/
-      element = bezen.dom.element;
+      element = bezen.dom.element,
+      hasAttribute = bezen.dom.hasAttribute;
 
   function testNamespace(){
 
@@ -198,14 +199,14 @@
     ut(noLangElement);
     assert.equals( noLangElement.lang, '',
                                         "empty language expected (no lang)");
-    assert.isTrue( noLangElement.lang.specified,
-                    "lang attribute must be explicitly specified (no lang)");
+    assert.isTrue( hasAttribute(noLangElement,'lang'),
+                          "lang attribute must be set explicitly (no lang)");
 
     ut(emptyLangElement);
     assert.equals( emptyLangElement.lang, '',
                 "existing lang value expected to be preserved (empty lang)");
-    assert.isTrue( emptyLangElement.lang.specified,
-         "assert: lang attribute must be explicitly specified (empty lang)");
+    assert.isTrue( hasAttribute(emptyLangElement,'lang'),
+               "assert: lang attribute must be set explicitly (empty lang)");
 
     ut(frenchElement);
     assert.equals( frenchElement.lang, 'fr',
@@ -258,7 +259,7 @@
     ut(missing3);
     assert.equals(missing3.lang, '',
                                   "lang '' expected to be set to missing #3");
-    assert.isTrue(missing3.lang.specified,
+    assert.isTrue( hasAttribute(missing3,'lang'),
                        "lang '' expected to be set explicitly on missing #3");
     ut(english);
     assert.equals(english.lang,'en',    "lang 'en' expected to be preserved");
