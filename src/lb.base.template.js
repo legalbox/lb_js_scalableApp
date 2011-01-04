@@ -9,14 +9,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-29
+ * 2011-01-04
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -113,11 +113,12 @@ lb.base.template = lb.base.template || (function() {
     // Unless processing is interrupted by a filter returning a value different
     // from undefined, all filters will be applied in turn, in this order.
 
-    var filters = arguments[arguments.length-1];
+    var filters = arguments[arguments.length-1],
+        i,
+        result;
     if (!filters){
       return;
     }
-    var i, result;
     for (i=filters.length-1; i>=0; i--){
       result = filters[i].apply(this,arguments);
       if (result !== undefined){
