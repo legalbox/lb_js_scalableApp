@@ -61,7 +61,7 @@
     assert.equals( ut(missingParam,{}), missingParam,
                           "missing parameter expected to be left unreplaced");
 
-    var multipleParams = 'Before#param1##param2##param3#After'
+    var multipleParams = 'Before#param1##param2##param3#After';
     assert.equals( ut(multipleParams,{
                      param1: ';value1;',
                      param2: '',

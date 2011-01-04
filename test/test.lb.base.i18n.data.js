@@ -2,9 +2,9 @@
  * test.lb.base.i18n.data.js - Unit Tests of lb.base.i18n.data module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-29
+ * Version:   2011-01-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -12,7 +12,7 @@
 
 /*requires lb.base.i18n.data.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window */
+/*global lb, bezen, window, document */
 (function() {
   // Builder of
   // Closure object for Test of lb.base.i18n.data

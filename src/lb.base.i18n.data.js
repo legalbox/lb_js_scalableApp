@@ -47,14 +47,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-29
+ * 2011-01-03
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -184,15 +184,17 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     // substitution to a section and subsection: ['no.substitution.done'].
     //
     // Parameters:
-    //   name - string, the name of the looked up property, which may be a
-    //          dotted string or an array of strings to represent a property
-    //          nested within sections and subsections
     //   languageCode - string, the language code to filter relevant languages
+    //   path - string, the name of the looked up property such as 'name',
+    //          or string, a dotted string such as 'section.subsection.name',
+    //          or an array of strings to represent a path to a property
+    //          such as ['section','subsection','name'] nested within sections
+    //          and subsections
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
-    //     object whose language code put in lower case is a substring of the
-    //     given language code put in lower case
+    //     object whose language code put in lower case is a hyphenated
+    //     substring of the given language code put in lower case
     //   * or null if the property is not found in suitable languages,
     //     if the given path is null or undefined, or if the given language
     //     code is not a string.

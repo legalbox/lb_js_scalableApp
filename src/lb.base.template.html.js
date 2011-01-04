@@ -14,14 +14,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-29
+ * 2011-01-04
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -32,12 +32,15 @@ lb.base.template.html = lb.base.template.html || (function() {
   // Closure for lb.base.template.html module
 
   // Declare aliases
+      /*requires lb.base.array.js */
   var toArray = lb.base.array.toArray,
+      /*requires lb.base.dom.js */
       dom = lb.base.dom,
       ELEMENT_NODE = dom.ELEMENT_NODE,
       ATTRIBUTE_NODE = dom.ATTRIBUTE_NODE,
       TEXT_NODE = dom.TEXT_NODE,
       applyFilters = lb.base.template.applyFilters,
+      /*requires lb.base.template.string.js */
       replaceParamsInString = lb.base.template.string.replaceParams;
 
   function topDownParsing(node){
@@ -72,8 +75,8 @@ lb.base.template.html = lb.base.template.html || (function() {
     }
 
     var args = toArray(arguments),
-        attributes = node.attributes,
-        childNodes = node.childNodes,
+        attributes = toArray(node.attributes),
+        childNodes = toArray(node.childNodes),
         i,
         length,
         attribute;
@@ -96,9 +99,11 @@ lb.base.template.html = lb.base.template.html || (function() {
     // Replace parameters in attribute and text nodes with values from given
     // data.
     //
-    // The parameters to replace are surrounded by '#' characters, e.g.
-    // #param# and replaced with the value of the property of the same name.
-    // It is also possible to use nested properties, e.g. #section.param#.
+    // The parameters to replace are surrounded by '#' characters,
+    // e.g. #param#
+    // and replaced with the value of the property of the same name.
+    // It is also possible to use nested properties,
+    // e.g. #section.subsection.param#.
     //
     // See details of parameter format in
     // <lb.base.template.string.replaceParams(string,data): string>,

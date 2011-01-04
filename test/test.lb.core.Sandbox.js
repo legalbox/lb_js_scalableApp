@@ -2,9 +2,9 @@
  * test.lb.core.Sandbox.js - Unit Tests of Sandbox for Modules
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-28
+ * Version:   2011-01-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -62,35 +62,51 @@
     assert.isTrue( sandbox instanceof Ut,      "instanceof expected to work");
   }
 
+  function setUp(){
+    // Set up to restore a neutral state before each unit test
+
+    // reset document language
+    document.documentElement.removeAttribute('lang');
+    // reset subscribers to notifications
+    empty( publisher.getSubscribers() );
+    // restore default configuration
+    config.reset();
+  }
+
   function testGetId(){
     // Unit tests for lb.core.Sandbox#getId()
-
     var testId = 'lb.ui.myModule';
     var sandbox = new lb.core.Sandbox(testId);
-    assert.equals( sandbox.getId(), testId,
+    var ut = sandbox.getId;
+
+    setUp();
+    assert.equals( ut(), testId,
                                   "id must match value given in constructor");
     assert.isFalse( object.exists( $('lb.ui.myModule') ),
                     "box element must not be created until getBox is called");
 
-    assert.equals( sandbox.getId('testId'), 'lb.ui.myModule.testId',
+    assert.equals( ut('testId'), 'lb.ui.myModule.testId',
                     "conversion to full id must add prefix and separator");
   }
 
   function testGetBox(){
     // Unit tests for lb.core.Sandbox#getBox()
-
     var sandbox = new lb.core.Sandbox('testGetBox');
-    assert.equals( sandbox.getBox(), $('testGetBox'),
+    var ut = sandbox.getBox;
+
+    setUp();
+    assert.equals( ut(), $('testGetBox'),
                                "box element 'testGetBox' should be returned");
 
     sandbox = new lb.core.Sandbox('missing');
+    ut = sandbox.getBox;
 
-    assert.equals( sandbox.getBox(false), null,
+    assert.equals( ut(false), null,
             "null expected when box element is missing and !createIfMissing");
     assert.equals( $('missing'), null,
              "missing box element must not be created when !createIfMissing");
 
-    var box = sandbox.getBox();
+    var box = ut();
     assert.isTrue( object.exists(box),
                                     "missing box must be created by default");
     assert.equals(box, $('missing'),   "new element must be created with id");
@@ -106,6 +122,7 @@
   function testIsInBox(){
     var ut = new lb.core.Sandbox('testIsInBox').isInBox;
 
+    setUp();
     assert.isFalse( ut(null),                      "false expected for null");
     assert.isFalse( ut(undefined),            "false expected for undefined");
     assert.isTrue( ut( $('testIsInBox.inBox') ),
@@ -120,7 +137,7 @@
   function testSubscribe(){
     var ut = new lb.core.Sandbox('testSubscribe').events.subscribe;
 
-    empty( publisher.getSubscribers() );
+    setUp();
 
     var notifiedEvents = [];
     var callback = function(event){
@@ -141,7 +158,7 @@
     var sandbox = new lb.core.Sandbox('testUnsubscribe');
     var ut = sandbox.events.unsubscribe;
 
-    empty( publisher.getSubscribers() );
+    setUp();
 
     var counter1 = 0, counter2 = 0, counter3 = 0, counter4 = 0;
     function func1(){ counter1++; }
@@ -184,7 +201,8 @@
   function testPublish(){
     var ut = new lb.core.Sandbox('testPublish').events.publish;
 
-    empty( publisher.getSubscribers() );
+    setUp();
+
     var events1 = [];
     var subscriber1 = new Subscriber(
       {topic:'abc'},
@@ -202,6 +220,7 @@
   function testSend(){
     var ut = new lb.core.Sandbox('testSend').server.send;
 
+    setUp();
     empty( MockXmlHttp.all );
 
     var url = '/events/';
@@ -226,6 +245,7 @@
   function testGetTimestamp(){
     var ut = new lb.core.Sandbox('testGetTimestamp').utils.getTimestamp;
 
+    setUp();
     var before = (new Date()).getTime();
     var timestamp = ut();
     var after = (new Date()).getTime();
@@ -238,6 +258,7 @@
   function testSetTimeout(){
     var ut = new lb.core.Sandbox('testSetTimeout').utils.setTimeout;
 
+    setUp();
     var originalSetTimeout = window.setTimeout;
     var funcs = [];
     var delays = [];
@@ -275,6 +296,7 @@
   function testClearTimeout(){
     var ut = new lb.core.Sandbox('testClearTimeout').utils.clearTimeout;
 
+    setUp();
     var originalClearTimeout = window.clearTimeout;
     var captured = [];
     window.clearTimeout = function(timeoutId){
@@ -295,6 +317,7 @@
   function testTrim(){
     var ut = new lb.core.Sandbox('testTrim').utils.trim;
 
+    setUp();
     assert.equals( ut('abcd'), 'abcd',
                           "no change expected when no whitespace is present");
     assert.equals( ut('a\nb c\td'), 'a\nb c\td',
@@ -306,6 +329,7 @@
   function testLog(){
     var ut = new lb.core.Sandbox('testLog').utils.log;
 
+    setUp();
     var logRecords = [];
     var logHandler = function(logRecord){
       logRecords.push(logRecord);
@@ -325,6 +349,7 @@
   function testConfirm(){
     var ut = new lb.core.Sandbox('testConfirm').utils.confirm;
 
+    setUp();
     var originalWindowConfirm = window.confirm;
     var capturedByConfirm = [];
     var confirmResult = false;
@@ -350,6 +375,7 @@
   function test$(){
     var ut = new lb.core.Sandbox('test$').dom.$;
 
+    setUp();
     assert.equals( ut('testId'), document.getElementById('test$.testId'),
       "$ must return same node as document.getElementById, once prefix added");
 
@@ -359,9 +385,10 @@
 
   function testElement(){
     // Unit tests for lb.core.Sandbox#dom.element()
-
     // test factory must be configured beforehand
-    var capturedNames = [], capturedParams = [], capturedChildNodes = [];
+    var capturedNames = [],
+        capturedParams = [],
+        capturedChildNodes = [];
     var testFactory = {
       createElement: function(name, params, childNodes){
         capturedNames.push(name);
@@ -372,9 +399,9 @@
     config.setOptions({lbFactory:testFactory});
     assert.equals( config.getOption('lbFactory'), testFactory,
                             "assert: test factory expected to be configured");
-
     var ut = new lb.core.Sandbox('testElement').dom.element;
 
+    setUp();
     var testName = 'a';
     var testParams = {href:"#first"};
     var testChildNodes = ["first link"];
@@ -391,6 +418,7 @@
   function testGetClasses(){
     var ut = new lb.core.Sandbox('testGetClasses').css.getClasses;
 
+    setUp();
     assert.objectEquals( ut( $('testGetClasses.threeClasses') ),
                          {'one':true, 'two':true, 'three':true},
                                             "three classes expected in hash");
@@ -402,6 +430,7 @@
   function testAddClass(){
     var ut = new lb.core.Sandbox('testAddClass').css.addClass;
 
+    setUp();
     var div = $('testAddClass.noClass');
     ut(div, 'one');
     ut(div, 'two');
@@ -418,6 +447,7 @@
   function testRemoveClass(){
     var ut = new lb.core.Sandbox('testRemoveClass').css.removeClass;
 
+    setUp();
     var div = $('testRemoveClass.threeClasses');
     ut(div, 'two');
     assert.equals(div.className, 'one three',
@@ -431,7 +461,7 @@
 
   function testFireEvent(){
     // Unit tests for lb.core.Sandbox#dom.fireEvent
-
+    // Test factory must be configured beforehand
     var capturedElements = [],
         capturedTypes = [],
         capturedProperties = [],
@@ -447,6 +477,7 @@
     config.setOptions({lbFactory:testFactory});
     var ut = new lb.core.Sandbox('testFireEvent').dom.fireEvent;
 
+    setUp();
     var testElement = element('div');
     var testProperties = {
       screenX: 300, screenY: 450,
@@ -461,14 +492,11 @@
                                                   "test properties expected");
     assert.arrayEquals(capturedUseCapture, [undefined],
                                                "useCapture expected omitted");
-
-    // restore default configuration
-    config.reset();
   }
 
   function testCancelEvent(){
     // Unit tests for lb.core.Sandbox#dom.cancelEvent
-
+    // Test factory must be configured beforehand
     var capturedEvents = [];
     var testFactory = {
       destroyEvent: function(event){
@@ -478,25 +506,23 @@
     config.setOptions({lbFactory:testFactory});
     var ut = new lb.core.Sandbox('testCancelEvent').dom.cancelEvent;
 
+    setUp();
     var testEvent = {type: 'click'};
     ut(testEvent);
     assert.arrayEquals(capturedEvents, [testEvent],
                                        "test event expected on test factory");
-
-    // restore default configuration
-    config.reset();
   }
 
   function testGetListeners(){
     var ut = new lb.core.Sandbox('testGetListeners').dom.getListeners;
 
+    setUp();
     assert.arrayEquals( ut(), [],          "empty array expected initially");
   }
 
   function testAddListener(){
     // Unit tests for lb.core.Sandbox#dom.addListener
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var createdListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
@@ -511,10 +537,10 @@
       }
     };
     config.setOptions({lbFactory:testFactory});
-
     var sandbox = new lb.core.Sandbox('testAddListener');
     var ut = sandbox.dom.addListener;
 
+    setUp();
     var callback = function(event){
     };
 
@@ -544,8 +570,7 @@
 
   function testRemoveListener(){
     // Unit tests for lb.core.Sandbox#dom.removeListener
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var destroyedListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
@@ -562,9 +587,10 @@
       }
     };
     config.setOptions({lbFactory:testFactory});
-
     var sandbox = new lb.core.Sandbox('testRemoveListener');
     var ut = sandbox.dom.removeListener;
+
+    setUp();
 
     // no failures expected
     ut();
@@ -604,8 +630,7 @@
 
   function testRemoveAllListeners(){
     // Unit tests for lb.core.Sandbox#dom.removeAllListeners
-
-    // test factory must be configured beforehand
+    // Test factory must be configured beforehand
     var destroyedListeners = [];
     var testFactory = {
       createListener: function(element, type, callback, useCapture){
@@ -622,9 +647,10 @@
       }
     };
     config.setOptions({lbFactory:testFactory});
-
     var sandbox = new lb.core.Sandbox('testRemoveAllListeners');
     var ut = sandbox.dom.removeAllListeners;
+
+    setUp();
 
     // no error expected
     ut();
@@ -648,6 +674,7 @@
   function testGetLanguageList(){
     var ut = new lb.core.Sandbox('testGetLanguageList').i18n.getLanguageList;
 
+    setUp();
     assert.arrayEquals( ut(), [],   "language list expected empty initially");
   }
 
@@ -655,7 +682,7 @@
     var sandbox = new lb.core.Sandbox('testGetSelectedLanguage');
     var ut = sandbox.i18n.getSelectedLanguage;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     assert.equals( ut(), navigator.language || navigator.browserLanguage,
                   "selected language expected to default to browser language");
 
@@ -668,7 +695,7 @@
   function testSelectLanguage(){
     var ut = new lb.core.Sandbox('testSelectLanguage').i18n.selectLanguage;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     var testLanguageCode = 'TestLANGUAGEcode';
     ut(testLanguageCode);
     assert.equals( document.documentElement.lang, testLanguageCode,
@@ -680,6 +707,7 @@
     var sandbox = new lb.core.Sandbox('testAddLanguageProperties');
     var ut = sandbox.i18n.addLanguageProperties;
 
+    setUp();
     ut();
     ut(undefined);
     ut(null,{});
@@ -721,6 +749,7 @@
     var sandbox = new lb.core.Sandbox('testGet');
     var ut = sandbox.i18n.get;
 
+    setUp();
     var testLanguageCode = 'te-ST';
     sandbox.i18n.selectLanguage(testLanguageCode);
     assert.equals( ut(), null,             "null expected for missing key");
@@ -771,7 +800,7 @@
     var sandbox = new lb.core.Sandbox('testGetString');
     var ut = sandbox.i18n.getString;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     assert.equals( ut(), null,              "null expected for missing key");
     assert.equals( ut('missing'), null,   "null expected for key 'missing'");
 
@@ -830,7 +859,7 @@
     var sandbox = new lb.core.Sandbox('testFilterHtml');
     var ut = sandbox.i18n.filterHtml;
 
-    document.documentElement.removeAttribute('lang');
+    setUp();
     try {
       ut();
       ut(null);
@@ -847,11 +876,11 @@
         simpleNode = element('div',{},simpleNodeValue),
         dottedNodeValue = '#dotted.param#',
         dottedNode = element('div',{},dottedNodeValue),
-        complexNode = element('div',{}, [
-          'complex ',
+        complexNode = element('div',{},
+          'Complex ',
           element('span',{id:'#attributeParam#'},'#text-to-replace#'),
           ' #missing#'
-        ]);
+        );
 
     ut(noParamNode);
     assert.equals( noParamNode.innerHTML, noParamValue,
@@ -866,20 +895,36 @@
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
     });
-    assert.equals( complexNode.innerHTML.toLowerCase().replace('"',"'",'g'),
-             "complex <span id='attribute value'>text value</span> #missing#",
-                 "two replacements expected in complex value (no language)");
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],          "two replacements expected in complex value (no language)");
 
     sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
 
-    noParamNode = element('div',{},noParamValue),
-    simpleNode = element('div',{},simpleNodeValue),
-    dottedNode = element('div',{},dottedNodeValue),
-    complexNode = element('div',{}, [
-      'complex ',
+    noParamNode = element('div',{},noParamValue);
+    simpleNode = element('div',{},simpleNodeValue);
+    dottedNode = element('div',{},dottedNodeValue);
+    complexNode = element('div',{},
+      'Complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
       ' #missing#'
-    ]);
+    );
 
     ut(noParamNode,testLanguageCode);
     assert.equals( noParamNode.innerHTML, noParamValue,
@@ -894,11 +939,27 @@
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
     },testLanguageCode);
-    assert.equals( complexNode.innerHTML.toLowerCase().replace('"',"'",'g'),
-             "complex <span id='attribute value'>text value</span> #missing#",
-           "two replacements expected in complex value (explicit language)");
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],    "two replacements expected in complex value (explicit language)");
 
-    var listNode = element('ul',{},[
+    var listNode = element('ul',{},
       element('li',{},'No Language'),
       element('li',{lang:''},'Root'),
       element('li',{lang:'de'},'German'),
@@ -910,29 +971,32 @@
       element('li',{lang:'fr'},'French'),
       element('li',{lang:'fr-CA'},'French/Canada'),
       element('li',{lang:'fr-FR'},'French/France')
-    ]);
+    );
+    assert.equals( listNode.childNodes.length, 11,
+                                 "assert: 11 child nodes expected initially");
     ut(listNode,{},'en-GB');
     assert.equals( listNode.childNodes.length, 4,
                                           "4 child nodes expected to remain");
     assert.arrayEquals(
       [
         listNode.childNodes[0].nodeName,
+        listNode.childNodes[0].getAttribute('lang'),
         listNode.childNodes[0].innerHTML,
 
         listNode.childNodes[1].nodeName,
-        listNode.childNodes[1].getAttributeValue('lang'),
+        listNode.childNodes[1].getAttribute('lang'),
         listNode.childNodes[1].innerHTML,
 
         listNode.childNodes[2].nodeName,
-        listNode.childNodes[2].getAttributeValue('lang'),
+        listNode.childNodes[2].getAttribute('lang'),
         listNode.childNodes[2].innerHTML,
 
         listNode.childNodes[3].nodeName,
-        listNode.childNodes[3].getAttributeValue('lang'),
+        listNode.childNodes[3].getAttribute('lang'),
         listNode.childNodes[3].innerHTML
       ],
       [
-        'LI',          'No Language',
+        'LI', '',      'No Language',
         'LI', '',      'Root',
         'LI', 'en',    'English',
         'LI', 'en-GB', 'English/United Kingdom'
@@ -966,6 +1030,7 @@
   function testGetLocation(){
     var ut = new lb.core.Sandbox('testGetLocation').url.getLocation;
 
+    setUp();
     var location = ut();
     assert.isTrue( object.exists(location),      "location object expected");
     assert.equals( location.href, window.location.href,
@@ -1015,6 +1080,7 @@
   function testSetHash(){
     var ut = new lb.core.Sandbox('testSetHash').url.setHash;
 
+    setUp();
     ut('simple');
     assert.equals(window.location.hash, '#simple',
                                              "simple hash expected to be set");
@@ -1028,6 +1094,7 @@
   function testOnHashChange(test){
     var ut = new lb.core.Sandbox('testOnHashChange').url.onHashChange;
 
+    setUp();
     history.setHash('start');
     var hashOne = [];
     function captureHashOne(hash){

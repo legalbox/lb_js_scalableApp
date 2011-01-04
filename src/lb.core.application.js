@@ -8,14 +8,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-06-22
+ * 2011-01-04
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -26,9 +26,7 @@ lb.core.application = lb.core.application || (function() {
   // Closure for lb.core.application module
 
   // Declare aliases
-      /*requires lb.base.log.js */
-  var log = lb.base.log.print,
-      /*requires lb.base.array.js */
+  var /*requires lb.base.array.js */
       addOne = lb.base.array.addOne,
       removeOne = lb.base.array.removeOne,
       removeAll = lb.base.array.removeAll,
