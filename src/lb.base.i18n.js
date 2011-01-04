@@ -32,11 +32,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-03
+ * 2011-01-04
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog, navigator */
+/*global lb, goog, navigator, document */
 // preserve the module, if already loaded
 lb.base.i18n = lb.base.i18n || (function() {
   // Builder of
