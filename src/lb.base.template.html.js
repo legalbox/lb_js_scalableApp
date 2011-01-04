@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-03
+ * 2011-01-04
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -75,8 +75,8 @@ lb.base.template.html = lb.base.template.html || (function() {
     }
 
     var args = toArray(arguments),
-        attributes = node.attributes,
-        childNodes = node.childNodes,
+        attributes = toArray(node.attributes),
+        childNodes = toArray(node.childNodes),
         i,
         length,
         attribute;

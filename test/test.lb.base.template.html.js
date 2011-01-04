@@ -2,9 +2,9 @@
  * test.lb.base.template.html.js - Unit Tests of lb.base.template.html module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-12-29
+ * Version:   2011-01-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -263,6 +263,49 @@
        TEXT_NODE,ELEMENT_NODE,
        TEXT_NODE,ELEMENT_NODE],
            "node types of 9 nodes expected to be processed (mixed content)");
+
+
+    var parent = null;
+    function removeAttributeFromParent(htmlNode){
+      if (parent && htmlNode.nodeType === ATTRIBUTE_NODE){
+        parent.removeAttributeNode(htmlNode);
+      }
+    }
+
+    var elementWithAttributes =
+      element('div',{id:'British',lang:'en-GB',title:'Sir',dir:'rtl'});
+
+    parent = elementWithAttributes;
+    capturedNames = {};
+    ut( elementWithAttributes,
+        [removeAttributeFromParent, catchAttributes]
+    );
+    assert.objectEquals(
+      capturedNames,
+      {id:true,lang:true,title:true,dir:true},
+   "all 3 attributes expected to be processed even if attributes are removed");
+
+    // check that all child nodes are processed even if some are removed by a
+    // filter
+    function removeLastSibling(htmlNode){
+      if (htmlNode.parentNode){
+        htmlNode.parentNode.removeChild(
+          htmlNode.parentNode.lastChild
+        );
+      }
+    }
+
+    var elementWithChildNodes = element('div',{},
+      element('h1'),
+      element('h2'),
+      element('h3'),
+      element('h4'),
+      element('h5')
+    );
+    capturedNames = [];
+    ut(elementWithChildNodes, [removeLastSibling, captureNames]);
+    assert.arrayEquals(capturedNames, ['H1','H2','H3','H4','H5'],
+    "all 5 child nodes expected to be processed, even with elements removed");
   }
 
   function testReplaceParams(){
