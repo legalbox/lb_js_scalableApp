@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-03
+ * Version:   2011-01-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -972,28 +972,31 @@
       element('li',{lang:'fr-CA'},'French/Canada'),
       element('li',{lang:'fr-FR'},'French/France')
     );
+    assert.equals( listNode.childNodes.length, 11,
+                                 "assert: 11 child nodes expected initially");
     ut(listNode,{},'en-GB');
     assert.equals( listNode.childNodes.length, 4,
                                           "4 child nodes expected to remain");
     assert.arrayEquals(
       [
         listNode.childNodes[0].nodeName,
+        listNode.childNodes[0].getAttribute('lang'),
         listNode.childNodes[0].innerHTML,
 
         listNode.childNodes[1].nodeName,
-        listNode.childNodes[1].getAttributeValue('lang'),
+        listNode.childNodes[1].getAttribute('lang'),
         listNode.childNodes[1].innerHTML,
 
         listNode.childNodes[2].nodeName,
-        listNode.childNodes[2].getAttributeValue('lang'),
+        listNode.childNodes[2].getAttribute('lang'),
         listNode.childNodes[2].innerHTML,
 
         listNode.childNodes[3].nodeName,
-        listNode.childNodes[3].getAttributeValue('lang'),
+        listNode.childNodes[3].getAttribute('lang'),
         listNode.childNodes[3].innerHTML
       ],
       [
-        'LI',          'No Language',
+        'LI', '',      'No Language',
         'LI', '',      'Root',
         'LI', 'en',    'English',
         'LI', 'en-GB', 'English/United Kingdom'
