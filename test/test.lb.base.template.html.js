@@ -12,7 +12,7 @@
 
 /*requires lb.base.template.html.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window */
+/*global lb, bezen, window, document */
 (function() {
   // Builder of
   // Closure object for Test of lb.base.template.html
