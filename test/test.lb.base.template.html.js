@@ -122,9 +122,9 @@
     assert.objectEquals(capturedNames,{id:true,title:true,lang:true},
                     "attributes id, title and lang expected to be processed");
 
-    var capturedNames = [];
-    function captureNames(node){
-      capturedNames.push(node.nodeName);
+    var capturedNodeNames = [];
+    function captureNodeNames(node){
+      capturedNodeNames.push(node.nodeName);
     }
 
     var deepElement =
@@ -135,7 +135,7 @@
       );
 
     captured = [];
-    filters = [ut,catchFilter,captureNames];
+    filters = [ut,catchFilter,captureNodeNames];
     ut(deepElement,one,two,three,filters);
     assert.equals( captured.length, 2,
                                  "2 elements deep expected to be processed");
@@ -151,7 +151,7 @@
           one, two, three, filters
         ],   "params and filters expected in each call (elements deep only)");
     }
-    assert.arrayEquals(capturedNames, ['H2','H3'],
+    assert.arrayEquals(capturedNodeNames, ['H2','H3'],
                           "names of two nodes deep expected to be processed");
 
     var wideElement =
@@ -161,7 +161,7 @@
         element('h3')
       );
     captured = [];
-    capturedNames = [];
+    capturedNodeNames = [];
     ut(wideElement,one,two,three,filters);
     assert.equals( captured.length, 3,
                                  "3 elements wide expected to be processed");
@@ -177,7 +177,7 @@
           one, two, three, filters
         ],   "params and filters expected in each call (elements wide only)");
     }
-    assert.arrayEquals(capturedNames, ['H1','H2','H3'],
+    assert.arrayEquals(capturedNodeNames, ['H1','H2','H3'],
                        "names of three nodes wide expected to be processed");
 
     var wideAndDeepElement =
@@ -199,7 +199,7 @@
         )
       );
     captured = [];
-    capturedNames = [];
+    capturedNodeNames = [];
     ut(wideAndDeepElement,one,two,three,filters);
     assert.equals( captured.length, 12,
                         "12 elements expected to be processed wide and deep");
@@ -216,7 +216,7 @@
         ],
          "params and filters expected in each call (elements wide and deep)");
     }
-    assert.arrayEquals(capturedNames,
+    assert.arrayEquals(capturedNodeNames,
       ['H1',
          'A','B','CITE',
        'H2',
@@ -302,9 +302,9 @@
       element('h4'),
       element('h5')
     );
-    capturedNames = [];
-    ut(elementWithChildNodes, [removeLastSibling, captureNames]);
-    assert.arrayEquals(capturedNames, ['H1','H2','H3','H4','H5'],
+    capturedNodeNames = [];
+    ut(elementWithChildNodes, [removeLastSibling, captureNodeNames]);
+    assert.arrayEquals(capturedNodeNames, ['H1','H2','H3','H4','H5'],
     "all 5 child nodes expected to be processed, even with elements removed");
   }
 
