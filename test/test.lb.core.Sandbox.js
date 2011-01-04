@@ -516,7 +516,7 @@
   function testGetListeners(){
     var ut = new lb.core.Sandbox('testGetListeners').dom.getListeners;
 
-    setUp()
+    setUp();
     assert.arrayEquals( ut(), [],          "empty array expected initially");
   }
 
@@ -917,9 +917,9 @@
 
     sandbox.i18n.selectLanguage('OTHER-LANGUAGE-CODE');
 
-    noParamNode = element('div',{},noParamValue),
-    simpleNode = element('div',{},simpleNodeValue),
-    dottedNode = element('div',{},dottedNodeValue),
+    noParamNode = element('div',{},noParamValue);
+    simpleNode = element('div',{},simpleNodeValue);
+    dottedNode = element('div',{},dottedNodeValue);
     complexNode = element('div',{},
       'Complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
