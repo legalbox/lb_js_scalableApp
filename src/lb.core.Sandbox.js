@@ -71,7 +71,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-03
+ * 2011-01-04
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -91,9 +91,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
   // Define aliases
       /*requires lb.base.array.js */
-  var addOne = lb.base.array.addOne,
-      removeOne = lb.base.array.removeOne,
-      removeAll = lb.base.array.removeAll,
+  var removeAll = lb.base.array.removeAll,
       /*requires lb.base.dom.js */
       dom = lb.base.dom,
       /*requires lb.base.dom.css.js */
@@ -440,6 +438,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Note:
     //   Nothing happens when the listener has already been removed.
 
+    // TODO: use lb.base.array.removeOne(listeners,listener) instead
+    // To check that only removed listener is destroyed, a return value is
+    // needed in removeOne(). It must be added in the base array module.
     for (var i=0; i<listeners.length; i++){
       if (listeners[i]===listener){
         factory.destroyListener(listener);
