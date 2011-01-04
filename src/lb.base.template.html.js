@@ -99,9 +99,11 @@ lb.base.template.html = lb.base.template.html || (function() {
     // Replace parameters in attribute and text nodes with values from given
     // data.
     //
-    // The parameters to replace are surrounded by '#' characters, e.g.
-    // #param# and replaced with the value of the property of the same name.
-    // It is also possible to use nested properties, e.g. #section.param#.
+    // The parameters to replace are surrounded by '#' characters,
+    // e.g. #param#
+    // and replaced with the value of the property of the same name.
+    // It is also possible to use nested properties,
+    // e.g. #section.subsection.param#.
     //
     // See details of parameter format in
     // <lb.base.template.string.replaceParams(string,data): string>,
