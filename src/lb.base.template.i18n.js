@@ -95,7 +95,7 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     //
     // This filter sets the 'lang' attribute of HTML elements explicitly.
     // When a 'lang' attribute is already specified, it is preserved. When it
-    // is missing, the language inherited from ancestors in computed and set
+    // is missing, the language inherited from ancestors is computed and set
     // to the 'lang' property/attribute.
     //
     // Parameter:
