@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-03
+ * 2011-01-04
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -51,8 +51,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     //
     // No processing is done in filter functions to discover or set the
     // language of elements without a 'lang' attribute. These filters should be
-    // used in conjunction with setLanguage(), which is intended for this
-    // purpose.
+    // used in conjunction with <setLanguage(htmlElement)>, which is intended
+    // for this purpose.
     //
     // Parameter:
     //   languageCode - string, the language code identifying the language,
