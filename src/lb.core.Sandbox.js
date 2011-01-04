@@ -96,8 +96,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       dom = lb.base.dom,
       /*requires lb.base.dom.css.js */
       css = lb.base.dom.css,
-      /*requires lb.base.dom.Listener.js */
-      Listener = lb.base.dom.Listener,
       /*requires lb.base.ajax.js */
       send = lb.base.ajax.send,
       /*requires lb.base.string.js */
