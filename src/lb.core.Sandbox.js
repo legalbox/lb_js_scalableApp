@@ -64,14 +64,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010, All Rights Reserved
+ * Legal Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2010-12-28
+ * 2011-01-03
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -116,8 +116,17 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       /*requires lb.base.i18n.data.js */
       i18nData = i18n.data,
       getProperty = i18nData.getProperty,
+      /*requires lb.base.template.js */
+      template = lb.base.template,
+      applyFilters = template.applyFilters,
       /*requires lb.base.template.string.js */
-      replaceParamsInString = lb.base.template.string.replaceParams,
+      replaceParamsInString = template.string.replaceParams,
+      /*requires lb.base.template.html.js */
+      topDownParsing = template.html.topDownParsing,
+      replaceParams = template.html.replaceParams,
+      /*requires lb.base.template.i18n.js */
+      filterByLanguage = template.i18n.filterByLanguage,
+      setLanguage = template.i18n.setLanguage,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -728,6 +737,22 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Reference:
   //   Specifying the language of content: the lang attribute
   //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
+  function filterHtml(htmlNode,data,languageCode){
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = getSelectedLanguage();
+    }
+    applyFilters(
+      htmlNode,
+      data,
+      [
+        topDownParsing,
+        filterByLanguage(languageCode),
+        setLanguage,
+        replaceParams
+      ]
+    );
+  }
 
   // Function: server.send(url,data,receive)
   // Send and receive data from the remote host.
@@ -913,7 +938,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     selectLanguage: selectLanguage,
     addLanguageProperties: i18nData.addLanguageProperties,
     get: get,
-    getString: getString
+    getString: getString,
+    filterHtml: filterHtml
   };
   this.server = {
     send: send
