@@ -155,6 +155,6 @@ HISTORY
   2010-10-26, v1.4.0, Added confirm method in sandbox.utils API
   2010-12-20, v1.4.1, Refactored base i18n API: simpler yet powerful
   2010-12-20, v1.4.2, Bug fix: language code comparison is now case-insensitive
-  2010-XX-XX, v1.5.0, ROADMAP: add support for internationalization (i18n)
-  2010-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
+  2011-01-05, v1.5.0, Added support for internationalization (i18n)
+  2011-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
 
