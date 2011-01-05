@@ -2,9 +2,9 @@
  * test.lb.base.string.js - Unit Tests of lb.base.string module
  *
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal Box (c) 2010, All Rights Reserved
+ * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2010-06-22
+ * Version:   2011-01-05
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/

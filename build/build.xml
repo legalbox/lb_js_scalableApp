@@ -3,12 +3,12 @@
   <description>
   Build script for
   The Scalable JavaScript Application Framework
-  by Legal Box, Paris
+  by Legal-Box, Paris
 
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
-  Copyright: Legal Box SAS (c) 2010, All Rights Reserved
+  Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2010-12-29
+  Version: 2011-01-04
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/

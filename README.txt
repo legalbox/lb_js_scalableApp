@@ -1,6 +1,6 @@
 
 The Scalable JavaScript Application framework,
-  by Legal Box, Paris
+  by Legal-Box, Paris
 
 LANGUAGES
 
@@ -9,13 +9,13 @@ LANGUAGES
 DESCRIPTION
 
   The Scalable JavaScript Application framework is a client-side library
-  developed by Legal Box to create modular Web applications. It is based on
+  developed by Legal-Box to create modular Web applications. It is based on
   the Scalable JavaScript Application Architecture [1] by Nicholas Zakas.
 
 FIRST STEPS
 
   The design of the framework is described in Design Patterns for Scalable
-  JavaScript Application by Legal Box [2], which you can find in the doc folder
+  JavaScript Application by Legal-Box [2], which you can find in the doc folder
   of this project.
 
   After installing the required software (see the requirements section below),
@@ -41,7 +41,7 @@ REFERENCES
   [1] Scalable JavaScript Application Architecture, by Nicholas Zakas
   http://www.slideshare.net/nzakas/scalable-javascript-application-architecture
 
-  [2] Design Patterns for Scalable JavaScript Application by Legal Box
+  [2] Design Patterns for Scalable JavaScript Application by Legal-Box
   ./doc/javascript-application-design-patterns.odt
 
   [3] Semantic Versioning
@@ -75,7 +75,7 @@ AUTHOR
 
 COPYRIGHT
 
-  Legal Box SAS (c) 2010, All Rights Reserved.
+  Legal-Box SAS (c) 2010-2011, All Rights Reserved.
   http://www.legal-box.com
 
 LICENSE
@@ -90,7 +90,7 @@ INCLUDED SOFTWARE
     Licensed under the Apache License, Version 2.0
     http://www.apache.org/licenses/LICENSE-2.0
     Parts of the library, in src/closure and test/closure,
-    with modifications by Legal Box under the BSD License.
+    with modifications by Legal-Box under the BSD License.
 
   * bezen.org JavaScript library CC-BY Eric Bréchemier
     http://bezen.org/javascript/

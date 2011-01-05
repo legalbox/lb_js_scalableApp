@@ -2,9 +2,9 @@ Format: 1.4
 
 
 Title: Scalable JavaScript Application
-SubTitle: by Legal Box
+SubTitle: by Legal-Box
 
-Footer: Copyright (c) 2010 Legal Box SAS
+Footer: Copyright (c) 2010-2011 Legal-Box SAS
 Timestamp: yyyy-dd-mm
 #   m     - One or two digit month.  January is "1"
 #   mm    - Always two digit month.  January is "01"

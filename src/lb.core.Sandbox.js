@@ -64,14 +64,14 @@
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
  * Copyright:
- * Legal Box SAS (c) 2010-2011, All Rights Reserved
+ * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-04
+ * 2011-01-05
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */

@@ -24,7 +24,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Modifications Copyright 2010 Legal Box SAS, All Rights Reserved
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/structs/map.js to goog.structs.Map.js
 // * added requires comments for goog.js, goog.iter.js, goog.object.js,
