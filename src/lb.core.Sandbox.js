@@ -71,7 +71,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-07
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -117,12 +117,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       applyFilters = template.applyFilters,
       /*requires lb.base.template.string.js */
       replaceParamsInString = template.string.replaceParams,
-      /*requires lb.base.template.html.js */
-      topDownParsing = template.html.topDownParsing,
-      replaceParams = template.html.replaceParams,
       /*requires lb.base.template.i18n.js */
-      filterByLanguage = template.i18n.filterByLanguage,
-      setLanguage = template.i18n.setLanguage,
+      filterHtml = template.i18n.filterHtml,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -736,22 +732,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Reference:
   //   Specifying the language of content: the lang attribute
   //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
-  function filterHtml(htmlNode,data,languageCode){
-    data = data || {};
-    if (typeof languageCode !== 'string'){
-      languageCode = getSelectedLanguage();
-    }
-    applyFilters(
-      htmlNode,
-      data,
-      [
-        topDownParsing,
-        filterByLanguage(languageCode),
-        setLanguage,
-        replaceParams
-      ]
-    );
-  }
+
+  // Note: filterHtml is an alias for lb.base.template.i18n.filterHtml
 
   // Function: server.send(url,data,receive)
   // Send and receive data from the remote host.
