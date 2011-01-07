@@ -34,6 +34,13 @@
                             "lb.base.template.i18n namespace was not found");
   }
 
+  function setUp(){
+    // Set up to restore a neutral state before each unit test
+
+    // reset document language
+    document.documentElement.removeAttribute('lang');
+  }
+
   function testFilterByLanguage(){
     var ut = lb.base.template.i18n.filterByLanguage;
 
@@ -268,10 +275,182 @@
                                 "lang 'en' expected to be set to missing #4");
   }
 
+  function testFilterHtml(){
+    var ut = lb.base.template.i18n.filterHtml;
+
+    setUp();
+    try {
+      ut();
+      ut(null);
+    } catch(e) {
+      assert.fail("null/undefined node expected to be ignored: "+e);
+    }
+
+    var testLanguageCode = 'te-ST';
+    document.documentElement.lang = testLanguageCode;
+
+    var noParamValue = 'No param replacement',
+        noParamNode = element('div',{},noParamValue),
+        simpleNodeValue = '#param#',
+        simpleNode = element('div',{},simpleNodeValue),
+        dottedNodeValue = '#dotted.param#',
+        dottedNode = element('div',{},dottedNodeValue),
+        complexNode = element('div',{},
+          'Complex ',
+          element('span',{id:'#attributeParam#'},'#text-to-replace#'),
+          ' #missing#'
+        );
+
+    ut(noParamNode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+               "value without param expected to be left AS IS (no language)");
+    ut(simpleNode,{param:'value'});
+    assert.equals( simpleNode.innerHTML, 'value',
+                           "simple value replacement expected (no language)");
+    ut(dottedNode,{dotted:{param:'value'}});
+    assert.equals( dottedNode.innerHTML, 'value',
+                           "dotted replacement value expected (no language)");
+    ut(complexNode,{
+      attributeParam: 'attribute value',
+      'text-to-replace':'text value'
+    });
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],          "two replacements expected in complex value (no language)");
+
+    document.documentElement.lang = 'OTHER-LANGUAGE-CODE';
+
+    noParamNode = element('div',{},noParamValue);
+    simpleNode = element('div',{},simpleNodeValue);
+    dottedNode = element('div',{},dottedNodeValue);
+    complexNode = element('div',{},
+      'Complex ',
+      element('span',{id:'#attributeParam#'},'#text-to-replace#'),
+      ' #missing#'
+    );
+
+    ut(noParamNode,testLanguageCode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+         "value without param expected to be left AS IS (explicit language)");
+    ut(simpleNode,{param:'value'},testLanguageCode);
+    assert.equals( simpleNode.innerHTML, 'value',
+                     "simple value replacement expected (explicit language)");
+    ut(dottedNode,{dotted:{param:'value'}},testLanguageCode);
+    assert.equals( dottedNode.innerHTML, 'value',
+                    "dotted replacement value expected (explicit language)");
+    ut(complexNode,{
+      attributeParam: 'attribute value',
+      'text-to-replace':'text value'
+    },testLanguageCode);
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'attribute value',
+            'text value',
+          ' #missing#'
+      ],    "two replacements expected in complex value (explicit language)");
+
+    var listNode = element('ul',{},
+      element('li',{},'No Language'),
+      element('li',{lang:''},'Root'),
+      element('li',{lang:'de'},'German'),
+      element('li',{lang:'de-AT'},'German/Austria'),
+      element('li',{lang:'de-DE'},'German/Germany'),
+      element('li',{lang:'en'},'English'),
+      element('li',{lang:'en-GB'},'English/United Kingdom'),
+      element('li',{lang:'en-US'},'English/USA'),
+      element('li',{lang:'fr'},'French'),
+      element('li',{lang:'fr-CA'},'French/Canada'),
+      element('li',{lang:'fr-FR'},'French/France')
+    );
+    assert.equals( listNode.childNodes.length, 11,
+                                 "assert: 11 child nodes expected initially");
+    ut(listNode,{},'en-GB');
+    assert.equals( listNode.childNodes.length, 4,
+                                          "4 child nodes expected to remain");
+    assert.arrayEquals(
+      [
+        listNode.childNodes[0].nodeName,
+        listNode.childNodes[0].getAttribute('lang'),
+        listNode.childNodes[0].innerHTML,
+
+        listNode.childNodes[1].nodeName,
+        listNode.childNodes[1].getAttribute('lang'),
+        listNode.childNodes[1].innerHTML,
+
+        listNode.childNodes[2].nodeName,
+        listNode.childNodes[2].getAttribute('lang'),
+        listNode.childNodes[2].innerHTML,
+
+        listNode.childNodes[3].nodeName,
+        listNode.childNodes[3].getAttribute('lang'),
+        listNode.childNodes[3].innerHTML
+      ],
+      [
+        'LI', '',      'No Language',
+        'LI', '',      'Root',
+        'LI', 'en',    'English',
+        'LI', 'en-GB', 'English/United Kingdom'
+      ],             "only child nodes with no lang, lang '', 'en', 'en-GB' "+
+                                   "expected to remain for language 'en-GB'");
+
+    var frenchAncestorWithChild = element('div',{lang:'fr'},
+      element('div')
+    );
+    var child = frenchAncestorWithChild.firstChild;
+    ut(child,{},'fr');
+    assert.equals( frenchAncestorWithChild.firstChild, child,
+        "child with inherited French language expected to be preserved (fr)");
+
+    ut(child,{},'en');
+    assert.equals( frenchAncestorWithChild.firstChild, null,
+          "child with inherited French language expected to be removed (en)");
+
+    var frenchAncestorWithEnglishChild = element('div',{lang:'fr'},
+      element('div',{lang:'en'})
+    );
+    child = frenchAncestorWithEnglishChild.firstChild;
+    ut(child,{},'en');
+    assert.equals( frenchAncestorWithEnglishChild.firstChild, child,
+           "English child with French ancestor expected to be preserved (en)");
+    ut(child,{},'fr');
+    assert.equals( frenchAncestorWithEnglishChild.firstChild, null,
+             "English child with French ancestor expected to be removed (fr)");
+  }
+
   var tests = {
     testNamespace: testNamespace,
     testFilterByLanguage: testFilterByLanguage,
-    testSetLanguage: testSetLanguage
+    testSetLanguage: testSetLanguage,
+    testFilterHtml: testFilterHtml
   };
 
   testrunner.define(tests, "lb.base.template.i18n");

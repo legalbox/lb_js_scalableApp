@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-07
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -36,7 +36,13 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       ELEMENT_NODE = dom.ELEMENT_NODE,
       hasAttribute = dom.hasAttribute,
       /*requires lb.base.i18n.js */
-      i18n = lb.base.i18n;
+      i18n = lb.base.i18n,
+      /*requires lb.base.template.js */
+      template = lb.base.template,
+      applyFilters = template.applyFilters,
+      /*requires lb.base.template.html.js */
+      topDownParsing = template.html.topDownParsing,
+      replaceParams = template.html.replaceParams;
 
   function filterByLanguage(languageCode){
     // Function: filterByLanguage(languageCode): function
@@ -115,8 +121,101 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     }
   }
 
+  function filterHtml(htmlNode,data,languageCode){
+    // Function: filterHtml(htmlNode[,data[,languageCode]])
+    // Replace parameters and trim nodes based on html 'lang' attribute.
+    //
+    // This is a higher level filter, that applies a predefined selection of
+    // filters to the given HTML node:
+    //   * topDownParsing (from base HTML templates)
+    //   * filterByLanguage
+    //   * setLanguage
+    //   * replaceParams (from base HTML templates)
+    //
+    // The given HTML node is modified in place. You should clone it beforehand
+    // if you wish to preserve the original version.
+    //
+    // Instead of looking for language properties associated with language
+    // codes using addLanguageProperties(), this method relies on HTML markup
+    // for translations. Multiple translations may be included in the same
+    // HTML node, and only relevant translations will be kept, based on 'lang'
+    // attribute:
+    // | <div lang=''>
+    // |   <span lang='de'>Hallo #firstName#!</span>
+    // |   <span lang='en'>Hi #firstName#!</span>
+    // |   <span lang='fr'>Salut #firstName# !</span>
+    // |   <span lang='jp'>こんにちは#lastName#!</span>
+    // | </div>
+    //
+    // The nodes are filtered according to the languageCode argument, or if it
+    // is omitted, the language code of the application as returned by
+    // getSelectedLanguage(). Filtering the HTML from the above example for the
+    // language 'en-GB' would result in:
+    // | <div lang=''>
+    // |   <span lang='en'>Hi #firstName#!</span>
+    // | </div>
+    //
+    // The 'lang' attribute is inherited from ancestors, including ancestors
+    // of the given HTML node, unless it has a 'lang' attribute itself. The
+    // root element of the HTML node will be removed from its parent as well
+    // if its language does not match the language code used for filtering.
+    // Elements within the scope of the empty language '' or in the scope of
+    // no language attribute are preserved by the filtering.
+    //
+    // The parameter format is the same as the one used in getString();
+    // parameters to replace are surrounded by '#' characters,
+    // e.g. '#param#', based on the regular expression
+    // /#([a-zA-Z0-9_\-\.]+)#/g.
+    //
+    // The data object contains properties with values for the replacement of
+    // parameters of the same name:
+    // | {
+    // |   firstName: 'Jane',
+    // |   lastName: 'Doe'
+    // | }
+    //
+    // After parameter replacement, the HTML node of the above example would
+    // end up as:
+    // | <div lang=''>
+    // |   <span lang='en'>Hi Jane!</span>
+    // | </div>
+    //
+    // Parameters:
+    //   key - string or array, the key identifiying the property:
+    //         * a property name: 'name' (at top level of language properties)
+    //         * a dotted name: 'section.subsection.name' (nested property)
+    //         * an array: ['section','subsection','name'] (alternate form for
+    //                                                      nested properties)
+    //   data - object, optional, replacement values for parameters found in
+    //          attributes and text of the HTML node. Defaults to an empty
+    //          object, leaving all parameters unreplaced.
+    //   languageCode - string, optional, language code for lookup in a
+    //                  specific language. Defaults to the language selected
+    //                  for the whole application, as returned in
+    //                  getSelectedLanguage().
+    //
+    // Reference:
+    //   Specifying the language of content: the lang attribute
+    //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = i18n.getLanguage();
+    }
+    applyFilters(
+      htmlNode,
+      data,
+      [
+        topDownParsing,
+        filterByLanguage(languageCode),
+        setLanguage,
+        replaceParams
+      ]
+    );
+  }
+
   return { // public API
     filterByLanguage: filterByLanguage,
-    setLanguage: setLanguage
+    setLanguage: setLanguage,
+    filterHtml: filterHtml
   };
 }());
