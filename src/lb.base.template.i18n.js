@@ -135,11 +135,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // The given HTML node is modified in place. You should clone it beforehand
     // if you wish to preserve the original version.
     //
-    // Instead of looking for language properties associated with language
-    // codes using addLanguageProperties(), this method relies on HTML markup
-    // for translations. Multiple translations may be included in the same
-    // HTML node, and only relevant translations will be kept, based on 'lang'
-    // attribute:
+    // Multiple translations may be included in the given HTML node, and only
+    // relevant translations will be kept, based on 'lang' attribute:
     // | <div lang=''>
     // |   <span lang='de'>Hallo #firstName#!</span>
     // |   <span lang='en'>Hi #firstName#!</span>
@@ -149,8 +146,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     //
     // The nodes are filtered according to the languageCode argument, or if it
     // is omitted, the language code of the application as returned by
-    // getSelectedLanguage(). Filtering the HTML from the above example for the
-    // language 'en-GB' would result in:
+    // lb.base.i18n.getLanguage(). Filtering the HTML from the above example
+    // for the language 'en-GB' would result in:
     // | <div lang=''>
     // |   <span lang='en'>Hi #firstName#!</span>
     // | </div>
@@ -162,10 +159,10 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // Elements within the scope of the empty language '' or in the scope of
     // no language attribute are preserved by the filtering.
     //
-    // The parameter format is the same as the one used in getString();
-    // parameters to replace are surrounded by '#' characters,
-    // e.g. '#param#', based on the regular expression
-    // /#([a-zA-Z0-9_\-\.]+)#/g.
+    // Parameters of the form #param# found in text and attribute nodes are
+    // replaced with values from the given data object. The parameter format
+    // is the same as the one used in lb.base.template.html.replaceParams(),
+    // based on the regular expression /#([a-zA-Z0-9_\-\.]+)#/g.
     //
     // The data object contains properties with values for the replacement of
     // parameters of the same name:
