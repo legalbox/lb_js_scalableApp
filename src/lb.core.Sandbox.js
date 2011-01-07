@@ -114,7 +114,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       getProperty = i18nData.getProperty,
       /*requires lb.base.template.js */
       template = lb.base.template,
-      applyFilters = template.applyFilters,
       /*requires lb.base.template.string.js */
       replaceParamsInString = template.string.replaceParams,
       /*requires lb.base.template.i18n.js */
