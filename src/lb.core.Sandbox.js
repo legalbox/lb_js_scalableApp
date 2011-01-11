@@ -112,12 +112,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       /*requires lb.base.i18n.data.js */
       i18nData = i18n.data,
       getProperty = i18nData.getProperty,
-      /*requires lb.base.template.js */
-      template = lb.base.template,
-      /*requires lb.base.template.string.js */
-      replaceParamsInString = template.string.replaceParams,
       /*requires lb.base.template.i18n.js */
-      filterHtml = template.i18n.filterHtml,
+      i18nTemplate = lb.base.template.i18n,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -666,18 +662,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //     corresponding properties found in data object or as a fallback in the
   //     language properties of the most specific language where available
   //   * or null if the property is not found
-  function getString(key,data,languageCode){
-    data = data || {};
-    if (typeof languageCode !== 'string'){
-      languageCode = getSelectedLanguage();
-    }
 
-    var value = getProperty(languageCode,key);
-    if (value===null){
-      return value;
-    }
-    return replaceParamsInString(value,data);
-  }
+  // Note: getString() is an alias for lb.base.i18n.data.getString()
 
   // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
   // Replace parameters and trim nodes based on html 'lang' attribute.
@@ -930,8 +916,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     selectLanguage: selectLanguage,
     addLanguageProperties: i18nData.addLanguageProperties,
     get: get,
-    getString: getString,
-    filterHtml: filterHtml
+    getString: i18nData.getString,
+    filterHtml: i18nTemplate.filterHtml
   };
   this.server = {
     send: send

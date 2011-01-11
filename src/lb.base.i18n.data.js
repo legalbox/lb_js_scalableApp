@@ -69,6 +69,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       equals = i18n.equals,
       languageCompare = i18n.languageCompare,
       contains = i18n.contains,
+                                  /*requires lb.base.template.string.js*/
+      replaceParamsInString = lb.base.template.string.replaceParams,
 
   // private fields
 
@@ -234,6 +236,68 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     return null;
   }
 
+  // Function: getString(key[,data[,languageCode]]): string
+  // Get a string computed by replacing data values in the most specific value
+  // found for given key, used as a string template.
+  //
+  // The parameters to replace are surrounded by '#' characters,
+  // e.g. '#param-to-replace#'. No space can appear in the name;
+  // only characters in the range [a-zA-Z0-9_\-\.] are allowed.
+  //
+  // Replacement values are provided as properties of the data object, with
+  // the same name as the parameter:
+  // | {
+  // |   'param-to-replace': 'value'
+  // | }
+  //
+  // Dotted parameter names, e.g. '#section.subsection.name', are replaced with
+  // values nested within sections and subsections of the data object:
+  // | {
+  // |   section: {
+  // |     subsection: {
+  // |       name: 'value'
+  // |     }
+  // |   }
+  // | }
+  //
+  // In case a property is not found in the given data object, it is looked up
+  // in the language properties of the given language instead.
+  //
+  // The language defaults to the language of the whole document, as set on
+  // the 'lang' attribute of the root document element.
+  //
+  // Parameters:
+  //   key - string or array, the key identifiying the property:
+  //         * a property name: 'name' (at top level of language properties)
+  //         * a dotted name: 'section.subsection.name' (nested property)
+  //         * an array: ['section','subsection','name'] (alternate form for
+  //                                                      nested properties)
+  //   data - object, optional, replacement values for parameters, which may be
+  //          nested within sections and subsections. Defaults to an empty
+  //          object, leaving all parameters unreplaced.
+  //   languageCode - string, optional, language code for lookup in a specific
+  //                  language. Defaults to the language selected for the whole
+  //                  document, as set on document.documentElement.lang.
+  //
+  // Returns:
+  //   * string, the value of corresponding property, in the most specific
+  //     language available, with parameters replaced with the value of
+  //     corresponding properties found in data object or as a fallback in the
+  //     language properties of the most specific language where available
+  //   * or null if the property is not found
+  function getString(key,data,languageCode){
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = i18n.getLanguage();
+    }
+
+    var value = getProperty(languageCode,key);
+    if (value===null){
+      return value;
+    }
+    return replaceParamsInString(value,data);
+  }
+
   function reset(){
     // Function: reset()
     // Remove all language properties.
@@ -245,6 +309,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
     getProperty: getProperty,
+    getString: getString,
     reset: reset
   };
 }());

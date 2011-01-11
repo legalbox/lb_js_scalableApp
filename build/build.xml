@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-01-04
+  Version: 2011-01-11
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -228,13 +228,13 @@
       <file file="../src/lb.base.dom.Listener.js"/>
       <file file="../src/lb.base.dom.factory.js"/>
       <file file="../src/lb.base.history.js"/>
+      <file file="../src/lb.base.template.js"/>
+      <file file="../src/lb.base.template.string.js"/>
       <file file="../src/lb.base.i18n.js"/>
       <file file="../src/lb.base.i18n.data.js"/>
       <file file="../src/lb.base.log.js"/>
       <file file="../src/lb.base.object.js"/>
       <file file="../src/lb.base.string.js"/>
-      <file file="../src/lb.base.template.js"/>
-      <file file="../src/lb.base.template.string.js"/>
       <file file="../src/lb.base.template.html.js"/>
       <file file="../src/lb.base.template.i18n.js"/>
       <file file="../src/lb.base.json.js"/>
