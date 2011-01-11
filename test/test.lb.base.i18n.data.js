@@ -83,61 +83,61 @@
     ut('en',english);
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(), ['en'],
                                         "language 'en' expected to be added");
-    assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en'), 'English',
                              "English property expected to be defined in en");
-    assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en-GB'), 'English',
                           "English property expected to be defined in en-GB");
-    assert.equals( lb.base.i18n.data.getProperty('fr','name'), null,
+    assert.equals( lb.base.i18n.data.get('name','fr'), null,
                          "English property not expected to be defined in fr");
 
     ut('',root);
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(), ['','en'],
                                    "language codes '','en' expected sorted");
-    assert.equals( lb.base.i18n.data.getProperty('','name'), 'Root',
+    assert.equals( lb.base.i18n.data.get('name',''), 'Root',
                                "Root property expected to be defined in ''");
-    assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en'), 'English',
                                "Root property expected to be hidden in en");
-    assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en-GB'), 'English',
                             "Root property expected to be hidden in en-GB");
-    assert.equals( lb.base.i18n.data.getProperty('fr','name'), 'Root',
+    assert.equals( lb.base.i18n.data.get('name','fr'), 'Root',
                               "Root property expected to be defined in fr");
 
     ut('fr-FR',frenchFrance);
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(), ['','en','fr-FR'],
                           "3 language codes '','en','fr-FR' expected sorted");
-    assert.equals( lb.base.i18n.data.getProperty('fr-FR','name'), 'FrenchFrance',
+    assert.equals( lb.base.i18n.data.get('name','fr-FR'), 'FrenchFrance',
                      "FrenchFrance property expected to be defined in fr-FR");
-    assert.equals( lb.base.i18n.data.getProperty('','name'), 'Root',
+    assert.equals( lb.base.i18n.data.get('name',''), 'Root',
                     "FrenchFrance property not expected to be defined in ''");
-    assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en'), 'English',
                     "FrenchFrance property not expected to be defined in en");
-    assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en-GB'), 'English',
                  "FrenchFrance property not expected to be defined in en-GB");
 
     ut('fr',french);
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(),
                         ['','en','fr','fr-FR'],
                                           "4 language codes expected sorted");
-    assert.equals( lb.base.i18n.data.getProperty('fr','name'), 'French',
+    assert.equals( lb.base.i18n.data.get('name','fr'), 'French',
                               "French property expected to be defined in fr");
-    assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en'), 'English',
                               "French property expected to be defined in en");
-    assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en-GB'), 'English',
                            "French property expected to be defined in en-GB");
-    assert.equals( lb.base.i18n.data.getProperty('fr-FR','name'), 'FrenchFrance',
+    assert.equals( lb.base.i18n.data.get('name','fr-FR'), 'FrenchFrance',
                            "French property expected to be hidden in fr-FR");
 
     ut('fr-CA',frenchCanada);
     assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(),
                         ['','en','fr','fr-CA','fr-FR'],
                                   "5 language codes expected sorted");
-    assert.equals( lb.base.i18n.data.getProperty('fr-CA','name'), 'FrenchCanada',
+    assert.equals( lb.base.i18n.data.get('name','fr-CA'), 'FrenchCanada',
                      "FrenchCanada property expected to be defined in fr-CA");
-    assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en'), 'English',
                     "FrenchCanada property not expected to be defined in en");
-    assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'English',
+    assert.equals( lb.base.i18n.data.get('name','en-GB'), 'English',
                  "FrenchCanada property not expected to be defined in en-GB");
-    assert.equals( lb.base.i18n.data.getProperty('fr','name'), 'French',
+    assert.equals( lb.base.i18n.data.get('name','fr'), 'French',
                     "FrenchCanada property not expected to be defined in fr");
 
     ut('en-GB',englishGB);
@@ -163,40 +163,41 @@
       assert.arrayEquals( lb.base.i18n.data.getLanguageCodes(),
                         ['','en','en-GB','en-US','fr','fr-CA','fr-FR'],
                    "7 language variants expected sorted, without duplicates");
-      assert.equals( lb.base.i18n.data.getProperty('','name'), 'Root2',
+      assert.equals( lb.base.i18n.data.get('name',''), 'Root2',
                                "Root2 property expected to be defined in ''");
-      assert.equals( lb.base.i18n.data.getProperty('fr','name'), 'French2',
+      assert.equals( lb.base.i18n.data.get('name','fr'), 'French2',
                              "French2 property expected to be defined in fr");
-      assert.equals( lb.base.i18n.data.getProperty('fr-CA','name'), 'FrenchCanada2',
+      assert.equals( lb.base.i18n.data.get('name','fr-CA'), 'FrenchCanada2',
                     "FrenchCanada2 property expected to be defined in fr-CA");
-      assert.equals( lb.base.i18n.data.getProperty('fr-FR','name'), 'FrenchFrance2',
+      assert.equals( lb.base.i18n.data.get('name','fr-FR'), 'FrenchFrance2',
                     "FrenchFrance2 property expected to be defined in fr-FR");
-      assert.equals( lb.base.i18n.data.getProperty('en','name'), 'English2',
+      assert.equals( lb.base.i18n.data.get('name','en'), 'English2',
                              "English2 property expected to be defined in en");
-      assert.equals( lb.base.i18n.data.getProperty('en-US','name'), 'EnglishUSA2',
+      assert.equals( lb.base.i18n.data.get('name','en-US'), 'EnglishUSA2',
                       "EnglishUSA2 property expected to be defined in en-US");
-      assert.equals( lb.base.i18n.data.getProperty('en-GB','name'), 'EnglishGB2',
+      assert.equals( lb.base.i18n.data.get('name','en-GB'), 'EnglishGB2',
                       "EnglishGB2 property expected to be defined in en-GB");
     } catch(e) {
       assert.fail("Property defined last shall hide/replace previous: "+e);
     }
   }
 
-  function testGetProperty(){
-    var ut = lb.base.i18n.data.getProperty;
+  function testGet(){
+    var ut = lb.base.i18n.data.get;
+
     setUp();
 
     assert.equals( ut(), null,
    "null expected for undefined property in undefined language (no language)");
     assert.equals( ut(''), null,
                   "null expected for undefined property in '' (no language)");
-    assert.equals( ut('','test'), null,
+    assert.equals( ut('test',''), null,
                      "null expected for 'test' property in '' (no language)");
-    assert.equals( ut({},'test'), null,
+    assert.equals( ut('test',{}), null,
                      "null expected for 'test' property in {} (no language)");
-    assert.equals( ut('','section.subsection.test'), null,
+    assert.equals( ut('section.subsection.test',''), null,
                      "null expected for dotted property in '' (no language)");
-    assert.equals( ut('','section','subsection','test'), null,
+    assert.equals( ut(['section','subsection','test'],''), null,
               "null expected for nested 'test' property in '' (no language)");
 
     lb.base.i18n.data.addLanguageProperties('',
@@ -209,17 +210,17 @@
 
     assert.equals( ut('fr-FR'), null,
                       "null expected for undefined property in fr-FR (root)");
-    assert.equals( ut({},'missing'), null,
+    assert.equals( ut('missing',{}), null,
                         "null expected for missing property in {} (root)");
-    assert.equals( ut('fr-FR','missing'), null,
+    assert.equals( ut('missing','fr-FR'), null,
                         "null expected for missing property in fr-FR (root)");
-    assert.equals( ut('fr-FR','empty'), '',
+    assert.equals( ut('empty','fr-FR'), '',
                   "empty string expected for empty property in fr-FR (root)");
-    assert.equals( ut('fr-FR','test'), 'Root Value',
+    assert.equals( ut('test','fr-FR'), 'Root Value',
                    "Root Value expected for 'test' property in fr-FR (root)");
-    assert.equals( ut('fr-FR','section.subsection.test'), null,
+    assert.equals( ut('section.subsection.test','fr-FR'), null,
                   "null expected for dotted nested property in fr-FR (root)");
-    assert.equals( ut('fr-FR','section','subsection','test'), null,
+    assert.equals( ut(['section','subsection','test'],'fr-FR'), null,
                   "null expected for nested 'test' property in fr-FR (root)");
 
     lb.base.i18n.data.addLanguageProperties('fr',
@@ -235,22 +236,22 @@
 
     assert.equals( ut('fr-FR'), null,
                    "null expected for undefined property in fr-FR (root,fr)");
-    assert.equals( ut('fr-FR','missing'), null,
+    assert.equals( ut('missing','fr-FR'), null,
                      "null expected for missing property in fr-FR (root,fr)");
-    assert.equals( ut('fr-FR','empty'), '',
+    assert.equals( ut('empty','fr-FR'), '',
                "empty string expected for empty property in fr-FR (root,fr)");
-    assert.equals( ut('fr-FR','test'), 'Root Value',
+    assert.equals( ut('test','fr-FR'), 'Root Value',
                 "Root Value expected for 'test' property in fr-FR (root,fr)");
-    assert.equals( ut('fr-FR','section.subsection.test'), 'French Value',
+    assert.equals( ut('section.subsection.test','fr-FR'), 'French Value',
        "French Value expected for dotted nested property in fr-FR (root,fr)");
-    assert.equals( ut('fr-FR',['section','subsection','test']), 'French Value',
+    assert.equals( ut(['section','subsection','test'],'fr-FR'), 'French Value',
        "French Value expected for nested 'test' property in fr-FR (root,fr)");
 
     lb.base.i18n.data.addLanguageProperties('frog',
       {
       }
     );
-    assert.equals( ut('frog','name'), 'root',
+    assert.equals( ut('name','frog'), 'root',
            "'frog' must not inherit 'name' property from 'fr' (root,fr,frog)");
 
     lb.base.i18n.data.addLanguageProperties('fr-FR',
@@ -267,17 +268,17 @@
 
     assert.equals( ut('fr-FR'), null,
              "null expected for undefined property in fr-FR (root,fr,fr-FR)");
-    assert.equals( ut('fr-FR','missing'), null,
+    assert.equals( ut('missing','fr-FR'), null,
                "null expected for missing property in fr-FR (root,fr,fr-FR)");
-    assert.equals( ut('fr-FR','empty'), '',
+    assert.equals( ut('empty','fr-FR'), '',
          "empty string expected for empty property in fr-FR (root,fr,fr-FR)");
-    assert.equals( ut('fr-FR','test'), 'First France Value',
+    assert.equals( ut('test','fr-FR'), 'First France Value',
   "First France Value expected for 'test' property in fr-FR (root,fr,fr-FR)");
-    assert.equals( ut('fr-FR','section.subsection.test'),
+    assert.equals( ut('section.subsection.test','fr-FR'),
                    'Second France Value',
                     "Second France Value expected for dotted nested property"+
                                                   "in fr-FR (root,fr,fr-FR)");
-    assert.equals( ut('fr-FR',['section','subsection','test']),
+    assert.equals( ut(['section','subsection','test'],'fr-FR'),
                    'Second France Value',
                     "Second France Value expected for nested 'test' property"+
                                                   "in fr-FR (root,fr,fr-FR)");
@@ -285,17 +286,17 @@
     try {
       assert.equals( ut('FR-fr'), null,
              "null expected for undefined property in FR-FR (root,fr,fr-FR)");
-      assert.equals( ut('FR-fr','missing'), null,
+      assert.equals( ut('missing','FR-fr'), null,
                "null expected for missing property in FR-fr (root,fr,fr-FR)");
-      assert.equals( ut('FR-fr','empty'), '',
+      assert.equals( ut('empty','FR-fr'), '',
          "empty string expected for empty property in FR-fr (root,fr,fr-FR)");
-      assert.equals( ut('FR-fr','test'), 'First France Value',
+      assert.equals( ut('test','FR-fr'), 'First France Value',
   "First France Value expected for 'test' property in FR-fr (root,fr,fr-FR)");
-      assert.equals( ut('FR-fr','section.subsection.test'),
+      assert.equals( ut('section.subsection.test','FR-fr'),
                    'Second France Value',
                     "Second France Value expected for dotted nested property"+
                                                   "in FR-fr (root,fr,fr-FR)");
-      assert.equals( ut('FR-fr',['section','subsection','test']),
+      assert.equals( ut(['section','subsection','test'],'FR-fr'),
                    'Second France Value',
                     "Second France Value expected for nested 'test' property"+
                                                   "in FR-fr (root,fr,fr-FR)");
@@ -305,35 +306,30 @@
 
     assert.equals( ut('fr'), null,
                 "nullt.lb.base.i18n.jsexpected for undefined property in fr (root,fr,fr-FR)");
-    assert.equals( ut('fr','missing'), null,
+    assert.equals( ut('missing','fr'), null,
                   "null expected for missing property in fr (root,fr,fr-FR)");
-    assert.equals( ut('fr','empty'), '',
+    assert.equals( ut('empty','fr'), '',
             "empty string expected for empty property in fr (root,fr,fr-FR)");
-    assert.equals( ut('fr','test'), 'Root Value',
+    assert.equals( ut('test','fr'), 'Root Value',
              "Root Value expected for 'test' property in fr (root,fr,fr-FR)");
-    assert.equals( ut('fr','section.subsection.test'), 'French Value',
+    assert.equals( ut('section.subsection.test','fr'), 'French Value',
     "French Value expected for dotted nested property in fr (root,fr,fr-FR)");
-    assert.equals( ut('fr',['section','subsection','test']), 'French Value',
+    assert.equals( ut(['section','subsection','test'],'fr'), 'French Value',
     "French Value expected for nested 'test' property in fr (root,fr,fr-FR)");
 
     assert.equals( ut(''), null,
                  "null expected for undefined property in '' (root,fr,fr-FR)");
-    assert.equals( ut('','missing'), null,
+    assert.equals( ut('missing',''), null,
                    "null expected for missing property in '' (root,fr,fr-FR)");
-    assert.equals( ut('','empty'), '',
+    assert.equals( ut('empty',''), '',
              "empty string expected for empty property in '' (root,fr,fr-FR)");
-    assert.equals( ut('','test'), 'Root Value',
+    assert.equals( ut('test',''), 'Root Value',
               "Root Value expected for 'test' property in '' (root,fr,fr-FR)");
-    assert.equals( ut('','section.subsection.test'), null,
+    assert.equals( ut('section.subsection.test',''), null,
              "null expected for dotted nested property in '' (root,fr,fr-FR)");
-    assert.equals( ut('','section','subsection','test'), null,
+    assert.equals( ut(['section','subsection','test'],''), null,
              "null expected for nested 'test' property in '' (root,fr,fr-FR)");
-  }
 
-  function testGet(){
-    var ut = lb.base.i18n.data.get;
-
-    setUp();
     var testLanguageCode = 'te-ST';
     document.documentElement.lang = testLanguageCode;
     assert.equals( ut(), null,             "null expected for missing key");
@@ -453,7 +449,6 @@
     testNamespace: testNamespace,
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
-    testGetProperty: testGetProperty,
     testGet: testGet,
     testGetString: testGetString,
     testReset: testReset
