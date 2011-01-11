@@ -618,8 +618,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   }
 
   // Function: i18n.getString(key[,data[,languageCode]]): string
-  // Get a string computed by replacing data values in the most specific string
-  // template found for given key.
+  // Get a string computed by replacing data values in the most specific value
+  // found for given key, used as a string template. 
   //
   // The parameters to replace are surrounded by '#' characters,
   // e.g. '#param-to-replace#'. No space can appear in the name;
@@ -644,6 +644,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // In case a property is not found in the given data object, it is looked up
   // in the language properties of the given language instead.
   //
+  // The language defaults to the language selected for the whole application,
+  // as returned by getSelectedLanguage().
+  //
   // Parameters:
   //   key - string or array, the key identifiying the property:
   //         * a property name: 'name' (at top level of language properties)
@@ -655,7 +658,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //          object, leaving all parameters unreplaced.
   //   languageCode - string, optional, language code for lookup in a specific
   //                  language. Defaults to the language selected for the whole
-  //                  application, as returned in getSelectedLanguage().
+  //                  application, as returned by getSelectedLanguage().
   //
   // Returns:
   //   * string, the value of corresponding property, in the most specific
