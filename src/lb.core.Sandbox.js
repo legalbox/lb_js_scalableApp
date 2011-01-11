@@ -722,11 +722,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // | </div>
   //
   // Parameters:
-  //   key - string or array, the key identifiying the property:
-  //         * a property name: 'name' (at top level of language properties)
-  //         * a dotted name: 'section.subsection.name' (nested property)
-  //         * an array: ['section','subsection','name'] (alternate form for
-  //                                                      nested properties)
+  //   htmlNode - DOM node, the node to apply the i18n filters to
   //   data - object, optional, replacement values for parameters found in
   //          attributes and text of the HTML node. Defaults to an empty
   //          object, leaving all parameters unreplaced.
