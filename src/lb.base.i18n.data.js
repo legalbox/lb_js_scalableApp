@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-11
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -164,76 +164,6 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       code: languageCode,
       properties: languageProperties
     });
-  }
-
-  function getProperty(languageCode,path){
-    // Function: getProperty(languageCode,path): any
-    // Get the most specific property for given language code at given path.
-    //
-    // The path argument may be a string
-    // or an array of strings:
-    // - the name of a property defined at top level:
-    //   e.g. 'propertyName'
-    // - the dotted name of a nested property:
-    //   e.g. 'section.subsection.propertyName'
-    // - the list of sections and subsections:
-    //   e.g. ['section','subsection','propertyName']
-    //
-    // The last two forms are equivalent, both matching a property
-    // 'propertyName' nested in a property 'subsection' within a property
-    // 'section' at top level of language properties. The array notation allows
-    // to look up a property which would contain a dot in its name, without the
-    // substitution to a section and subsection: ['no.substitution.done'].
-    //
-    // Parameters:
-    //   languageCode - string, the language code to filter relevant languages
-    //   path - string, the name of the looked up property such as 'name',
-    //          or string, a dotted string such as 'section.subsection.name',
-    //          or an array of strings to represent a path to a property
-    //          such as ['section','subsection','name'] nested within sections
-    //          and subsections
-    //
-    // Returns:
-    //   * any, the value of the property found in the most specific language
-    //     object whose language code put in lower case is a hyphenated
-    //     substring of the given language code put in lower case
-    //   * or null if the property is not found in suitable languages,
-    //     if the given path is null or undefined, or if the given language
-    //     code is not a string.
-    if (path===null || path===undefined || typeof languageCode!=='string'){
-      return null;
-    }
-    if (typeof path === 'string'){
-      path = path.split('.');
-    }
-
-    var language,
-        i,
-        properties,
-        pathElement,
-        j,
-        length;
-
-    // for each language, from most specific (last) to least specific (first)
-    for (i=languages.length-1; i>=0; i--){
-      language = languages[i];
-      // does selected language inherit properties from this language ?
-      if ( contains(languageCode,language.code) ){
-        // start at top of language properties
-        properties = language.properties;
-        // for each path element in the given property path
-        for (j=0, length=path.length; j<length && properties; j++){
-          pathElement = path[j];
-          // if the final path element is found
-          if (pathElement in properties && j===length-1){
-            return properties[pathElement];
-          }
-          // go on with next level (may be undefined)
-          properties = properties[pathElement];
-        }
-      }
-    }
-    return null;
   }
 
   function get(key,languageCode){
@@ -367,7 +297,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       languageCode = i18n.getLanguage();
     }
 
-    var value = getProperty(languageCode,key);
+    var value = get(key,languageCode);
     if (value===null){
       return value;
     }
@@ -384,7 +314,6 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   return { // public API
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
-    //getProperty: getProperty,
     get: get,
     getString: getString,
     reset: reset
