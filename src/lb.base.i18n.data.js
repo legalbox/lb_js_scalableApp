@@ -166,6 +166,21 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     });
   }
 
+  // Function: getDefaultLanguageCode(): string
+  // Get the default language code for use in internationalization methods.
+  //
+  // This method is intended to provide a default value to optional language
+  // code arguments of base internationalization methods.
+  //
+  // Returns:
+  //   string, the value of the 'lang' attribute of the root HTML element,
+  //   or when it is missing or an empty string '', the value of the browser
+  //   language found in navigator.language or navigator.browserLanguage.
+  function getDefaultLanguageCode(){
+
+    return i18n.getLanguage() || i18n.getBrowserLanguage();
+  }
+
   function get(key,languageCode){
     // Function: get(key[,languageCode]): any
     // Get the value of the property identified by given key, in the most
@@ -207,7 +222,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       return null;
     }
     if (typeof languageCode !== 'string'){
-      languageCode = i18n.getLanguage();
+      languageCode = getDefaultLanguageCode();
     }
     if (typeof key === 'string'){
       key = key.split('.');
@@ -294,7 +309,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   function getString(key,data,languageCode){
     data = data || {};
     if (typeof languageCode !== 'string'){
-      languageCode = i18n.getLanguage();
+      languageCode = getDefaultLanguageCode();
     }
 
     var value = get(key,languageCode);
@@ -314,6 +329,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   return { // public API
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
+    getDefaultLanguageCode: getDefaultLanguageCode,
     get: get,
     getString: getString,
     reset: reset

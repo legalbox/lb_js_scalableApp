@@ -540,10 +540,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   string, the value of the 'lang' attribute of the root HTML element,
   //   or when it is missing or the empty string '', the value of the browser
   //   language found in navigator.language or navigator.browserLanguage.
-  function getSelectedLanguage(){
 
-    return i18n.getLanguage() || i18n.getBrowserLanguage();
-  }
+  // Note: getSelectedLanguage() is an alias for getDefaultLanguageCode()
+  //       in lb.base.i18n.data, which returns the same value
 
   // Function: i18n.selectLanguage(languageCode)
   // Select the language of the application, shared by all modules.
@@ -907,7 +906,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   };
   this.i18n = {
     getLanguageList: i18nData.getLanguageCodes,
-    getSelectedLanguage: getSelectedLanguage,
+    getSelectedLanguage: i18nData.getDefaultLanguageCode,
     selectLanguage: selectLanguage,
     addLanguageProperties: i18nData.addLanguageProperties,
     get: i18nData.get,

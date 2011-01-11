@@ -182,6 +182,19 @@
     }
   }
 
+  function testGetDefaultLanguageCode(){
+    var ut = lb.base.i18n.data.getDefaultLanguageCode;
+
+    setUp();
+    assert.equals( ut(), navigator.language || navigator.browserLanguage,
+                   "default language expected to be the browser's language");
+
+    var testLanguageCode = 'TESTlanguageCODE';
+    document.documentElement.lang = testLanguageCode;
+    assert.equals( ut(), testLanguageCode,
+     "value of 'lang' attribute of root HTML element expected to be returned");
+  }
+
   function testGet(){
     var ut = lb.base.i18n.data.get;
 
@@ -449,6 +462,7 @@
     testNamespace: testNamespace,
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
+    testGetDefaultLanguageCode: testGetDefaultLanguageCode,
     testGet: testGet,
     testGetString: testGetString,
     testReset: testReset
