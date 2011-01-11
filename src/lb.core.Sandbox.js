@@ -71,7 +71,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-07
+ * 2011-01-11
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -221,6 +221,12 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
 
     var ancestor = element;
     while (ancestor) {
+      // TODO: return false when a document node is reached without passing by
+      //       the root of the box
+
+      // TODO: allow document-fragment or null as last ancestor
+      //       for nodes not/no longer part of the DOM
+
       // box must be found in ancestors or self
       if ( ancestor === getBox(false) ) {
         return true;
@@ -731,6 +737,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Reference:
   //   Specifying the language of content: the lang attribute
   //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
+
+  // TODO: add implementation to check that htmlNode is part of the box
 
   // Note: filterHtml is an alias for lb.base.template.i18n.filterHtml
 

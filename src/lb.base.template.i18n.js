@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-07
+ * 2011-01-11
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -198,6 +198,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     if (typeof languageCode !== 'string'){
       languageCode = i18n.getLanguage();
     }
+    // TODO: add optional argument filters, which defaults to the four filters
+    //       used below
+
     applyFilters(
       htmlNode,
       data,
