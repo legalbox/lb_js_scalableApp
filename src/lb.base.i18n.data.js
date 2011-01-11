@@ -208,8 +208,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     //         such as ['section','subsection','name'] nested within sections
     //         and subsections
     //   languageCode - string, optional, the language code used to filter
-    //                  relevant languages, defaults to the language of the
-    //                  whole document, as set on document.documentElement.lang
+    //                  relevant languages, defaults to the value of
+    //                  getDefaultLanguageCode()
     //
     // Returns:
     //   * any, the value of the property found in the most specific language
@@ -297,8 +297,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   //          nested within sections and subsections. Defaults to an empty
   //          object, leaving all parameters unreplaced.
   //   languageCode - string, optional, language code for lookup in a specific
-  //                  language. Defaults to the language selected for the whole
-  //                  document, as set on document.documentElement.lang.
+  //                  language. Defaults to getDefaultLanguageCode().
   //
   // Returns:
   //   * string, the value of corresponding property, in the most specific

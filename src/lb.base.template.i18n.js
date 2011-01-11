@@ -37,6 +37,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       hasAttribute = dom.hasAttribute,
       /*requires lb.base.i18n.js */
       i18n = lb.base.i18n,
+      /*requires lb.base.i18n.data.js */
+      getDefaultLanguageCode = i18n.data.getDefaultLanguageCode,
       /*requires lb.base.template.js */
       template = lb.base.template,
       applyFilters = template.applyFilters,
@@ -186,16 +188,15 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     //          attributes and text of the HTML node. Defaults to an empty
     //          object.
     //   languageCode - string, optional, language code for lookup in a
-    //                  specific language. Defaults to the language selected
-    //                  for the whole application, as returned in
-    //                  getSelectedLanguage().
+    //                  specific language. Defaults to the value of
+    //                  lb.base.i18n.data.getDefaultLanguageCode().
     //
     // Reference:
     //   Specifying the language of content: the lang attribute
     //   o http://www.w3.org/TR/html401/struct/dirlang.html#h-8.1
     data = data || {};
     if (typeof languageCode !== 'string'){
-      languageCode = i18n.getLanguage();
+      languageCode = getDefaultLanguageCode();
     }
     applyFilters(
       htmlNode,
