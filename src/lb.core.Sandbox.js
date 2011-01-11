@@ -641,6 +641,9 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // |   }
   // | }
   //
+  // In case a property is not found in the given data object, it is looked up
+  // in the language properties of the given language instead.
+  //
   // Parameters:
   //   key - string or array, the key identifiying the property:
   //         * a property name: 'name' (at top level of language properties)
@@ -657,7 +660,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Returns:
   //   * string, the value of corresponding property, in the most specific
   //     language available, with parameters replaced with the value of
-  //     corresponding properties found in data object
+  //     corresponding properties found in data object or as a fallback in the
+  //     language properties of the most specific language where available
   //   * or null if the property is not found
   function getString(key,data,languageCode){
     data = data || {};
@@ -678,23 +682,21 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // The given HTML node is modified in place. You should clone it beforehand
   // if you wish to preserve the original version.
   //
-  // Instead of looking for language properties associated with language codes
-  // using addLanguageProperties(), this method relies on HTML markup for
-  // translations. Multiple translations may be included in the same HTML node,
+  // The HTML node is filtered according to the languageCode argument, or
+  // if it is omitted, the language code of the application as returned by
+  // getSelectedLanguage(). Multiple translations may be included
   // and only relevant translations will be kept, based on 'lang' attribute:
   // | <div lang=''>
-  // |   <span lang='de'>Hallo #firstName#!</span>
-  // |   <span lang='en'>Hi #firstName#!</span>
-  // |   <span lang='fr'>Salut #firstName# !</span>
-  // |   <span lang='jp'>こんにちは#lastName#!</span>
+  // |   <span lang='de'>Hallo #user.firstName#!</span>
+  // |   <span lang='en'>Hi #user.firstName#!</span>
+  // |   <span lang='fr'>Salut #user.firstName# !</span>
+  // |   <span lang='jp'>こんにちは#user.lastName#!</span>
   // | </div>
   //
-  // The nodes are filtered according to the languageCode argument, or if it
-  // is omitted, the language code of the application as returned by
-  // getSelectedLanguage(). Filtering the HTML from the above example for the
+  // Filtering the HTML from the above example for the
   // language 'en-GB' would result in:
   // | <div lang=''>
-  // |   <span lang='en'>Hi #firstName#!</span>
+  // |   <span lang='en'>Hi #user.firstName#!</span>
   // | </div>
   //
   // The 'lang' attribute is inherited from ancestors, including ancestors
@@ -704,16 +706,20 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // within the scope of the empty language '' or in the scope of no language
   // attribute are preserved by the filtering. 
   //
-  // The parameter format is the same as the one used in getString();
-  // parameters to replace are surrounded by '#' characters,
-  // e.g. '#param#', based on the regular expression /#([a-zA-Z0-9_\-\.]+)#/g.
-  //
-  // The data object contains properties with values for the replacement of
-  // parameters of the same name:
-  // | {
-  // |   firstName: 'Jane',
-  // |   lastName: 'Doe'
-  // | }
+  // Parameters of the form #param# found in text and attribute nodes are
+  // replaced in the same way as using getString():
+  // - the parameter format is based on following regular expression:
+  //   /#([a-zA-Z0-9_\-\.]+)#/g
+  // - data object contains values for the parameters to replace, which may
+  //   be nested:
+  //   | {
+  //   |   user: {
+  //   |     firstName: 'Jane',
+  //   |     lastName: 'Doe'
+  //   |   }
+  //   | }
+  // - when no property is found in data for the replacement of a parameter,
+  //   a lookup is performed in language properties instead
   //
   // After parameter replacement, the HTML node of the above example would end
   // up as:
@@ -724,8 +730,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Parameters:
   //   htmlNode - DOM node, the node to apply the i18n filters to
   //   data - object, optional, replacement values for parameters found in
-  //          attributes and text of the HTML node. Defaults to an empty
-  //          object, leaving all parameters unreplaced.
+  //          attributes and text of the HTML node. Defaults to an empty object
   //   languageCode - string, optional, language code for lookup in a specific
   //                  language. Defaults to the language selected for the whole
   //                  application, as returned in getSelectedLanguage().

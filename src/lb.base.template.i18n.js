@@ -135,21 +135,21 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // The given HTML node is modified in place. You should clone it beforehand
     // if you wish to preserve the original version.
     //
-    // Multiple translations may be included in the given HTML node, and only
-    // relevant translations will be kept, based on 'lang' attribute:
+    // The HTML node is filtered according to the languageCode argument, or
+    // if it is omitted, the language code of the application as returned by
+    // getSelectedLanguage(). Multiple translations may be included
+    // and only relevant translations will be kept, based on 'lang' attribute:
     // | <div lang=''>
-    // |   <span lang='de'>Hallo #firstName#!</span>
-    // |   <span lang='en'>Hi #firstName#!</span>
-    // |   <span lang='fr'>Salut #firstName# !</span>
-    // |   <span lang='jp'>こんにちは#lastName#!</span>
+    // |   <span lang='de'>Hallo #user.firstName#!</span>
+    // |   <span lang='en'>Hi #user.firstName#!</span>
+    // |   <span lang='fr'>Salut #user.firstName# !</span>
+    // |   <span lang='jp'>こんにちは#user.lastName#!</span>
     // | </div>
     //
-    // The nodes are filtered according to the languageCode argument, or if it
-    // is omitted, the language code of the application as returned by
-    // lb.base.i18n.getLanguage(). Filtering the HTML from the above example
-    // for the language 'en-GB' would result in:
+    // Filtering the HTML from the above example for the
+    // language 'en-GB' would result in:
     // | <div lang=''>
-    // |   <span lang='en'>Hi #firstName#!</span>
+    // |   <span lang='en'>Hi #user.firstName#!</span>
     // | </div>
     //
     // The 'lang' attribute is inherited from ancestors, including ancestors
@@ -160,16 +160,19 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // no language attribute are preserved by the filtering.
     //
     // Parameters of the form #param# found in text and attribute nodes are
-    // replaced with values from the given data object. The parameter format
-    // is the same as the one used in lb.base.template.html.replaceParams(),
-    // based on the regular expression /#([a-zA-Z0-9_\-\.]+)#/g.
-    //
-    // The data object contains properties with values for the replacement of
-    // parameters of the same name:
-    // | {
-    // |   firstName: 'Jane',
-    // |   lastName: 'Doe'
-    // | }
+    // replaced in the same way as using lb.base.i18n.data.getString():
+    // - the parameter format is based on following regular expression:
+    //   /#([a-zA-Z0-9_\-\.]+)#/g
+    // - data object contains values for the parameters to replace, which may
+    //   be nested:
+    //   | {
+    //   |   user: {
+    //   |     firstName: 'Jane',
+    //   |     lastName: 'Doe'
+    //   |   }
+    //   | }
+    // - when no property is found in data for the replacement of a parameter,
+    //   a lookup is performed in language properties instead
     //
     // After parameter replacement, the HTML node of the above example would
     // end up as:
@@ -178,10 +181,10 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // | </div>
     //
     // Parameters:
-    //   htmlNode - DOM node, the node to apply the i18n filters to
+    //   htmlNode - DOM node, the node to apply the i18n filters to.
     //   data - object, optional, replacement values for parameters found in
     //          attributes and text of the HTML node. Defaults to an empty
-    //          object, leaving all parameters unreplaced.
+    //          object.
     //   languageCode - string, optional, language code for lookup in a
     //                  specific language. Defaults to the language selected
     //                  for the whole application, as returned in
@@ -194,9 +197,6 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     if (typeof languageCode !== 'string'){
       languageCode = i18n.getLanguage();
     }
-    // TODO: add optional argument filters, which defaults to the four filters
-    //       used below
-
     applyFilters(
       htmlNode,
       data,
