@@ -111,7 +111,6 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
       i18n = lb.base.i18n,
       /*requires lb.base.i18n.data.js */
       i18nData = i18n.data,
-      getProperty = i18nData.getProperty,
       /*requires lb.base.template.i18n.js */
       i18nTemplate = lb.base.template.i18n,
       /*requires lb.core.events.publisher.js */
@@ -606,12 +605,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //   * any, the value of the corresponding property in the most specific
   //     language available,
   //   * or null if not found
-  function get(key,languageCode){
-    if ( typeof languageCode !== 'string' ){
-      languageCode = getSelectedLanguage();
-    }
-    return getProperty(languageCode,key);
-  }
+
+  // Note: get() is an alias for lb.base.i18n.data.get()
 
   // Function: i18n.getString(key[,data[,languageCode]]): string
   // Get a string computed by replacing data values in the most specific value
@@ -915,7 +910,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     getSelectedLanguage: getSelectedLanguage,
     selectLanguage: selectLanguage,
     addLanguageProperties: i18nData.addLanguageProperties,
-    get: get,
+    get: i18nData.get,
     getString: i18nData.getString,
     filterHtml: i18nTemplate.filterHtml
   };

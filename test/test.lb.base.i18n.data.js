@@ -330,6 +330,55 @@
              "null expected for nested 'test' property in '' (root,fr,fr-FR)");
   }
 
+  function testGet(){
+    var ut = lb.base.i18n.data.get;
+
+    setUp();
+    var testLanguageCode = 'te-ST';
+    document.documentElement.lang = testLanguageCode;
+    assert.equals( ut(), null,             "null expected for missing key");
+
+    var dValue = function(){
+          return 'D VALUE';
+        },
+        cValue = {
+          d: dValue
+        },
+        bValue = {
+          c: cValue
+        },
+        aValue = 'A VALUE';
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      a: aValue,
+      b: bValue
+    });
+
+    assert.equals( ut(), null,                "null expected for missing key");
+    assert.equals( ut('a'), aValue,     "a value expected (default language)");
+    assert.equals( ut('b'), bValue,     "b value expected (default language)");
+    assert.equals( ut('b.c'), cValue,   "c value expected (default language)");
+    assert.equals( ut('b.c.d'), dValue, "d value expected (default language)");
+
+    document.documentElement.lang = "OTHER-LANGUAGE-CODE";
+    assert.equals( ut('a',testLanguageCode), aValue,
+                                      "a value expected (explicit language)");
+    assert.equals( ut('b',testLanguageCode), bValue,
+                                      "b value expected (explicit language)");
+    assert.equals( ut('b.c',testLanguageCode), cValue,
+                                      "c value expected (explicit language)");
+    assert.equals( ut('b.c.d',testLanguageCode), dValue,
+                                      "d value expected (explicit language)");
+
+    assert.equals( ut(['a'],testLanguageCode), aValue,
+                      "a value expected (array notation, explicit language)");
+    assert.equals( ut(['b'],testLanguageCode), bValue,
+                      "b value expected (array notation, explicit language)");
+    assert.equals( ut(['b','c'],testLanguageCode), cValue,
+                      "c value expected (array notation, explicit language)");
+    assert.equals( ut(['b','c','d'],testLanguageCode), dValue,
+                      "d value expected (array notation, explicit language)");
+  }
+
   function testGetString(){
     var ut = lb.base.i18n.data.getString;
 
@@ -405,6 +454,7 @@
     testGetLanguageCodes: testGetLanguageCodes,
     testAddLanguageProperties: testAddLanguageProperties,
     testGetProperty: testGetProperty,
+    testGet: testGet,
     testGetString: testGetString,
     testReset: testReset
   };

@@ -236,6 +236,82 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     return null;
   }
 
+  function get(key,languageCode){
+    // Function: get(key[,languageCode]): any
+    // Get the value of the property identified by given key, in the most
+    // specific language available.
+    //
+    // The key argument may be a string
+    // or an array of strings:
+    // - the name of a property defined at top level:
+    //   e.g. 'propertyName'
+    // - the dotted name of a nested property:
+    //   e.g. 'section.subsection.propertyName'
+    // - the list of sections and subsections:
+    //   e.g. ['section','subsection','propertyName']
+    //
+    // The last two forms are equivalent, both matching a property
+    // 'propertyName' nested in a property 'subsection' within a property
+    // 'section' at top level of language properties. The array notation allows
+    // to look up a property which would contain a dot in its name, without the
+    // substitution to a section and subsection: ['no.substitution.done'].
+    //
+    // Parameters:
+    //   key - string, the name of the looked up property such as 'name',
+    //         or string, a dotted string such as 'section.subsection.name',
+    //         or an array of strings to represent a path to a property
+    //         such as ['section','subsection','name'] nested within sections
+    //         and subsections
+    //   languageCode - string, optional, the language code used to filter
+    //                  relevant languages, defaults to the language of the
+    //                  whole document, as set on document.documentElement.lang
+    //
+    // Returns:
+    //   * any, the value of the property found in the most specific language
+    //     object whose language code put in lower case is a hyphenated
+    //     substring of the given language code put in lower case
+    //   * or null if the property is not found in suitable languages,
+    //     if the given path is null or undefined, or if the given language
+    //     code is not a string.
+    if (key===null || key===undefined){
+      return null;
+    }
+    if (typeof languageCode !== 'string'){
+      languageCode = i18n.getLanguage();
+    }
+    if (typeof key === 'string'){
+      key = key.split('.');
+    }
+
+    var language,
+        i,
+        properties,
+        pathElement,
+        j,
+        length;
+
+    // for each language, from most specific (last) to least specific (first)
+    for (i=languages.length-1; i>=0; i--){
+      language = languages[i];
+      // does selected language inherit properties from this language ?
+      if ( contains(languageCode,language.code) ){
+        // start at top of language properties
+        properties = language.properties;
+        // for each path element in the given key
+        for (j=0, length=key.length; j<length && properties; j++){
+          pathElement = key[j];
+          // if the final path element is found
+          if (pathElement in properties && j===length-1){
+            return properties[pathElement];
+          }
+          // go on with next level (may be undefined)
+          properties = properties[pathElement];
+        }
+      }
+    }
+    return null;
+  }
+
   // Function: getString(key[,data[,languageCode]]): string
   // Get a string computed by replacing data values in the most specific value
   // found for given key, used as a string template.
@@ -308,7 +384,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   return { // public API
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
-    getProperty: getProperty,
+    //getProperty: getProperty,
+    get: get,
     getString: getString,
     reset: reset
   };
