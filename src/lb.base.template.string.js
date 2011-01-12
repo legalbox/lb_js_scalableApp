@@ -32,6 +32,12 @@ lb.base.template.string = lb.base.template.string || (function() {
   // Closure for lb.base.template.string module
 
   // Private fields
+
+      // PARAM_REGEXP - regular expression, format of parameters to replace:
+      //                - ASCII letters and digits: a-zA-Z0-9
+      //                - special characters intended as separators: \_\-\.
+      //                - surrounded by hash signs: #...#
+      //                - no white-space allowed
   var PARAM_REGEXP = /#([a-zA-Z0-9\_\-\.]+)#/g;
 
   function withValuesFrom(data){
