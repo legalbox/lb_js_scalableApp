@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-01-11
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -31,6 +31,34 @@
 
     assert.isTrue( object.exists(window,'lb','base','template','string'),
                            "lb.base.template.string namespace was not found");
+  }
+
+  function testWithValuesFrom(){
+    var ut = lb.base.template.sring.withValuesFrom;
+
+    var filter = ut();
+    assert.equals( typeof ut, 'function',
+                                  "function getter expected to be returned");
+    assert.equals( filter('param'), null,
+                             "no replacement value expected (missing data)");
+
+    filter = ut({param: 'value'});
+    assert.equals( filter('param'), 'value',
+                                "replacement value expected (single value)");
+    assert.equals( filter('other'), null,
+        "no replacement value expected for missing property (single value)");
+
+    filter = ut({
+      section:{
+        subsection:{
+          param: 'nestedValue'
+        }
+      }
+    });
+    assert.equals( filter('section.subsection.param'), 'nestedValue',
+      "replacement value expected for nested property (single nested value)");
+    assert.equals( filter('other'), null,
+  "no replacement value expected for missing property (single nested value)");
   }
 
   function testReplaceParams(){
@@ -72,6 +100,7 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testWithValuesFrom: testWithValuesFrom,
     testReplaceParams: testReplaceParams
   };
 
