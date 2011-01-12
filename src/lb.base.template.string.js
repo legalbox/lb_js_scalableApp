@@ -111,7 +111,8 @@ lb.base.template.string = lb.base.template.string || (function() {
     //
     // Parameter:
     //   getValue - function, a getter function returning values for the
-    //              replacement of parameters: function(name): any
+    //              replacement of parameters:
+    //              | function(name): any
     //              The name argument is the name of the parameter to replace.
     //              The getter value should return string values when a
     //              matching property is found, and null otherwise.
