@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-01-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -311,23 +311,28 @@
   function testReplaceParams(){
     var ut = lb.base.template.html.replaceParams;
 
-    try {
-      ut();
-      ut(null);
-      ut(null,null);
-      ut(null,[]);
-    } catch (e0) {
-     assert.fail("No error expected when required arguments are missing: "+e0);
+    assert.equals( ut(), null,
+                            "null expected when required getter is missing");
+    assert.equals( ut(null), null,
+                               "null expected when required getter is null");
+    assert.equals( ut({}), null,
+                     "null expected when required getter is not a function");
+
+    var captured = [];
+    var returnValues = [];
+    function captureParams(key){
+      captured.push(key);
+      return returnValues.shift();
     }
 
-    try {
-      ut({},[]);
-    } catch (e1) {
-      assert.fail("No error expected when given node is not a node: "+e1);
-    }
+    var filter = ut(captureParams);
+    assert.equals( typeof filter, 'function',
+                              "a filter function is expected to be returned");
 
     var htmlNode = element('div',{id:'theOne',title:'#param1#'},'#param2#');
-    ut(htmlNode,{param1:'value1',param2:'value2'});
+    captured = [];
+    returnValues = ['value1','value2'];
+    filter(htmlNode);
     assert.arrayEquals([
       htmlNode.nodeName,
       htmlNode.getAttribute('id'),
@@ -340,11 +345,10 @@
       '#param1#',
       '#param2#'
     ],                  "no replacement expected at the element node level");
+    assert.arrayEquals(captured,[],
+                     "no call to getter expected at the element node level");
 
-    ut(
-      htmlNode.getAttributeNode('title'),
-      {param1:'value1',param2:'value2'}
-    );
+    filter( htmlNode.getAttributeNode('title') );
     assert.arrayEquals([
       htmlNode.nodeName,
       htmlNode.getAttribute('id'),
@@ -357,11 +361,10 @@
       'value1',
       '#param2#'
     ],                "parameter in title attribute expected to be replaced");
+    assert.arrayEquals(captured,['param1'],
+                   "call to getter with param1 expected for title attribute");
 
-    ut(
-      htmlNode.firstChild,
-      {param1:'value1',param2:'value2'}
-    );
+    filter( htmlNode.firstChild );
     assert.arrayEquals([
       htmlNode.nodeName,
       htmlNode.getAttribute('id'),
@@ -374,6 +377,8 @@
       'value1',
       'value2'
     ],                    "parameter in text node expected to be replaced");
+    assert.arrayEquals(captured,['param1','param2'],
+                       "call to getter with param2 expected for text node");
   }
 
   var tests = {
