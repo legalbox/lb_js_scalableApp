@@ -80,10 +80,10 @@ lb.base.template.string = lb.base.template.string || (function() {
         properties = properties[pathElement];
       }
       return null;
-    }
+    };
   }
 
-  function replaceParams(string, data){
+  function replaceParams(getValue){
     // Function: replaceParams(getValue): function
     // Get a filter function to replace parameters in a string template.
     //
@@ -124,24 +124,20 @@ lb.base.template.string = lb.base.template.string || (function() {
     //   | Returns:
     //   |   string, a string computed from the template string by replacing
     //   |   named parameters with corresponding values returned by getValue()
-    //   * null when the required getter argument is missing
-
-    return string.replace(PARAM_REGEXP, function(match,param){
-      var properties = data,
-          path = param.split('.'),
-          pathElement,
-          i,
-          length;
-      for (i=0,length=path.length; i<length && properties; i++){
-        pathElement = path[i];
-        if ( pathElement in properties && i===length-1 ){
-          return properties[pathElement];
+    //   * null when the required getter argument is missing or not a function
+    if (typeof getValue !== 'function'){
+      return null;
+    }
+    return function(string){
+      return string.replace(PARAM_REGEXP, function(match,param){
+        var value = getValue(param);
+        if (value===null || value===undefined){
+          // no replacement found - return unreplaced param
+          return match;
         }
-        properties = properties[pathElement];
-      }
-      // no replacement found - return unreplaced param
-      return match;
-    });
+        return value;
+      });
+    };
   }
 
   return { // public API
