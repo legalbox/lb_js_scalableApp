@@ -113,8 +113,8 @@ lb.base.template.string = lb.base.template.string || (function() {
     //              matching property is found, and null otherwise.
     //
     // Returns:
-    //   function, a closure wrapped around the given getter function, with the
-    //   following signature:
+    //   * function, a closure wrapped around the given getter function, with
+    //   the following signature:
     //   | Function: filter(string): string
     //   | Replace parameters in given string with values from wrapped getter.
     //   |
@@ -124,6 +124,7 @@ lb.base.template.string = lb.base.template.string || (function() {
     //   | Returns:
     //   |   string, a string computed from the template string by replacing
     //   |   named parameters with corresponding values returned by getValue()
+    //   * null when the required getter argument is missing
 
     return string.replace(PARAM_REGEXP, function(match,param){
       var properties = data,
