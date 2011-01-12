@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-11
+ * 2011-01-12
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -70,7 +70,8 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
       languageCompare = i18n.languageCompare,
       contains = i18n.contains,
                                   /*requires lb.base.template.string.js*/
-      replaceParamsInString = lb.base.template.string.replaceParams,
+      withValuesFrom = lb.base.template.string.withValuesFrom,
+      replaceParams = lb.base.template.string.replaceParams,
 
   // private fields
 
@@ -315,7 +316,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     if (value===null){
       return value;
     }
-    return replaceParamsInString(value,data);
+    return replaceParams(withValuesFrom(data))(value);
   }
 
   function reset(){

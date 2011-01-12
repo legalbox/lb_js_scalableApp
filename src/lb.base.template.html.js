@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-11
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -41,7 +41,9 @@ lb.base.template.html = lb.base.template.html || (function() {
       TEXT_NODE = dom.TEXT_NODE,
       applyFilters = lb.base.template.applyFilters,
       /*requires lb.base.template.string.js */
-      replaceParamsInString = lb.base.template.string.replaceParams;
+      stringTemplates = lb.base.template.string,
+      withValuesFrom = stringTemplates.withValuesFrom,
+      replaceParamsInString = stringTemplates.replaceParams;
 
   function topDownParsing(node){
     // Function: topDownParsing(node[,context...],filters)
@@ -94,6 +96,8 @@ lb.base.template.html = lb.base.template.html || (function() {
     }
   }
 
+  // TODO: transform replaceParams into a filter generator:
+  //       Function: replaceParams(getter): function
   function replaceParams(node,data){
     // Function: replaceParams(node,data)
     // Replace parameters in attribute and text nodes with values from given
@@ -123,7 +127,9 @@ lb.base.template.html = lb.base.template.html || (function() {
       return;
     }
 
-    node.nodeValue = replaceParamsInString(node.nodeValue,data);
+    node.nodeValue = replaceParamsInString(withValuesFrom(data))(
+      node.nodeValue
+    );
   }
 
   return { // public API
