@@ -34,7 +34,7 @@
   }
 
   function testWithValuesFrom(){
-    var ut = lb.base.template.sring.withValuesFrom;
+    var ut = lb.base.template.string.withValuesFrom;
 
     var filter = ut();
     assert.equals( typeof ut, 'function',
