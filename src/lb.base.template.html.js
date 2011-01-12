@@ -130,6 +130,7 @@ lb.base.template.html = lb.base.template.html || (function() {
     //     |   htmlNode - DOM Node, a DOM node. Only attribute and text nodes
     //     |              are considered for parameter replacement.
     //     |              Other nodes are left untouched.
+    //   * null when the required getter argument is missing or not a function
     if (  !node ||
           ( node.nodeType!==ATTRIBUTE_NODE &&
             node.nodeType!==TEXT_NODE )  ){
