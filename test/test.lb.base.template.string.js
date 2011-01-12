@@ -71,7 +71,7 @@
     var returnValues = [];
     function captureParams(key){
       captured.push(key);
-      return returnValues.pop();
+      return returnValues.shift();
     }
 
     var filter = ut(captureParams);
@@ -125,7 +125,7 @@
 
     var multipleParams = 'Before#param1##param2##param3#After';
     captured = [];
-    returnValues = [';value1;','',';value3'];
+    returnValues = [';value1;','',';value3;'];
     assert.equals( filter(multipleParams), 'Before;value1;;value3;After',
         "multiple parameters expected to be replaced, including empty string");
     assert.arrayEquals(captured,['param1','param2','param3'],
