@@ -44,7 +44,7 @@ lb.base.template.string = lb.base.template.string || (function() {
     // Function: withValuesFrom([data]): function
     // Get a closure function that gets values of properties in data.
     //
-    // This method is intended for use in combination with replaceParams,
+    // This method is intended for use in combination with replaceParams(),
     // to get a filter to replace parameters in a string template with values
     // from given data:
     // | var filter = replaceParams( withValuesFrom(data) )
