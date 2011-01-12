@@ -54,22 +54,33 @@ lb.base.template.string = lb.base.template.string || (function() {
     // Returns:
     //   function, a closure wrapped around the given data, with the following
     //   signature:
-    //   | Function: getDataValue(path): any
+    //   | Function: getDataValue(key): any
     //   | Get the value of a property, possibly nested, in wrapped data.
     //   |
     //   | Parameter:
-    //   |   path - string, the path to a property, which may be:
-    //   |            * a string refering to the name of a property: 'name'
-    //   |            * a dotted string for a nested property: 'section.name'
-    //   |            * an array of path elements: ['section','name']
-    //   |          The array and the dotted string are equivalent, except that
-    //   |          the array form allows to use names including the dot '.'
-    //   |          character: "a.somewhat.illegal.property.name".
+    //   |   key - string, the key identifying a property, which may be:
+    //   |           * a string refering to the name of a property: 'name'
+    //   |           * a dotted string for a nested property: 'section.name'
     //   |
     //   | Returns:
     //   |   * any, the value of corresponding property, if found
     //   |   * null otherwise
-
+    data = data || {};
+    return function(key){
+      var properties = data,
+          path = key.split('.'),
+          pathElement,
+          i,
+          length;
+      for (i=0,length=path.length; i<length && properties; i++){
+        pathElement = path[i];
+        if ( pathElement in properties && i===length-1 ){
+          return properties[pathElement];
+        }
+        properties = properties[pathElement];
+      }
+      return null;
+    }
   }
 
   function replaceParams(string, data){
@@ -133,6 +144,7 @@ lb.base.template.string = lb.base.template.string || (function() {
   }
 
   return { // public API
+    withValuesFrom: withValuesFrom,
     replaceParams: replaceParams
   };
 }());
