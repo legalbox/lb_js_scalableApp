@@ -56,6 +56,44 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       topDownParsing = template.html.topDownParsing,
       replaceParams = template.html.replaceParams;
 
+  function withValuesFromDataOrLanguageProperties(data,languageCode){
+    // Function: withValuesFromDataOrLanguageProperties([data[,languageCode]]): function
+    // Get a closure function that gets values of properties in data or, as a
+    // fallback, from language properties available for given language code.
+    //
+    // This method is intended for use in combination with replaceParams(),
+    // to get a filter to replace parameters in a string or an HTML template
+    // with values from given data (first) or from language properties (then):
+    // | var filter = replaceParams(
+    // |   withValuesFromDataOrLanguageProperties(data,languageCode)
+    // | );
+    //
+    // Parameter:
+    //   data - object, optional, properties for parameter replacement, which
+    //          may be nested in sections and subsections. Defaults to {}.
+    //   languageCode - string, optional, language code for lookup in a
+    //                  specific language. Defaults to the value of
+    //                  <lb.base.i18n.data.getDefaultLanguageCode(): string>.
+    //
+    // Returns:
+    //   function, a closure wrapped around the given data and language code,
+    //   with the following signature:
+    //   | Function: getDataOrLanguagePropertiesValue(key): any
+    //   | Get the value of a property, possibly nested, in wrapped data or,
+    //   | as a fallback, from language properties of wrapped language code.
+    //   |
+    //   | Parameter:
+    //   |   key - string, the key identifying a property, which may be:
+    //   |     * a string refering to the name of a property: 'name'
+    //   |     * a dotted string for a nested property: 'section.name'
+    //   |
+    //   | Returns:
+    //   |   * any, the value of corresponding property, if found in data
+    //   |   * any, the value of corresponding language property found in the
+    //   |     most specific language available, as a fallback
+    //   |   * null if neither is available
+  }
+
   function getString(key,data,languageCode){
     // Function: getString(key[,data[,languageCode]]): string
     // Get a string computed by replacing data values in the most specific
