@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-01-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -44,6 +44,148 @@
     // all language variants are removed before each test, to make sure that
     // the behavior is consistent when these tests are run as part of all tests
     lb.base.i18n.data.reset();
+  }
+
+  function testWithValuesFromDataOrLanguageProperties(){
+    var ut = lb.base.template.i18n.withValuesFromDataOrLanguageProperties;
+
+    setUp();
+
+    var filter = ut();
+    assert.equals( typeof ut, 'function',
+           "function getter expected to be returned (no data, no language)");
+    assert.equals( filter('param'), null,
+                     "no replacement value expected (no data, no language)");
+    assert.equals( filter('missing'), null,
+                       "no replacement value expected for missing property"+
+                                                  "(no data, no language)");
+
+    filter = ut({param: 'value'});
+    assert.equals( filter('param'), 'value',
+                   "replacement value expected (single value, no language)");
+    assert.equals( filter('other'), null,
+                         "no replacement value expected for other property "+
+                                              "(single value, no language)");
+    assert.equals( filter('missing'), null,
+                       "no replacement value expected for missing property "+
+                                              "(single value, no language)");
+
+    filter = ut({
+      section:{
+        subsection:{
+          param: 'nestedValue'
+        }
+      }
+    });
+    assert.equals( filter('section.subsection.param'), 'nestedValue',
+                           "replacement value expected for nested property "+
+                                       "(single nested value, no language)");
+    assert.equals( filter('other'), null,
+                         "no replacement value expected for other property "+
+                                       "(single nested value, no language)");
+    assert.equals( filter('missing'), null,
+                        "no replacement value expected for missing property"+
+                                       "(single nested value, no language)");
+
+    var testLanguageCode = 'te-ST';
+    document.documentElement.lang = testLanguageCode;
+
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      param: 'i18nValue',
+      other: 'i18nOtherValue',
+      section: {
+        subsection: {
+          param: 'i18nNestedValue'
+        }
+      }
+    });
+
+    filter = ut();
+    assert.equals( typeof ut, 'function',
+      "function getter expected to be returned (no data, default language)");
+    assert.equals( filter('param'), 'i18nValue',
+                         "i18n value expected (no data, default language)");
+    assert.equals( filter('missing'), null,
+                       "no replacement value expected for missing property"+
+                                             "(no data, default language)");
+
+    filter = ut({param: 'value'});
+    assert.equals( filter('param'), 'value',
+              "replacement value expected (single value, default language)");
+    assert.equals( filter('section.subsection.param'), 'i18nNestedValue',
+                                  "i18n value expected for nested property "+
+                                         "(single value, default language)");
+    assert.equals( filter('other'), 'i18nOtherValue',
+                                   "i18n value expected for other property "+
+                                         "(single value, default language)");
+    assert.equals( filter('missing'), null,
+                        "no replacement value expected for missing property"+
+                                         "(single value, default language)");
+
+    filter = ut({
+      section:{
+        subsection:{
+          param: 'nestedValue'
+        }
+      }
+    });
+    assert.equals( filter('param'), 'i18nValue',
+              "i18n value expected (single nested value, default language)");
+    assert.equals( filter('section.subsection.param'), 'nestedValue',
+                           "replacement value expected for nested property "+
+                                  "(single nested value, default language)");
+    assert.equals( filter('other'), 'i18nOtherValue',
+                                 "i18n value expected for missing property "+
+                                  "(single nested value, default language)");
+    assert.equals( filter('missing'), null,
+                                "no replacement value expected for missing "+
+                                  "(single nested value, default language)");
+
+    document.documentElement.lang = 'OTHER-TEST-LANGUAGE';
+
+    filter = ut(null,testLanguageCode);
+    assert.equals( typeof ut, 'function',
+      "function getter expected to be returned (no data, specific language)");
+    assert.equals( filter('param'), 'i18nValue',
+                         "i18n value expected (no data, specific language)");
+    assert.equals( filter('missing'), null,
+                       "no replacement value expected for missing property"+
+                                             "(no data, specific language)");
+
+    filter = ut({param: 'value'},testLanguageCode);
+    assert.equals( filter('param'), 'value',
+              "replacement value expected (single value, specific language)");
+    assert.equals( filter('section.subsection.param'), 'i18nNestedValue',
+                                  "i18n value expected for nested property "+
+                                         "(single value, specific language)");
+    assert.equals( filter('other'), 'i18nOtherValue',
+                                   "i18n value expected for other property "+
+                                         "(single value, specific language)");
+    assert.equals( filter('missing'), null,
+                        "no replacement value expected for missing property"+
+                                         "(single value, specific language)");
+
+    filter = ut(
+      {
+        section:{
+          subsection:{
+            param: 'nestedValue'
+          }
+        }
+      },
+      testLanguageCode
+    );
+    assert.equals( filter('param'), 'i18nValue',
+              "i18n value expected (single nested value, specific language)");
+    assert.equals( filter('section.subsection.param'), 'nestedValue',
+                           "replacement value expected for nested property "+
+                                  "(single nested value, specific language)");
+    assert.equals( filter('other'), 'i18nOtherValue',
+                                 "i18n value expected for missing property "+
+                                  "(single nested value, specific language)");
+    assert.equals( filter('missing'), null,
+                                "no replacement value expected for missing "+
+                                  "(single nested value, specific language)");
   }
 
   function testGetString(){
@@ -510,6 +652,8 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testWithValuesFromDataOrLanguageProperties:
+      testWithValuesFromDataOrLanguageProperties,
     testGetString: testGetString,
     testFilterByLanguage: testFilterByLanguage,
     testSetLanguage: testSetLanguage,
