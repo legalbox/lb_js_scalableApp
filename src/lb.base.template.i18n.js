@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-11
+ * 2011-01-12
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -42,6 +42,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       /*requires lb.base.template.js */
       template = lb.base.template,
       applyFilters = template.applyFilters,
+      /*requires lb.base.template.string.js */
+      withValuesFrom = template.string.withValuesFrom,
       /*requires lb.base.template.html.js */
       topDownParsing = template.html.topDownParsing,
       replaceParams = template.html.replaceParams;
@@ -200,12 +202,11 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     }
     applyFilters(
       htmlNode,
-      data,
       [
         topDownParsing,
         filterByLanguage(languageCode),
         setLanguage,
-        replaceParams
+        replaceParams( withValuesFrom(data) )
       ]
     );
   }
