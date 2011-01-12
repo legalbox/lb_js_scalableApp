@@ -2,9 +2,13 @@
  * Namespace: lb.base.template.string
  * Base String Template Module
  *
- * This module provides the basis for String templates using a set of functions
- * as filters to modify the input.
+ * This module provides the basis for String templates using one or several
+ * functions as filters to modify the input.
  * See <lb.base.template.applyFilters(input...,filters):any> for details.
+ *
+ * Use replaceParams() to generate a filter which replaces parameters in a
+ * string. A function must be provided as argument, which is called to get
+ * values for the replacement.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
