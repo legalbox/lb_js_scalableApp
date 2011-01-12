@@ -64,38 +64,72 @@
   function testReplaceParams(){
     var ut = lb.base.template.string.replaceParams;
 
+    assert.equals( ut(), null,
+                            "null expected when required getter is missing");
+
+    var captured = [];
+    var returnValues = [];
+    function captureParams(key){
+      captured.push(key);
+      return returnValues.pop();
+    }
+
+    var filter = ut(captureParams);
+    assert.equals( typeof filter, 'function',
+                              "a filter function is expected to be returned");
+
     var noParam = 'No param to replace';
-    assert.equals( ut(noParam,{}), noParam,
+    assert.equals( filter(noParam), noParam,
                               "no change expected without params to replace");
+    assert.arrayEquals(captured, [],
+                      "no call to getter expected without params to replace");
 
     var noParamReally = 'No #param, #here!#really$#';
-    assert.equals( ut(noParamReally,{}), noParamReally,
+    assert.equals( filter(noParamReally), noParamReally,
                       "no change expected without params to replace, really");
+    assert.arrayEquals(captured, [],
+              "no call to getter expected without params to replace, really");
 
     var rangeParam = '#abc-xyz_ABC-XYZ_0-9#';
-    assert.equals( ut(rangeParam,{'abc-xyz_ABC-XYZ_0-9':'value'}), 'value',
-                       "replacement expected for parameter with large range "+
+    captured = [];
+    returnValues = ['value'];
+    assert.equals( filter(rangeParam), 'value',
+                                       "replacement expected for parameter "+
                                     "with large range of characters in name");
+    assert.arrayEquals(captured, ['abc-xyz_ABC-XYZ_0-9'],
+      "param name with large range of characters expected in call to getter");
 
     var nestedParam = '#a.b.c.d#';
-    assert.equals( ut(nestedParam,{a:{b:{c:{d:'value'}}}}),'value',
+    captured = [];
+    returnValues = ['value'];
+    assert.equals( filter(nestedParam),'value',
                               "replacement expected for nested param value");
+    assert.arrayEquals(captured,['a.b.c.d'],
+                              "dotted param nam expected in call to getter");
 
     var paramInText = 'Before #param# after';
-    assert.equals( ut(paramInText,{param:'value'}), 'Before value after',
+    captured = [];
+    returnValues = ['value'];
+    assert.equals( filter(paramInText), 'Before value after',
                                "parameter in text expectec to be replaced");
+    assert.arrayEquals(captured,['param'],
+                        "name of param in text expected in call to getter");
 
     var missingParam = '#missing#';
-    assert.equals( ut(missingParam,{}), missingParam,
+    captured = [];
+    returnValues = [null];
+    assert.equals( filter(missingParam), missingParam,
                           "missing parameter expected to be left unreplaced");
+    assert.arrayEquals(captured,['missing'],
+                          "name of missing param expected in call to getter");
 
     var multipleParams = 'Before#param1##param2##param3#After';
-    assert.equals( ut(multipleParams,{
-                     param1: ';value1;',
-                     param2: '',
-                     param3: ';value3;'
-                   }), 'Before;value1;;value3;After',
+    captured = [];
+    returnValues = [';value1;','',';value3'];
+    assert.equals( filter(multipleParams), 'Before;value1;;value3;After',
         "multiple parameters expected to be replaced, including empty string");
+    assert.arrayEquals(captured,['param1','param2','param3'],
+                "multiple parameters expected in sequence in calls to getter");
   }
 
   var tests = {
