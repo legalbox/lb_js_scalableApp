@@ -2,12 +2,16 @@
  * Namespace: lb.base.template.i18n
  * Base Module for Internationalization Templates (i18n)
  *
- * This module defines filter functions for templates used in i18n
- * (internationalization), used together with HTML filters in calls to
- * <lb.base.template.applyFilters(input...,filters):any> in the base template
- * module.
+ * This module defines methods that manipulate string and HTML templates and
+ * replace parameters with values from dynamic data or language properties:
+ *   o <getString(key[,data[,languageCode]]): string>
+ *   o <filterHtml(htmlNode[,data[,languageCode]])>
  *
- * Like HTML filters, i18n filters are applied to DOM nodes, modified in place.
+ * The module includes also individual filters to be applied to HTML nodes
+ * and more generally helpers for use in i18n templates:
+ *   o <filterByLanguage(languageCode): function>
+ *   o <setLanguage(htmlElement)>
+ *   o <withValuesFromDataOrLanguageProperties([data[,languageCode]]): function>
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
