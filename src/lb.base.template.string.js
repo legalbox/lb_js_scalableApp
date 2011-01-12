@@ -35,7 +35,7 @@ lb.base.template.string = lb.base.template.string || (function() {
   var PARAM_REGEXP = /#([a-zA-Z0-9\_\-\.]+)#/g;
 
   function withValuesFrom(data){
-    // Function: withValuesFrom(data): function
+    // Function: withValuesFrom([data]): function
     // Get a closure function that gets values of properties in data.
     //
     // This method is intended for use in combination with replaceParams,
