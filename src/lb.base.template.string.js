@@ -17,7 +17,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-11
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -30,9 +30,51 @@ lb.base.template.string = lb.base.template.string || (function() {
   // Private fields
   var PARAM_REGEXP = /#([a-zA-Z0-9\_\-\.]+)#/g;
 
+  function withValuesFrom(data){
+    // Function: withValuesFrom(data): function
+    // Get a closure function that gets values of properties in data.
+    //
+    // This method is intended for use in combination with replaceParams,
+    // to get a filter to replace parameters in a string template with values
+    // from given data:
+    // | var filter = replaceParams( withValuesFrom(data) )
+    //
+    // Parameter:
+    //   data - object, optional, properties for parameter replacement, which
+    //          may be nested in sections and subsections. Defaults to {}.
+    //          Example:
+    //          | {
+    //          |   section: {
+    //          |     subsection: {
+    //          |       name: 'value'
+    //          |     }
+    //          |   }
+    //          | }
+    //
+    // Returns:
+    //   function, a closure wrapped around the given data, with the following
+    //   signature:
+    //   | Function: getDataValue(path): any
+    //   | Get the value of a property, possibly nested, in wrapped data.
+    //   |
+    //   | Parameter:
+    //   |   path - string, the path to a property, which may be:
+    //   |            * a string refering to the name of a property: 'name'
+    //   |            * a dotted string for a nested property: 'section.name'
+    //   |            * an array of path elements: ['section','name']
+    //   |          The array and the dotted string are equivalent, except that
+    //   |          the array form allows to use names including the dot '.'
+    //   |          character: "a.somewhat.illegal.property.name".
+    //   |
+    //   | Returns:
+    //   |   * any, the value of corresponding property, if found
+    //   |   * null otherwise
+
+  }
+
   function replaceParams(string, data){
-    // Function: replaceParams(string,data): string
-    // Replace parameters in given string with values from given data.
+    // Function: replaceParams(getValue): function
+    // Get a filter function to replace parameters in a string template.
     //
     // The parameters to replace are surrounded by '#' characters, and
     // allow the folowing characters in the name:
@@ -52,14 +94,25 @@ lb.base.template.string = lb.base.template.string || (function() {
     //
     // Parameters for which no value is found are left unreplaced.
     //
-    // Parameters:
-    //   string - string, the template string with parameters to replace
-    //   data - object, properties for parameter replacement, which may be
-    //          nested in sections and subsections
+    // Parameter:
+    //   getValue - function, a getter function returning values for the
+    //              replacement of parameters: function(name): any
+    //              The name argument is the name of the parameter to replace.
+    //              The getter value should return string values when a
+    //              matching property is found, and null otherwise.
     //
     // Returns:
-    //   string, a string computed from the template string by replacing
-    //   named parameters with corresponding values found in data object
+    //   function, a closure wrapped around the given getter function, with the
+    //   following signature:
+    //   | Function: filter(string): string
+    //   | Replace parameters in given string with values from wrapped getter.
+    //   |
+    //   | Parameters:
+    //   |   string - string, the template string with parameters to replace
+    //   |
+    //   | Returns:
+    //   |   string, a string computed from the template string by replacing
+    //   |   named parameters with corresponding values returned by getValue()
 
     return string.replace(PARAM_REGEXP, function(match,param){
       var properties = data,
