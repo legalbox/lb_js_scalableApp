@@ -96,9 +96,7 @@ lb.base.template.html = lb.base.template.html || (function() {
     }
   }
 
-  // TODO: transform replaceParams into a filter generator:
-  //       Function: replaceParams(getter): function
-  function replaceParams(node,data){
+  function replaceParams(getValue){
     // Function: replaceParams(getValue): function
     // Get a filter function to replace parameters in attribute and text nodes.
     //
@@ -131,15 +129,18 @@ lb.base.template.html = lb.base.template.html || (function() {
     //     |              are considered for parameter replacement.
     //     |              Other nodes are left untouched.
     //   * null when the required getter argument is missing or not a function
-    if (  !node ||
-          ( node.nodeType!==ATTRIBUTE_NODE &&
-            node.nodeType!==TEXT_NODE )  ){
-      return;
+    if ( typeof getValue !== 'function' ){
+      return null;
     }
-
-    node.nodeValue = replaceParamsInString(withValuesFrom(data))(
-      node.nodeValue
-    );
+    var replaceParamsWithValues = replaceParamsInString(getValue);
+    return function(htmlNode){
+      if (  !htmlNode ||
+            ( htmlNode.nodeType!==ATTRIBUTE_NODE &&
+              htmlNode.nodeType!==TEXT_NODE )  ){
+        return;
+      }
+      htmlNode.nodeValue = replaceParamsWithValues(htmlNode.nodeValue);
+    };
   }
 
   return { // public API
