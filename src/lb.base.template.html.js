@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-11
+ * 2011-01-12
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -41,9 +41,7 @@ lb.base.template.html = lb.base.template.html || (function() {
       TEXT_NODE = dom.TEXT_NODE,
       applyFilters = lb.base.template.applyFilters,
       /*requires lb.base.template.string.js */
-      stringTemplates = lb.base.template.string,
-      withValuesFrom = stringTemplates.withValuesFrom,
-      replaceParamsInString = stringTemplates.replaceParams;
+      replaceParamsInString = lb.base.template.string.replaceParams;
 
   function topDownParsing(node){
     // Function: topDownParsing(node[,context...],filters)
