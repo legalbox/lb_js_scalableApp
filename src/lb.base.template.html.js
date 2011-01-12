@@ -99,28 +99,37 @@ lb.base.template.html = lb.base.template.html || (function() {
   // TODO: transform replaceParams into a filter generator:
   //       Function: replaceParams(getter): function
   function replaceParams(node,data){
-    // Function: replaceParams(node,data)
-    // Replace parameters in attribute and text nodes with values from given
-    // data.
+    // Function: replaceParams(getValue): function
+    // Get a filter function to replace parameters in attribute and text nodes.
     //
-    // The parameters to replace are surrounded by '#' characters,
-    // e.g. #param#
-    // and replaced with the value of the property of the same name.
-    // It is also possible to use nested properties,
-    // e.g. #section.subsection.param#.
+    // This method applies replaceParams() from the base string templates
+    // module, and follows the same conventions:
+    // - parameters to replace are surrounded by '#' characters
+    // - getValue() is called for replacement values
     //
     // See details of parameter format in
-    // <lb.base.template.string.replaceParams(string,data): string>,
-    // which is used internally for parameter replacement.
+    // <lb.base.template.string.replaceParams(getValue): function>.
     //
-    // The replacements are operated in place in given node.
+    // Parameter:
+    //   getValue - function, a getter function returning values for the
+    //              replacement of parameters: function(name): any
+    //              The name argument is the name of the parameter to replace.
+    //              The getter value should return string values when a
+    //              matching property is found, and null otherwise.
     //
-    // Parameters:
-    //   node - DOM Node, a DOM node. Only attribute and text nodes are
-    //          considered for parameter replacement. Other nodes are left
-    //          untouched.
-    //   data - object, properties for parameter replacement, which may be
-    //          nested in sections and subsections
+    // Returns:
+    //   * function, a closure wrapped around the given getter function, with
+    //     the following signature:
+    //     | Function: filter(htmlNode)
+    //     | Replace parameters in attribute and text nodes
+    //     | with corresponding values returned by getValue().
+    //     |
+    //     | The replacements are operated in place in given node.
+    //     |
+    //     | Parameters:
+    //     |   htmlNode - DOM Node, a DOM node. Only attribute and text nodes
+    //     |              are considered for parameter replacement.
+    //     |              Other nodes are left untouched.
     if (  !node ||
           ( node.nodeType!==ATTRIBUTE_NODE &&
             node.nodeType!==TEXT_NODE )  ){
