@@ -92,6 +92,18 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     //   |   * any, the value of corresponding language property found in the
     //   |     most specific language available, as a fallback
     //   |   * null if neither is available
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = getDefaultLanguageCode();
+    }
+    var getDataValue = withValuesFrom(data);
+    return function(key){
+      var value = getDataValue(key);
+      if (value===null || value===undefined){
+        return get(key,languageCode);
+      }
+      return value;
+    };
   }
 
   function getString(key,data,languageCode){
@@ -325,6 +337,8 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
   }
 
   return { // public API
+    withValuesFromDataOrLanguageProperties:
+      withValuesFromDataOrLanguageProperties,
     getString: getString,
     filterByLanguage: filterByLanguage,
     setLanguage: setLanguage,
