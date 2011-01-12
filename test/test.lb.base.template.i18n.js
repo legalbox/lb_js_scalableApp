@@ -39,6 +39,68 @@
 
     // reset document language
     document.documentElement.removeAttribute('lang');
+
+    // Note:
+    // all language variants are removed before each test, to make sure that
+    // the behavior is consistent when these tests are run as part of all tests
+    lb.base.i18n.data.reset();
+  }
+
+  function testGetString(){
+    var ut = lb.base.template.i18n.getString;
+
+    setUp();
+    assert.equals( ut(), null,              "null expected for missing key");
+    assert.equals( ut('missing'), null,   "null expected for key 'missing'");
+
+    var testLanguageCode = 'te-ST';
+    document.documentElement.lang = testLanguageCode;
+
+    var noParamValue = 'No Param Value',
+        simpleParamValue = '#simple#',
+        dottedParamValue = '#dotted.param#',
+        complexParamValue = 'Complex #param-to-replace#, #missing#';
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      noParam: noParamValue,
+      simpleParam: simpleParamValue,
+      dottedParam: dottedParamValue,
+      complexParam: complexParamValue
+    });
+
+    assert.equals( ut('noParam'), noParamValue,
+                          "value without param expected AS IS (no language)");
+    assert.equals( ut('simpleParam',{simple:'replacement'}), 'replacement',
+                           "simple value replacement expected (no language)");
+    assert.equals( ut('dottedParam',
+                   {
+                     dotted:{
+                       param:'replacement'
+                     }
+                   }), 'replacement',
+                           "dotted value replacement expected (no language)");
+    assert.equals( ut('complexParam',{'param-to-replace':'value'}),
+                   'Complex value, #missing#',
+                 "one of two params expected in complex value (no language)");
+
+    document.documentElement.lang = "OTHER-LANGUAGE-CODE";
+
+    assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
+                    "value without param expected AS IS (explicit language)");
+    assert.equals( ut('simpleParam',{simple:'replacement'},testLanguageCode),
+                   'replacement',
+                     "simple value replacement expected (explicit language)");
+    assert.equals( ut('dottedParam',
+                   {
+                     dotted:{
+                       param:'replacement'
+                     }
+                   }, testLanguageCode), 'replacement',
+                    "dotted value replacement expected (explicit language)");
+    assert.equals( ut('complexParam',
+                      {'param-to-replace':'value'},
+                      testLanguageCode),
+                   'Complex value, #missing#',
+           "one of two params expected in complex value (explicit language)");
   }
 
   function testFilterByLanguage(){
@@ -448,6 +510,7 @@
 
   var tests = {
     testNamespace: testNamespace,
+    testGetString: testGetString,
     testFilterByLanguage: testFilterByLanguage,
     testSetLanguage: testSetLanguage,
     testFilterHtml: testFilterHtml

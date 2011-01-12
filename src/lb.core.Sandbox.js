@@ -71,7 +71,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-11
+ * 2011-01-12
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -657,7 +657,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //     language properties of the most specific language where available
   //   * or null if the property is not found
 
-  // Note: getString() is an alias for lb.base.i18n.data.getString()
+  // Note: getString() is an alias for lb.base.template.i18n.getString()
 
   // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
   // Replace parameters and trim nodes based on html 'lang' attribute.
@@ -690,7 +690,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // attribute are preserved by the filtering. 
   //
   // Parameters of the form #param# found in text and attribute nodes are
-  // replaced in the same way as using getString():
+  // replaced in the same way as using i18n.getString():
   // - the parameter format is based on following regular expression:
   //   /#([a-zA-Z0-9_\-\.]+)#/g
   // - data object contains values for the parameters to replace, which may
@@ -910,7 +910,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     selectLanguage: selectLanguage,
     addLanguageProperties: i18nData.addLanguageProperties,
     get: i18nData.get,
-    getString: i18nData.getString,
+    getString: i18nTemplate.getString,
     filterHtml: i18nTemplate.filterHtml
   };
   this.server = {
