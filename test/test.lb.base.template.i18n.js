@@ -591,6 +591,17 @@
       attributeParam: 'i18nAttributeValue',
       "text-to-replace": 'i18nDashedValue'
     });
+    noParamValue = 'No param replacement',
+    noParamNode = element('div',{},noParamValue),
+    simpleNodeValue = '#param#',
+    simpleNode = element('div',{},simpleNodeValue),
+    dottedNodeValue = '#dotted.param#',
+    dottedNode = element('div',{},dottedNodeValue),
+    complexNode = element('div',{},
+      'Complex ',
+      element('span',{id:'#attributeParam#'},'#text-to-replace#'),
+      ' #missing#'
+    );
 
     ut(noParamNode);
     assert.equals( noParamNode.innerHTML, noParamValue,
@@ -678,6 +689,17 @@
       attributeParam: 'i18nAttributeValue',
       "text-to-replace": 'i18nDashedValue'
     });
+    noParamValue = 'No param replacement',
+    noParamNode = element('div',{},noParamValue),
+    simpleNodeValue = '#param#',
+    simpleNode = element('div',{},simpleNodeValue),
+    dottedNodeValue = '#dotted.param#',
+    dottedNode = element('div',{},dottedNodeValue),
+    complexNode = element('div',{},
+      'Complex ',
+      element('span',{id:'#attributeParam#'},'#text-to-replace#'),
+      ' #missing#'
+    );
 
     ut(noParamNode,null,testLanguageCode);
     assert.equals( noParamNode.innerHTML, noParamValue,
