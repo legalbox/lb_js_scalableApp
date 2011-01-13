@@ -583,6 +583,49 @@
           ' #missing#'
       ],     "two replacements expected in complex value (default language)");
 
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      param: 'i18nValue',
+      dotted:{
+        param: 'i18nDottedValue'
+      },
+      attributeParam: 'i18nAttributeValue',
+      "text-to-replace": 'i18nDashedValue'
+    });
+
+    ut(noParamNode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+                             "value without param expected to be left AS IS "+
+                                           "(default language + properties)");
+    ut(simpleNode,{});
+    assert.equals( simpleNode.innerHTML, 'i18nValue',
+         "simple value replacement expected (default language + properties)");
+    ut(dottedNode,{});
+    assert.equals( dottedNode.innerHTML, 'i18nDottedValue',
+         "dotted replacement value expected (default language + properties)");
+    ut(complexNode,{});
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'i18nAttributeValue',
+            'i18nDashedValue',
+          ' #missing#'
+      ],
+                                 "two replacements expected in complex value "+
+                                            "(default language + properties)");
+
+    setUp();
     document.documentElement.lang = 'OTHER-LANGUAGE-CODE';
 
     noParamNode = element('div',{},noParamValue);
