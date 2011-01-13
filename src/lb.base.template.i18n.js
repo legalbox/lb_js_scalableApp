@@ -24,7 +24,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-12
+ * 2011-01-13
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -165,12 +165,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     if (value===null){
       return value;
     }
-    // TODO: define a function
-    //       withValuesFromDataOrLanguageProperties(data,languageCode)
-    //       This method will call:
-    //         * lb.base.template.string.withValuesFromData()
-    //         * lb.base.i18n.data.get()
-    return replaceParamsInString(withValuesFrom(data))(value);
+    return replaceParamsInString(
+      withValuesFromDataOrLanguageProperties(data,languageCode)
+    )(value);
   }
 
   function filterByLanguage(languageCode){
@@ -331,7 +328,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
         topDownParsing,
         filterByLanguage(languageCode),
         setLanguage,
-        replaceParams( withValuesFrom(data) )
+        replaceParams(
+          withValuesFromDataOrLanguageProperties(data,languageCode)
+        )
       ]
     );
   }
