@@ -225,7 +225,32 @@
                    'Complex value, #missing#',
             "one of two params expected in complex value (default language)");
 
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      simple: 'i18nSimpleValue',
+      dotted:{
+        param: 'i18nDottedValue'
+      },
+      "param-to-replace": 'i18nDashedValue'
+    });
+
+    assert.equals( ut('noParam'), noParamValue,
+        "value without param expected AS IS (default language + properties)");
+    assert.equals( ut('simpleParam',{}), 'i18nSimpleValue',
+    "i18n simple value replacement expected (default language + properties)");
+    assert.equals( ut('dottedParam',{}), 'i18nDottedValue',
+    "i18n dotted value replacement expected (default language + properties)");
+    assert.equals( ut('complexParam',{}), 'Complex i18nDashedValue, #missing#',
+               "i18n value expected for one of two params in complex value "+
+                                          "(default language + properties)");
+
+    setUp();
     document.documentElement.lang = "OTHER-LANGUAGE-CODE";
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      noParam: noParamValue,
+      simpleParam: simpleParamValue,
+      dottedParam: dottedParamValue,
+      complexParam: complexParamValue
+    });
 
     assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
                     "value without param expected AS IS (specific language)");
@@ -244,6 +269,25 @@
                       testLanguageCode),
                    'Complex value, #missing#',
            "one of two params expected in complex value (specific language)");
+
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      simple: 'i18nSimpleValue',
+      dotted:{
+        param: 'i18nDottedValue'
+      },
+      "param-to-replace": 'i18nDashedValue'
+    });
+
+    assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
+        "value without param expected AS IS (specific language + properties)");
+    assert.equals( ut('simpleParam',{},testLanguageCode), 'i18nSimpleValue',
+    "i18n simple value replacement expected (specific language + properties)");
+    assert.equals( ut('dottedParam',{},testLanguageCode), 'i18nDottedValue',
+    "i18n dotted value replacement expected (specific language + properties)");
+    assert.equals( ut('complexParam',{},testLanguageCode),
+                   'Complex i18nDashedValue, #missing#',
+               "i18n value expected for one of two params in complex value "+
+                                          "(specific language + properties)");
   }
 
   function testFilterByLanguage(){
