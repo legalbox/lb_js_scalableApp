@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-12
+ * Version:   2011-01-13
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -192,6 +192,7 @@
     var ut = lb.base.template.i18n.getString;
 
     setUp();
+
     assert.equals( ut(), null,              "null expected for missing key");
     assert.equals( ut('missing'), null,   "null expected for key 'missing'");
 
@@ -210,39 +211,39 @@
     });
 
     assert.equals( ut('noParam'), noParamValue,
-                          "value without param expected AS IS (no language)");
+                     "value without param expected AS IS (default language)");
     assert.equals( ut('simpleParam',{simple:'replacement'}), 'replacement',
-                           "simple value replacement expected (no language)");
+                      "simple value replacement expected (default language)");
     assert.equals( ut('dottedParam',
                    {
                      dotted:{
                        param:'replacement'
                      }
                    }), 'replacement',
-                           "dotted value replacement expected (no language)");
+                      "dotted value replacement expected (default language)");
     assert.equals( ut('complexParam',{'param-to-replace':'value'}),
                    'Complex value, #missing#',
-                 "one of two params expected in complex value (no language)");
+            "one of two params expected in complex value (default language)");
 
     document.documentElement.lang = "OTHER-LANGUAGE-CODE";
 
     assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
-                    "value without param expected AS IS (explicit language)");
+                    "value without param expected AS IS (specific language)");
     assert.equals( ut('simpleParam',{simple:'replacement'},testLanguageCode),
                    'replacement',
-                     "simple value replacement expected (explicit language)");
+                     "simple value replacement expected (specific language)");
     assert.equals( ut('dottedParam',
                    {
                      dotted:{
                        param:'replacement'
                      }
                    }, testLanguageCode), 'replacement',
-                    "dotted value replacement expected (explicit language)");
+                    "dotted value replacement expected (specific language)");
     assert.equals( ut('complexParam',
                       {'param-to-replace':'value'},
                       testLanguageCode),
                    'Complex value, #missing#',
-           "one of two params expected in complex value (explicit language)");
+           "one of two params expected in complex value (specific language)");
   }
 
   function testFilterByLanguage(){
