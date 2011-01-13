@@ -552,13 +552,13 @@
 
     ut(noParamNode);
     assert.equals( noParamNode.innerHTML, noParamValue,
-               "value without param expected to be left AS IS (no language)");
+          "value without param expected to be left AS IS (default language)");
     ut(simpleNode,{param:'value'});
     assert.equals( simpleNode.innerHTML, 'value',
-                           "simple value replacement expected (no language)");
+                      "simple value replacement expected (default language)");
     ut(dottedNode,{dotted:{param:'value'}});
     assert.equals( dottedNode.innerHTML, 'value',
-                           "dotted replacement value expected (no language)");
+                      "dotted replacement value expected (default language)");
     ut(complexNode,{
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
@@ -581,7 +581,7 @@
             'attribute value',
             'text value',
           ' #missing#'
-      ],          "two replacements expected in complex value (no language)");
+      ],     "two replacements expected in complex value (default language)");
 
     document.documentElement.lang = 'OTHER-LANGUAGE-CODE';
 
@@ -596,13 +596,13 @@
 
     ut(noParamNode,testLanguageCode);
     assert.equals( noParamNode.innerHTML, noParamValue,
-         "value without param expected to be left AS IS (explicit language)");
+         "value without param expected to be left AS IS (specific language)");
     ut(simpleNode,{param:'value'},testLanguageCode);
     assert.equals( simpleNode.innerHTML, 'value',
-                     "simple value replacement expected (explicit language)");
+                     "simple value replacement expected (specific language)");
     ut(dottedNode,{dotted:{param:'value'}},testLanguageCode);
     assert.equals( dottedNode.innerHTML, 'value',
-                    "dotted replacement value expected (explicit language)");
+                    "dotted replacement value expected (specific language)");
     ut(complexNode,{
       attributeParam: 'attribute value',
       'text-to-replace':'text value'
@@ -625,7 +625,7 @@
             'attribute value',
             'text value',
           ' #missing#'
-      ],    "two replacements expected in complex value (explicit language)");
+      ],    "two replacements expected in complex value (specific language)");
 
     var listNode = element('ul',{},
       element('li',{},'No Language'),
