@@ -670,6 +670,48 @@
           ' #missing#'
       ],    "two replacements expected in complex value (specific language)");
 
+    lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
+      param: 'i18nValue',
+      dotted:{
+        param: 'i18nDottedValue'
+      },
+      attributeParam: 'i18nAttributeValue',
+      "text-to-replace": 'i18nDashedValue'
+    });
+
+    ut(noParamNode,null,testLanguageCode);
+    assert.equals( noParamNode.innerHTML, noParamValue,
+                             "value without param expected to be left AS IS "+
+                                           "(specific language + properties)");
+    ut(simpleNode,{},testLanguageCode);
+    assert.equals( simpleNode.innerHTML, 'i18nValue',
+         "simple value replacement expected (specific language + properties)");
+    ut(dottedNode,{},testLanguageCode);
+    assert.equals( dottedNode.innerHTML, 'i18nDottedValue',
+         "dotted replacement value expected (specific language + properties)");
+    ut(complexNode,{},testLanguageCode);
+    assert.arrayEquals(
+      [
+        complexNode.nodeName,
+        complexNode.childNodes.length,
+          complexNode.childNodes[0].nodeValue,
+          complexNode.childNodes[1].nodeName,
+          complexNode.childNodes[1].getAttribute('id'),
+          complexNode.childNodes[1].innerHTML,
+          complexNode.childNodes[2].nodeValue
+      ],
+      [
+        'DIV',
+        3,
+          'Complex ',
+          'SPAN',
+            'i18nAttributeValue',
+            'i18nDashedValue',
+          ' #missing#'
+      ],
+                                 "two replacements expected in complex value "+
+                                            "(specific language + properties)");
+
     var listNode = element('ul',{},
       element('li',{},'No Language'),
       element('li',{lang:''},'Root'),
