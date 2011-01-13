@@ -591,12 +591,9 @@
       attributeParam: 'i18nAttributeValue',
       "text-to-replace": 'i18nDashedValue'
     });
-    noParamValue = 'No param replacement',
-    noParamNode = element('div',{},noParamValue),
-    simpleNodeValue = '#param#',
-    simpleNode = element('div',{},simpleNodeValue),
-    dottedNodeValue = '#dotted.param#',
-    dottedNode = element('div',{},dottedNodeValue),
+    noParamNode = element('div',{},noParamValue);
+    simpleNode = element('div',{},simpleNodeValue);
+    dottedNode = element('div',{},dottedNodeValue);
     complexNode = element('div',{},
       'Complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
@@ -689,12 +686,10 @@
       attributeParam: 'i18nAttributeValue',
       "text-to-replace": 'i18nDashedValue'
     });
-    noParamValue = 'No param replacement',
-    noParamNode = element('div',{},noParamValue),
-    simpleNodeValue = '#param#',
-    simpleNode = element('div',{},simpleNodeValue),
-    dottedNodeValue = '#dotted.param#',
-    dottedNode = element('div',{},dottedNodeValue),
+
+    noParamNode = element('div',{},noParamValue);
+    simpleNode = element('div',{},simpleNodeValue);
+    dottedNode = element('div',{},dottedNodeValue);
     complexNode = element('div',{},
       'Complex ',
       element('span',{id:'#attributeParam#'},'#text-to-replace#'),
