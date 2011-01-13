@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-11
+ * Version:   2011-01-13
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -44,6 +44,8 @@
       config = lb.base.config,
       /*requires lb.base.history.js */
       history = lb.base.history,
+      /*requires lb.base.i18n.data.js*/
+      i18nData = lb.base.i18n.data,
       /*requires lb.core.events.publisher.js */
       publisher = lb.core.events.publisher,
       /*requires lb.core.events.Subscriber.js */
@@ -67,6 +69,8 @@
 
     // reset document language
     document.documentElement.removeAttribute('lang');
+    // remove all language properties
+    i18nData.reset();
     // reset subscribers to notifications
     empty( publisher.getSubscribers() );
     // restore default configuration
