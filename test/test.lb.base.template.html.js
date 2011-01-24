@@ -320,7 +320,7 @@
       element('div',{id:'British',lang:'en-GB',title:'Sir',dir:'rtl'});
     capturedNames = {};
     ut( elementWithAttributes,
-        [catchAttributes, failOnAttribute]
+        [failOnAttribute, catchAttributes]
     );
     assert.objectEquals(
       capturedNames,
