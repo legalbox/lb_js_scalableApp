@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-01-24
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -175,6 +175,25 @@
     assert.equals(startCounter2, 1,             "module 2 must have started");
     assert.equals(startCounter3, 1,             "module 3 must have started");
 
+    array.empty( lb.core.application.getModules() );
+    startCounter1 = 0;
+    startCounter2 = 0;
+    startCounter3 = 0;
+    lb.core.application.addModule();
+    lb.core.application.addModule(null);
+    lb.core.application.addModule(module1);
+    lb.core.application.addModule({
+      start: function(){
+        throw new Error('Expected Failure in start');
+      }
+    });
+    lb.core.application.addModule(module2);
+    lb.core.application.addModule(module3);
+
+    ut();
+    assert.equals(startCounter1, 1,             "module 1 must have started");
+    assert.equals(startCounter2, 1,             "module 2 must have started");
+    assert.equals(startCounter3, 1,             "module 3 must have started");
   }
 
   function testEndAll(){
