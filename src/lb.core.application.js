@@ -15,7 +15,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-24
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -34,6 +34,8 @@ lb.core.application = lb.core.application || (function() {
       config = lb.base.config,
       /*requires lb.base.dom.Listener.js */
       Listener = lb.base.dom.Listener,
+      /*requires lb.base.log.js */
+      log = lb.base.log.print,
 
   // Private members
 
@@ -96,7 +98,11 @@ lb.core.application = lb.core.application || (function() {
     //
 
     for (var i=0; i<modules.length; i++){
-      modules[i].start();
+      try {
+        modules[i].start();
+      } catch (e) {
+        log('Error while starting module '+modules[i]+': '+e);
+      }
     }
   }
 
@@ -107,7 +113,11 @@ lb.core.application = lb.core.application || (function() {
     // All registered modules are discarded.
 
     for (var i=0; i<modules.length; i++){
-      modules[i].end();
+      try {
+        modules[i].end();
+      } catch(e) {
+        log('Error while ending module '+modules[i]+': '+e);
+      }
     }
     removeAll(modules);
     if (loadListener){
