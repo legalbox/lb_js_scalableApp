@@ -159,8 +159,13 @@ lb.base.template.html = lb.base.template.html || (function() {
               htmlNode.nodeType!==TEXT_NODE )  ){
         return;
       }
-      // TODO: do not update value unless modified
-      htmlNode.nodeValue = replaceParamsWithValues(htmlNode.nodeValue);
+      var newValue = replaceParamsWithValues(htmlNode.nodeValue);
+      if (htmlNode.nodeValue !== newValue) {
+        // only set if the new value differs, to avoid issues in IE
+        // e.g. setting the nodeValue of input.type attribute when element
+        // is in the DOM fails.
+        htmlNode.nodeValue = newValue;
+      }
     };
   }
 
