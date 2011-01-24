@@ -159,6 +159,7 @@ HISTORY
   2011-01-07, v1.5.1, Refactoring: moved filterHtml code to base i18n templates
   2011-01-13, v1.5.2, Enhanced i18n: language properties fallback in templates
   2011-01-24, v1.5.3, Enhancement: catch and go on when a module fails to start
-  2011-XX-XX, v1.5.4, ROADMAP: Enhancement: call functions found in getString()
+  2011-01-24, v1.5.4, Enhancement: added explicit string conversion for Module
+  2011-XX-XX, v1.5.5, ROADMAP: Enhancement: call functions found in getString()
   2011-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
 

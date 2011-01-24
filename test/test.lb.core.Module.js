@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-01-24
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -199,13 +199,23 @@
                   "all listeners must be removed, even when end() is omitted");
   }
 
+  function testToString(){
+    setUp();
+    var testId = 'testToString';
+    var module = new lb.core.Module(testId, createStubModule);
+    var ut = module.toString;
+
+    assert.equals( ut(), testId,         "module id expected in toString()");
+  }
+
   var tests = {
     testNamespace: testNamespace,
     testConstructor: testConstructor,
     testGetId: testGetId,
     testGetSandbox: testGetSandbox,
     testStart: testStart,
-    testEnd: testEnd
+    testEnd: testEnd,
+    testToString: testToString
   };
 
   testrunner.define(tests, "lb.core.Module");

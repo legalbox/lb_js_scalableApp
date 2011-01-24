@@ -19,7 +19,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-01-24
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -149,6 +149,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
   // Public methods
   this.getId = getId;
+  this.toString = getId;
   this.getSandbox = getSandbox;
   this.start = start;
   this.end = end;
