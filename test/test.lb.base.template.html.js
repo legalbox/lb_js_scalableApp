@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-12
+ * Version:   2011-01-24
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -264,7 +264,8 @@
        TEXT_NODE,ELEMENT_NODE],
            "node types of 9 nodes expected to be processed (mixed content)");
 
-
+    // check that all attributes are processed even if some are removed by a
+    // filter
     var parent = null;
     function removeAttributeFromParent(htmlNode){
       if (parent && htmlNode.nodeType === ATTRIBUTE_NODE){
@@ -306,6 +307,45 @@
     ut(elementWithChildNodes, [removeLastSibling, captureNodeNames]);
     assert.arrayEquals(capturedNodeNames, ['H1','H2','H3','H4','H5'],
     "all 5 child nodes expected to be processed, even with elements removed");
+
+    // check that all attributes are processed even if a filter fails while
+    // processing an attribute
+    function failOnAttribute(htmlNode){
+      if (htmlNode.nodeType === ATTRIBUTE_NODE){
+        throw new Error('Expected error on attribute');
+      }
+    }
+
+    elementWithAttributes =
+      element('div',{id:'British',lang:'en-GB',title:'Sir',dir:'rtl'});
+    capturedNames = {};
+    ut( elementWithAttributes,
+        [catchAttributes, failOnAttribute]
+    );
+    assert.objectEquals(
+      capturedNames,
+      {id:true,lang:true,title:true,dir:true},
+          "all 3 attributes expected to be processed even if a filter fails");
+
+    // check that all child nodes are processed even if a filter fails while
+    // processing a child node
+    function failOnElement(htmlNode){
+      if (htmlNode.nodeType === ELEMENT_NODE){
+        throw new Error('Expected error on element');
+      }
+    }
+
+    elementWithChildNodes = element('div',{},
+      element('h1'),
+      element('h2'),
+      element('h3'),
+      element('h4'),
+      element('h5')
+    );
+    capturedNodeNames = [];
+    ut(elementWithChildNodes, [failOnElement, captureNodeNames]);
+    assert.arrayEquals(capturedNodeNames, ['H1','H2','H3','H4','H5'],
+        "all 5 child nodes expected to be processed, even if a filter fails");
   }
 
   function testReplaceParams(){
