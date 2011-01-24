@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-12
+ * 2011-01-24
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -41,7 +41,9 @@ lb.base.template.html = lb.base.template.html || (function() {
       TEXT_NODE = dom.TEXT_NODE,
       applyFilters = lb.base.template.applyFilters,
       /*requires lb.base.template.string.js */
-      replaceParamsInString = lb.base.template.string.replaceParams;
+      replaceParamsInString = lb.base.template.string.replaceParams,
+      /*requires lb.base.log.js */
+      log = lb.base.log.print;
 
   function topDownParsing(node){
     // Function: topDownParsing(node[,context...],filters)
@@ -85,12 +87,31 @@ lb.base.template.html = lb.base.template.html || (function() {
       attribute = attributes[i];
       if ( attribute.specified ) {
         args[0] = attribute;
-        applyFilters.apply(null,args);
+        try {
+          applyFilters.apply(null,args);
+        } catch( attributeFilterError ) {
+          log(
+            'Failed to apply HTML filters to attribute "'+attribute.name+'" '+
+            'of element '+node.nodeName+ ( node.id? '#'+node.id+'' :
+            (node.className?' class="'+node.className+'"':'') )+
+            ': '+attributeFilterError
+          );
+        }
       }
     }
     for (i=0,length=childNodes.length; i<length; i++){
       args[0] = childNodes[i];
-      applyFilters.apply(null,args);
+      try {
+        applyFilters.apply(null,args);
+      } catch ( childNodeFilterError ) {
+        log(
+          'Failed to apply HTML filters to child node '+childNodes[i]+
+          ' in position '+(i+1)+
+          ' of element '+node.nodeName+ ( node.id? '#'+node.id+'' :
+          (node.className?' class="'+node.className+'"':'') )+
+          ': '+childNodeFilterError
+        );
+      }
     }
   }
 
