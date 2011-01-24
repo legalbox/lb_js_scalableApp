@@ -191,9 +191,10 @@
     lb.core.application.addModule(module3);
 
     ut();
-    assert.equals(startCounter1, 1,             "module 1 must have started");
-    assert.equals(startCounter2, 1,             "module 2 must have started");
-    assert.equals(startCounter3, 1,             "module 3 must have started");
+    assert.arrayEquals(
+      [startCounter1, startCounter2, startCounter3],
+      [1,             1,             1],
+     "all 3 modules expected to start in spite of failures in other modules");
   }
 
   function testEndAll(){
@@ -218,6 +219,26 @@
     assert.equals(endCounter3, 1,                 "module 3 must have ended");
     assert.arrayEquals( lb.core.application.getModules(), [],
                                                    "no more module expected");
+
+    lb.core.application.addModule(module1);
+    lb.core.application.addModule({
+      end: function(){
+        throw new Error('Expected error in end');
+      }
+    });
+    lb.core.application.addModule(module2);
+    lb.core.application.addModule(null);
+    lb.core.application.addModule(undefined);
+    lb.core.application.addModule(module3);
+
+    endCounter1 = 0;
+    endCounter2 = 0;
+    endCounter3 = 0;
+    ut();
+    assert.arrayEquals(
+      [endCounter1, endCounter2, endCounter3],
+      [1,           1,           1],
+              "all 3 modules expected to end in spite of failures in others");
   }
 
   function testRun(){
