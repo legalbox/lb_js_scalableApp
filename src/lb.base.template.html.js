@@ -159,6 +159,7 @@ lb.base.template.html = lb.base.template.html || (function() {
               htmlNode.nodeType!==TEXT_NODE )  ){
         return;
       }
+      // TODO: do not update value unless modified
       htmlNode.nodeValue = replaceParamsWithValues(htmlNode.nodeValue);
     };
   }
