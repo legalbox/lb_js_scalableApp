@@ -25,6 +25,7 @@
       /*requires bezen.testrunner.js */
       testrunner = bezen.testrunner,
       /*requires bezen.dom.js*/
+      $ = bezen.$,
       element = bezen.dom.element,
       ELEMENT_NODE = bezen.dom.ELEMENT_NODE,
       ATTRIBUTE_NODE = bezen.dom.ATTRIBUTE_NODE,
@@ -419,6 +420,17 @@
     ],                    "parameter in text node expected to be replaced");
     assert.arrayEquals(captured,['param1','param2'],
                        "call to getter with param2 expected for text node");
+
+    var input = $('testReplaceParams.input');
+    assert.isTrue( object.exists(input,'type'),
+                        "assert: input element with type attribute expected");
+    try {
+      filter( input.getAttributeNode('type') );
+    } catch(e) {
+      assert.fail(
+       "Failure in IE setting type of input part of DOM should be avoided: "+e
+      );
+    }
   }
 
   var tests = {
