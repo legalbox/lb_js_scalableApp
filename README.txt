@@ -158,5 +158,6 @@ HISTORY
   2011-01-05, v1.5.0, Added support for internationalization (i18n)
   2011-01-07, v1.5.1, Refactoring: moved filterHtml code to base i18n templates
   2011-01-13, v1.5.2, Enhanced i18n: language properties fallback in templates
+  2011-XX-XX, v1.5.3, ROADMAP: Enhancement: go on when a module fails to start
   2011-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
 
