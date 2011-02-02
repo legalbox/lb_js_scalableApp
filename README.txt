@@ -163,5 +163,7 @@ HISTORY
   2011-01-24, v1.5.5, Enhancement: log errors from filters in topDownParsing()
   2011-01-24, v1.5.6, Bug fix: replaceParams only sets nodeValue if different
   2011-XX-XX, v1.5.7, ROADMAP: Enhancement: call functions found in getString()
-  2011-XX-XX, v1.6.0, ROADMAP: add support for plugins to extend Sandbox API
+  2011-XX-XX, v1.6.0, ROADMAP: add is() method to utils API of Sandbox
+  2011-XX-XX, v1.7.0, ROADMAP: add support for plugins to extend Sandbox API
+  2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
 
