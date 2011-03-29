@@ -21,11 +21,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-24
+ * 2011-03-29
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
+/*global lb, goog, window */
 // preserve the module, if already loaded
 lb.base.template.html = lb.base.template.html || (function() {
   // Builder of
@@ -115,6 +115,69 @@ lb.base.template.html = lb.base.template.html || (function() {
     }
   }
 
+  function getBaseUrl(url){
+    // (Private) getBaseUrl(url)
+    // Get the base URL of the page (without the hash part).
+    //
+    // This method is extracted and adapted from bezen.template.js
+    // in the bezen.org JavaScript library, CC-BY Eric Bréchemier.
+    //
+    // Parameters::
+    //   url - string, optional, defaults to window.location.href, the url
+    //         to truncate
+    //   Note: I switched from document.URL to window.location.href for
+    //         accurate results with local files in Internet Explorer.
+    //         Although both share the same value for online files using the
+    //         http/https protocols, with the file protocol, in IE,
+    //         document.URL will look like
+    //           file://D:\web\bezen.org\javascript\test\test-template.html
+    //         while the corresponding window.location.href would be
+    //           file:///D:/web/bezen.org/javascript/test/test-template.html
+    //
+    // Returns:
+    //   string, the input URL, with the hash part removed
+    url = url || window.location.href;
+
+    // Remove the fragment part of the url
+    var pos = url.indexOf("#");
+    return ( pos<0? url: url.slice(0,pos) );
+  }
+
+  function getNodeValue(node) {
+    // (Private) getNodeValue(node)
+    // Get the node value.
+    //
+    // This method is extracted and adapted from bezen.template.js
+    // in the bezen.org JavaScript library, CC-BY Eric Bréchemier.
+    //
+    // A specific processing is required for URLs in (A) href and (IMG) src
+    // attributes, which get transformed to an absolute path in IE 7,
+    // prepending the web page URL to the left of the #param#.
+    // This method removes the web page URL if found at the start of a
+    // href or src attribute.
+    //
+    // Parameters:
+    //   node - DOM node, a node with a value
+    //          (PRE: node.nodeValue is truthy)
+    //
+    // Returns:
+    //   string or any, the node value from node.nodeValue, with the URL of the
+    //   page removed from the start for href and src attributes.
+    //   This value is typically a string. It may also be null, e.g. for the
+    //   document itself, and may be a number or even an object (for custom
+    //   properties, considered as attributes) in Internet Explorer.
+    if ( (node.nodeType === ATTRIBUTE_NODE) && 
+         (node.name === 'href' || node.name === 'src')  ) {
+      var baseUrl = getBaseUrl(); 
+      if ( node.nodeValue.indexOf(baseUrl) === 0 ) {
+        // Remove absolute URL added by IE 7 at start of local href and src
+        // The URL is identical to the part of window.location.href before the '#'
+        return node.nodeValue.replace(baseUrl,'');
+      }
+    }
+    return node.nodeValue;
+  }
+
   function replaceParams(getValue){
     // Function: replaceParams(getValue): function
     // Get a filter function to replace parameters in attribute and text nodes.
@@ -159,11 +222,19 @@ lb.base.template.html = lb.base.template.html || (function() {
               htmlNode.nodeType!==TEXT_NODE )  ){
         return;
       }
-      var newValue = replaceParamsWithValues(htmlNode.nodeValue);
-      if (htmlNode.nodeValue !== newValue) {
-        // only set if the new value differs, to avoid issues in IE
-        // e.g. setting the nodeValue of input.type attribute when element
-        // is in the DOM fails.
+      var oldValue,
+          newValue;
+
+      // In IE7, the base location of the window (without the hash part) is
+      // prepended to the nodeValue for img src and a href:
+      // e.g. "#param#" becomes "http://example.org/#param#".
+      oldValue = getNodeValue(htmlNode);
+      newValue = replaceParamsWithValues(oldValue);
+
+      if (newValue !== oldValue) {
+        // only set if the new value differs, to avoid issues in IE:
+        // for example, setting the nodeValue of input.type attribute fails
+        // when the input element is in the DOM.
         htmlNode.nodeValue = newValue;
       }
     };

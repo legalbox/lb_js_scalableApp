@@ -162,7 +162,7 @@ HISTORY
   2011-01-24, v1.5.4, Enhancement: added explicit string conversion for Module
   2011-01-24, v1.5.5, Enhancement: log errors from filters in topDownParsing()
   2011-01-24, v1.5.6, Bug fix: replaceParams only sets nodeValue if different
-  2011-XX-XX, v1.5.7, ROADMAP: Fixed replacement of parameters in URL in IE7
+  2011-03-29, v1.5.7, Fixed replacement of parameters in src and href in IE7
   2011-XX-XX, v1.5.8, ROADMAP: Enhancement: call functions found in getString()
   2011-XX-XX, v1.6.0, ROADMAP: add is() and has() methods to Sandbox utils API
   2011-XX-XX, v1.7.0, ROADMAP: add support for plugins to extend Sandbox API

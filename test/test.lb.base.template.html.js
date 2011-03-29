@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-24
+ * Version:   2011-03-29
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -385,9 +385,9 @@
       'theOne',
       '#param1#',
       '#param2#'
-    ],                  "no replacement expected at the element node level");
+    ],          "no replacement expected at the element node level for div");
     assert.arrayEquals(captured,[],
-                     "no call to getter expected at the element node level");
+             "no call to getter expected at the element node level for div");
 
     filter( htmlNode.getAttributeNode('title') );
     assert.arrayEquals([
@@ -419,7 +419,7 @@
       'value2'
     ],                    "parameter in text node expected to be replaced");
     assert.arrayEquals(captured,['param1','param2'],
-                       "call to getter with param2 expected for text node");
+                "call to getter with param2 expected for text node in div");
 
     var input = $('testReplaceParams.input');
     assert.isTrue( object.exists(input,'type'),
@@ -431,6 +431,51 @@
        "Failure in IE setting type of input part of DOM should be avoided: "+e
       );
     }
+
+    var anchor = $('testReplaceParams.anchor');
+    captured = [];
+    returnValues = ['http://test.example.org'];
+    filter( anchor.getAttributeNode('href') );
+    assert.arrayEquals([
+      anchor.nodeName,
+      anchor.getAttribute('href'),
+      anchor.innerHTML
+    ],
+    [
+      'A',
+      'http://test.example.org',
+      'Text'
+    ],                      "exact replacement expected for href of anchor");
+    assert.arrayEquals(captured,['url'],
+                      "call to getter with url expected for href of anchor");
+
+    var image = $('testReplaceParams.image');
+    captured = [];
+    /* Source: Data URI scheme
+     * From Wikipedia, the free encyclopedia
+     * http://en.wikipedia.org/wiki/Data_URI_scheme#HTML
+     */
+    var dataURI = 'data:image/png;base64,'+
+    'iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAALGP'+
+    'C/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YGARc5KB0XV+IA'+
+    'AAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAF1J'+
+    'REFUGNO9zL0NglAAxPEfdLTs4BZM4DIO4C7OwQg2JoQ9LE1exdlYvBBeZ7jq'+
+    'ch9//q1uH4TLzw4d6+ErXMMcXuHWxId3KOETnnXXV6MJpcq2MLaI97CER3N0'+
+    'vr4MkhoXe0rZigAAAABJRU5ErkJggg==';
+    returnValues = [dataURI];
+    filter( image.getAttributeNode('src') );
+    assert.arrayEquals([
+      image.nodeName,
+      image.getAttribute('src'),
+      image.getAttribute('alt')
+    ],
+    [
+      'IMG',
+      dataURI,
+      'Test Image'
+    ],                      "exact replacement expected for image src");
+    assert.arrayEquals(captured,['data'],
+                      "call to getter with url expected for image src");
   }
 
   var tests = {
