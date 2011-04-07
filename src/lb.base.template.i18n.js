@@ -100,6 +100,7 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     return function(key){
       var value = getDataValue(key);
       if (value===null || value===undefined){
+        // TODO: call getString(key,data,languageCode) instead
         return get(key,languageCode);
       }
       return value;
@@ -110,6 +111,11 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // Function: getString(key[,data[,languageCode]]): string
     // Get a string computed by replacing data values in the most specific
     // value found for given key, used as a string template.
+    //
+    // When a function is found for the given key instead of a string template,
+    // it is called with the key, data and language code, replaced with their
+    // default values when omitted, and its return value is used as string
+    // template instead.
     //
     // The parameters to replace are surrounded by '#' characters,
     // e.g. '#param-to-replace#'. No space can appear in the name;
@@ -131,11 +137,22 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // |   }
     // | }
     //
-    // In case a property is not found in the given data object, it is looked
-    // up in the language properties of the given language instead.
+    // In case a property is not found in the given data object, getString()
+    // is called recursively to get the string value of the property for
+    // parameter replacement.
     //
-    // The language defaults to the language of the whole document, as set in
-    // the 'lang' attribute of the root document element.
+    // To summarize:
+    //
+    //   1. the key is looked up in language properties of selected language.
+    //      A string is expected. If no value is found, null is returned.
+    //      If a function is found, its return value is used instead
+    //
+    //   2. any parameter found in the string value is looked up, first in the
+    //      given data, then in language properties of selected language, by
+    //      calling getString() recursively. A string is expected for parameter
+    //      replacement.
+    //
+    //   3. the resulting string, with parameters replaced, is returned.
     //
     // Parameters:
     //   key - string or array, the key identifiying the property:
