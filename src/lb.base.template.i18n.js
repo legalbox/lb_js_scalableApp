@@ -24,7 +24,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-13
+ * 2011-04-07
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -121,7 +121,7 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // |   'param-to-replace': 'value'
     // | }
     //
-    // Dotted parameter names, e.g. '#section.subsection.name', are replaced
+    // Dotted parameter names, e.g. '#section.subsection.name#', are replaced
     // with values nested within sections and subsections of the data object:
     // | {
     // |   section: {
