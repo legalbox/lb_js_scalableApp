@@ -134,7 +134,7 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // In case a property is not found in the given data object, it is looked
     // up in the language properties of the given language instead.
     //
-    // The language defaults to the language of the whole document, as set on
+    // The language defaults to the language of the whole document, as set in
     // the 'lang' attribute of the root document element.
     //
     // Parameters:
