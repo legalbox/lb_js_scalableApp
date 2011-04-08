@@ -90,6 +90,11 @@
     var testLanguageCode = 'te-ST';
     document.documentElement.lang = testLanguageCode;
 
+    var capturedParams = [];
+    function stubTwo(key,data,languageCode){
+      capturedParams.push(key,data,languageCode);
+      return 'Two';
+    }
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       param: 'i18nValue',
       other: 'i18nOtherValue',
@@ -97,7 +102,10 @@
         subsection: {
           param: 'i18nNestedValue'
         }
-      }
+      },
+      mixedParam: 'i18n: 1:#param1#, 2:#param2#, 3:#param3#',
+      param1: 'One',
+      param2: stubTwo
     });
 
     filter = ut();
@@ -141,7 +149,19 @@
                                 "no replacement value expected for missing "+
                                   "(single nested value, default language)");
 
+    var data = {param3:'Three'};
+    filter = ut(data);
+    assert.arrayEquals(capturedParams,[],
+                                        "no captured params expected before "+
+                                    "(chained parameters, default language)");
+    assert.equals( filter('mixedParam'), 'i18n: 1:One, 2:Two, 3:Three',
+         "replacement value expected (chained parameters, default language)");
+    assert.arrayEquals(capturedParams,['param2',data,testLanguageCode],
+         "key,data,languageCode params expected for function call in param2 "+
+                                    "(chained parameters, default language)");
+
     document.documentElement.lang = 'OTHER-TEST-LANGUAGE';
+    capturedParams = [];
 
     filter = ut(null,testLanguageCode);
     assert.equals( typeof ut, 'function',
@@ -186,6 +206,17 @@
     assert.equals( filter('missing'), null,
                                 "no replacement value expected for missing "+
                                   "(single nested value, specific language)");
+
+    data = {param3:'Three'};
+    filter = ut(data,testLanguageCode);
+    assert.arrayEquals(capturedParams,[],
+                                        "no captured params expected before "+
+                                   "(chained parameters, specific language)");
+    assert.equals( filter('mixedParam'), 'i18n: 1:One, 2:Two, 3:Three',
+        "replacement value expected (chained parameters, specific language)");
+    assert.arrayEquals(capturedParams,['param2',data,testLanguageCode],
+         "key,data,languageCode params expected for function call in param2 "+
+                                   "(chained parameters, specific language)");
   }
 
   function testGetString(){

@@ -190,8 +190,7 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     return function(key){
       var value = getDataValue(key);
       if (value===null || value===undefined){
-        // TODO: call getString(key,data,languageCode) instead
-        return get(key,languageCode);
+        return getString(key,data,languageCode);
       }
       return value;
     };
