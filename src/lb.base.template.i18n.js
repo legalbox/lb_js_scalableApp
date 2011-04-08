@@ -153,6 +153,11 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     // |   withValuesFromDataOrLanguageProperties(data,languageCode)
     // | );
     //
+    // It calls getString() to retrieve values from language properties, which
+    // are treated as string templates where parameters are replaced with
+    // values from data or language properties.
+    // See <getString(key[,data[,languageCode]]): string> for details.
+    //
     // Parameter:
     //   data - object, optional, properties for parameter replacement, which
     //          may be nested in sections and subsections. Defaults to {}.
