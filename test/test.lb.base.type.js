@@ -54,7 +54,7 @@
                                 "true expected for date object (1 argument)");
     assert.isTrue( ut('abc'),
                            "true expected for non-empty string (1 argument)");
-    assert.isTrue( ut(/a/), 
+    assert.isTrue( ut(/a/),
                          "true expected for regular expression (1 argument)");
     assert.isTrue( ut(window),       "true expected for window (1 argument)");
 
@@ -94,6 +94,10 @@
 
     assert.isFalse( ut({},{}),    "{} is not {}, only similar (2 arguments)");
 
+    assert.isTrue( ut(null,'null'),           "null is 'null' (2 arguments)");
+    assert.isTrue( ut(undefined,'undefined'),
+                                    "undefined is 'undefined' (2 arguments)");
+
     assert.isTrue( ut(true,'boolean'),     "true is a boolean (2 arguments)");
     assert.isTrue( ut(false,'boolean'),   "false is a boolean (2 arguments)");
 
@@ -112,6 +116,9 @@
     assert.isTrue( ut('Yeah!','string'),
                                          "'Yeah!' is a string (2 arguments)");
 
+    assert.isTrue( ut(/abc/g,'regexp'),
+                                       "/abc/g is a 'regexp' (2 arguments)");
+
     assert.isFalse( ut(true,'string'),  "true is not a string (2 arguments)");
     assert.isFalse( ut(false,'number'), "true is not a number (2 arguments)");
     assert.isFalse( ut(42,'object'),                   "42 is not an object");
@@ -123,7 +130,8 @@
         S = String,
         O = Object,
         A = Array,
-        F = Function;
+        F = Function,
+        R = RegExp;
 
     assert.isTrue( ut( new N(42), 'number'),
                                 "new Number(42) is a 'number' (2 arguments)");
@@ -145,6 +153,10 @@
                               "new Function() is a 'function' (2 arguments)");
     assert.isTrue( ut( new F(), Function),
                                 "new Function() is a Function (2 arguments)");
+    assert.isTrue( ut( new R('abc'), 'regexp'),
+                             "new RegExp('abc') is a 'regexp' (2 arguments)");
+    assert.isTrue( ut( new R('abc'), RegExp),
+                               "new RegExp('abc') is a RegExp (2 arguments)");
 
     var level1 = {
       level2: {

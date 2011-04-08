@@ -94,19 +94,28 @@ lb.base.type = lb.base.type || (function() {
     }
 
     type = arguments[last];
+    if (value === null){
+      return (type === null || type === 'null');
+    }
+    if (value === undefined){
+      return (type === undefined || type === 'undefined');
+    }
     if (type === ''){
       return value === type;
     }
 
     typeOfType = typeof type;
-    if (typeOfType === 'string') {
-      internalClass = Object.prototype.toString.call(value)
-                                               .slice(8, -1)
-                                               .toLowerCase();
+    if (typeOfType === 'string'){
+      internalClass =
+        Object.prototype
+              .toString
+              .call(value)
+              .slice(8,-1)
+              .toLowerCase();
       return internalClass === type;
     }
 
-    if (typeOfType === 'function') {
+    if (typeOfType === 'function'){
       return value instanceof type;
     }
 
