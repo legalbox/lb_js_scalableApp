@@ -54,58 +54,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       replaceParamsInString = stringTemplates.replaceParams,
       /*requires lb.base.template.html.js */
       topDownParsing = template.html.topDownParsing,
-      replaceParams = template.html.replaceParams;
-
-  function withValuesFromDataOrLanguageProperties(data,languageCode){
-    // Function: withValuesFromDataOrLanguageProperties([data[,languageCode]]): function
-    // Get a closure function that gets values of properties in data or, as a
-    // fallback, from language properties available for given language code.
-    //
-    // This method is intended for use in combination with replaceParams(),
-    // to get a filter to replace parameters in a string or an HTML template
-    // with values from given data (first) or from language properties (then):
-    // | var filter = replaceParams(
-    // |   withValuesFromDataOrLanguageProperties(data,languageCode)
-    // | );
-    //
-    // Parameter:
-    //   data - object, optional, properties for parameter replacement, which
-    //          may be nested in sections and subsections. Defaults to {}.
-    //   languageCode - string, optional, language code for lookup in a
-    //                  specific language. Defaults to the value of
-    //                  <lb.base.i18n.data.getDefaultLanguageCode(): string>.
-    //
-    // Returns:
-    //   function, a closure wrapped around the given data and language code,
-    //   with the following signature:
-    //   | Function: getDataOrLanguagePropertiesValue(key): any
-    //   | Get the value of a property, possibly nested, in wrapped data or,
-    //   | as a fallback, from language properties of wrapped language code.
-    //   |
-    //   | Parameter:
-    //   |   key - string, the key identifying a property, which may be:
-    //   |     * a string refering to the name of a property: 'name'
-    //   |     * a dotted string for a nested property: 'section.name'
-    //   |
-    //   | Returns:
-    //   |   * any, the value of corresponding property, if found in data
-    //   |   * any, the value of corresponding language property found in the
-    //   |     most specific language available, as a fallback
-    //   |   * null if neither is available
-    data = data || {};
-    if (typeof languageCode !== 'string'){
-      languageCode = getDefaultLanguageCode();
-    }
-    var getDataValue = withValuesFrom(data);
-    return function(key){
-      var value = getDataValue(key);
-      if (value===null || value===undefined){
-        // TODO: call getString(key,data,languageCode) instead
-        return get(key,languageCode);
-      }
-      return value;
-    };
-  }
+      replaceParams = template.html.replaceParams,
+      // hack to let JSLint accept mutual recursion
+      withValuesFromDataOrLanguageProperties2;
 
   function getString(key,data,languageCode){
     // Function: getString(key[,data[,languageCode]]): string
@@ -186,9 +137,63 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
       value = value(key,data,languageCode);
     }
     return replaceParamsInString(
-      withValuesFromDataOrLanguageProperties(data,languageCode)
+      withValuesFromDataOrLanguageProperties2(data,languageCode)
     )(value);
   }
+
+  function withValuesFromDataOrLanguageProperties(data,languageCode){
+    // Function: withValuesFromDataOrLanguageProperties([data[,languageCode]]): function
+    // Get a closure function that gets values of properties in data or, as a
+    // fallback, from language properties available for given language code.
+    //
+    // This method is intended for use in combination with replaceParams(),
+    // to get a filter to replace parameters in a string or an HTML template
+    // with values from given data (first) or from language properties (then):
+    // | var filter = replaceParams(
+    // |   withValuesFromDataOrLanguageProperties(data,languageCode)
+    // | );
+    //
+    // Parameter:
+    //   data - object, optional, properties for parameter replacement, which
+    //          may be nested in sections and subsections. Defaults to {}.
+    //   languageCode - string, optional, language code for lookup in a
+    //                  specific language. Defaults to the value of
+    //                  <lb.base.i18n.data.getDefaultLanguageCode(): string>.
+    //
+    // Returns:
+    //   function, a closure wrapped around the given data and language code,
+    //   with the following signature:
+    //   | Function: getDataOrLanguagePropertiesValue(key): any
+    //   | Get the value of a property, possibly nested, in wrapped data or,
+    //   | as a fallback, from language properties of wrapped language code.
+    //   |
+    //   | Parameter:
+    //   |   key - string, the key identifying a property, which may be:
+    //   |     * a string refering to the name of a property: 'name'
+    //   |     * a dotted string for a nested property: 'section.name'
+    //   |
+    //   | Returns:
+    //   |   * any, the value of corresponding property, if found in data
+    //   |   * any, the value of corresponding language property found in the
+    //   |     most specific language available, as a fallback
+    //   |   * null if neither is available
+    data = data || {};
+    if (typeof languageCode !== 'string'){
+      languageCode = getDefaultLanguageCode();
+    }
+    var getDataValue = withValuesFrom(data);
+    return function(key){
+      var value = getDataValue(key);
+      if (value===null || value===undefined){
+        // TODO: call getString(key,data,languageCode) instead
+        return get(key,languageCode);
+      }
+      return value;
+    };
+  }
+  // hack to have JSLint allow mutual recursion
+  withValuesFromDataOrLanguageProperties2 =
+    withValuesFromDataOrLanguageProperties;
 
   function filterByLanguage(languageCode){
     // Function: filterByLanguage(languageCode): function
@@ -356,9 +361,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
   }
 
   return { // public API
+    getString: getString,
     withValuesFromDataOrLanguageProperties:
       withValuesFromDataOrLanguageProperties,
-    getString: getString,
     filterByLanguage: filterByLanguage,
     setLanguage: setLanguage,
     filterHtml: filterHtml
