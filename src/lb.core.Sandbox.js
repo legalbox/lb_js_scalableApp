@@ -71,7 +71,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-12
+ * 2011-04-08
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -608,8 +608,13 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // Note: get() is an alias for lb.base.i18n.data.get()
 
   // Function: i18n.getString(key[,data[,languageCode]]): string
-  // Get a string computed by replacing data values in the most specific value
-  // found for given key, used as a string template. 
+  // Get a string computed by replacing data values in the most specific
+  // value found for given key, used as a string template.
+  //
+  // When a function is found for the given key instead of a string template,
+  // it is called with the key, data and language code, replaced with their
+  // default values when omitted, and its return value is used as string
+  // template instead.
   //
   // The parameters to replace are surrounded by '#' characters,
   // e.g. '#param-to-replace#'. No space can appear in the name;
@@ -621,8 +626,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // |   'param-to-replace': 'value'
   // | }
   //
-  // Dotted parameter names, e.g. '#section.subsection.name', are replaced with
-  // values nested within sections and subsections of the data object:
+  // Dotted parameter names, e.g. '#section.subsection.name#', are replaced
+  // with values nested within sections and subsections of the data object:
   // | {
   // |   section: {
   // |     subsection: {
@@ -631,11 +636,22 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // |   }
   // | }
   //
-  // In case a property is not found in the given data object, it is looked up
-  // in the language properties of the given language instead.
+  // In case a property is not found in the given data object, getString()
+  // is called recursively to get the string value of the property for
+  // parameter replacement.
   //
-  // The language defaults to the language selected for the whole application,
-  // as returned by getSelectedLanguage().
+  // To summarize:
+  //
+  //   1. the key is looked up in language properties of selected language.
+  //      A string is expected. If no value is found, null is returned.
+  //      If a function is found, its return value is used instead
+  //
+  //   2. any parameter found in the string value is looked up, first in the
+  //      given data, then in language properties of selected language, by
+  //      calling getString() recursively. A string is expected for parameter
+  //      replacement.
+  //
+  //   3. the resulting string, with parameters replaced, is returned.
   //
   // Parameters:
   //   key - string or array, the key identifiying the property:
@@ -643,8 +659,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //         * a dotted name: 'section.subsection.name' (nested property)
   //         * an array: ['section','subsection','name'] (alternate form for
   //                                                      nested properties)
-  //   data - object, optional, replacement values for parameters, which may be
-  //          nested within sections and subsections. Defaults to an empty
+  //   data - object, optional, replacement values for parameters, which may
+  //          be nested within sections and subsections. Defaults to an empty
   //          object, leaving all parameters unreplaced.
   //   languageCode - string, optional, language code for lookup in a specific
   //                  language. Defaults to the language selected for the whole
