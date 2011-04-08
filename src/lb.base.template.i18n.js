@@ -24,7 +24,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-07
+ * 2011-04-08
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -181,6 +181,9 @@ lb.base.template.i18n = lb.base.template.i18n || (function() {
     var value = get(key,languageCode);
     if (value===null){
       return value;
+    }
+    if (typeof value === 'function'){
+      value = value(key,data,languageCode);
     }
     return replaceParamsInString(
       withValuesFromDataOrLanguageProperties(data,languageCode)

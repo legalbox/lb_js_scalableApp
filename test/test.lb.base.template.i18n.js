@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-13
+ * Version:   2011-04-08
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -203,11 +203,20 @@
         simpleParamValue = '#simple#',
         dottedParamValue = '#dotted.param#',
         complexParamValue = 'Complex #param-to-replace#, #missing#';
+
+    var capturedParams = [],
+        stubReturnValue = 'Return Value for Stub Function';
+    function stubComputeValue(key,data,languageCode){
+      capturedParams.push(key,data,languageCode);
+      return stubReturnValue;
+    }
+
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       noParam: noParamValue,
       simpleParam: simpleParamValue,
       dottedParam: dottedParamValue,
-      complexParam: complexParamValue
+      complexParam: complexParamValue,
+      functionParam: stubComputeValue
     });
 
     assert.equals( ut('noParam'), noParamValue,
@@ -224,7 +233,25 @@
     assert.equals( ut('complexParam',{'param-to-replace':'value'}),
                    'Complex value, #missing#',
             "one of two params expected in complex value (default language)");
+    assert.arrayEquals(capturedParams, [],
+                "no call to capture function expected before replacement of "+
+                                    "corresponding param (default language)");
+    assert.equals( ut('functionParam'), stubReturnValue,
+       "result of function found as param value expected (default language)");
+    assert.arrayEquals([
+        capturedParams.length,
+        capturedParams[0],
+        typeof capturedParams[1],
+        capturedParams[2]
+      ],
+      [
+        3,
+        'functionParam',
+        'object',
+        testLanguageCode
+      ], "key,data,languageCode expected to be forwarded (default language)");
 
+    capturedParams = [];
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       simple: 'i18nSimpleValue',
       dotted:{
@@ -233,23 +260,35 @@
       "param-to-replace": 'i18nDashedValue'
     });
 
-    assert.equals( ut('noParam'), noParamValue,
+    var data = {id:42, other:'other'};
+    assert.equals( ut('noParam',data), noParamValue,
         "value without param expected AS IS (default language + properties)");
-    assert.equals( ut('simpleParam',{}), 'i18nSimpleValue',
+    assert.equals( ut('simpleParam',data), 'i18nSimpleValue',
     "i18n simple value replacement expected (default language + properties)");
-    assert.equals( ut('dottedParam',{}), 'i18nDottedValue',
+    assert.equals( ut('dottedParam',data), 'i18nDottedValue',
     "i18n dotted value replacement expected (default language + properties)");
-    assert.equals( ut('complexParam',{}), 'Complex i18nDashedValue, #missing#',
+    assert.equals( ut('complexParam',data), 'Complex i18nDashedValue, #missing#',
                "i18n value expected for one of two params in complex value "+
                                           "(default language + properties)");
+    assert.arrayEquals(capturedParams, [],
+                "no call to capture function expected before replacement of "+
+                        "corresponding param (default language + properties)");
+    assert.equals( ut('functionParam',data), stubReturnValue,
+                          "result of function found as param value expected "+
+                                           "(default language + properties)");
+    assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
+                            "key,data,languageCode expected to be forwarded "+
+                                           "(default language + properties)");
 
     setUp();
     document.documentElement.lang = "OTHER-LANGUAGE-CODE";
+    capturedParams = [];
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       noParam: noParamValue,
       simpleParam: simpleParamValue,
       dottedParam: dottedParamValue,
-      complexParam: complexParamValue
+      complexParam: complexParamValue,
+      functionParam: stubComputeValue
     });
 
     assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
@@ -269,7 +308,17 @@
                       testLanguageCode),
                    'Complex value, #missing#',
            "one of two params expected in complex value (specific language)");
+    assert.arrayEquals(capturedParams, [],
+                "no call to capture function expected before replacement of "+
+                                   "corresponding param (specific language)");
+    assert.equals( ut('functionParam',data,testLanguageCode), stubReturnValue,
+                          "result of function found as param value expected "+
+                                                        "(specific language)");
+    assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
+                            "key,data,languageCode expected to be forwarded "+
+                                                       "(specific language)");
 
+    capturedParams = [];
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       simple: 'i18nSimpleValue',
       dotted:{
@@ -287,6 +336,15 @@
     assert.equals( ut('complexParam',{},testLanguageCode),
                    'Complex i18nDashedValue, #missing#',
                "i18n value expected for one of two params in complex value "+
+                                          "(specific language + properties)");
+    assert.arrayEquals(capturedParams, [],
+                "no call to capture function expected before replacement of "+
+                      "corresponding param (specific language + properties)");
+    assert.equals( ut('functionParam',data,testLanguageCode), stubReturnValue,
+                          "result of function found as param value expected "+
+                                          "(specific language + properties)");
+    assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
+                            "key,data,languageCode expected to be forwarded "+
                                           "(specific language + properties)");
   }
 
