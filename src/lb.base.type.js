@@ -90,7 +90,7 @@ lb.base.type = lb.base.type || (function() {
     // The internal class is only guaranteed to be the same in all browsers for
     // Core JavaScript classes defined in ECMAScript. It differs for classes
     // part of the Browser Object Model (BOM) and Document Object Model (DOM):
-    // window, document, DOM nodes.
+    // window, document, DOM nodes:
     //
     //   window        - 'Object' (IE), 'Window' (Firefox,Opera),
     //                   'global' (Chrome), 'DOMWindow' (Safari)
