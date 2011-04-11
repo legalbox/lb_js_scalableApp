@@ -73,6 +73,7 @@ Group: Base API {
   File: lb.base.template.html  (no auto-title, lb.base.template.html.js)
   File: lb.base.template.i18n  (no auto-title, lb.base.template.i18n.js)
   File: lb.base.template.string  (no auto-title, lb.base.template.string.js)
+  File: lb.base.type  (no auto-title, lb.base.type.js)
 }
 
 Group: Namespaces {
