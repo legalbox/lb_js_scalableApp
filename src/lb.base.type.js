@@ -54,20 +54,42 @@ lb.base.type = lb.base.type || (function() {
     //   * otherwise, the value is compared with the provided type using the
     //     strict equality operator ===
     //
-    // Expected Types:
-    // [TO BE COMPLETED]
+    // Type Reference:
+    //   'undefined' - undefined
+    //   'null'      - null
+    //   'boolean'   - false, true
+    //   'number'    - -1, 0, 1, 2, 3, Math.sqrt(2), Math.E, Math.PI...
+    //   'string'    - '', 'abc', "Text!?"...
+    //   'array'     - [], [1,2,3], ['a',{},3]...
+    //   'object'    - {}, {question:'?',answer:42}, {a:{b:{c:3}}}...
+    //   'regexp'    - /abc/g, /[0-9a-z]+/i...
+    //   'function'  - function(){}, Date, setTimeout...
     //
     // Notes:
     // This method retrieves the internal class of the provided value using
     // | Object.prototype.toString.call(value).slice(8, -1)
     // The class is then converted to lower case.
     //
-    // The internal class differs depending on the script engine used by the
-    // browser for [ADD LIST HERE: window, DOM Nodes?]
-    //
     // See "The Class of an Object" section in the JavaScript Garden for
-    // more details:
+    // more details on the internal class:
     // http://bonsaiden.github.com/JavaScript-Garden/#types.typeof
+    //
+    // The internal class is only guaranteed to be the same in all browsers for
+    // Core JavaScript classes defined in ECMAScript. It differs for classes
+    // part of the Browser Object Model (BOM) and Document Object Model (DOM):
+    // window, document, DOM nodes.
+    //
+    //   window        - 'Object' (IE), 'Window' (Firefox,Opera),
+    //                   'global' (Chrome), 'DOMWindow' (Safari)
+    //   document      - 'Object' (IE),
+    //                   'HTMLDocument' (Firefox,Chrome,Safari,Opera)
+    //   document.body - 'Object' (IE),
+    //                   'HTMLBodyElement' (Firefox,Chrome,Safari,Opera)
+    //   document.createElement('div') - 'Object' (IE)
+    //                   'HTMLDivElement' (Firefox,Chrome,Safari,Opera)
+    //   document.createComment('') - 'Object' (IE),
+    //                   'Comment' (Firefox,Chrome,Safari,Opera)
+    //
     var undefined, // do not trust global undefined, which may be overridden
         i,
         length = arguments.length,
