@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-08
+ * 2011-04-09
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -47,8 +47,8 @@ lb.base.type = lb.base.type || (function() {
     //   * false, if no argument is provided
     //   * false, if a single argument is provided which is null or undefined
     //   * true, if a single argument is provided, which is not null/undefined
-    //   * if the type argument is a string, it is compared with the internal
-    //     class of the value, put in lower case
+    //   * if the type argument is a non-empty string, it is compared with the
+    //     internal class of the value, put in lower case
     //   * if the type argument is a function, the instanceof operator is used
     //     to check if the value is considered an instance of the function
     //   * otherwise, the value is compared with the provided type using the
