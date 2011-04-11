@@ -103,7 +103,7 @@ lb.base.type = lb.base.type || (function() {
     //   document.createComment('') - 'Object' (IE),
     //                   'Comment' (Firefox,Chrome,Safari,Opera)
     //
-    var undefined, // do not trust global undefined, which may be overridden
+    var undef, // do not trust global undefined, which may be overridden
         i,
         length = arguments.length,
         last = length -1,
@@ -116,7 +116,7 @@ lb.base.type = lb.base.type || (function() {
     }
 
     if (length===1){
-      return (value!==null && value!==undefined);
+      return (value!==null && value!==undef);
     }
 
     if (length>2){
@@ -124,7 +124,7 @@ lb.base.type = lb.base.type || (function() {
         if ( !is(value) ){
           return false;
         }
-        value = value[ arguments[i+1] ]
+        value = value[ arguments[i+1] ];
       }
     }
 
@@ -132,8 +132,8 @@ lb.base.type = lb.base.type || (function() {
     if (value === null){
       return (type === null || type === 'null');
     }
-    if (value === undefined){
-      return (type === undefined || type === 'undefined');
+    if (value === undef){
+      return (type === undef || type === 'undefined');
     }
     if (type === ''){
       return value === type;
