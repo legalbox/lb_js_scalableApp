@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-13
+ * Version:   2011-04-11
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -244,6 +244,36 @@
     // trigger asynchronous response
     xhr.complete();
     assert.objectEquals(responses, [data],      "echo of given data expected");
+  }
+
+  function testHas(){
+    var ut = new lb.core.Sandbox('testHas').utils.has;
+
+    setUp();
+    assert.isFalse( ut(undefined),      "false expected for undefined value");
+    assert.isFalse( ut({},'missing'),  "false expected for missing property");
+
+    assert.isFalse( ut({a:null},'a'),
+                    "false expected for value null found in nested property");
+    assert.isTrue( ut({a:{b:{c:{d:'e'}}}},'a','b','c','d'),
+                    "true expected for string value found in nested property");
+  }
+
+  function testIs(){
+    var ut = new lb.core.Sandbox('testIs').utils.is;
+
+    setUp();
+    assert.isFalse( ut(null),               "false expected for null value");
+    assert.isFalse( ut(undefined),     "false expected for undefined value");
+
+    assert.isTrue( ut(''),                 "true expected for empty string");
+    assert.isTrue( ut(false),               "true expected for false value");
+    assert.isTrue( ut(0),                             "true expected for 0");
+
+    assert.isFalse( ut({a:{b:{c:{d:null}}}},'a','b','c','d','object'),
+                    "false expected for null value found in nested property");
+    assert.isTrue( ut({a:{b:'c'}},'a','b','string'),
+                   "true expected for string value found in nested property");
   }
 
   function testGetTimestamp(){
@@ -1067,6 +1097,8 @@
   },"lb.core.Sandbox.url");
 
   testrunner.define({
+    testHas: testHas,
+    testIs: testIs,
     testGetTimestamp: testGetTimestamp,
     testSetTimeout: testSetTimeout,
     testClearTimeout: testClearTimeout,
