@@ -24,7 +24,7 @@ lb.base.type = lb.base.type || (function() {
   // Closure for lb.base.type module
 
   function is(value){
-    // Function: is(value[,type]): boolean
+    // Function: is([...,]value[,type]): boolean
     // Check the type of a value, possibly nested in sub-properties.
     //
     // The method may be called with a single argument to check that the value
@@ -36,7 +36,20 @@ lb.base.type = lb.base.type || (function() {
     // will check whether the property object.parent.child.leaf exists and is
     // a boolean.
     //
+    // The intent of this method is to replace unsafe guard conditions that
+    // rely on type coercion:
+    // | if (object && object.parent && object.parent.child) {
+    // |   // Issue: all falsy values are treated like null and undefined:
+    // |   // '', 0, false...
+    // | }
+    // with a safer check in a single call:
+    // | if ( is(object,'parent','child','number') ) {
+    // |   // only null and undefined values are rejected
+    // |   // and the type expected (here 'number') is explicit
+    // | }
+    //
     // Parameters:
+    //   ...   - any, optional, a chain of parent properties for a nested value
     //   value - any, the value to check, which may be nested in a chain made
     //           of previous arguments (see above)
     //   type - string, optional, the type expected for the value.
