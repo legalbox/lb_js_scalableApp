@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-09
+ * 2011-04-11
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
