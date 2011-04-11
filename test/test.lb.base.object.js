@@ -86,7 +86,7 @@
     assert.isTrue( ut({a:Math.PI},'a'),
                                "true expected for value PI found in property");
 
-    assert.isTrue( ut({a:(function(){})},'a'),
+    assert.isTrue( ut({a:function(){}},'a'),
                              "true expected for a function found in property");
     assert.isTrue( ut({a:/abc/m},'a'),
                                "true expected for a regexp found in property");
@@ -137,7 +137,7 @@
         }
       },
       c: 'c'
-    }
+    };
 
     assert.isTrue( ut(level1,'level2'),
                                "true expected for nested property 'level2'");
