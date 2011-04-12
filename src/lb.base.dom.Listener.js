@@ -17,7 +17,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
@@ -32,9 +32,8 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
   //   element - DOM Element, an element
   //   type - string, the name of an event (without 'on') e.g. 'click'
   //   callback - function, a function to call when the event is dispatched.
-  //   useCapture - boolean, whether the callback is set for capture phase.
-  //                Optional: defaults to false.
-  //                See [1] for details.
+  //   useCapture - boolean, optional, defaults to false, whether the callback
+  //                is set for capture phase. See [1] for details.
   //
   // Returns:
   //   object, the new instance of Listener
@@ -42,14 +41,19 @@ lb.base.dom.Listener = lb.base.dom.Listener ||
   // Reference:
   //   [1] DOM Level 2 Events: addEventListener
   //   <http://bit.ly/9SQoL4>
-  useCapture = useCapture || false;
 
   // Declare aliases
+
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
       /*requires closure/goog.events.js */
-  var events = goog.events,
+      events = goog.events,
 
   // Private fields
       key = events.listen(element, type, callback, useCapture);
+
+  // initialize optional argument
+  useCapture = has(useCapture)? useCapture : false;
 
   function getElement(){
     // Function: getElement(): DOM Element
