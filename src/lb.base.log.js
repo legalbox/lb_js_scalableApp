@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -33,7 +33,7 @@ lb.base.log = lb.base.log || (function() {
   // Private fields
 
     // object - the logger instance (goog.debug.Logger)
-    logger;
+    logger = null;
 
   function print(message){
     // Function: print(message)
@@ -48,7 +48,7 @@ lb.base.log = lb.base.log || (function() {
     //
     // The console is initialized on first call.
 
-    if (!logger){
+    if (logger===null){
       Console.autoInstall();
       logger = Logger.getLogger('lb');
       logger.setLevel(Level.INFO);
