@@ -1,5 +1,6 @@
 
 The Scalable JavaScript Application framework,
+http://legalbox.github.com/lb_js_scalableApp/
   by Legal-Box, Paris
 
 LANGUAGES
