@@ -18,7 +18,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -29,8 +29,11 @@ lb.base.config = lb.base.config || (function() {
   // Closure for lb.base.config module
 
   // Declare alias
+
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
       /*requires closure/goog.object.js */
-  var gObject = goog.object,
+      gObject = goog.object,
 
   // Private fields
 
@@ -76,15 +79,14 @@ lb.base.config = lb.base.config || (function() {
     //   - the default value when the corresponding configuration property is
     //     missing, null or undefined
     //   - the value of the corresponding configuration property otherwise
-    if (defaultValue===undefined){
-      defaultValue = null;
-    }
+    defaultValue = has(defaultValue)? defaultValue : null;
 
     var value = config[name];
-    if (value===null || value===undefined){
+    if ( has(value) ){
+      return value;
+    } else {
       return defaultValue;
     }
-    return value;
   }
 
   return { // public API
