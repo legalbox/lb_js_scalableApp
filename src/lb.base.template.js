@@ -16,7 +16,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -25,6 +25,10 @@
 lb.base.template = lb.base.template || (function() {
   // Builder of
   // Closure for lb.base.template module
+
+  // Define alias
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has;
 
   function applyFilters(){
     // Function: applyFilters(input...,filters): any
@@ -116,12 +120,13 @@ lb.base.template = lb.base.template || (function() {
     var filters = arguments[arguments.length-1],
         i,
         result;
-    if (!filters){
+    if ( !has(filters) ){
       return;
     }
+
     for (i=filters.length-1; i>=0; i--){
       result = filters[i].apply(this,arguments);
-      if (result !== undefined){
+      if ( has(result) || result===null ){
         return result;
       }
     }
