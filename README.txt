@@ -167,4 +167,5 @@ HISTORY
   2011-XX-XX, v1.6.0, ROADMAP: add is() and has() methods to Sandbox utils API
   2011-XX-XX, v1.7.0, ROADMAP: add support for plugins to extend Sandbox API
   2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
+  2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
 
