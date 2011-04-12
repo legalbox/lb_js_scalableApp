@@ -97,8 +97,8 @@ lb.base.object = lb.base.object || (function() {
     //
     // Parameter:
     //   object - object, an object or array
-    //   deep - boolean, optional, whether to make a deep copy (true) or a
-    //          shallow copy (false)
+    //   deep - boolean, optional, defaults to false, whether to make a deep
+    //          copy (true) or a shallow copy (false)
     //
     // Returns:
     //   * a deep copy of given object, when deep is true,
@@ -107,7 +107,7 @@ lb.base.object = lb.base.object || (function() {
     // Notes:
     //   In the case of a deep copy, there must be no cyclic references in the
     //   given object.
-    deep = deep || false;
+    deep = has(deep)? deep : false;
 
     if (deep) {
       return deepCopy(object);
