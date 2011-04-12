@@ -19,7 +19,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-24
+ * 2011-04-12
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -42,8 +42,10 @@ lb.core.Module = lb.core.Module || function (id, creator){
   //   object, the new instance of Module
 
   // Define aliases
+  var /*requires lb.base.type.js */
+      is = lb.base.type.is,
       /*requires lb.base.log.js */
-  var log = lb.base.log.print,
+      log = lb.base.log.print,
       /*requires lb.core.Sandbox.js */
       Sandbox = lb.core.Sandbox,
       /*requires lb.base.config.js */
@@ -102,15 +104,15 @@ lb.core.Module = lb.core.Module || function (id, creator){
 
     var customFactory = getOption('lbFactory'),
         box;
-    if (customFactory && customFactory.initElement){
+    if ( is(customFactory,'initElement','function') ){
       box = getSandbox().getBox(false);
-      if (box){
+      if ( is(box) ){
         // possible extension point for the initialization of widgets
         customFactory.initElement(box);
       }
     }
 
-    if (!module || !module.start){
+    if ( !is(module,'start','function') ){
       return;
     }
 
@@ -133,13 +135,13 @@ lb.core.Module = lb.core.Module || function (id, creator){
     // and any widgets included within.
 
     try {
-      if (module && module.end){
+      if ( is(module,'end','function') ){
         module.end();
       }
       sandbox.dom.removeAllListeners();
       var box = $( sandbox.getId() ),
           factory = getOption('lbFactory',lb.base.dom.factory);
-      if (box && factory){
+      if ( is(box) && is(factory,'destroyElement','function') ){
         factory.destroyElement(box);
       }
     } catch(endError){
