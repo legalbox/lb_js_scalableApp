@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -24,8 +24,11 @@ lb.base.dom = lb.base.dom || (function() {
   // Closure for lb.base.dom module
 
   // Declare aliases
+
+  var /*requires lb.base.type.js */
+      is = lb.base.type.is,
       /*requires closure/goog.dom.js */
-  var dom = goog.dom;
+      dom = goog.dom;
 
   function $(id){
     // Function: $(id): DOM Element
@@ -79,16 +82,17 @@ lb.base.dom = lb.base.dom || (function() {
     //
     //   specified - Interface Attr
     //   http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-637646024
-    if (!element || !element.getAttributeNode){
-      return false;
-    }
 
-    if (element.hasAttribute) {
+    if ( is(element,'hasAttribute','function') ) {
       return element.hasAttribute(attributeName);
     }
 
+    if ( !is(element,'getAttributeNode','function') ){
+      return false;
+    }
+
     var attributeNode = element.getAttributeNode(attributeName);
-    if (attributeNode === null) {
+    if ( !is(attributeNode) ) {
       return false;
     }
     return attributeNode.specified;
