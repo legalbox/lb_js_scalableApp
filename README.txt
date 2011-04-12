@@ -55,8 +55,8 @@ REQUIREMENTS
 
   The following software is required for the build process which generates the
   API documentation, checks the syntax of source files and produces a combined
-  and minified version of the library for deployment. The versions used in our
-  development environment is indicated in parenthesis.
+  and minified version of the library for deployment. The versions that we use
+  in our development environment at Legal-Box are indicated in parenthesis.
 
   * Apache Ant (1.8.0)
   http://ant.apache.org/
