@@ -1,2 +1,5 @@
 #ignore temporary files created by vim
 *.swp
+
+# ignore transient PDF for gh-pages, exported from ODT with OpenOffice Writer
+doc/javascript-application-design-patterns.pdf
