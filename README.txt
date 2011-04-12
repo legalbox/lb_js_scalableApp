@@ -99,6 +99,7 @@ INCLUDED SOFTWARE
   * bezen.org JavaScript library CC-BY Eric Bréchemier
     http://bezen.org/javascript/
     Licensed under a Creative Commons Attribution license
+    http://creativecommons.org/licenses/by/3.0/
     in build/build.xml, test/bezen.org, test/style and some unit tests in test
 
   * Natural Docs by Greg Valure
@@ -109,6 +110,9 @@ INCLUDED SOFTWARE
 
   * JSLint by Douglas Crockford
     http://jslint.com/
+    Licensed under a modified MIT License
+    http://www.opensource.org/licenses/mit-license
+    adding "The Software shall be used for Good, not Evil."
     in build/lib/jslint
 
   * Combiner by Nicholas Zakas
