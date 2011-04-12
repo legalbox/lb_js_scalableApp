@@ -73,7 +73,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-11
+ * 2011-04-12
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -191,11 +191,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   * or null, in case createIfMissing is false and the element is missing
     createIfMissing = has(createIfMissing)? createIfMissing : true;
 
-    if (box) {
+    if ( has(box) ) {
       return box;
     }
     box = dom.$(id);
-    if (!box && createIfMissing){
+    if ( !has(box) && createIfMissing){
       log('Warning: no element "'+id+
           '" found in box. Will be created at end of body.');
       box = factory.createElement('div',{'id': id});
@@ -221,7 +221,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // (available as goog.dom.contains(parent,descendant) in Closure library)
 
     var ancestor = element;
-    while (ancestor) {
+    while ( has(ancestor) ) {
       // TODO: return false when a document node is reached without passing by
       //       the root of the box
 
@@ -814,11 +814,11 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //              for each subsequent change of hash. The hash parameter is a
     //              string, decoded, starting with the '#' character.
 
-    if (hashChangeCallback){
+    if ( has(hashChangeCallback) ){
       history.removeListener(hashChangeCallback);
     }
     hashChangeCallback = callback;
-    if (callback){
+    if ( has(callback) ){
       history.addListener(callback);
     }
   }
