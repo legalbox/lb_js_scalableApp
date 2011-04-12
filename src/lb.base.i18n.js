@@ -32,7 +32,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -44,8 +44,12 @@ lb.base.i18n = lb.base.i18n || (function() {
 
   // Define aliases
 
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
+      /*requires lb.base.type.js */
+      is = lb.base.type.is,
       /*requires lb.base.dom.js */
-  var dom = lb.base.dom,
+      dom = lb.base.dom,
       hasAttribute = dom.hasAttribute,
       ELEMENT_NODE = dom.ELEMENT_NODE;
 
@@ -64,7 +68,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     //   navigator Object - MSDN
     //   http://msdn.microsoft.com/en-us/library/ms535867%28VS.85%29.aspx
 
-    return navigator.language || navigator.browserLanguage;
+    return is(navigator,'language','string')?
+      navigator.language :
+      navigator.browserLanguage;
   }
 
   function getLanguage(htmlElement){
@@ -90,10 +96,10 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Returns:
     //   string, the value of the first 'lang' attribute found on the node or
     //   its closest ancestor element, or the empty string '' by default.
-    htmlElement = htmlElement || document.documentElement;
+    htmlElement = has(htmlElement)? htmlElement : document.documentElement;
 
     var ancestorOrSelf = htmlElement;
-    while(ancestorOrSelf){
+    while( has(ancestorOrSelf) ){
       // IE returns '' by default even when no lang attribute was set.
       // hasAttribute() checks whether the attribute 'lang' was set explicitly.
       if ( hasAttribute(ancestorOrSelf,'lang') ){
@@ -128,9 +134,9 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Note:
     // Nothing happens in case the language code is not a string or the given
     // html node is not an element.
-    htmlElement = htmlElement || document.documentElement;
+    htmlElement = has(htmlElement)? htmlElement : document.documentElement;
 
-    if ( typeof languageCode !== 'string' ||
+    if ( !is(languageCode,'string') ||
          htmlElement.nodeType !== ELEMENT_NODE ){
       return;
     }
@@ -159,8 +165,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Note:
     // The result is undefined in case one or both of given language codes is
     // not a string.
-    if ( typeof languageCode1 !== 'string' ||
-         typeof languageCode2 !== 'string' ){
+    if ( !is(languageCode1,'string') ||
+         !is(languageCode2,'string') ){
       return;
     }
     return languageCode1.toLowerCase()
@@ -186,8 +192,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Note:
     // The result is undefined in case one or both language codes is not a
     // string.
-    if ( typeof languageCode1 !== 'string' ||
-         typeof languageCode2 !== 'string' ){
+    if ( !is(languageCode1,'string') ||
+         !is(languageCode2,'string') ){
       return;
     }
     return languageCode1.toLowerCase() === languageCode2.toLowerCase();
@@ -217,8 +223,8 @@ lb.base.i18n = lb.base.i18n || (function() {
     // Note:
     // The result is undefined in case one or both language codes is not a
     // string.
-    if ( typeof languageCode1 !== 'string' ||
-         typeof languageCode2 !== 'string' ){
+    if ( !is(languageCode1,'string') ||
+         !is(languageCode2,'string') ){
       return;
     }
     if (languageCode2 === ''){
