@@ -25,8 +25,8 @@ lb.base.dom = lb.base.dom || (function() {
 
   // Declare aliases
 
-  var /*requires lb.base.type.js */
-      is = lb.base.type.is,
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
       /*requires closure/goog.dom.js */
       dom = goog.dom;
 
@@ -83,16 +83,16 @@ lb.base.dom = lb.base.dom || (function() {
     //   specified - Interface Attr
     //   http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-637646024
 
-    if ( is(element,'hasAttribute','function') ) {
+    if ( has(element,'hasAttribute') ) {
       return element.hasAttribute(attributeName);
     }
 
-    if ( !is(element,'getAttributeNode','function') ){
+    if ( !has(element,'getAttributeNode') ){
       return false;
     }
 
     var attributeNode = element.getAttributeNode(attributeName);
-    if ( !is(attributeNode) ) {
+    if ( !has(attributeNode) ) {
       return false;
     }
     return attributeNode.specified;
