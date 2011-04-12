@@ -51,6 +51,9 @@ REFERENCES
   [3] Semantic Versioning
   http://semver.org
 
+  [4] HTML API of The Scalable JavaScript Application framework (latest stable)
+  http://legalbox.github.com/lb_js_scalableApp/build/out/doc/
+
 REQUIREMENTS
 
   The following software is required for the build process which generates the
