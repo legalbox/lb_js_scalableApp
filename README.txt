@@ -22,6 +22,10 @@ FIRST STEPS
   run Apache Ant in the build folder to generate the API documentation and the
   combined/minified script for deployment.
 
+  For debugging purpose, you may use another version of the script which
+  contains the whole code in a single file including long identifiers,
+  indentation and comments: build/out/js/lb-full.js (5 times bigger).
+
   The HTML documentation of the Application Programming Interface is generated
   in the folder build/out/doc. The script generated for deployment is located
   at build/out/js/lb-min.js.
@@ -29,7 +33,7 @@ FIRST STEPS
   After understanding the underlying principles [1] and reading the design
   document [2], you should start digging the generated HTML API, starting with
   the Sandbox build/out/doc/files/lb-core-Sandbox-js.html and the application
-  build/out/files/lb-core-application-js.html
+  build/out/doc/files/lb-core-application-js.html
 
   For the purpose of Semantic Versioning [3], the public API of this library
   comprises all modules and methods in the lb.core namespace. The details of
