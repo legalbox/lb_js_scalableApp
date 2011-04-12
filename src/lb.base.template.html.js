@@ -32,8 +32,13 @@ lb.base.template.html = lb.base.template.html || (function() {
   // Closure for lb.base.template.html module
 
   // Declare aliases
+
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
+      /*requires lb.base.type.js */
+      is = lb.base.type.is,
       /*requires lb.base.array.js */
-  var toArray = lb.base.array.toArray,
+      toArray = lb.base.array.toArray,
       /*requires lb.base.dom.js */
       dom = lb.base.dom,
       ELEMENT_NODE = dom.ELEMENT_NODE,
@@ -72,7 +77,7 @@ lb.base.template.html = lb.base.template.html || (function() {
     // Reference:
     //   specified - Interface Attr
     //   http://www.w3.org/TR/DOM-Level-2-Core/core.html#ID-637646024
-    if ( !node || node.nodeType !== ELEMENT_NODE ){
+    if ( !has(node) || node.nodeType !== ELEMENT_NODE ){
       return;
     }
 
@@ -136,7 +141,7 @@ lb.base.template.html = lb.base.template.html || (function() {
     //
     // Returns:
     //   string, the input URL, with the hash part removed
-    url = url || window.location.href;
+    url = has(url)? url : window.location.href;
 
     // Remove the fragment part of the url
     var pos = url.indexOf("#");
@@ -166,7 +171,7 @@ lb.base.template.html = lb.base.template.html || (function() {
     //   This value is typically a string. It may also be null, e.g. for the
     //   document itself, and may be a number or even an object (for custom
     //   properties, considered as attributes) in Internet Explorer.
-    if ( (node.nodeType === ATTRIBUTE_NODE) && 
+    if ( (node.nodeType === ATTRIBUTE_NODE) &&
          (node.name === 'href' || node.name === 'src')  ) {
       var baseUrl = getBaseUrl(); 
       if ( node.nodeValue.indexOf(baseUrl) === 0 ) {
@@ -212,12 +217,12 @@ lb.base.template.html = lb.base.template.html || (function() {
     //     |              are considered for parameter replacement.
     //     |              Other nodes are left untouched.
     //   * null when the required getter argument is missing or not a function
-    if ( typeof getValue !== 'function' ){
+    if ( !is(getValue,'function') ){
       return null;
     }
     var replaceParamsWithValues = replaceParamsInString(getValue);
     return function(htmlNode){
-      if (  !htmlNode ||
+      if (  !has(htmlNode) ||
             ( htmlNode.nodeType!==ATTRIBUTE_NODE &&
               htmlNode.nodeType!==TEXT_NODE )  ){
         return;
