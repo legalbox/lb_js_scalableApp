@@ -73,7 +73,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -84,8 +84,13 @@ lb.base.history = lb.base.history || (function() {
   // Closure for lb.base.history module
 
   // Declare aliases
+
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
+      /*requires lb.base.type.js */
+      is = lb.base.type.is,
       /*requires closure/goog.History.js */
-  var History = goog.History,
+      History = goog.History,
       NAVIGATE = History.EventType.NAVIGATE,
       /*requires closure/goog.events.js */
       listen = goog.events.listen,
@@ -141,11 +146,12 @@ lb.base.history = lb.base.history || (function() {
 
     var head = document.getElementsByTagName('HEAD')[0],
         node;
-    if (head){
+    if ( has(head) ){
       node = head.firstChild;
-      while(node){
+      while( has(node) ){
         if ( node.tagName === 'LINK' &&
-             node.rel && node.rel.toUpperCase() === 'SHORTCUT ICON' ){
+             is(node,'rel','toUpperCase','function') &&
+             node.rel.toUpperCase() === 'SHORTCUT ICON' ){
           return node.href;
         }
         node = node.nextSibling;
@@ -164,7 +170,7 @@ lb.base.history = lb.base.history || (function() {
     //   * string, the url-decoded value of the current hash
     //   * null when the history manager has been destroyed
 
-    if (!history){
+    if ( !has(history) ){
       return null;
     }
     return '#'+decodeHash( history.getToken() );
@@ -181,7 +187,7 @@ lb.base.history = lb.base.history || (function() {
     //   hash - string, the new hash part to set, with or without the initial
     //          hash sign, e.g. 'new-hash', '#new-hash' or '#new hash'
 
-    if (!history){
+    if ( !has(history) ){
       return;
     }
 
@@ -210,7 +216,7 @@ lb.base.history = lb.base.history || (function() {
     //              for each subsequent change of hash. The new hash, decoded
     //              and starting with '#', will be provided as parameter.
 
-    if (!history){
+    if ( !has(history) ){
       return;
     }
 
@@ -234,7 +240,7 @@ lb.base.history = lb.base.history || (function() {
     // removed already.
     var listener, i;
 
-    if (!history){
+    if ( !has(history) ){
       return;
     }
 
@@ -251,12 +257,12 @@ lb.base.history = lb.base.history || (function() {
     // Function: destroy()
     // Terminate the history manager.
 
-    if (history){
+    if ( has(history) ){
       history.dispose();
       history = null;
       navigationListeners = null;
     }
-    if (unloadListener){
+    if ( has(unloadListener) ){
       unloadListener.detach();
       unloadListener = null;
     }
