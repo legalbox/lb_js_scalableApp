@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-11
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -41,7 +41,8 @@ lb.base.object = lb.base.object || (function() {
     //
     // The intent of this method is to replace unsafe tests relying on type
     // coercion for optional arguments or object properties:
-    // | function on(event){
+    // | function on(event,options){
+    // |   options = options || {}; // type coercion
     // |   if (!event || !event.data || !event.data.value){
     // |     // unsafe due to type coercion: all falsy values '', false, 0
     // |     // are discarded, not just null and undefined
@@ -50,7 +51,8 @@ lb.base.object = lb.base.object || (function() {
     // |   // ...
     // | }
     // with a safer test without type coercion:
-    // | function on(event){
+    // | function on(event,options){
+    // |   options = has(options) ? options : {}; // no type coercion
     // |   if (!has(event,'data','value'){
     // |     // safe check: only null/undefined values are rejected;
     // |     // besides, inherited properties are ignored.

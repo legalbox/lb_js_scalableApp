@@ -832,7 +832,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   //
   // The intent of this method is to replace unsafe tests relying on type
   // coercion for optional arguments or object properties:
-  // | function on(event){
+  // | function on(event,options){
+  // |   options = options || {}; // type coercion
   // |   if (!event || !event.data || !event.data.value){
   // |     // unsafe due to type coercion: all falsy values '', false, 0
   // |     // are discarded, not just null and undefined
@@ -841,7 +842,8 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
   // |   // ...
   // | }
   // with a safer test without type coercion:
-  // | function on(event){
+  // | function on(event,options){
+  // |   options = has(options)? options : {};
   // |   if (!has(event,'data','value'){
   // |     // safe check: only null/undefined values are rejected;
   // |     // besides, inherited properties are ignored.
