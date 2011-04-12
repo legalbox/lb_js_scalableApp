@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-12
+ * 2011-04-12
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -65,7 +65,12 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   // Closure for lb.base.i18n.data module
 
   // Declare aliases
-  var i18n = lb.base.i18n,
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
+      /*requires lb.base.type.js */
+      is = lb.base.type.is,
+      /*requires lb.base.i18n.js */
+      i18n = lb.base.i18n,
       equals = i18n.equals,
       languageCompare = i18n.languageCompare,
       contains = i18n.contains,
@@ -133,7 +138,7 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     //
     // Note:
     //   Nothing happens in case the given language code is not a string.
-    if ( typeof languageCode!=='string' ){
+    if ( !is(languageCode,'string') ){
       return;
     }
 
@@ -176,7 +181,11 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
   //   language found in navigator.language or navigator.browserLanguage.
   function getDefaultLanguageCode(){
 
-    return i18n.getLanguage() || i18n.getBrowserLanguage();
+    var languageCode = i18n.getLanguage();
+    if ( !has(languageCode) || languageCode==='' ){
+      return i18n.getBrowserLanguage();
+    }
+    return languageCode;
   }
 
   function get(key,languageCode){
@@ -216,13 +225,13 @@ lb.base.i18n.data = lb.base.i18n.data || (function() {
     //   * or null if the property is not found in suitable languages,
     //     if the given path is null or undefined, or if the given language
     //     code is not a string.
-    if (key===null || key===undefined){
+    if ( !has(key) ){
       return null;
     }
-    if (typeof languageCode !== 'string'){
+    if ( !is(languageCode,'string') ){
       languageCode = getDefaultLanguageCode();
     }
-    if (typeof key === 'string'){
+    if ( is(key,'string') ){
       key = key.split('.');
     }
 
