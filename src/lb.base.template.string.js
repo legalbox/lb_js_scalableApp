@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-12
+ * 2011-04-12
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -31,6 +31,12 @@ lb.base.template.string = lb.base.template.string || (function() {
   // Builder of
   // Closure for lb.base.template.string module
 
+  // Declare aliases
+  var /*requires lb.base.object.js */
+      has = lb.base.object.has,
+      /*requires lb.base.type.js */
+      is = lb.base.type.is,
+
   // Private fields
 
       // PARAM_REGEXP - regular expression, format of parameters to replace:
@@ -38,7 +44,7 @@ lb.base.template.string = lb.base.template.string || (function() {
       //                - special characters intended as separators: \_\-\.
       //                - surrounded by hash signs: #...#
       //                - no white-space allowed
-  var PARAM_REGEXP = /#([a-zA-Z0-9\_\-\.]+)#/g;
+      PARAM_REGEXP = /#([a-zA-Z0-9\_\-\.]+)#/g;
 
   function withValuesFrom(data){
     // Function: withValuesFrom([data]): function
@@ -75,7 +81,7 @@ lb.base.template.string = lb.base.template.string || (function() {
     //   | Returns:
     //   |   * any, the value of corresponding property, if found
     //   |   * null otherwise
-    data = data || {};
+    data = has(data)? data : {};
     return function(key){
       var properties = data,
           path = key.split('.'),
@@ -136,17 +142,19 @@ lb.base.template.string = lb.base.template.string || (function() {
     //   |   string, a string computed from the template string by replacing
     //   |   named parameters with corresponding values returned by getValue()
     //   * null when the required getter argument is missing or not a function
-    if (typeof getValue !== 'function'){
+    if ( !is(getValue,'function') ){
       return null;
     }
+
     return function(string){
       return string.replace(PARAM_REGEXP, function(match,param){
         var value = getValue(param);
-        if (value===null || value===undefined){
+        if ( is(value) ){
+          return value;
+        } else {
           // no replacement found - return unreplaced param
           return match;
         }
-        return value;
       });
     };
   }
