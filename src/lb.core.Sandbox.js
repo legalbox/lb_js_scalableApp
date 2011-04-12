@@ -166,7 +166,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     //   The full identifier is made of the module identifier, followed by the
     //   separator '.', followed by the local identifier.
 
-    if (localId) {
+    if ( has(localId) ) {
       return id+'.'+localId;
     } else {
       return id;
@@ -189,7 +189,7 @@ lb.core.Sandbox = lb.core.Sandbox || function (id){
     // Returns:
     //   * DOM Element, the HTML element corresponding to the module id,
     //   * or null, in case createIfMissing is false and the element is missing
-    createIfMissing = createIfMissing!==false;
+    createIfMissing = has(createIfMissing)? createIfMissing : true;
 
     if (box) {
       return box;
