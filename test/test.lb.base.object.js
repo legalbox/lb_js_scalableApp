@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-11
+ * Version:   2011-04-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -116,11 +116,11 @@
                   "assert: properties expected to be defined on F.prototype");
 
     var object = new F();
-    assert.isFalse( ut(object,'boolean') ||
-                    ut(object,'string') ||
-                    ut(object,'array') ||
-                    ut(object,'constructor'),
-                                    "false expected for inherited properties");
+    assert.isTrue( ut(object,'boolean') ||
+                   ut(object,'string') ||
+                   ut(object,'array') ||
+                   ut(object,'constructor'),
+                            "true expected for inherited properties as well");
 
     // 3 arguments and more
     var level1 = {

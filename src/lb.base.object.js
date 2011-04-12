@@ -36,8 +36,7 @@ lb.base.object = lb.base.object || (function() {
     // Check whether an object property is present and not null nor undefined.
     //
     // A chain of nested properties may be checked by providing more than two
-    // arguments. Only own properties are considered, properties inherited from
-    // the constructor's prototype are ignored.
+    // arguments.
     //
     // The intent of this method is to replace unsafe tests relying on type
     // coercion for optional arguments or object properties:
@@ -52,10 +51,9 @@ lb.base.object = lb.base.object || (function() {
     // | }
     // with a safer test without type coercion:
     // | function on(event,options){
-    // |   options = has(options) ? options : {}; // no type coercion
+    // |   options = has(options)? options : {}; // no type coercion
     // |   if (!has(event,'data','value'){
     // |     // safe check: only null/undefined values are rejected;
-    // |     // besides, inherited properties are ignored.
     // |     return;
     // |   }
     // |   // ...
@@ -69,20 +67,17 @@ lb.base.object = lb.base.object || (function() {
     // Returns:
     //   * false if no argument is provided or if the object is null or
     //     undefined, whatever the number of arguments
-    //   * true if the object owns the full chain of nested properties for all
-    //     arguments provided, and the corresponding value is neither null nor
-    //     undefined
+    //   * true if the full chain of nested properties is found in the object
+    //     and the corresponding value is neither null nor undefined
     //   * false otherwise
     if ( !is(object) ){
       return false;
     }
+
     var i,
         length;
     for (i=1, length=arguments.length; i<length; i++){
       property = arguments[i];
-      if ( !object.hasOwnProperty(property) ){
-        return false;
-      }
       object = object[property];
       if ( !is(object) ){
         return false;
