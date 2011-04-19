@@ -47,7 +47,7 @@ REFERENCES
   http://www.slideshare.net/nzakas/scalable-javascript-application-architecture
 
   [2] Design Patterns for Scalable JavaScript Application by Legal-Box
-  ./doc/javascript-application-design-patterns.odt
+  http://legalbox.github.com/lb_js_scalableApp/doc/javascript-application-design-patterns.pdf
 
   [3] Semantic Versioning
   http://semver.org
