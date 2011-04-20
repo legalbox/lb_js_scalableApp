@@ -24,13 +24,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.base.template.i18n = lb.base.template.i18n || (function() {
+lb.base.template.i18n = (function() {
   // Builder of
   // Closure for lb.base.template.i18n module
 

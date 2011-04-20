@@ -13,13 +13,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.ajax = lb.base.ajax || (function() {
+lb.base.ajax = (function() {
   // Builder of
   // Closure for lb.base.ajax module
 

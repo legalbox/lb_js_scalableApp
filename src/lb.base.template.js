@@ -16,13 +16,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.template = lb.base.template || (function() {
+lb.base.template = (function() {
   // Builder of
   // Closure for lb.base.template module
 

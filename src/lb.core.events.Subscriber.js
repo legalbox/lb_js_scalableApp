@@ -24,14 +24,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.core.events.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.core.events.Subscriber = lb.core.events.Subscriber ||
-                            function(filter, callback){
+lb.core.events.Subscriber = function(filter, callback){
   // Function: new Subscriber(filter,callback): Subscriber
   // Constructor of a new Core Events Subscriber.
   //

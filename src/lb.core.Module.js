@@ -19,13 +19,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.core.Module = lb.core.Module || function (id, creator){
+lb.core.Module = function (id, creator){
   // Function: new Module(id,creator): Module
   // Constructor of a new Core Module.
   //

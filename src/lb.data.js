@@ -13,13 +13,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.data = lb.data || (function() {
+lb.data = (function() {
   // Builder of
   // Closure for lb.data namespace
 

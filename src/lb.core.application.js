@@ -15,13 +15,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-24
+ * 2011-04-20
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb, window */
-// preserve the module, if already loaded
-lb.core.application = lb.core.application || (function() {
+lb.core.application = (function() {
   // Builder of
   // Closure for lb.core.application module
 
