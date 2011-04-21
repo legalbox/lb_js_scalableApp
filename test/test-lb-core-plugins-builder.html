@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Unit Tests for lb.core.plugins.builder.js</title>
+    <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
+    <meta name="DC.publisher" content="Legal-Box SAS" />
+    <meta name="DC.creator" content="Eric Bréchemier" />
+    <meta name="DC.rights" content=
+    "Copyright Legal-Box SAS (c) 2010-2011, All Rights Reserved.
+     Licensed under a BSD License" />
+    <meta name="DC.rights" scheme="DCTERMS.URI"
+          content="http://creativecommons.org/licenses/BSD/" />
+    <meta name="DC.date" content="2011-04-21" />
+    <link rel="stylesheet" type="text/css" href="style/test.css" />
+  </head>
+  <body>
+    <h1>
+      Unit Tests for lb.core.plugins.builder.js
+    </h1>
+    <div class="status-text" id="bezen.test.status">0 / 0</div>
+    <div class="progress-bar">
+      <div class="progress" id="bezen.test.progress"></div>
+    </div>
+    <ul>
+      <li>
+      See the <a href="test.lb.core.plugins.js">source code</a> of the test.
+      </li>
+      <li>
+      See the list of <a href="index.html">all unit tests</a>.
+      </li>
+    </ul>
+    <p>
+      <em>Note:</em>
+      The output of the test is displayed in the div below.
+      You may also use
+      <a href="https://addons.mozilla.org/fr/firefox/addon/1843"
+         target="_blank">Firebug</a>
+      or
+      <a href="http://www.billyreisinger.com/jash/"
+         target="_blank">Jash</a>
+      to see the output of the test in a console.
+    </p>
+
+    <div class='console'>
+      <pre id='bezen.log'></pre>
+    </div>
+    <!--script type="text/javascript"
+        src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
+    </script-->
+
+    <script src="bezen.org/bezen.js"></script>
+    <script src="bezen.org/bezen.array.js"></script>
+    <script src="bezen.org/bezen.object.js"></script>
+    <script src="bezen.org/bezen.log.js"></script>
+    <script src="bezen.org/bezen.assert.js"></script>
+    <script src="bezen.org/bezen.error.js"></script>
+    <script src="bezen.org/bezen.string.js"></script>
+    <script src="bezen.org/bezen.style.js"></script>
+    <script src="bezen.org/bezen.testrunner.js"></script>
+
+    <script src="../src/closure/goog.js"></script>
+    <script src="../src/closure/goog.Disposable.js"></script>
+    <script src="../src/closure/goog.array.js"></script>
+    <script src="../src/closure/goog.debug.errorHandlerWeakDep.js"></script>
+    <script src="../src/closure/goog.events.Event.js"></script>
+    <script src="../src/closure/goog.string.js"></script>
+    <script src="../src/closure/goog.userAgent.js"></script>
+    <script src="../src/closure/goog.events.BrowserEvent.js"></script>
+    <script src="../src/closure/goog.events.EventWrapper.js"></script>
+    <script src="../src/closure/goog.events.Listener.js"></script>
+    <script src="../src/closure/goog.structs.SimplePool.js"></script>
+    <script src="../src/closure/goog.userAgent.jscript.js"></script>
+    <script src="../src/closure/goog.events.pools.js"></script>
+    <script src="../src/closure/goog.object.js"></script>
+    <script src="../src/closure/goog.events.js"></script>
+    <script src="../src/closure/goog.events.EventTarget.js"></script>
+    <script src="../src/closure/goog.Timer.js"></script>
+    <script src="../src/closure/goog.structs.js"></script>
+    <script src="../src/closure/goog.iter.js"></script>
+    <script src="../src/closure/goog.structs.Map.js"></script>
+    <script src="../src/closure/goog.structs.Set.js"></script>
+    <script src="../src/closure/goog.debug.js"></script>
+    <script src="../src/closure/goog.debug.LogRecord.js"></script>
+    <script src="../src/closure/goog.debug.LogBuffer.js"></script>
+    <script src="../src/closure/goog.debug.Logger.js"></script>
+    <script src="../src/closure/goog.debug.RelativeTimeProvider.js"></script>
+    <script src="../src/closure/goog.debug.Formatter.js"></script>
+    <script src="../src/closure/goog.debug.Console.js"></script>
+    <script src="../src/closure/goog.json.js"></script>
+    <script src="../src/closure/goog.net.ErrorCode.js"></script>
+    <script src="../src/closure/goog.net.EventType.js"></script>
+    <script src="../src/closure/goog.net.XmlHttp.js"></script>
+    <script src="closure/goog.net.MockXmlHttp.js"></script>
+    <script src="../src/closure/goog.net.xhrMonitor.js"></script>
+    <script src="../src/closure/goog.net.XhrIo.js"></script>
+    <script src="../src/closure/goog.dom.TagName.js"></script>
+    <script src="../src/closure/goog.dom.classes.js"></script>
+    <script src="../src/closure/goog.math.Coordinate.js"></script>
+    <script src="../src/closure/goog.math.Size.js"></script>
+    <script src="../src/closure/goog.userAgent.js"></script>
+    <script src="../src/closure/goog.dom.js"></script>
+    <script src="../src/closure/goog.debug.errorHandlerWeakDep.js"></script>
+    <script src="../src/closure/goog.Disposable.js"></script>
+    <script src="../src/closure/goog.events.Event.js"></script>
+    <script src="../src/closure/goog.events.BrowserEvent.js"></script>
+    <script src="../src/closure/goog.events.EventWrapper.js"></script>
+    <script src="../src/closure/goog.events.Listener.js"></script>
+    <script src="../src/closure/goog.structs.SimplePool.js"></script>
+    <script src="../src/closure/goog.userAgent.jscript.js"></script>
+    <script src="../src/closure/goog.events.pools.js"></script>
+    <script src="../src/closure/goog.events.js"></script>
+    <script src="../src/closure/goog.events.EventHandler.js"></script>
+    <script src="../src/closure/goog.History.js"></script>
+
+    <script src="../src/lb.js"></script>
+    <script src="../src/lb.base.js"></script>
+    <script src="../src/lb.base.type.js"></script>
+    <script src="../src/lb.base.object.js"></script>
+    <script src="../src/lb.base.array.js"></script>
+    <script src="../src/lb.base.config.js"></script>
+    <script src="../src/lb.base.log.js"></script>
+    <script src="../src/lb.base.json.js"></script>
+    <script src="../src/lb.base.ajax.js"></script>
+    <script src="../src/lb.base.dom.js"></script>
+    <script src="../src/lb.base.dom.css.js"></script>
+    <script src="../src/lb.base.dom.Listener.js"></script>
+    <script src="../src/lb.base.dom.factory.js"></script>
+    <script src="../src/lb.base.history.js"></script>
+    <script src="../src/lb.base.i18n.js"></script>
+    <script src="../src/lb.base.i18n.data.js"></script>
+    <script src="../src/lb.base.string.js"></script>
+    <script src="../src/lb.base.template.js"></script>
+    <script src="../src/lb.base.template.string.js"></script>
+    <script src="../src/lb.base.template.html.js"></script>
+    <script src="../src/lb.base.template.i18n.js"></script>
+    <script src="../src/lb.core.js"></script>
+    <script src="../src/lb.core.events.js"></script>
+    <script src="../src/lb.core.events.publisher.js"></script>
+    <script src="../src/lb.core.events.Subscriber.js"></script>
+    <script src="../src/lb.core.Sandbox.js"></script>
+    <script src="../src/lb.core.plugins.js"></script>
+    <script src="../src/lb.core.plugins.builder.js"></script>
+    <script src="test.lb.core.plugins.builder.js"></script>
+    <script>
+    bezen.testrunner.run();
+    </script>
+  </body>
+</html>
