@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-04-12
+  Version: 2011-04-21
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -72,11 +72,12 @@
     <jslint file="../src/lb.base.type.js" />
     <jslint file="../src/lb.core.js" />
     <jslint file="../src/lb.core.application.js" />
-    <jslint file="../src/lb.core.Module.js" />
-    <jslint file="../src/lb.core.Sandbox.js" />
     <jslint file="../src/lb.core.events.js" />
     <jslint file="../src/lb.core.events.publisher.js" />
     <jslint file="../src/lb.core.events.Subscriber.js" />
+    <jslint file="../src/lb.core.Module.js" />
+    <jslint file="../src/lb.core.plugins.js" />
+    <jslint file="../src/lb.core.Sandbox.js" />
     <jslint file="../src/lb.data.js" />
     <jslint file="../src/lb.ui.js" />
   </target>
@@ -105,11 +106,12 @@
     <jslint file="../test/test.lb.base.type.js" />
     <jslint file="../test/test.lb.core.js" />
     <jslint file="../test/test.lb.core.application.js" />
-    <jslint file="../test/test.lb.core.Module.js" />
-    <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.core.events.js" />
     <jslint file="../test/test.lb.core.events.publisher.js" />
     <jslint file="../test/test.lb.core.events.Subscriber.js" />
+    <jslint file="../test/test.lb.core.Module.js" />
+    <jslint file="../test/test.lb.core.plugins.js" />
+    <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.data.js" />
     <jslint file="../test/test.lb.ui.js" />
   </target>
@@ -248,6 +250,7 @@
       <file file="../src/lb.core.events.Subscriber.js"/>
       <file file="../src/lb.core.application.js"/>
       <file file="../src/lb.core.Sandbox.js"/>
+      <file file="../src/lb.core.plugins.js"/>
       <file file="../src/lb.core.Module.js"/>
       <file file="../src/lb.core.application.js"/>
       <file file="../src/lb.data.js" />
