@@ -15,7 +15,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-04-21
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -50,8 +50,25 @@ lb.core.application = (function() {
   // Function: setOptions(options)
   // Configure a set of option properties.
   //
-  // Note:
-  // Previous properties are preserved unless overwritten by new properties.
+  // Each new option is added to the configuration, replacing any existing
+  // value of the same name. Options previously set are otherwise preserved.
+  //
+  // Supported Properties:
+  //   lbBuilder - builder used in lb.core.Module to create an instance of
+  //               the Sandbox for the new module from a selection of plugins
+  //               which define different parts of the Sandbox API.
+  //               Defaults to lb.core.plugins.builder, which creates a
+  //               Sandbox with all the plugins defined in the framework.
+  //               Use of a custom builder allows to customize the Sandbox
+  //               API by loading custom plugins besides or instead of the
+  //               plugins defined in the framework.
+  //   lbFactory - factory used in the Sandbox methods to create and destroy
+  //               DOM elements, DOM listeners and DOM events, and used in
+  //               lb.core.Module to "initialize" the box elements of a new
+  //               module. Defaults to lb.base.dom.factory. Use of a custom
+  //               factory allows to "initialize" the box by creating widgets
+  //               associated with DOM elements within which, for example,
+  //               carry particular CSS class names.
   //
   // Parameter:
   //   options - object, a hash of configuration properties.
