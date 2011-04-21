@@ -54,10 +54,10 @@ lb.core.application = (function() {
   // value of the same name. Options previously set are otherwise preserved.
   //
   // Supported Properties:
-  //   lbBuilder - builder used in lb.core.Module to create an instance of
+  //   lbBuilder - builder used in <lb.core.Module> to create an instance of
   //               the Sandbox for the new module from a selection of plugins
   //               which define different parts of the Sandbox API.
-  //               Defaults to lb.core.plugins.builder, which creates a
+  //               Defaults to <lb.core.plugins.builder>, which creates a
   //               Sandbox with all the plugins defined in the framework.
   //               Use of a custom builder allows to customize the Sandbox
   //               API by loading custom plugins besides or instead of the
@@ -65,7 +65,7 @@ lb.core.application = (function() {
   //   lbFactory - factory used in the Sandbox methods to create and destroy
   //               DOM elements, DOM listeners and DOM events, and used in
   //               lb.core.Module to "initialize" the box elements of a new
-  //               module. Defaults to lb.base.dom.factory. Use of a custom
+  //               module. Defaults to <lb.base.dom.factory>. Use of a custom
   //               factory allows to "initialize" the box by creating widgets
   //               associated with DOM elements within which, for example,
   //               carry particular CSS class names.
