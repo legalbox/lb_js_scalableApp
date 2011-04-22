@@ -4,18 +4,30 @@
 Copyright (c) 2002 Douglas Crockford  (www.JSLint.com) Rhino Edition
 */
 
+// Modifications by Eric Bréchemier <legalbox@eric.brechemier.name>
+// Copyright Legal-Box SAS (c) 2010-2011, All Rights Reserved
+// Licensed under a BSD License http://creativecommons.org/licenses/BSD/
+//
+// 2011-04-22: added encoding 'utf-8' as second argument to readFile.
+// All our files are in UTF-8. The encoding may be specified as a command-line
+// argument and default to UTF-8 instead. We encountered some issues running
+// this script on files which contained Japanese characters in comments on
+// Cygwin and Git Bash () on Windows: "Unsafe character", which was not
+// reported by JSLint when checking the same file from bash on Debian.
+
 // This is the Rhino companion to fulljslint.js.
 
 /*global JSLINT */
 /*jslint rhino: true, strict: false */
 
 (function (a) {
-    var e, i, input;
+    var e, i, input, encoding;
     if (!a[0]) {
         print("Usage: jslint.js file.js");
         quit(1);
     }
-    input = readFile(a[0]);
+    encoding = 'utf-8'; // TODO: optionally initialize from command-line arg
+    input = readFile(a[0],encoding);
     if (!input) {
         print("jslint: Couldn't open file '" + a[0] + "'.");
         quit(1);
