@@ -19,7 +19,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-04-22
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -32,9 +32,9 @@ lb.core.Module = function (id, creator){
   //   id - string, the module identifier, e.g. 'lb.ui.myModule'
   //   creator - function, a creator function returning a custom module.
   //             A new Sandbox instance will be provided as parameter.
-  //             creator functions for User Interface modules should be
+  //             creator functions for User Interface modules may be
   //             registered in the namespace 'lb.ui', e.g. lb.ui.myModule while
-  //             creator functions for Data Model modules should be registered
+  //             creator functions for Data Model modules may be registered
   //             in the namespace 'lb.data', e.g. lb.data.myModule.
   //
   // Returns:
