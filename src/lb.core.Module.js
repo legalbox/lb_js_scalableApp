@@ -53,8 +53,6 @@ lb.core.Module = function (id, creator){
       log = lb.base.log.print,
       /*requires lb.core.plugins.builder.js */
       defaultBuilder = lb.core.plugins.builder,
-      /*requires lb.core.Sandbox.js */
-      Sandbox = lb.core.Sandbox,
       /*requires lb.base.config.js */
       getOption = lb.base.config.getOption,
       /*requires lb.base.dom.js */
