@@ -19,13 +19,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-22
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.core.Module = lb.core.Module || function (id, creator){
+lb.core.Module = function (id, creator){
   // Function: new Module(id,creator): Module
   // Constructor of a new Core Module.
   //
@@ -33,19 +32,27 @@ lb.core.Module = lb.core.Module || function (id, creator){
   //   id - string, the module identifier, e.g. 'lb.ui.myModule'
   //   creator - function, a creator function returning a custom module.
   //             A new Sandbox instance will be provided as parameter.
-  //             creator functions for User Interface modules should be
-  //             registered in the namespace 'lb.ui', e.g. lb.ui.myModule while
-  //             creator functions for Data Model modules should be registered
-  //             in the namespace 'lb.data', e.g. lb.data.myModule.
   //
   // Returns:
   //   object, the new instance of Module
+  //
+  // Notes:
+  // Creator functions for User Interface modules may be registered in the
+  // namespace 'lb.ui', e.g. lb.ui.myModule while creator functions for Data
+  // modules, with no user interface,  may be registered in the namespace
+  // 'lb.data', e.g. lb.data.myModule.
+  //
+  // The sandbox API can be customized by configuring a different builder
+  // to load additional or alternative plugins. See <lb.core.plugins.builder>
+  // for details.
 
   // Define aliases
   var /*requires lb.base.type.js */
       is = lb.base.type.is,
       /*requires lb.base.log.js */
       log = lb.base.log.print,
+      /*requires lb.core.plugins.builder.js */
+      defaultBuilder = lb.core.plugins.builder,
       /*requires lb.core.Sandbox.js */
       Sandbox = lb.core.Sandbox,
       /*requires lb.base.config.js */
@@ -62,7 +69,7 @@ lb.core.Module = lb.core.Module || function (id, creator){
       sandbox;
 
   try {
-    sandbox = new Sandbox(id);
+    sandbox = getOption('lbBuilder',defaultBuilder).buildSandbox(id);
     module = creator(sandbox);
   } catch(creationError){
     log('ERROR: failed to create module "'+id+

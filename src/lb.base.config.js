@@ -18,13 +18,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-21
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.config = lb.base.config || (function() {
+lb.base.config = (function() {
   // Builder of
   // Closure for lb.base.config module
 
@@ -57,7 +56,7 @@ lb.base.config = lb.base.config || (function() {
     // In order to avoid clashes in the names of configuration properties,
     // each property should use a prefix corresponding to the implementor of
     // the module which makes use of it. All configuration properties used in
-    // modules implemented by Legal Box will use the prefix 'lb', e.g.
+    // modules implemented by Legal-Box will use the prefix 'lb', e.g.
     // 'lbFactory' for the DOM Element Factory.
     //
     // Parameter:

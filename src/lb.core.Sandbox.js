@@ -73,13 +73,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb, document, window */
-// preserve the module, if already loaded
-lb.core.Sandbox = lb.core.Sandbox || function (id){
+lb.core.Sandbox = function (id){
   // Function: new Sandbox(id): Sandbox
   // Constructor of a new Sandbox.
   //

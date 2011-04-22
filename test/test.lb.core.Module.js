@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-24
+ * Version:   2011-04-22
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -18,12 +18,18 @@
   // Closure object for Test of Core Module
 
   // Define aliases
-  var assert = bezen.assert,              /*requires bezen.assert.js */
-      object = bezen.object,              /*requires bezen.object.js */
-      string = bezen.string,              /*requires bezen.string.js */
-      testrunner = bezen.testrunner,      /*requires bezen.testrunner.js */
-      $ = bezen.$,                        /*requires bezen.js */
-      application = lb.core.application;  /*requires lb.core.application.js*/
+  var /*requires bezen.assert.js */
+      assert = bezen.assert,
+      /*requires bezen.object.js */
+      object = bezen.object,
+      /*requires bezen.string.js */
+      string = bezen.string,
+      /*requires bezen.testrunner.js */
+      testrunner = bezen.testrunner,
+      /*requires bezen.js */
+      $ = bezen.$,
+      /*requires lb.core.application.js*/
+      application = lb.core.application;
 
   function testNamespace(){
 
@@ -33,7 +39,7 @@
 
   function setUp(){
     // remove custom factory
-    application.setOptions({lbFactory: null});
+    application.setOptions({lbBuilder: null, lbFactory: null});
   }
 
   var sandboxCreated;
@@ -90,7 +96,31 @@
     assert.isTrue( object.exists(sandboxCreated),
                   "underlying module must be created with a sandbox instance");
 
-    module = new lb.core.Module('testConstructor.fail', creatorWhichFails);
+    try {
+      module = new lb.core.Module('testConstructor.fail', creatorWhichFails);
+    } catch(e) {
+      assert.fail("No failure expected when creator fails: "+e);
+    }
+
+    var capturedId = null,
+        stubSandbox = {};
+    function stubBuildSandbox(id){
+      capturedId = id;
+      return stubSandbox;
+    }
+    application.setOptions({
+      lbBuilder: {
+        buildSandbox: stubBuildSandbox
+      }
+    });
+
+    sandboxCreated = null;
+    var testId = 'testConstructor.builder';
+    module = new Ut(testId, createStubModule);
+    assert.equals(sandboxCreated, stubSandbox,
+      "sandbox from custom builder expected to be provided to module creator");
+    assert.equals(capturedId, testId,
+                "module identifier expected to be provided to custom builder");
   }
 
   function testGetId(){

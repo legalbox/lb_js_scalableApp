@@ -13,13 +13,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.array = lb.base.array || (function() {
+lb.base.array = (function() {
   // Builder of
   // Closure for lb.base.array module
 

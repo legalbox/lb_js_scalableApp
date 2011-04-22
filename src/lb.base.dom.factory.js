@@ -39,13 +39,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.dom.factory = lb.base.dom.factory || (function() {
+lb.base.dom.factory = (function() {
   // Builder of
   // Closure for lb.base.dom.factory module
 

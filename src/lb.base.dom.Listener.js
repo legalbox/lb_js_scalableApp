@@ -17,14 +17,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog */
-// preserve the module, if already loaded
-lb.base.dom.Listener = lb.base.dom.Listener ||
-  function(element, type, callback, useCapture) {
+lb.base.dom.Listener = function(element, type, callback, useCapture) {
   // Function: new Listener(element, type, callback[, useCapture])
   // Create a new listener for a type of event on a DOM element.
   //

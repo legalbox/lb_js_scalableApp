@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Unit Tests for lb.core.Module.js</title>
+    <title>Unit Tests for lb.core.plugins.builder.js</title>
     <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
     <meta name="DC.publisher" content="Legal-Box SAS" />
     <meta name="DC.creator" content="Eric Bréchemier" />
@@ -12,14 +12,12 @@
      Licensed under a BSD License" />
     <meta name="DC.rights" scheme="DCTERMS.URI"
           content="http://creativecommons.org/licenses/BSD/" />
-    <meta name="DC.date" content="2011-04-22" />
-    <!-- Needed in IE for history manager because no iframe is included -->
-    <link rel="shortcut icon" href="favicon.ico" />
+    <meta name="DC.date" content="2011-04-21" />
     <link rel="stylesheet" type="text/css" href="style/test.css" />
   </head>
   <body>
     <h1>
-      Unit Tests for lb.core.Module.js
+      Unit Tests for lb.core.plugins.builder.js
     </h1>
     <div class="status-text" id="bezen.test.status">0 / 0</div>
     <div class="progress-bar">
@@ -27,7 +25,7 @@
     </div>
     <ul>
       <li>
-      See the <a href="test.lb.core.Module.js">source code</a> of the test.
+      See the <a href="test.lb.core.plugins.js">source code</a> of the test.
       </li>
       <li>
       See the list of <a href="index.html">all unit tests</a>.
@@ -36,11 +34,11 @@
     <p>
       <em>Note:</em>
       The output of the test is displayed in the div below.
-      You may also use 
-      <a href="https://addons.mozilla.org/fr/firefox/addon/1843" 
-         target="_blank">Firebug</a> 
+      You may also use
+      <a href="https://addons.mozilla.org/fr/firefox/addon/1843"
+         target="_blank">Firebug</a>
       or
-      <a href="http://www.billyreisinger.com/jash/" 
+      <a href="http://www.billyreisinger.com/jash/"
          target="_blank">Jash</a>
       to see the output of the test in a console.
     </p>
@@ -48,7 +46,7 @@
     <div class='console'>
       <pre id='bezen.log'></pre>
     </div>
-    <!--script type="text/javascript" 
+    <!--script type="text/javascript"
         src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
     </script-->
 
@@ -63,9 +61,22 @@
     <script src="bezen.org/bezen.testrunner.js"></script>
 
     <script src="../src/closure/goog.js"></script>
+    <script src="../src/closure/goog.Disposable.js"></script>
     <script src="../src/closure/goog.array.js"></script>
+    <script src="../src/closure/goog.debug.errorHandlerWeakDep.js"></script>
+    <script src="../src/closure/goog.events.Event.js"></script>
     <script src="../src/closure/goog.string.js"></script>
+    <script src="../src/closure/goog.userAgent.js"></script>
+    <script src="../src/closure/goog.events.BrowserEvent.js"></script>
+    <script src="../src/closure/goog.events.EventWrapper.js"></script>
+    <script src="../src/closure/goog.events.Listener.js"></script>
+    <script src="../src/closure/goog.structs.SimplePool.js"></script>
+    <script src="../src/closure/goog.userAgent.jscript.js"></script>
+    <script src="../src/closure/goog.events.pools.js"></script>
     <script src="../src/closure/goog.object.js"></script>
+    <script src="../src/closure/goog.events.js"></script>
+    <script src="../src/closure/goog.events.EventTarget.js"></script>
+    <script src="../src/closure/goog.Timer.js"></script>
     <script src="../src/closure/goog.structs.js"></script>
     <script src="../src/closure/goog.iter.js"></script>
     <script src="../src/closure/goog.structs.Map.js"></script>
@@ -77,6 +88,13 @@
     <script src="../src/closure/goog.debug.RelativeTimeProvider.js"></script>
     <script src="../src/closure/goog.debug.Formatter.js"></script>
     <script src="../src/closure/goog.debug.Console.js"></script>
+    <script src="../src/closure/goog.json.js"></script>
+    <script src="../src/closure/goog.net.ErrorCode.js"></script>
+    <script src="../src/closure/goog.net.EventType.js"></script>
+    <script src="../src/closure/goog.net.XmlHttp.js"></script>
+    <script src="closure/goog.net.MockXmlHttp.js"></script>
+    <script src="../src/closure/goog.net.xhrMonitor.js"></script>
+    <script src="../src/closure/goog.net.XhrIo.js"></script>
     <script src="../src/closure/goog.dom.TagName.js"></script>
     <script src="../src/closure/goog.dom.classes.js"></script>
     <script src="../src/closure/goog.math.Coordinate.js"></script>
@@ -93,19 +111,10 @@
     <script src="../src/closure/goog.userAgent.jscript.js"></script>
     <script src="../src/closure/goog.events.pools.js"></script>
     <script src="../src/closure/goog.events.js"></script>
-    <script src="../src/closure/goog.events.EventTarget.js"></script>
-    <script src="../src/closure/goog.Timer.js"></script>
     <script src="../src/closure/goog.events.EventHandler.js"></script>
     <script src="../src/closure/goog.History.js"></script>
-    <script src="../src/closure/goog.json.js"></script>
-    <script src="../src/closure/goog.net.ErrorCode.js"></script>
-    <script src="../src/closure/goog.net.EventType.js"></script>
-    <script src="../src/closure/goog.net.XmlHttp.js"></script>
-    <script src="../src/closure/goog.net.xhrMonitor.js"></script>"
-    <script src="../src/closure/goog.net.XhrIo.js"></script>
 
     <script src="../src/lb.js"></script>
-    <script src="../src/lb.base.js"></script>
     <script src="../src/lb.base.js"></script>
     <script src="../src/lb.base.type.js"></script>
     <script src="../src/lb.base.object.js"></script>
@@ -130,15 +139,10 @@
     <script src="../src/lb.core.events.js"></script>
     <script src="../src/lb.core.events.publisher.js"></script>
     <script src="../src/lb.core.events.Subscriber.js"></script>
-    <script src="../src/lb.core.application.js"></script>
     <script src="../src/lb.core.Sandbox.js"></script>
     <script src="../src/lb.core.plugins.js"></script>
     <script src="../src/lb.core.plugins.builder.js"></script>
-    <script src="../src/lb.core.Module.js"></script>
-    <script src="test.lb.core.Module.js"></script>
-
-    <div id="testStart.initEvent"></div>
-
+    <script src="test.lb.core.plugins.builder.js"></script>
     <script>
     bezen.testrunner.run();
     </script>

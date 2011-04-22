@@ -13,13 +13,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.core.events = lb.core.events || (function() {
+lb.core.events = (function() {
   // Builder of
   // Closure for lb.core.events namespace
 

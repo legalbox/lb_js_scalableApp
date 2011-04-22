@@ -13,13 +13,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-11
+ * 2011-04-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-// preserve the module, if already loaded
-lb.base.type = lb.base.type || (function() {
+lb.base.type = (function() {
   // Builder of
   // Closure for lb.base.type module
 

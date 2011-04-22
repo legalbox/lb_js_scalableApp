@@ -73,13 +73,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-12
+ * 2011-04-20
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
 /*global lb, goog, window, document */
-// preserve the module, if already loaded
-lb.base.history = lb.base.history || (function() {
+lb.base.history = (function() {
   // Builder of
   // Closure for lb.base.history module
 

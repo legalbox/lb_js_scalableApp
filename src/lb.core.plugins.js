@@ -1,6 +1,6 @@
 /*
- * Namespace: lb.data
- * Data Model Modules for Legal Box Scalable JavaScript Application
+ * Namespace: lb.core.plugins
+ * Core Plugins which define API methods for the Sandbox.
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
@@ -13,14 +13,14 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-04-21
  */
-/*requires lb.js */
+/*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global lb */
-lb.data = (function() {
+lb.core.plugins = (function() {
   // Builder of
-  // Closure for lb.data namespace
+  // Closure for lb.core.plugins namespace
 
   // Note: no methods defined at this level currently
 

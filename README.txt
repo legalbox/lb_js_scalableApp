@@ -177,6 +177,7 @@ HISTORY
   2011-03-29, v1.5.7, Fixed replacement of parameters in src and href in IE7
   2011-04-08, v1.5.8, Parameter replacement in getString() is now recursive
   2011-04-12, v1.6.0, Added has() and is() methods to Sandbox utils API
+  2011-04-20, v1.6.1, Avoid type coercion in module definition: override
   2011-XX-XX, v1.7.0, ROADMAP: add support for plugins to extend Sandbox API
   2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API

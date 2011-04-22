@@ -13,12 +13,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-01-05
+ * 2011-04-20
  */
 /*jslint white:false, plusplus:false */
 /*global window */
-// preserve the library, if already loaded
-window.lb = window.lb || (function() {
+window.lb = (function() {
   // Builder of
   // Closure for Root of Legal Box Scalable JavaScript Application
 
