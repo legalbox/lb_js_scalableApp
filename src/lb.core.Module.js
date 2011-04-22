@@ -51,6 +51,8 @@ lb.core.Module = function (id, creator){
       is = lb.base.type.is,
       /*requires lb.base.log.js */
       log = lb.base.log.print,
+      /*requires lb.core.plugins.builder.js */
+      defaultBuilder = lb.core.plugins.builder,
       /*requires lb.core.Sandbox.js */
       Sandbox = lb.core.Sandbox,
       /*requires lb.base.config.js */
@@ -67,7 +69,7 @@ lb.core.Module = function (id, creator){
       sandbox;
 
   try {
-    sandbox = new Sandbox(id);
+    sandbox = getOption('lbBuilder',defaultBuilder).buildSandbox(id);
     module = creator(sandbox);
   } catch(creationError){
     log('ERROR: failed to create module "'+id+

@@ -39,7 +39,7 @@
 
   function setUp(){
     // remove custom factory
-    application.setOptions({lbFactory: null});
+    application.setOptions({lbBuilder: null, lbFactory: null});
   }
 
   var sandboxCreated;
@@ -116,7 +116,7 @@
 
     sandboxCreated = null;
     var testId = 'testConstructor.builder';
-    var module = new Ut(testId, createStubModule);
+    module = new Ut(testId, createStubModule);
     assert.equals(sandboxCreated, stubSandbox,
       "sandbox from custom builder expected to be provided to module creator");
     assert.equals(capturedId, testId,

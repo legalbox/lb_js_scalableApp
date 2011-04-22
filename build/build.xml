@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-04-21
+  Version: 2011-04-22
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -77,6 +77,7 @@
     <jslint file="../src/lb.core.events.Subscriber.js" />
     <jslint file="../src/lb.core.Module.js" />
     <jslint file="../src/lb.core.plugins.js" />
+    <jslint file="../src/lb.core.plugins.builder.js" />
     <jslint file="../src/lb.core.Sandbox.js" />
     <jslint file="../src/lb.data.js" />
     <jslint file="../src/lb.ui.js" />
@@ -111,6 +112,7 @@
     <jslint file="../test/test.lb.core.events.Subscriber.js" />
     <jslint file="../test/test.lb.core.Module.js" />
     <jslint file="../test/test.lb.core.plugins.js" />
+    <jslint file="../test/test.lb.core.plugins.builder.js" />
     <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.data.js" />
     <jslint file="../test/test.lb.ui.js" />
@@ -251,6 +253,7 @@
       <file file="../src/lb.core.application.js"/>
       <file file="../src/lb.core.Sandbox.js"/>
       <file file="../src/lb.core.plugins.js"/>
+      <file file="../src/lb.core.plugins.builder.js"/>
       <file file="../src/lb.core.Module.js"/>
       <file file="../src/lb.core.application.js"/>
       <file file="../src/lb.data.js" />
