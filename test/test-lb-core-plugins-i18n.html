@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head profile="http://dublincore.org/documents/2008/08/04/dc-html/">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Unit Tests for lb.core.plugins.css.js</title>
+    <title>Unit Tests for lb.core.plugins.i18n.js</title>
     <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
     <meta name="DC.publisher" content="Legal-Box SAS" />
     <meta name="DC.creator" content="Eric Bréchemier" />
@@ -19,7 +19,7 @@
   </head>
   <body>
     <h1>
-      Unit Tests for lb.core.plugins.css.js
+      Unit Tests for lb.core.plugins.i18n.js
     </h1>
     <div class="status-text" id="bezen.test.status">0 / 0</div>
     <div class="progress-bar">
@@ -27,7 +27,7 @@
     </div>
     <ul>
       <li>
-      See the <a href="test.lb.core.plugins.css.js">source code</a> of the
+      See the <a href="test.lb.core.plugins.i18n.js">source code</a> of the
       test.
       </li>
       <li>
@@ -53,21 +53,6 @@
         src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
     </script-->
 
-    <div id='testGetClasses'>
-      <div id='testGetClasses.threeClasses' class='one two three'></div>
-    </div>
-    <div id='testGetClasses.outsideBox' class='one two three'></div>
-
-    <div id='testAddClass'>
-      <div id='testAddClass.noClass'></div>
-    </div>
-    <div id='testAddClass.outsideBox' class='one two'></div>
-
-    <div id='testRemoveClass'>
-      <div id='testRemoveClass.threeClasses' class='one two three'></div>
-    </div>
-    <div id='testRemoveClass.outsideBox' class='one two three'></div>
-
     <script src="bezen.org/bezen.js"></script>
     <script src="bezen.org/bezen.array.js"></script>
     <script src="bezen.org/bezen.object.js"></script>
@@ -76,6 +61,7 @@
     <script src="bezen.org/bezen.error.js"></script>
     <script src="bezen.org/bezen.string.js"></script>
     <script src="bezen.org/bezen.style.js"></script>
+    <script src="bezen.org/bezen.dom.js"></script>
     <script src="bezen.org/bezen.testrunner.js"></script>
 
     <script src="../src/closure/goog.js"></script>
@@ -159,8 +145,8 @@
     <script src="../src/lb.core.events.Subscriber.js"></script>
     <script src="../src/lb.core.Sandbox.js"></script>
     <script src="../src/lb.core.plugins.js"></script>
-    <script src="../src/lb.core.plugins.css.js"></script>
-    <script src="test.lb.core.plugins.css.js"></script>
+    <script src="../src/lb.core.plugins.i18n.js"></script>
+    <script src="test.lb.core.plugins.i18n.js"></script>
     <script>
     bezen.testrunner.run();
     </script>
