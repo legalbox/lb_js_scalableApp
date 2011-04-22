@@ -41,6 +41,10 @@ lb.core.Module = function (id, creator){
   // namespace 'lb.ui', e.g. lb.ui.myModule while creator functions for Data
   // modules, with no user interface,  may be registered in the namespace
   // 'lb.data', e.g. lb.data.myModule.
+  //
+  // The sandbox API can be customized by configuring a different builder
+  // to load additional or alternative plugins. See <lb.core.plugins.builder>
+  // for details.
 
   // Define aliases
   var /*requires lb.base.type.js */
