@@ -32,13 +32,15 @@ lb.core.Module = function (id, creator){
   //   id - string, the module identifier, e.g. 'lb.ui.myModule'
   //   creator - function, a creator function returning a custom module.
   //             A new Sandbox instance will be provided as parameter.
-  //             creator functions for User Interface modules may be
-  //             registered in the namespace 'lb.ui', e.g. lb.ui.myModule while
-  //             creator functions for Data Model modules may be registered
-  //             in the namespace 'lb.data', e.g. lb.data.myModule.
   //
   // Returns:
   //   object, the new instance of Module
+  //
+  // Notes:
+  // Creator functions for User Interface modules may be registered in the
+  // namespace 'lb.ui', e.g. lb.ui.myModule while creator functions for Data
+  // modules, with no user interface,  may be registered in the namespace
+  // 'lb.data', e.g. lb.data.myModule.
 
   // Define aliases
   var /*requires lb.base.type.js */
