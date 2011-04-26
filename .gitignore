@@ -1,5 +1,8 @@
-#ignore temporary files created by vim
+# ignore temporary files created by vim
 *.swp
+
+# ignore temporary OpenOffice.org files
+.~lock.*
 
 # ignore transient PDF for gh-pages, exported from ODT with OpenOffice Writer
 doc/javascript-application-design-patterns.pdf
