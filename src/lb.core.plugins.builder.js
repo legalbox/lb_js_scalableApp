@@ -42,7 +42,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-22
+ * 2011-04-26
  */
 /*requires lb.core.plugins.js */
 /*jslint white:false, plusplus:false */
@@ -55,7 +55,23 @@ lb.core.plugins.builder = (function() {
   var /*requires lb.base.object.js */
       has = lb.base.object.has,
       /*requires lb.core.Sandbox.js */
-      Sandbox = lb.core.Sandbox;
+      Sandbox = lb.core.Sandbox,
+      /*requires lb.core.plugins.js */
+      plugins = lb.core.plugins,
+      /*requires lb.core.plugins.css.js */
+      css = plugins.css,
+      /*requires lb.core.plugins.dom.js */
+      dom = plugins.dom,
+      /*requires lb.core.plugins.events.js */
+      events = plugins.events
+      /*requires lb.core.plugins.i18n.js */
+      i18n = plugins.i18n,
+      /*requires lb.core.plugins.server.js */
+      server = plugins.server,
+      /*requires lb.core.plugins.url.js */
+      url = plugins.url,
+      /*requires lb.core.plugins.utils.js */
+      utils = plugins.utils;
 
   function buildSandbox(id){
     // Function: buildSandbox(id)
@@ -81,7 +97,13 @@ lb.core.plugins.builder = (function() {
     }
 
     var sandbox = new Sandbox(id);
-    // TODO: call each plugin(sandbox);
+    css(sandbox);
+    dom(sandbox);
+    events(sandbox);
+    i18n(sandbox);
+    server(sandbox);
+    url(sandbox);
+    utils(sandbox);
     return sandbox;
   }
 
