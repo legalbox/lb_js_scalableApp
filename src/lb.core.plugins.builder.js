@@ -63,7 +63,7 @@ lb.core.plugins.builder = (function() {
       /*requires lb.core.plugins.dom.js */
       dom = plugins.dom,
       /*requires lb.core.plugins.events.js */
-      events = plugins.events
+      events = plugins.events,
       /*requires lb.core.plugins.i18n.js */
       i18n = plugins.i18n,
       /*requires lb.core.plugins.server.js */
