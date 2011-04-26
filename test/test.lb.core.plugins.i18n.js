@@ -70,7 +70,9 @@
   }
 
   function testGetLanguageList(){
-    var ut = new lb.core.Sandbox('testGetLanguageList').i18n.getLanguageList;
+    var sandbox = new Sandbox('testGetLanguageList');
+    lb.core.plugins.i18n(sandbox);
+    var ut = sandbox.i18n.getLanguageList;
 
     setUp();
     assert.arrayEquals( ut(), [],   "language list expected empty initially");
@@ -158,6 +160,7 @@
     assert.equals( ut(), null,             "null expected for missing key");
 
     var testSandbox = new lb.core.Sandbox('testGet.testSandbox');
+    lb.core.plugins.i18n(testSandbox);
     var dValue = function(){
           return 'D VALUE';
         },
@@ -210,6 +213,7 @@
     sandbox.i18n.selectLanguage(testLanguageCode);
 
     var testSandbox = new lb.core.Sandbox('testGetString.testSandbox');
+    lb.core.plugins.i18n(testSandbox);
     testSandbox.i18n.addLanguageProperties(testLanguageCode,{
       complexParam: 'Complex #param-to-replace#, #missing#'
     });
