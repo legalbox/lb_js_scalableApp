@@ -34,7 +34,7 @@ lb.core.plugins.css = function(sandbox) {
       log = lb.base.log.print;
 
   function getClasses(element){
-    // Function: sandbox.getClasses(element): object
+    // Function: sandbox.css.getClasses(element): object
     // Get the CSS classes of given DOM element.
     //
     // Parameter:
@@ -62,7 +62,7 @@ lb.core.plugins.css = function(sandbox) {
   }
 
   function addClass(element,name){
-    // Function: sandbox.addClass(element,name)
+    // Function: sandbox.css.addClass(element,name)
     // Append a CSS class to a DOM element part of the box.
     //
     // Parameters:
@@ -82,7 +82,7 @@ lb.core.plugins.css = function(sandbox) {
   }
 
   function removeClass(element,name){
-    // Function: sandbox.removeClass(element,name)
+    // Function: sandbox.css.removeClass(element,name)
     // Remove a CSS class from a DOM element part of the box.
     //
     // Parameters:

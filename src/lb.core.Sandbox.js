@@ -15,52 +15,52 @@
  *   - <sandbox.getBox(createIfMissing): DOM Element>
  *   - <sandbox.isInBox(element): boolean>
  *
- * Cascading Style Sheets (sandbox.css):
- *   - <lb.core.plugins.css.sandbox.getClasses(element): object>
- *   - <lb.core.plugins.css.sandbox.addClass(element,name)>
- *   - <lb.core.plugins.css.sandbox.removeClass(element,name)>
+ * Cascading Style Sheets (sandbox.css, defined by <lb.core.plugins.css>):
+ *   - <lb.core.plugins.css.sandbox.css.getClasses(element): object>
+ *   - <lb.core.plugins.css.sandbox.css.addClass(element,name)>
+ *   - <lb.core.plugins.css.sandbox.css.removeClass(element,name)>
  *
- * Document Object Model (sandbox.dom):
- *   - <dom.$(localId): DOM Element>
- *   - <dom.element(name[,attributes[,childNodes]]): DOM Element>
- *   - <dom.fireEvent(element,type[,properties]): DOM Event>
- *   - <dom.cancelEvent(event)>
- *   - <dom.getListeners(): array>
- *   - <dom.addListener(element,type,callback): Listener>
- *   - <dom.removeListener(listener)>
- *   - <dom.removeAllListeners()>
+ * Document Object Model (sandbox.dom, defined by <lb.core.plugins.dom>):
+ *   - <lb.core.plugins.dom.sandbox.dom.$(localId): DOM Element>
+ *   - <lb.core.plugins.dom.sandbox.dom.element(name[,attributes[,childNodes]]): DOM Element>
+ *   - <lb.core.plugins.dom.sandbox.dom.fireEvent(element,type[,properties]): DOM Event>
+ *   - <lb.core.plugins.dom.sandbox.dom.cancelEvent(event)>
+ *   - <lb.core.plugins.dom.sandbox.dom.getListeners(): array>
+ *   - <lb.core.plugins.dom.sandbox.dom.addListener(element,type,callback): Listener>
+ *   - <lb.core.plugins.dom.sandbox.dom.removeListener(listener)>
+ *   - <lb.core.plugins.dom.sandbox.dom.removeAllListeners()>
  *
- * Events for loose coupling with other modules (sandbox.events):
- *   - <events.subscribe(filter,callback)>
- *   - <events.unsubscribe(filter)>
- *   - <events.publish(event)>
+ * Events for loose coupling with other modules (sandbox.events, defined by <lb.core.plugins.events>):
+ *   - <lb.core.plugins.events.sandbox.events.subscribe(filter,callback)>
+ *   - <lb.core.plugins.events.sandbox.events.unsubscribe(filter)>
+ *   - <lb.core.plugins.events.sandbox.events.publish(event)>
  *
- * Internationalization through language properties (sandbox.i18n):
- *   - <i18n.getLanguageList(): array of strings>
- *   - <i18n.getSelectedLanguage(): string>
- *   - <i18n.selectLanguage(languageCode)>
- *   - <i18n.addLanguageProperties(languageCode,languageProperties)>
- *   - <i18n.get(key[,languageCode]): any>
- *   - <i18n.getString(key[,data[,languageCode]]): string>
- *   - <i18n.filterHtml(htmlNode[,data[,languageCode]])>
+ * Internationalization through language properties (sandbox.i18n, defined by <lb.core.plugins.i18n>):
+ *   - <lb.core.plugins.i18n.sandbox.i18n.getLanguageList(): array of strings>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.getSelectedLanguage(): string>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.selectLanguage(languageCode)>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.addLanguageProperties(languageCode,languageProperties)>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.get(key[,languageCode]): any>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.getString(key[,data[,languageCode]]): string>
+ *   - <lb.core.plugins.i18n.sandbox.i18n.filterHtml(htmlNode[,data[,languageCode]])>
  *
- * Asynchronous communication with a remote server (sandbox.server):
- *   - <server.send(url,data,receive)>
+ * Asynchronous communication with a remote server (sandbox.server, defined by <lb.core.plugins.server>):
+ *   - <lb.core.plugins.server.sandbox.server.send(url,data,receive)>
  *
- * Uniform Resource Locator, local navigation (sandbox.url):
- *   - <url.getLocation(): object>
- *   - <url.setHash(hash)>
- *   - <url.onHashChange(callback)>
+ * Uniform Resource Locator, local navigation (sandbox.url, defined by <lb.core.plugins.url>):
+ *   - <lb.core.plugins.url.sandbox.url.getLocation(): object>
+ *   - <lb.core.plugins.url.sandbox.url.setHash(hash)>
+ *   - <lb.core.plugins.url.sandbox.url.onHashChange(callback)>
  *
  * General utilities (sandbox.utils):
- *   - <utils.has(object,property[,...]): boolean>
- *   - <utils.is([...,]value[,type]): boolean>
- *   - <utils.getTimestamp(): number>
- *   - <utils.setTimeout(callback,delay): number>
- *   - <utils.clearTimeout(timeoutId)>
- *   - <utils.trim(string): string>
- *   - <utils.log(message)>
- *   - <utils.confirm(message): boolean>
+ *   - <lb.core.plugins.utils.sandbox.utils.has(object,property[,...]): boolean>
+ *   - <lb.core.plugins.utils.sandbox.utils.is([...,]value[,type]): boolean>
+ *   - <lb.core.plugins.utils.sandbox.utils.getTimestamp(): number>
+ *   - <lb.core.plugins.utils.sandbox.utils.setTimeout(callback,delay): number>
+ *   - <lb.core.plugins.utils.sandbox.utils.clearTimeout(timeoutId)>
+ *   - <lb.core.plugins.utils.sandbox.utils.trim(string): string>
+ *   - <lb.core.plugins.utils.sandbox.utils.log(message)>
+ *   - <lb.core.plugins.utils.sandbox.utils.confirm(message): boolean>
  *
  * The plugins are loaded by the Sandbox Builder. The sandbox API can be
  * customized by configuring a different sandbox builder to load additional or
