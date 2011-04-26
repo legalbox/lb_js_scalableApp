@@ -223,7 +223,7 @@ lb.core.Sandbox = function (id){
     return false;
   }
 
-  // Function: i18n.getLanguageList(): array of strings
+  // Function: sandbox.i18n.getLanguageList(): array of strings
   // Get the list of available languages.
   //
   // Returns:
@@ -232,7 +232,7 @@ lb.core.Sandbox = function (id){
 
   // Note: getLanguageList is an alias for lb.base.i18n.data.getLanguageCodes
 
-  // Function: i18n.getSelectedLanguage(): string
+  // Function: sandbox.i18n.getSelectedLanguage(): string
   // Get the language currently selected for the application.
   //
   // Returns:
@@ -243,7 +243,7 @@ lb.core.Sandbox = function (id){
   // Note: getSelectedLanguage() is an alias for getDefaultLanguageCode()
   //       in lb.base.i18n.data, which returns the same value
 
-  // Function: i18n.selectLanguage(languageCode)
+  // Function: sandbox.i18n.selectLanguage(languageCode)
   // Select the language of the application, shared by all modules.
   //
   // The language code of selected language is stored in the 'lang' attribute
@@ -264,7 +264,7 @@ lb.core.Sandbox = function (id){
     i18n.setLanguage(languageCode);
   }
 
-  // Function: i18n.addLanguageProperties(languageCode,languageProperties)
+  // Function: sandbox.i18n.addLanguageProperties(languageCode,languageProperties)
   // Define or replace properties for given language.
   //
   // Language properties are inherited by all languages whose language code
@@ -286,7 +286,7 @@ lb.core.Sandbox = function (id){
 
   // Note: This is an alias for lb.base.i8n.data.addLanguageProperties
 
-  // Function: i18n.get(key[,languageCode]): any
+  // Function: sandbox.i18n.get(key[,languageCode]): any
   // Get the value of the property identified by given key.
   //
   // Parameters:
@@ -306,7 +306,7 @@ lb.core.Sandbox = function (id){
 
   // Note: get() is an alias for lb.base.i18n.data.get()
 
-  // Function: i18n.getString(key[,data[,languageCode]]): string
+  // Function: sandbox.i18n.getString(key[,data[,languageCode]]): string
   // Get a string computed by replacing data values in the most specific
   // value found for given key, used as a string template.
   //
@@ -374,7 +374,7 @@ lb.core.Sandbox = function (id){
 
   // Note: getString() is an alias for lb.base.template.i18n.getString()
 
-  // Function: i18n.filterHtml(htmlNode[,data[,languageCode]])
+  // Function: sandbox.i18n.filterHtml(htmlNode[,data[,languageCode]])
   // Replace parameters and trim nodes based on html 'lang' attribute.
   //
   // The given HTML node is modified in place. You should clone it beforehand
@@ -441,7 +441,7 @@ lb.core.Sandbox = function (id){
 
   // Note: filterHtml is an alias for lb.base.template.i18n.filterHtml
 
-  // Function: server.send(url,data,receive)
+  // Function: sandbox.server.send(url,data,receive)
   // Send and receive data from the remote host.
   //
   // Parameters:
@@ -454,7 +454,7 @@ lb.core.Sandbox = function (id){
   // Note: send is an alias for lb.base.ajax.send
 
   function getLocation(){
-    // Function: url.getLocation(): object
+    // Function: sandbox.url.getLocation(): object
     // Get the properties of the current URL location
     //
     // Returns:
@@ -483,7 +483,7 @@ lb.core.Sandbox = function (id){
     };
   }
 
-  // Function: url.setHash(hash)
+  // Function: sandbox.url.setHash(hash)
   // Jump to a new local location by replacing the hash part of the URL.
   //
   // This method is used for local navigation, and ensures, in collaboration
@@ -496,7 +496,7 @@ lb.core.Sandbox = function (id){
   // Note: setHash is an alias for lb.base.history.setHash
 
   function onHashChange(callback){
-    // Function: url.onHashChange(callback)
+    // Function: sandbox.url.onHashChange(callback)
     // Set a listener to observe changes in local part of the URL.
     // Calling this method with a new callback will replace the listener
     // previously set. Calling onHashChange(null) will remove the current
@@ -516,7 +516,7 @@ lb.core.Sandbox = function (id){
     }
   }
 
-  // Function: utils.has(object,property[,...]): boolean
+  // Function: sandbox.utils.has(object,property[,...]): boolean
   // Check whether an object property is present and not null nor undefined.
   //
   // A chain of nested properties may be checked by providing more than two
@@ -557,7 +557,7 @@ lb.core.Sandbox = function (id){
 
   // Note: is is an alias for lb.base.object.has
 
-  // Function: utils.is([...,]value[,type]): boolean
+  // Function: sandbox.utils.is([...,]value[,type]): boolean
   // Check the type of a value, possibly nested in sub-properties.
   //
   // The method may be called with a single argument to check that the value
@@ -639,7 +639,7 @@ lb.core.Sandbox = function (id){
   // Note: is is an alias for lb.base.type.is
 
   function getTimestamp(){
-    // Function: utils.getTimestamp(): number
+    // Function: sandbox.utils.getTimestamp(): number
     // Get current timestamp, in milliseconds.
     //
     // Returns:
@@ -650,7 +650,7 @@ lb.core.Sandbox = function (id){
   }
 
   function setTimeout(callback, delay){
-    // Function: utils.setTimeout(callback,delay): number
+    // Function: sandbox.utils.setTimeout(callback,delay): number
     // Plan the delayed execution of a callback function.
     //
     // Parameters:
@@ -671,7 +671,7 @@ lb.core.Sandbox = function (id){
   }
 
   function clearTimeout(timeoutId){
-    // Function: utils.clearTimeout(timeoutId)
+    // Function: sandbox.utils.clearTimeout(timeoutId)
     // Cancels the planned execution of a callback function.
     //
     // Parameter:
@@ -681,7 +681,7 @@ lb.core.Sandbox = function (id){
     window.clearTimeout(timeoutId);
   }
 
-  // Function: utils.trim(string): string
+  // Function: sandbox.utils.trim(string): string
   // Remove leading and trailing whitespace from a string.
   //
   // Parameter:
@@ -692,7 +692,7 @@ lb.core.Sandbox = function (id){
 
   // Note: trim is an alias for lb.base.string.trim
 
-  // Function: utils.log(message)
+  // Function: sandbox.utils.log(message)
   // Log a message.
   //
   // Log messages will be printed in the browser console, when available,
@@ -705,7 +705,7 @@ lb.core.Sandbox = function (id){
   // Note: log is an alias for lb.base.log.print
 
   function confirm(message){
-    // Function: utils.confirm(message): boolean
+    // Function: sandbox.utils.confirm(message): boolean
     // Open a confirmation (OK/Cancel) dialog.
     //
     // Parameter:
