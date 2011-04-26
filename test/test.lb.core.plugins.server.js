@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-22
+ * Version:   2011-04-26
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -39,13 +39,6 @@
 
   function testPlugin(){
     var ut = lb.core.plugins.server;
-
-    try {
-      ut();
-      ut(null);
-    } catch(e) {
-      assert.fail("No failure expected when argument is missing/null: "+e);
-    }
 
     var sandbox = new Sandbox('testPlugin');
     ut(sandbox);
