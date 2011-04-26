@@ -12,7 +12,7 @@
 
 /*requires lb.core.Sandbox.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, goog, window, setTimeout */
+/*global lb, bezen, goog, window, setTimeout, document */
 (function() {
   // Builder of
   // Closure object for Test of User Interface Module
