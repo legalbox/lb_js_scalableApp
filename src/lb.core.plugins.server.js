@@ -25,5 +25,23 @@ lb.core.plugins.server = function(sandbox) {
   // Parameters:
   //   sandbox - object, the sandbox instance to enrich with the send method
 
+  // Declare aliases
+  var /*requires lb.base.ajax.js */
+      send = lb.base.ajax.send;
 
+  // Function: sandbox.server.send(url,data,receive)
+  // Send and receive data from the remote host.
+  //
+  // Parameters:
+  //   url - string, a url on remote host (must respect same origin policy)
+  //   data - object, the data to send to the server. It must be valid JSON.
+  //   receive - function, the callback with data received in response from
+  //             the server. The data provided in argument will be a valid
+  //             JSON object or array.
+
+  // Note: send is an alias for lb.base.ajax.send
+
+  sandbox.server = {
+    send: send
+  };
 };

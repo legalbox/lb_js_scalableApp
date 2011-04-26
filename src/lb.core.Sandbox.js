@@ -105,8 +105,6 @@ lb.core.Sandbox = function (id){
       defaultFactory = lb.base.dom.factory,
       /*requires lb.base.dom.js */
       dom = lb.base.dom,
-      /*requires lb.base.ajax.js */
-      send = lb.base.ajax.send,
       /*requires lb.base.string.js */
       trim = lb.base.string.trim,
       /*requires lb.base.log.js */
@@ -216,18 +214,6 @@ lb.core.Sandbox = function (id){
     }
     return false;
   }
-
-  // Function: sandbox.server.send(url,data,receive)
-  // Send and receive data from the remote host.
-  //
-  // Parameters:
-  //   url - string, a url on remote host (must respect same origin policy)
-  //   data - object, the data to send to the server. It must be valid JSON.
-  //   receive - function, the callback with data received in response from
-  //             the server. The data provided in argument will be a valid
-  //             JSON object or array.
-
-  // Note: send is an alias for lb.base.ajax.send
 
   function getLocation(){
     // Function: sandbox.url.getLocation(): object
@@ -497,9 +483,6 @@ lb.core.Sandbox = function (id){
   this.getId = getId;
   this.getBox = getBox;
   this.isInBox = isInBox;
-  this.server = {
-    send: send
-  };
   this.url = {
     getLocation: getLocation,
     setHash: setHash,
