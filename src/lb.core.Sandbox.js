@@ -8,7 +8,8 @@
  * encloses the module.
  *
  * The methods related to the module itself are defined on the Sandbox.
- * Other methods are separated into groups of similar purpose.
+ * Other methods are separated into groups of similar purpose, each defined
+ * by an optional plugin.
  *
  * Module (sandbox):
  *   - <getId([localId]):string>
@@ -62,6 +63,10 @@
  *   - <utils.log(message)>
  *   - <utils.confirm(message): boolean>
  *
+ *  The plugins are loaded by the Sandbox Builder. The sandbox API can be
+ * customized by configuring a different sandbox builder to load additional or
+ * alternative plugins. See <lb.core.plugins.builder> for details.
+ *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
  *
@@ -73,7 +78,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-04-26
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -99,8 +104,6 @@ lb.core.Sandbox = function (id){
       removeAll = lb.base.array.removeAll,
       /*requires lb.base.dom.js */
       dom = lb.base.dom,
-      /*requires lb.base.dom.css.js */
-      css = lb.base.dom.css,
       /*requires lb.base.ajax.js */
       send = lb.base.ajax.send,
       /*requires lb.base.string.js */
@@ -234,74 +237,6 @@ lb.core.Sandbox = function (id){
       ancestor = ancestor.parentNode;
     }
     return false;
-  }
-
-  function getClasses(element){
-    // Function: css.getClasses(element): object
-    // Get the CSS classes of given DOM element.
-    //
-    // Parameter:
-    //   element - DOM Element, an element of the box
-    //
-    // Returns:
-    //   object, a hash of CSS classes, with a boolean property set to true
-    //   for each of the CSS class names found on element, e.g.
-    //   | {'big':true, 'box':true}
-    //   for
-    //   | <div class='big box'></div>.
-    //   When no class attribute is present, or when it is empty, an empty
-    //   object is returned.
-    //
-    // Note:
-    // When the element is out of the box, an empty object is returned as well.
-
-    if ( !isInBox(element) ){
-      log('Warning: cannot get CSS classes of element "'+element+
-          '" outside of box "'+id+'"');
-      return {};
-    }
-
-    return css.getClasses(element);
-  }
-
-  function addClass(element,name){
-    // Function: css.addClass(element,name)
-    // Append a CSS class to a DOM element part of the box.
-    //
-    // Parameters:
-    //   element - DOM Element, an element of the box
-    //   name - string, a CSS class name
-    //
-    // Note:
-    //   Nothing happens if element is out of the box.
-
-    if ( !isInBox(element) ){
-      log('Warning: cannot add CSS class to element "'+element+
-          '" outside of box "'+id+'"');
-      return;
-    }
-
-    css.addClass(element,name);
-  }
-
-  function removeClass(element,name){
-    // Function: css.removeClass(element,name)
-    // Remove a CSS class from a DOM element part of the box.
-    //
-    // Parameters:
-    //   element - DOM Element, an element of the box
-    //   name - string, a CSS class name
-    //
-    // Note:
-    //   Nothing happens if element is out of the box.
-
-    if ( !isInBox(element) ){
-      log('Warning: cannot remove CSS class from element "'+element+
-          '" outside of box "'+id+'"');
-      return;
-    }
-
-    css.removeClass(element,name);
   }
 
   function $(localId){
@@ -1027,11 +962,6 @@ lb.core.Sandbox = function (id){
   this.getId = getId;
   this.getBox = getBox;
   this.isInBox = isInBox;
-  this.css = {
-    getClasses: getClasses,
-    addClass: addClass,
-    removeClass: removeClass
-  };
   this.dom = {
     $:$,
     element: element,
