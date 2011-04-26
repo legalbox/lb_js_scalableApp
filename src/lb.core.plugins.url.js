@@ -17,7 +17,7 @@
  */
 /*requires lb.core.plugins.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
+/*global lb, window */
 lb.core.plugins.url = function(sandbox) {
   // Function: url(sandbox)
   // Define methods in the 'url' property of given sandbox.
