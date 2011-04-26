@@ -7,19 +7,18 @@
  * modifications to the box assigned to the module, an HTML element which
  * encloses the module.
  *
- * The methods related to the module itself are defined on the Sandbox.
- * Other methods are separated into groups of similar purpose, each defined
- * by an optional plugin.
+ * The methods related to the module itself are defined on the Sandbox. Other
+ * methods are defined by separate plugin modules.
  *
  * Module (sandbox):
- *   - <getId([localId]):string>
- *   - <getBox(createIfMissing): DOM Element>
- *   - <isInBox(element): boolean>
+ *   - <sandbox.getId([localId]):string>
+ *   - <sandbox.getBox(createIfMissing): DOM Element>
+ *   - <sandbox.isInBox(element): boolean>
  *
  * Cascading Style Sheets (sandbox.css):
- *   - <css.getClasses(element): object>
- *   - <css.addClass(element,name)>
- *   - <css.removeClass(element,name)>
+ *   - <lb.core.plugins.css.sandbox.getClasses(element): object>
+ *   - <lb.core.plugins.css.sandbox.addClass(element,name)>
+ *   - <lb.core.plugins.css.sandbox.removeClass(element,name)>
  *
  * Document Object Model (sandbox.dom):
  *   - <dom.$(localId): DOM Element>
@@ -63,7 +62,7 @@
  *   - <utils.log(message)>
  *   - <utils.confirm(message): boolean>
  *
- *  The plugins are loaded by the Sandbox Builder. The sandbox API can be
+ * The plugins are loaded by the Sandbox Builder. The sandbox API can be
  * customized by configuring a different sandbox builder to load additional or
  * alternative plugins. See <lb.core.plugins.builder> for details.
  *
@@ -152,7 +151,7 @@ lb.core.Sandbox = function (id){
     hashChangeCallback = null;
 
   function getId(localId){
-    // Function: getId([localId]): string
+    // Function: sandbox.getId([localId]): string
     // Get the identifier of the module, when optional parameter is omitted.
     // With optional parameter, get the full identifier corresponding to the
     // given local identifier.
@@ -176,7 +175,7 @@ lb.core.Sandbox = function (id){
   }
 
   function getBox(createIfMissing){
-    // Function: getBox(createIfMissing): DOM Element
+    // Function: sandbox.getBox(createIfMissing): DOM Element
     // Get the root HTML element for this module.
     //
     // Parameter:
@@ -207,7 +206,7 @@ lb.core.Sandbox = function (id){
   }
 
   function isInBox(element){
-    // Function: isInBox(element): boolean
+    // Function: sandbox.isInBox(element): boolean
     // Check whether the given element is in the box.
     //
     // Parameter:
