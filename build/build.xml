@@ -276,7 +276,6 @@
       <file file="../src/lb.core.plugins.utils.js"/>
       <file file="../src/lb.core.plugins.builder.js"/>
       <file file="../src/lb.core.Module.js"/>
-      <file file="../src/lb.core.application.js"/>
       <file file="../src/lb.data.js" />
       <file file="../src/lb.ui.js" />
     </concat>
