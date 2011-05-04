@@ -289,8 +289,8 @@
     try {
       assert.equals( ut('failingFunction'), null,
       "null expected as return value for failing function (default language)");
-    } catch(e) {
-      assert.fail("No failure expected for failing function: "+e+
+    } catch(e1) {
+      assert.fail("No failure expected for failing function: "+e1+
                   " (default language)");
     }
 
@@ -326,8 +326,8 @@
       assert.equals( ut('failingFunction',data), null,
                         "null expected as return value for failing function "+
                                             "(default language + properties)");
-    } catch(e) {
-      assert.fail("No failure expected for failing function: "+e+
+    } catch(e2) {
+      assert.fail("No failure expected for failing function: "+e2+
                   " (default language + properties)");
     }
 
@@ -373,8 +373,8 @@
       assert.equals( ut('failingFunction',data,testLanguageCode), null,
                         "null expected as return value for failing function "+
                                                         "(specific language)");
-    } catch(e) {
-      assert.fail("No failure expected for failing function: "+e+
+    } catch(e3) {
+      assert.fail("No failure expected for failing function: "+e3+
                   " (specific language)");
     }
 
@@ -410,8 +410,8 @@
       assert.equals( ut('failingFunction',data,testLanguageCode), null,
                         "null expected as return value for failing function "+
                                           "(specific language + properties)");
-    } catch(e) {
-      assert.fail("No failure expected for failing function: "+e+
+    } catch(e4) {
+      assert.fail("No failure expected for failing function: "+e4+
                   " (specific language + properties)");
     }
   }
