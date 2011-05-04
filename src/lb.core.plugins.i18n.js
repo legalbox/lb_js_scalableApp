@@ -123,7 +123,14 @@ lb.core.plugins.i18n = function(sandbox) {
   // When a function is found for the given key instead of a string template,
   // it is called with the key, data and language code, replaced with their
   // default values when omitted, and its return value is used as string
-  // template instead.
+  // template. In case the call to the function template fails, null is
+  // returned instead.
+  //
+  // Function templates may be used in place of string values in language
+  // properties to handle pluralization, for example:
+  // | function(key,data,languageCode){
+  // |   return data.number <= 1 ? "goose" : "geese";
+  // | }
   //
   // The parameters to replace are surrounded by '#' characters,
   // e.g. '#param-to-replace#'. No space can appear in the name;
@@ -153,7 +160,8 @@ lb.core.plugins.i18n = function(sandbox) {
   //
   //   1. the key is looked up in language properties of selected language.
   //      A string is expected. If no value is found, null is returned.
-  //      If a function is found, its return value is used instead
+  //      If a function is found, its return value is used instead; if the
+  //      function fails, null is returned.
   //
   //   2. any parameter found in the string value is looked up, first in the
   //      given data, then in language properties of selected language, by
@@ -179,8 +187,9 @@ lb.core.plugins.i18n = function(sandbox) {
   //   * string, the value of corresponding property, in the most specific
   //     language available, with parameters replaced with the value of
   //     corresponding properties found in data object or as a fallback in the
-  //     language properties of the most specific language where available
-  //   * or null if the property is not found
+  //     language properties of the most specific language available
+  //   * or null if the property is not found, or if the function template
+  //     found throws an exception
 
   // Note: getString() is an alias for lb.base.template.i18n.getString()
 
