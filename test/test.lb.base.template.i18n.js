@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-08
+ * Version:   2011-05-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -242,12 +242,17 @@
       return stubReturnValue;
     }
 
+    function fail(){
+      throw new Error("Test Failure Thrown in Failing Function");
+    }
+
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
       noParam: noParamValue,
       simpleParam: simpleParamValue,
       dottedParam: dottedParamValue,
       complexParam: complexParamValue,
-      functionParam: stubComputeValue
+      functionParam: stubComputeValue,
+      failingFunction: fail
     });
 
     assert.equals( ut('noParam'), noParamValue,
@@ -281,6 +286,13 @@
         'object',
         testLanguageCode
       ], "key,data,languageCode expected to be forwarded (default language)");
+    try {
+      assert.equals( ut('failingFunction'), null,
+      "null expected as return value for failing function (default language)");
+    } catch(e) {
+      assert.fail("No failure expected for failing function: "+e+
+                  " (default language)");
+    }
 
     capturedParams = [];
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
@@ -310,6 +322,14 @@
     assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
                             "key,data,languageCode expected to be forwarded "+
                                            "(default language + properties)");
+    try {
+      assert.equals( ut('failingFunction',data), null,
+                        "null expected as return value for failing function "+
+                                            "(default language + properties)");
+    } catch(e) {
+      assert.fail("No failure expected for failing function: "+e+
+                  " (default language + properties)");
+    }
 
     setUp();
     document.documentElement.lang = "OTHER-LANGUAGE-CODE";
@@ -319,7 +339,8 @@
       simpleParam: simpleParamValue,
       dottedParam: dottedParamValue,
       complexParam: complexParamValue,
-      functionParam: stubComputeValue
+      functionParam: stubComputeValue,
+      failingFunction: fail
     });
 
     assert.equals( ut('noParam',null,testLanguageCode), noParamValue,
@@ -348,6 +369,14 @@
     assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
                             "key,data,languageCode expected to be forwarded "+
                                                        "(specific language)");
+    try {
+      assert.equals( ut('failingFunction',data,testLanguageCode), null,
+                        "null expected as return value for failing function "+
+                                                        "(specific language)");
+    } catch(e) {
+      assert.fail("No failure expected for failing function: "+e+
+                  " (specific language)");
+    }
 
     capturedParams = [];
     lb.base.i18n.data.addLanguageProperties(testLanguageCode,{
@@ -377,6 +406,14 @@
     assert.arrayEquals(capturedParams,['functionParam',data,testLanguageCode],
                             "key,data,languageCode expected to be forwarded "+
                                           "(specific language + properties)");
+    try {
+      assert.equals( ut('failingFunction',data,testLanguageCode), null,
+                        "null expected as return value for failing function "+
+                                          "(specific language + properties)");
+    } catch(e) {
+      assert.fail("No failure expected for failing function: "+e+
+                  " (specific language + properties)");
+    }
   }
 
   function testFilterByLanguage(){
