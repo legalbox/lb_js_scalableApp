@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-05-06
  */
 /*requires lb.base.js */
 /*jslint white:false, plusplus:false */
@@ -89,7 +89,7 @@ lb.base.template.string = (function() {
           length;
       for (i=0,length=path.length; i<length && properties; i++){
         pathElement = path[i];
-        if ( pathElement in properties && i===length-1 ){
+        if ( has(properties,pathElement) && i===length-1 ){
           return properties[pathElement];
         }
         properties = properties[pathElement];
