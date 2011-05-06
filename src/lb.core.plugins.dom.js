@@ -13,7 +13,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-26
+ * 2011-05-06
  */
 /*requires lb.core.plugins.js */
 /*jslint white:false, plusplus:false */
@@ -186,7 +186,8 @@ lb.core.plugins.dom = function(sandbox) {
     // TODO: use lb.base.array.removeOne(listeners,listener) instead
     // To check that only removed listener is destroyed, a return value is
     // needed in removeOne(). It must be added in the base array module.
-    for (var i=0; i<listeners.length; i++){
+    var i;
+    for (i=0; i<listeners.length; i++){
       if (listeners[i]===listener){
         factory.destroyListener(listener);
         listeners.splice(i,1);
@@ -205,7 +206,8 @@ lb.core.plugins.dom = function(sandbox) {
     // automatically by the framework after the module terminates in end(),
     // which makes its use optional for the module itself.
 
-    for (var i=0; i<listeners.length; i++){
+    var i;
+    for (i=0; i<listeners.length; i++){
       factory.destroyListener(listeners[i]);
     }
     removeAll(listeners);
