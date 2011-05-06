@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-03-29
+ * Version:   2011-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -108,7 +108,8 @@
     ut(elementWithAttributesOnly, one, two, three, filters);
     assert.equals( captured.length, 3,
                                     "3 attributes expected to be processed");
-    for(var i=0; i<captured.length; i++){
+    var i;
+    for (i=0; i<captured.length; i++){
       assert.arrayEquals(
         [
           captured[i][1],
