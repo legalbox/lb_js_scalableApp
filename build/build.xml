@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-04-26
+  Version: 2011-05-06
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -22,7 +22,40 @@
     <delete dir="out"/>
   </target>
 
+  <taskdef name="jslint4java"
+           classname="com.googlecode.jslint4java.ant.JSLintTask"
+           classpath="lib/jslint4java/jslint4java-1.4.7.jar" />
+  <!--
+  Check a set of JavaScript files with JSLint, using jslint4java
+
+  Usage:
+    * Check a single file
+    <jslint file="../src/singleFile.js" />
+
+    * Check all JavaScript files (*.js) in a directory (non-recursive)
+    <jslint dir="../src/wholeDir/" />
+
+    * Check all JavaScript files in a directory, recursively
+    <jslint dir="../src" file="**/*.js" />
+  -->
   <macrodef name="jslint">
+    <attribute name="file" default="*.js" />
+    <attribute name="dir"  default="." />
+    <sequential>
+      <echo>jslint: checking @{file} in @{dir}</echo>
+      <jslint4java encoding="UTF-8">
+        <formatter type="plain" />
+        <!-- The two file sets are combined to handle two use cases:
+          1) only file attribute is present
+          2) only dir attribute, or both file and dir attributes are present
+        -->
+        <fileset file="@{file}" />
+        <fileset dir="@{dir}" includes="@{file}" />
+      </jslint4java>
+    </sequential>
+  </macrodef>
+
+  <!--macrodef name="jslint">
     <attribute name="file" />
     <sequential>
       <echo>jslint: checking @{file}</echo>
@@ -36,7 +69,7 @@
       </java>
       <echo />
     </sequential>
-  </macrodef>
+  </macrodef-->
 
   <target name="checkLib"
           description="Check Google Closure source files with JSLint">
@@ -44,54 +77,18 @@
     <jslint file="../src/closure/goog.js" />
     <jslint file="../src/closure/goog.array.js" />
     -->
+    <!--jslint dir="../src/closure" /-->
     <jslint file="../src/closure/goog.debug.js" />
   </target>
 
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
-    <jslint file="../src/lb.js" />
-    <jslint file="../src/lb.base.js" />
-    <jslint file="../src/lb.base.ajax.js" />
-    <jslint file="../src/lb.base.array.js" />
-    <jslint file="../src/lb.base.config.js" />
-    <jslint file="../src/lb.base.dom.js" />
-    <jslint file="../src/lb.base.dom.css.js" />
-    <jslint file="../src/lb.base.dom.factory.js" />
-    <jslint file="../src/lb.base.dom.Listener.js" />
-    <jslint file="../src/lb.base.history.js" />
-    <jslint file="../src/lb.base.i18n.js" />
-    <jslint file="../src/lb.base.i18n.data.js" />
-    <jslint file="../src/lb.base.json.js" />
-    <jslint file="../src/lb.base.log.js" />
-    <jslint file="../src/lb.base.object.js" />
-    <jslint file="../src/lb.base.string.js" />
-    <jslint file="../src/lb.base.template.js" />
-    <jslint file="../src/lb.base.template.html.js" />
-    <jslint file="../src/lb.base.template.i18n.js" />
-    <jslint file="../src/lb.base.template.string.js" />
-    <jslint file="../src/lb.base.type.js" />
-    <jslint file="../src/lb.core.js" />
-    <jslint file="../src/lb.core.application.js" />
-    <jslint file="../src/lb.core.events.js" />
-    <jslint file="../src/lb.core.events.publisher.js" />
-    <jslint file="../src/lb.core.events.Subscriber.js" />
-    <jslint file="../src/lb.core.Module.js" />
-    <jslint file="../src/lb.core.plugins.js" />
-    <jslint file="../src/lb.core.plugins.builder.js" />
-    <jslint file="../src/lb.core.plugins.css.js" />
-    <jslint file="../src/lb.core.plugins.dom.js" />
-    <jslint file="../src/lb.core.plugins.events.js" />
-    <jslint file="../src/lb.core.plugins.i18n.js" />
-    <jslint file="../src/lb.core.plugins.server.js" />
-    <jslint file="../src/lb.core.plugins.url.js" />
-    <jslint file="../src/lb.core.plugins.utils.js" />
-    <jslint file="../src/lb.core.Sandbox.js" />
-    <jslint file="../src/lb.data.js" />
-    <jslint file="../src/lb.ui.js" />
+    <jslint dir="../src" />
   </target>
 
   <target name="checkTest" description="Check test files with JSLint">
-    <jslint file="../test/test.lb.js" />
+    <jslint dir="../test" />
+    <!--jslint file="../test/test.lb.js" />
     <jslint file="../test/test.lb.base.js" />
     <jslint file="../test/test.lb.base.ajax.js" />
     <jslint file="../test/test.lb.base.array.js" />
@@ -129,7 +126,7 @@
     <jslint file="../test/test.lb.core.plugins.utils.js" />
     <jslint file="../test/test.lb.core.Sandbox.js" />
     <jslint file="../test/test.lb.data.js" />
-    <jslint file="../test/test.lb.ui.js" />
+    <jslint file="../test/test.lb.ui.js" /-->
   </target>
 
   <target name="check" description="Check JavaScript files with JSLint" 
