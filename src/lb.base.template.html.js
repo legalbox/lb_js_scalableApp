@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-05-06
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -96,7 +96,7 @@ lb.base.template.html = (function() {
         } catch( attributeFilterError ) {
           log(
             'Failed to apply HTML filters to attribute "'+attribute.name+'" '+
-            'of element '+node.nodeName+ ( node.id? '#'+node.id+'' :
+            'of element '+node.nodeName+ ( node.id? '#'+node.id :
             (node.className?' class="'+node.className+'"':'') )+
             ': '+attributeFilterError
           );
@@ -111,7 +111,7 @@ lb.base.template.html = (function() {
         log(
           'Failed to apply HTML filters to child node '+childNodes[i]+
           ' in position '+(i+1)+
-          ' of element '+node.nodeName+ ( node.id? '#'+node.id+'' :
+          ' of element '+node.nodeName+ ( node.id? '#'+node.id :
           (node.className?' class="'+node.className+'"':'') )+
           ': '+childNodeFilterError
         );
