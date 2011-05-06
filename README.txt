@@ -182,6 +182,7 @@ HISTORY
   2011-04-26, v1.7.0, Modular Sandbox API using Sandbox Builder and Plug-ins
   2011-05-02, v1.7.1, Fixed build: removed duplicate script in combine task
   2011-05-04, v1.7.2, Enhancement: return null when function fails in getString
+  2011-XX-XX, v1.7.3, Enhancement: speed up build using jslint4java
   2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
 
