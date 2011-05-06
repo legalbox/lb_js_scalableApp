@@ -55,30 +55,10 @@
     </sequential>
   </macrodef>
 
-  <!--macrodef name="jslint">
-    <attribute name="file" />
-    <sequential>
-      <echo>jslint: checking @{file}</echo>
-      <java jar="lib/yuicompressor/rhino-1.6R7.jar"
-          fork="true"
-          failonerror="true"
-      >
-        <arg line="-f lib/jslint/fulljslint.js" />
-        <arg value="lib/jslint/rhino.js" />
-        <arg value="@{file}" />
-      </java>
-      <echo />
-    </sequential>
-  </macrodef-->
-
   <target name="checkLib"
           description="Check Google Closure source files with JSLint">
-    <!--
-    <jslint file="../src/closure/goog.js" />
-    <jslint file="../src/closure/goog.array.js" />
-    -->
-    <!--jslint dir="../src/closure" /-->
-    <jslint file="../src/closure/goog.debug.js" />
+    <!-- food for thought: fails with terrible errors -->
+    <jslint dir="../src/closure" />
   </target>
 
   <target name="checkSrc"
@@ -88,45 +68,6 @@
 
   <target name="checkTest" description="Check test files with JSLint">
     <jslint dir="../test" />
-    <!--jslint file="../test/test.lb.js" />
-    <jslint file="../test/test.lb.base.js" />
-    <jslint file="../test/test.lb.base.ajax.js" />
-    <jslint file="../test/test.lb.base.array.js" />
-    <jslint file="../test/test.lb.base.config.js" />
-    <jslint file="../test/test.lb.base.dom.js" />
-    <jslint file="../test/test.lb.base.dom.css.js" />
-    <jslint file="../test/test.lb.base.dom.factory.js" />
-    <jslint file="../test/test.lb.base.dom.Listener.js" />
-    <jslint file="../test/test.lb.base.history.js" />
-    <jslint file="../test/test.lb.base.i18n.js" />
-    <jslint file="../test/test.lb.base.i18n.data.js" />
-    <jslint file="../test/test.lb.base.json.js" />
-    <jslint file="../test/test.lb.base.log.js" />
-    <jslint file="../test/test.lb.base.object.js" />
-    <jslint file="../test/test.lb.base.string.js" />
-    <jslint file="../test/test.lb.base.template.js" />
-    <jslint file="../test/test.lb.base.template.html.js" />
-    <jslint file="../test/test.lb.base.template.i18n.js" />
-    <jslint file="../test/test.lb.base.template.string.js" />
-    <jslint file="../test/test.lb.base.type.js" />
-    <jslint file="../test/test.lb.core.js" />
-    <jslint file="../test/test.lb.core.application.js" />
-    <jslint file="../test/test.lb.core.events.js" />
-    <jslint file="../test/test.lb.core.events.publisher.js" />
-    <jslint file="../test/test.lb.core.events.Subscriber.js" />
-    <jslint file="../test/test.lb.core.Module.js" />
-    <jslint file="../test/test.lb.core.plugins.js" />
-    <jslint file="../test/test.lb.core.plugins.builder.js" />
-    <jslint file="../test/test.lb.core.plugins.css.js" />
-    <jslint file="../test/test.lb.core.plugins.dom.js" />
-    <jslint file="../test/test.lb.core.plugins.events.js" />
-    <jslint file="../test/test.lb.core.plugins.i18n.js" />
-    <jslint file="../test/test.lb.core.plugins.server.js" />
-    <jslint file="../test/test.lb.core.plugins.url.js" />
-    <jslint file="../test/test.lb.core.plugins.utils.js" />
-    <jslint file="../test/test.lb.core.Sandbox.js" />
-    <jslint file="../test/test.lb.data.js" />
-    <jslint file="../test/test.lb.ui.js" /-->
   </target>
 
   <target name="check" description="Check JavaScript files with JSLint" 
