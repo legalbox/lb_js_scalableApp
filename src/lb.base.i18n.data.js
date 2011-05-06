@@ -54,7 +54,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-05-06
  */
 /*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
@@ -252,10 +252,10 @@ lb.base.i18n.data = (function() {
         for (j=0, length=key.length; j<length && properties; j++){
           pathElement = key[j];
           // if the final path element is found
-          if (pathElement in properties && j===length-1){
+          if ( has(properties,pathElement) && j===length-1){
             return properties[pathElement];
           }
-          // go on with next level (may be undefined)
+          // go on with next level (may be null or undefined)
           properties = properties[pathElement];
         }
       }
