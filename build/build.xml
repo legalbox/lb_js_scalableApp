@@ -43,7 +43,8 @@
     <attribute name="dir"  default="." />
     <sequential>
       <echo>jslint: checking @{file} in @{dir}</echo>
-      <jslint4java encoding="UTF-8">
+      <jslint4java jslint="lib/jslint/fulljslint.js"
+        encoding="UTF-8" haltOnFailure="true">
         <formatter type="plain" />
         <!-- The two file sets are combined to handle two use cases:
           1) only file attribute is present
