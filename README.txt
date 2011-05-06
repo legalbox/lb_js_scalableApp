@@ -119,6 +119,30 @@ INCLUDED SOFTWARE
     adding "The Software shall be used for Good, not Evil."
     in build/lib/jslint
 
+  * jslint4java by Dominic Mitchell
+    http://code.google.com/p/jslint4java/
+    Licensed under a New BSD License
+    http://www.opensource.org/licenses/bsd-license.php
+    in build/lib/jslint4java
+
+    Includes:
+
+      o JCommander by Cédric Beust
+        http://jcommander.org/
+        Licensed under the Apache License, Version 2.0
+        http://www.apache.org/licenses/LICENSE-2.0
+
+      o Rhino by Mozilla
+        http://www.mozilla.org/rhino/
+        Licensed under Mozilla Public License
+        http://www.mozilla.org/MPL/
+
+      o JSLint by Douglas Crockford
+        http://jslint.com/
+        Licensed under a modified MIT License
+        http://www.opensource.org/licenses/mit-license
+        adding "The Software shall be used for Good, not Evil."
+
   * Combiner by Nicholas Zakas
     http://github.com/nzakas/combiner
     Licensed under a MIT License
