@@ -15,7 +15,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-21
+ * 2011-05-06
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
@@ -111,9 +111,9 @@ lb.core.application = (function() {
   function startAll(){
     // Function: startAll()
     // Start all registered modules.
-    //
 
-    for (var i=0; i<modules.length; i++){
+    var i;
+    for (i=0; i<modules.length; i++){
       try {
         modules[i].start();
       } catch (e) {
@@ -128,7 +128,8 @@ lb.core.application = (function() {
     //
     // All registered modules are discarded.
 
-    for (var i=0; i<modules.length; i++){
+    var i;
+    for (i=0; i<modules.length; i++){
       try {
         modules[i].end();
       } catch(e) {
