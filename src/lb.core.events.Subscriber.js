@@ -24,7 +24,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-05-06
  */
 /*requires lb.core.events.js */
 /*jslint white:false, plusplus:false */
@@ -74,7 +74,8 @@ lb.core.events.Subscriber = function(filter, callback){
     // an event includes a filter; it is also used in the Sandbox, to compare
     // the mutual inclusion of two filters and check equality.
 
-    for (var name in filter) {
+    var name;
+    for (name in filter) {
       if ( filter.hasOwnProperty(name) ){
         if ( event[name] !== filter[name] ){
           // difference found
