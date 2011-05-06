@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-12
+ * Version:   2011-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -164,7 +164,8 @@
 
     var shallow = ut(object);
     assert.objectEquals(shallow, object,        "shallow copy must be a copy");
-    for (var name in object){
+    var name;
+    for (name in object){
       if ( object.hasOwnProperty(name) ){
         assert.equals( object[name], shallow[name],
                      "property '"+name+"' must be identical in shallow copy");

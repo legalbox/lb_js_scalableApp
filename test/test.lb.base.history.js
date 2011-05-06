@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-05-06
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -61,7 +61,8 @@
 
     var unloadListeners = events.getListeners(window, 'unload', false);
     var found = false;
-    for (var i=0; i<unloadListeners.length && !found; i++){
+    var i;
+    for (i=0; i<unloadListeners.length && !found; i++){
       if ( unloadListeners[i].listener === lb.base.history.destroy ) {
         found = true;
       }
