@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-05-30
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -35,10 +35,14 @@
                                        "lb.base.ajax namespace was not found");
   }
 
+  function setUp(){
+
+    // empty set of MockXmlHttp instances
+    empty( MockXmlHttp.lb.all );
+  }
+
   function testSend(){
     var ut = lb.base.ajax.send;
-
-    empty( MockXmlHttp.all );
 
     var url = '/events/';
     var data = {name: 'message', data: [{id:1, title:'Test'}]};
@@ -48,8 +52,9 @@
     };
     ut(url, data, callback);
 
-    assert.equals( MockXmlHttp.all.length, 1, "one instance of XHR expected");
-    var xhr = MockXmlHttp.all[0];
+    assert.equals( MockXmlHttp.lb.all.length, 1,
+                                              "one instance of XHR expected");
+    var xhr = MockXmlHttp.lb.all[0];
     assert.equals( xhr.lb.url, url,          "same url expected in XHR call");
     assert.equals( xhr.lb.method, 'POST',             "POST method expected");
     assert.equals( xhr.lb.async, true,          "asynchronous call expected");
@@ -65,8 +70,9 @@
       throw new Error('Test failure in XHR callback');
     };
     ut (url, data, failCallback);
-    assert.equals( MockXmlHttp.all.length, 2, "two instances of XHR expected");
-    xhr = MockXmlHttp.all[1];
+    assert.equals( MockXmlHttp.lb.all.length, 2,
+                                              "two instances of XHR expected");
+    xhr = MockXmlHttp.lb.all[1];
     // trigger asynchronous response - should not fail
     xhr.complete();
   }
