@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-05-06
+  Version: 2011-05-27
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -151,15 +151,19 @@
       <file file="../src/closure/goog.debug.RelativeTimeProvider.js"/>
       <file file="../src/closure/goog.debug.Formatter.js"/>
       <file file="../src/closure/goog.debug.Console.js"/>
+      <file file="../src/closure/goog.userAgent.js"/>
+      <file file="../src/closure/goog.dom.BrowserFeature.js"/>
       <file file="../src/closure/goog.dom.TagName.js"/>
       <file file="../src/closure/goog.dom.classes.js"/>
       <file file="../src/closure/goog.math.Coordinate.js"/>
       <file file="../src/closure/goog.math.Size.js"/>
-      <file file="../src/closure/goog.userAgent.js"/>
       <file file="../src/closure/goog.dom.js"/>
       <file file="../src/closure/goog.debug.errorHandlerWeakDep.js"/>
       <file file="../src/closure/goog.Disposable.js"/>
       <file file="../src/closure/goog.events.Event.js"/>
+      <file file="../src/closure/goog.events.EventType.js"/>
+      <file file="../src/closure/goog.events.BrowserFeature.js"/>
+      <file file="../src/closure/goog.reflect.js"/>
       <file file="../src/closure/goog.events.BrowserEvent.js"/>
       <file file="../src/closure/goog.events.EventWrapper.js"/>
       <file file="../src/closure/goog.events.Listener.js"/>
@@ -170,12 +174,18 @@
       <file file="../src/closure/goog.events.EventTarget.js"/>
       <file file="../src/closure/goog.Timer.js"/>
       <file file="../src/closure/goog.events.EventHandler.js"/>
+      <file file="../src/closure/goog.history.EventType.js"/>
+      <file file="../src/closure/goog.history.Event.js"/>
       <file file="../src/closure/goog.History.js"/>
       <file file="../src/closure/goog.json.js"/>
       <file file="../src/closure/goog.net.ErrorCode.js"/>
       <file file="../src/closure/goog.net.EventType.js"/>
+      <file file="../src/closure/goog.net.HttpStatus.js"/>
+      <file file="../src/closure/goog.net.XmlHttpFactory.js"/>
+      <file file="../src/closure/goog.net.WrapperXmlHttpFactory.js"/>
       <file file="../src/closure/goog.net.XmlHttp.js"/>
       <file file="../src/closure/goog.net.xhrMonitor.js"/>
+      <file file="../src/closure/goog.uri.utils.js"/>
       <file file="../src/closure/goog.net.XhrIo.js"/>
       <!-- Scalable JavaScript Application -->
       <file file="../src/lb.js"/>
