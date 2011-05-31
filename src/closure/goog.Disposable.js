@@ -17,6 +17,8 @@
 // * renamed file from goog/disposable/disposable.js to goog.Disposable.js
 // * added requires comment for goog.js
 // * commented requirement for interface goog.disposable.IDisposable
+// * commented out conditional code that runs when ENABLE_MONITORING is true
+//   (always false here)
 
 /**
  * @fileoverview Implements the disposable interface. The dispose method is used
@@ -40,9 +42,10 @@ goog.provide('goog.dispose');
  * @implements {goog.disposable.IDisposable}
  */
 goog.Disposable = function() {
-  if (goog.Disposable.ENABLE_MONITORING) {
-    goog.Disposable.instances_[goog.getUid(this)] = this;
-  }
+  // LB: ENABLE_MONITORING is false
+  // if (goog.Disposable.ENABLE_MONITORING) {
+  //   goog.Disposable.instances_[goog.getUid(this)] = this;
+  // }
 };
 
 
@@ -126,15 +129,16 @@ goog.Disposable.prototype.dispose = function() {
     // gets disposed recursively.
     this.disposed_ = true;
     this.disposeInternal();
-    if (goog.Disposable.ENABLE_MONITORING) {
-      var uid = goog.getUid(this);
-      if (!goog.Disposable.instances_.hasOwnProperty(uid)) {
-        throw Error(this + ' did not call the goog.Disposable base ' +
-            'constructor or was disposed of after a clearUndisposedObjects ' +
-            'call');
-      }
-      delete goog.Disposable.instances_[uid];
-    }
+    // LB: ENABLE_MONITORING is false
+    //if (goog.Disposable.ENABLE_MONITORING) {
+    //  var uid = goog.getUid(this);
+    //  if (!goog.Disposable.instances_.hasOwnProperty(uid)) {
+    //    throw Error(this + ' did not call the goog.Disposable base ' +
+    //        'constructor or was disposed of after a clearUndisposedObjects ' +
+    //        'call');
+    //  }
+    //  delete goog.Disposable.instances_[uid];
+    //}
   }
 };
 

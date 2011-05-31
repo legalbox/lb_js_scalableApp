@@ -17,8 +17,11 @@
 // * renamed file from goog/base.js to goog.js
 // * moved global var COMPILED to goog.COMPILED, moved declaration after
 //   initialization of namespace object goog
-// * set goog.COMPILED to true
+// * set goog.COMPILED to true and commented out conditional code running when
+//   the flag is true
 // * set CLOSURE_NO_DEPS to true
+// * set goog.ENABLE_DEBUG_LOADER to false and commented out conditional code
+//   running when the flag is true
 // * fixed unsafe use of console.error, checking only that console exists
 // * commented undefined expressions without assignment, used as declarations
 // * moved all constants in goog.global.* (typicall window.*) to just goog.*
@@ -320,7 +323,8 @@ goog.addDependency = function(relPath, provides, requires) {
  * provided (and depend on the fact that some outside tool correctly ordered
  * the script).
  */
-goog.ENABLE_DEBUG_LOADER = true;
+// LB: set to false, dependencies are managed separately
+goog.ENABLE_DEBUG_LOADER = false;
 
 
 /**
@@ -341,7 +345,8 @@ goog.require = function(name) {
   // TODO(user): If we implement dynamic load after page load we should probably
   //            not remove this code for the compiled output
   // LB: changed COMPILED to goog.COMPILED
-  if (!goog.COMPILED) {
+  // LB: commented out - !goog.COMPILED is always false
+  /*if (!goog.COMPILED) {
     if (goog.isProvided_(name)) {
       return;
     }
@@ -367,7 +372,7 @@ goog.require = function(name) {
 
       throw Error(errorMessage);
 
-  }
+  }*/
 };
 
 
@@ -460,195 +465,196 @@ goog.addSingletonGetter = function(ctor) {
 };
 
 // LB: changed COMPILED to goog.COMPILED
-if (!goog.COMPILED && goog.ENABLE_DEBUG_LOADER) {
-  /**
-   * Object used to keep track of urls that have already been added. This
-   * record allows the prevention of circular dependencies.
-   * @type {Object}
-   * @private
-   */
-  goog.included_ = {};
-
-
-  /**
-   * This object is used to keep track of dependencies and other data that is
-   * used for loading scripts
-   * @private
-   * @type {Object}
-   */
-  goog.dependencies_ = {
-    pathToNames: {}, // 1 to many
-    nameToPath: {}, // 1 to 1
-    requires: {}, // 1 to many
-    // used when resolving dependencies to prevent us from
-    // visiting the file twice
-    visited: {},
-    written: {} // used to keep track of script files we have written
-  };
-
-
-  /**
-   * Tries to detect whether is in the context of an HTML document.
-   * @return {boolean} True if it looks like HTML document.
-   * @private
-   */
-  goog.inHtmlDocument_ = function() {
-    var doc = goog.global.document;
-    return typeof doc != 'undefined' &&
-           'write' in doc;  // XULDocument misses write.
-  };
-
-
-  /**
-   * Tries to detect the base path of the base.js script that bootstraps Closure
-   * @private
-   */
-  goog.findBasePath_ = function() {
-    // LB: replaced goog.global.CLOSURE_BASE_PATH with goog.CLOSURE_BASE_PATH
-    if (goog.CLOSURE_BASE_PATH) {
-      goog.basePath = goog.CLOSURE_BASE_PATH;
-      return;
-    } else if (!goog.inHtmlDocument_()) {
-      return;
-    }
-    var doc = goog.global.document;
-    var scripts = doc.getElementsByTagName('script');
-    // Search backwards since the current script is in almost all cases the one
-    // that has base.js.
-    for (var i = scripts.length - 1; i >= 0; --i) {
-      var src = scripts[i].src;
-      var qmark = src.lastIndexOf('?');
-      var l = qmark == -1 ? src.length : qmark;
-      if (src.substr(l - 7, 7) == 'base.js') {
-        goog.basePath = src.substr(0, l - 7);
-        return;
-      }
-    }
-  };
-
-
-  /**
-   * Imports a script if, and only if, that script hasn't already been imported.
-   * (Must be called at execution time)
-   * @param {string} src Script source.
-   * @private
-   */
-  goog.importScript_ = function(src) {
-    var importScript = goog.global.CLOSURE_IMPORT_SCRIPT ||
-        goog.writeScriptTag_;
-    if (!goog.dependencies_.written[src] && importScript(src)) {
-      goog.dependencies_.written[src] = true;
-    }
-  };
-
-
-  /**
-   * The default implementation of the import function. Writes a script tag to
-   * import the script.
-   *
-   * @param {string} src The script source.
-   * @return {boolean} True if the script was imported, false otherwise.
-   * @private
-   */
-  goog.writeScriptTag_ = function(src) {
-    if (goog.inHtmlDocument_()) {
-      var doc = goog.global.document;
-      doc.write(
-          '<script type="text/javascript" src="' + src + '"></' + 'script>');
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-
-  /**
-   * Resolves dependencies based on the dependencies added using addDependency
-   * and calls importScript_ in the correct order.
-   * @private
-   */
-  goog.writeScripts_ = function() {
-    // the scripts we need to write this time
-    var scripts = [];
-    var seenScript = {};
-    var deps = goog.dependencies_;
-
-    function visitNode(path) {
-      if (path in deps.written) {
-        return;
-      }
-
-      // we have already visited this one. We can get here if we have cyclic
-      // dependencies
-      if (path in deps.visited) {
-        if (!(path in seenScript)) {
-          seenScript[path] = true;
-          scripts.push(path);
-        }
-        return;
-      }
-
-      deps.visited[path] = true;
-
-      if (path in deps.requires) {
-        for (var requireName in deps.requires[path]) {
-          // If the required name is defined, we assume that it was already
-          // bootstrapped by other means.
-          if (!goog.isProvided_(requireName)) {
-            if (requireName in deps.nameToPath) {
-              visitNode(deps.nameToPath[requireName]);
-            } else {
-              throw Error('Undefined nameToPath for ' + requireName);
-            }
-          }
-        }
-      }
-
-      if (!(path in seenScript)) {
-        seenScript[path] = true;
-        scripts.push(path);
-      }
-    }
-
-    for (var path in goog.included_) {
-      if (!deps.written[path]) {
-        visitNode(path);
-      }
-    }
-
-    for (var i = 0; i < scripts.length; i++) {
-      if (scripts[i]) {
-        goog.importScript_(goog.basePath + scripts[i]);
-      } else {
-        throw Error('Undefined script input');
-      }
-    }
-  };
-
-
-  /**
-   * Looks at the dependency rules and tries to determine the script file that
-   * fulfills a particular rule.
-   * @param {string} rule In the form goog.namespace.Class or project.script.
-   * @return {?string} Url corresponding to the rule, or null.
-   * @private
-   */
-  goog.getPathFromDeps_ = function(rule) {
-    if (rule in goog.dependencies_.nameToPath) {
-      return goog.dependencies_.nameToPath[rule];
-    } else {
-      return null;
-    }
-  };
-
-  goog.findBasePath_();
-
-  // Allow projects to manage the deps files themselves.
-  // LB: changed goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
-  if (!goog.CLOSURE_NO_DEPS) {
-    goog.importScript_(goog.basePath + 'deps.js');
-  }
-}
+// LB: commented out, !goog.COMPILED is always false
+//if (!goog.COMPILED && goog.ENABLE_DEBUG_LOADER) {
+//  /**
+//   * Object used to keep track of urls that have already been added. This
+//   * record allows the prevention of circular dependencies.
+//   * @type {Object}
+//   * @private
+//   */
+//  goog.included_ = {};
+//
+//
+//  /**
+//   * This object is used to keep track of dependencies and other data that is
+//   * used for loading scripts
+//   * @private
+//   * @type {Object}
+//   */
+//  goog.dependencies_ = {
+//    pathToNames: {}, // 1 to many
+//    nameToPath: {}, // 1 to 1
+//    requires: {}, // 1 to many
+//    // used when resolving dependencies to prevent us from
+//    // visiting the file twice
+//    visited: {},
+//    written: {} // used to keep track of script files we have written
+//  };
+//
+//
+//  /**
+//   * Tries to detect whether is in the context of an HTML document.
+//   * @return {boolean} True if it looks like HTML document.
+//   * @private
+//   */
+//  goog.inHtmlDocument_ = function() {
+//    var doc = goog.global.document;
+//    return typeof doc != 'undefined' &&
+//           'write' in doc;  // XULDocument misses write.
+//  };
+//
+//
+//  /**
+//   * Tries to detect the base path of the base.js script that bootstraps Closure
+//   * @private
+//   */
+//  goog.findBasePath_ = function() {
+//    // LB: replaced goog.global.CLOSURE_BASE_PATH with goog.CLOSURE_BASE_PATH
+//    if (goog.CLOSURE_BASE_PATH) {
+//      goog.basePath = goog.CLOSURE_BASE_PATH;
+//      return;
+//    } else if (!goog.inHtmlDocument_()) {
+//      return;
+//    }
+//    var doc = goog.global.document;
+//    var scripts = doc.getElementsByTagName('script');
+//    // Search backwards since the current script is in almost all cases the one
+//    // that has base.js.
+//    for (var i = scripts.length - 1; i >= 0; --i) {
+//      var src = scripts[i].src;
+//      var qmark = src.lastIndexOf('?');
+//      var l = qmark == -1 ? src.length : qmark;
+//      if (src.substr(l - 7, 7) == 'base.js') {
+//        goog.basePath = src.substr(0, l - 7);
+//        return;
+//      }
+//    }
+//  };
+//
+//
+//  /**
+//   * Imports a script if, and only if, that script hasn't already been imported.
+//   * (Must be called at execution time)
+//   * @param {string} src Script source.
+//   * @private
+//   */
+//  goog.importScript_ = function(src) {
+//    var importScript = goog.global.CLOSURE_IMPORT_SCRIPT ||
+//        goog.writeScriptTag_;
+//    if (!goog.dependencies_.written[src] && importScript(src)) {
+//      goog.dependencies_.written[src] = true;
+//    }
+//  };
+//
+//
+//  /**
+//   * The default implementation of the import function. Writes a script tag to
+//   * import the script.
+//   *
+//   * @param {string} src The script source.
+//   * @return {boolean} True if the script was imported, false otherwise.
+//   * @private
+//   */
+//  goog.writeScriptTag_ = function(src) {
+//    if (goog.inHtmlDocument_()) {
+//      var doc = goog.global.document;
+//      doc.write(
+//          '<script type="text/javascript" src="' + src + '"></' + 'script>');
+//      return true;
+//    } else {
+//      return false;
+//    }
+//  };
+//
+//
+//  /**
+//   * Resolves dependencies based on the dependencies added using addDependency
+//   * and calls importScript_ in the correct order.
+//   * @private
+//   */
+//  goog.writeScripts_ = function() {
+//    // the scripts we need to write this time
+//    var scripts = [];
+//    var seenScript = {};
+//    var deps = goog.dependencies_;
+//
+//    function visitNode(path) {
+//      if (path in deps.written) {
+//        return;
+//      }
+//
+//      // we have already visited this one. We can get here if we have cyclic
+//      // dependencies
+//      if (path in deps.visited) {
+//        if (!(path in seenScript)) {
+//          seenScript[path] = true;
+//          scripts.push(path);
+//        }
+//        return;
+//      }
+//
+//      deps.visited[path] = true;
+//
+//      if (path in deps.requires) {
+//        for (var requireName in deps.requires[path]) {
+//          // If the required name is defined, we assume that it was already
+//          // bootstrapped by other means.
+//          if (!goog.isProvided_(requireName)) {
+//            if (requireName in deps.nameToPath) {
+//              visitNode(deps.nameToPath[requireName]);
+//            } else {
+//              throw Error('Undefined nameToPath for ' + requireName);
+//            }
+//          }
+//        }
+//      }
+//
+//      if (!(path in seenScript)) {
+//        seenScript[path] = true;
+//        scripts.push(path);
+//      }
+//    }
+//
+//    for (var path in goog.included_) {
+//      if (!deps.written[path]) {
+//        visitNode(path);
+//      }
+//    }
+//
+//    for (var i = 0; i < scripts.length; i++) {
+//      if (scripts[i]) {
+//        goog.importScript_(goog.basePath + scripts[i]);
+//      } else {
+//        throw Error('Undefined script input');
+//      }
+//    }
+//  };
+//
+//
+//  /**
+//   * Looks at the dependency rules and tries to determine the script file that
+//   * fulfills a particular rule.
+//   * @param {string} rule In the form goog.namespace.Class or project.script.
+//   * @return {?string} Url corresponding to the rule, or null.
+//   * @private
+//   */
+//  goog.getPathFromDeps_ = function(rule) {
+//    if (rule in goog.dependencies_.nameToPath) {
+//      return goog.dependencies_.nameToPath[rule];
+//    } else {
+//      return null;
+//    }
+//  };
+//
+//  goog.findBasePath_();
+//
+//  // Allow projects to manage the deps files themselves.
+//  // LB: changed goog.global.CLOSURE_NO_DEPS to goog.CLOSURE_NO_DEPS
+//  if (!goog.CLOSURE_NO_DEPS) {
+//    goog.importScript_(goog.basePath + 'deps.js');
+//  }
+//}
 
 
 

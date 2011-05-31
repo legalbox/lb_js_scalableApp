@@ -18,7 +18,8 @@
 // * added requires comments for goog.js, goog.array.js, goog.debug.js,
 //   goog.debug.LogBuffer.js, goog.debug.LogRecord.js
 // * commented out all assertions and removed requirement
-// * set goog.debug.Logger.ENABLE_HIERARCHY to false
+// * set goog.debug.Logger.ENABLE_HIERARCHY to false and commented out
+//   conditional code that runs when the flag is true
 
 /**
  * @fileoverview Definition of the Logger class. Please minimize dependencies
@@ -374,18 +375,19 @@ goog.debug.Logger.prototype.getName = function() {
  * @param {Function} handler Handler function to add.
  */
 goog.debug.Logger.prototype.addHandler = function(handler) {
-  if (goog.debug.Logger.ENABLE_HIERARCHY) {
-    if (!this.handlers_) {
-      this.handlers_ = [];
-    }
-    this.handlers_.push(handler);
-  } else {
+  // LB: ENABLE_HIERARCHY is false
+  //if (goog.debug.Logger.ENABLE_HIERARCHY) {
+  //  if (!this.handlers_) {
+  //    this.handlers_ = [];
+  //  }
+  //  this.handlers_.push(handler);
+  //} else {
     // LB: not used
     // goog.asserts.assert(!this.name_,
     //    'Cannot call addHandler on a non-root logger when ' +
     //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
     goog.debug.Logger.rootHandlers_.push(handler);
-  }
+  //}
 };
 
 
@@ -434,15 +436,16 @@ goog.debug.Logger.prototype.getChildren = function() {
  * @param {goog.debug.Logger.Level} level The new level.
  */
 goog.debug.Logger.prototype.setLevel = function(level) {
-  if (goog.debug.Logger.ENABLE_HIERARCHY) {
-    this.level_ = level;
-  } else {
+  // LB: ENABLE_HIERARCHY is false
+  // if (goog.debug.Logger.ENABLE_HIERARCHY) {
+  //  this.level_ = level;
+  //} else {
     // LB: not used
     // goog.asserts.assert(!this.name_,
     //    'Cannot call setLevel() on a non-root logger when ' +
     //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
     goog.debug.Logger.rootLevel_ = level;
-  }
+  //}
 };
 
 
@@ -662,17 +665,18 @@ goog.debug.Logger.prototype.logToSpeedTracer_ = function(msg) {
  */
 goog.debug.Logger.prototype.doLogRecord_ = function(logRecord) {
   this.logToSpeedTracer_('log:' + logRecord.getMessage());
-  if (goog.debug.Logger.ENABLE_HIERARCHY) {
-    var target = this;
-    while (target) {
-      target.callPublish_(logRecord);
-      target = target.getParent();
-    }
-  } else {
+  // LB: ENABLE_HIERARCHY is false
+  // if (goog.debug.Logger.ENABLE_HIERARCHY) {
+  //  var target = this;
+  //  while (target) {
+  //    target.callPublish_(logRecord);
+  //    target = target.getParent();
+  //  }
+  //} else {
     for (var i = 0, handler; handler = goog.debug.Logger.rootHandlers_[i++]; ) {
       handler(logRecord);
     }
-  }
+  //}
 };
 
 
@@ -810,16 +814,17 @@ goog.debug.LogManager.createFunctionForCatchErrors = function(opt_logger) {
 goog.debug.LogManager.createLogger_ = function(name) {
   // find parent logger
   var logger = new goog.debug.Logger(name);
-  if (goog.debug.Logger.ENABLE_HIERARCHY) {
-    var lastDotIndex = name.lastIndexOf('.');
-    var parentName = name.substr(0, lastDotIndex);
-    var leafName = name.substr(lastDotIndex + 1);
-    var parentLogger = goog.debug.LogManager.getLogger(parentName);
+  // LB: ENABLE_HIERARCHY is false
+  //if (goog.debug.Logger.ENABLE_HIERARCHY) {
+  //  var lastDotIndex = name.lastIndexOf('.');
+  //  var parentName = name.substr(0, lastDotIndex);
+  //  var leafName = name.substr(lastDotIndex + 1);
+  //  var parentLogger = goog.debug.LogManager.getLogger(parentName);
 
-    // tell the parent about the child and the child about the parent
-    parentLogger.addChild_(leafName, logger);
-    logger.setParent_(parentLogger);
-  }
+  //  // tell the parent about the child and the child about the parent
+  //  parentLogger.addChild_(leafName, logger);
+  //  logger.setParent_(parentLogger);
+  //}
 
   goog.debug.LogManager.loggers_[name] = logger;
   return logger;
