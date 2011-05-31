@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -270,6 +258,19 @@ goog.string.normalizeSpaces = function(str) {
 
 
 /**
+ * Removes the breaking spaces from the left and right of the string and
+ * collapses the sequences of breaking spaces in the middle into single spaces.
+ * The original and the result strings render the same way in HTML.
+ * @param {string} str A string in which to collapse spaces.
+ * @return {string} Copy of the string with normalized breaking spaces.
+ */
+goog.string.collapseBreakingSpaces = function(str) {
+  return str.replace(/[\t\r\n ]+/g, ' ').replace(
+      /^[\t\r\n ]+|[\t\r\n ]+$/g, '');
+};
+
+
+/**
  * Trims white spaces to the left and right of a string.
  * @param {string} str The string to trim.
  * @return {string} A trimmed copy of {@code str}.
@@ -414,6 +415,7 @@ goog.string.numerateCompare = function(str1, str2) {
  */
 goog.string.encodeUriRegExp_ = /^[a-zA-Z0-9\-_.!~*'()]*$/;
 
+
 /**
  * URL-encodes a string
  * @param {*} str The string to url-encode.
@@ -464,7 +466,7 @@ goog.string.newLineToBr = function(str, opt_xml) {
  * be valid, but it has been decided to escape it for consistency with other
  * implementations.
  *
- * NOTE:
+ * NOTE(user):
  * HtmlEscape is often called during the generation of large blocks of HTML.
  * Using statics for the regular expressions and strings is an optimization
  * that can more than half the amount of time IE spends in this function for
@@ -600,15 +602,24 @@ goog.string.unescapeEntities = function(str) {
  * @return {string} The unescaped {@code str} string.
  */
 goog.string.unescapeEntitiesUsingDom_ = function(str) {
-  var el = goog.global['document']['createElement']('a');
-  el['innerHTML'] = str;
+  // Use a DIV as FF3 generates bogus markup for A > PRE.
+  var el = goog.global['document']['createElement']('div');
+  // Wrap in PRE to preserve whitespace in IE.
+  // The PRE must be part of the innerHTML markup,
+  // just setting innerHTML on a PRE element does not work.
+  // Also include a leading character since conforming HTML5
+  // UAs will strip leading newlines inside a PRE element.
+  el['innerHTML'] = '<pre>x' + str + '</pre>';
   // Accesing the function directly triggers some virus scanners.
-  if (el[goog.string.NORMALIZE_FN_]) {
-    el[goog.string.NORMALIZE_FN_]();
+  if (el['firstChild'][goog.string.NORMALIZE_FN_]) {
+    el['firstChild'][goog.string.NORMALIZE_FN_]();
   }
-  str = el['firstChild']['nodeValue'];
+  // Remove the leading character we added.
+  str = el['firstChild']['firstChild']['nodeValue'].slice(1);
   el['innerHTML'] = '';
-  return str;
+  // IE will also return non-standard newlines for TextNode.nodeValue,
+  // switching \r and \n, so canonicalize them before returning.
+  return goog.string.canonicalizeNewlines(str);
 };
 
 
@@ -642,6 +653,7 @@ goog.string.unescapePureXmlEntities_ = function(str) {
   });
 };
 
+
 /**
  * String name for the node.normalize function. Anti-virus programs use this as
  * a signature for some viruses so we need a work around (temporary).
@@ -649,6 +661,7 @@ goog.string.unescapePureXmlEntities_ = function(str) {
  * @type {string}
  */
 goog.string.NORMALIZE_FN_ = 'normalize';
+
 
 /**
  * Do escaping of whitespace to preserve spatial formatting. We use character
@@ -723,15 +736,25 @@ goog.string.truncate = function(str, chars, opt_protectEscapedCharacters) {
  * @param {number} chars Max number of characters.
  * @param {boolean=} opt_protectEscapedCharacters Whether to protect escaped
  *     characters from being cutoff in the middle.
+ * @param {number=} opt_trailingChars Optional number of trailing characters to
+ *     leave at the end of the string, instead of truncating as close to the
+ *     middle as possible.
  * @return {string} A truncated copy of {@code str}.
  */
 goog.string.truncateMiddle = function(str, chars,
-    opt_protectEscapedCharacters) {
+    opt_protectEscapedCharacters, opt_trailingChars) {
   if (opt_protectEscapedCharacters) {
     str = goog.string.unescapeEntities(str);
   }
 
-  if (str.length > chars) {
+  if (opt_trailingChars && str.length > chars) {
+    if (opt_trailingChars > chars) {
+      opt_trailingChars = chars;
+    }
+    var endPoint = str.length - opt_trailingChars;
+    var startPoint = chars - opt_trailingChars;
+    str = str.substring(0, startPoint) + '...' + str.substring(endPoint);
+  } else if (str.length > chars) {
     // Favor the beginning of the string:
     var half = Math.floor(chars / 2);
     var endPos = str.length - half;
@@ -748,11 +771,12 @@ goog.string.truncateMiddle = function(str, chars,
 
 
 /**
- * Character mappings used internally for goog.string.quote.
+ * Special chars that need to be escaped for goog.string.quote.
  * @private
  * @type {Object}
  */
-goog.string.jsEscapeCache_ = {
+goog.string.specialEscapeChars_ = {
+  '\0': '\\0',
   '\b': '\\b',
   '\f': '\\f',
   '\n': '\\n',
@@ -760,8 +784,17 @@ goog.string.jsEscapeCache_ = {
   '\t': '\\t',
   '\x0B': '\\x0B', // '\v' is not supported in JScript
   '"': '\\"',
-  '\'': '\\\'',
   '\\': '\\\\'
+};
+
+
+/**
+ * Character mappings used internally for goog.string.escapeChar.
+ * @private
+ * @type {Object}
+ */
+goog.string.jsEscapeCache_ = {
+  '\'': '\\\''
 };
 
 
@@ -778,11 +811,28 @@ goog.string.quote = function(s) {
   } else {
     var sb = ['"'];
     for (var i = 0; i < s.length; i++) {
-      sb[i + 1] = goog.string.escapeChar(s.charAt(i));
+      var ch = s.charAt(i);
+      var cc = ch.charCodeAt(0);
+      sb[i + 1] = goog.string.specialEscapeChars_[ch] ||
+          ((cc > 31 && cc < 127) ? ch : goog.string.escapeChar(ch));
     }
     sb.push('"');
     return sb.join('');
   }
+};
+
+
+/**
+ * Takes a string and returns the escaped string for that character.
+ * @param {string} str The string to escape.
+ * @return {string} An escaped string representing {@code str}.
+ */
+goog.string.escapeString = function(str) {
+  var sb = [];
+  for (var i = 0; i < str.length; i++) {
+    sb[i] = goog.string.escapeChar(str.charAt(i));
+  }
+  return sb.join('');
 };
 
 
@@ -796,6 +846,11 @@ goog.string.escapeChar = function(c) {
   if (c in goog.string.jsEscapeCache_) {
     return goog.string.jsEscapeCache_[c];
   }
+
+  if (c in goog.string.specialEscapeChars_) {
+    return goog.string.jsEscapeCache_[c] = goog.string.specialEscapeChars_[c];
+  }
+
   var rv = c;
   var cc = c.charCodeAt(0);
   if (cc > 31 && cc < 127) {
@@ -827,7 +882,7 @@ goog.string.escapeChar = function(c) {
  * @param {string} s The string to build the map from.
  * @return {Object} The map of characters used.
  */
-// TODO: It seems like we should have a generic goog.array.toMap. But do
+// TODO(user): It seems like we should have a generic goog.array.toMap. But do
 //            we want a dependency on goog.array in goog.string?
 goog.string.toMap = function(s) {
   var rv = {};
@@ -903,7 +958,7 @@ goog.string.removeAll = function(s, ss) {
  */
 goog.string.regExpEscape = function(s) {
   return String(s).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').
-                   replace(/\x08/g, '\\x08');
+      replace(/\x08/g, '\\x08');
 };
 
 
@@ -983,8 +1038,9 @@ goog.string.buildString = function(var_args) {
  * @return {string} A random string, e.g. sn1s7vb4gcic.
  */
 goog.string.getRandomString = function() {
-  return Math.floor(Math.random() * 2147483648).toString(36) +
-         (Math.floor(Math.random() * 2147483648) ^ goog.now()).toString(36);
+  var x = 2147483648;
+  return Math.floor(Math.random() * x).toString(36) +
+         Math.abs(Math.floor(Math.random() * x) ^ goog.now()).toString(36);
 };
 
 
@@ -1037,7 +1093,7 @@ goog.string.compareVersions = function(version1, version2) {
           goog.string.compareElements_(v1Comp[2].length == 0,
               v2Comp[2].length == 0) ||
           goog.string.compareElements_(v1Comp[2], v2Comp[2]);
-    // Stop as soon as an inequality is discovered.
+      // Stop as soon as an inequality is discovered.
     } while (order == 0);
   }
 
@@ -1131,4 +1187,50 @@ goog.string.toNumber = function(str) {
     return NaN;
   }
   return num;
+};
+
+
+/**
+ * A memoized cache for goog.string.toCamelCase.
+ * @type {Object.<string>}
+ * @private
+ */
+goog.string.toCamelCaseCache_ = {};
+
+
+/**
+ * Converts a string from selector-case to camelCase (e.g. from
+ * "multi-part-string" to "multiPartString"), useful for converting
+ * CSS selectors and HTML dataset keys to their equivalent JS properties.
+ * @param {string} str The string in selector-case form.
+ * @return {string} The string in camelCase form.
+ */
+goog.string.toCamelCase = function(str) {
+  return goog.string.toCamelCaseCache_[str] ||
+      (goog.string.toCamelCaseCache_[str] =
+          String(str).replace(/\-([a-z])/g, function(all, match) {
+            return match.toUpperCase();
+          }));
+};
+
+
+/**
+ * A memoized cache for goog.string.toSelectorCase.
+ * @type {Object.<string>}
+ * @private
+ */
+goog.string.toSelectorCaseCache_ = {};
+
+
+/**
+ * Converts a string from camelCase to selector-case (e.g. from
+ * "multiPartString" to "multi-part-string"), useful for converting JS
+ * style and dataset properties to equivalent CSS selectors and HTML keys.
+ * @param {string} str The string in camelCase form.
+ * @return {string} The string in selector-case form.
+ */
+goog.string.toSelectorCase = function(str) {
+  return goog.string.toSelectorCaseCache_[str] ||
+      (goog.string.toSelectorCaseCache_[str] =
+          String(str).replace(/([A-Z])/g, '-$1').toLowerCase());
 };

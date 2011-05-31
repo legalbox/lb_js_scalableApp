@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,11 +20,9 @@
 /**
  * @fileoverview JSON utility functions.
  */
-
 /*requires goog.js*/
 goog.provide('goog.json');
 goog.provide('goog.json.Serializer');
-
 
 
 /**
@@ -122,6 +108,7 @@ goog.json.unsafeParse = function(s) {
   return eval('(' + s + ')');
 };
 
+
 /**
  * Serializes an object or a value to a JSON string.
  *
@@ -194,7 +181,7 @@ goog.json.Serializer.prototype.serialize_ = function(object, sb) {
       break;
     case 'function':
       // Skip functions.
-      // TODO Should we return something here?
+      // TODO(user) Should we return something here?
       break;
     default:
       throw Error('Unknown type: ' + typeof object);
@@ -284,7 +271,7 @@ goog.json.Serializer.prototype.serializeArray_ = function(arr, sb) {
   sb.push('[');
   var sep = '';
   for (var i = 0; i < l; i++) {
-    sb.push(sep)
+    sb.push(sep);
     this.serialize_(arr[i], sb);
     sep = ',';
   }
@@ -302,10 +289,10 @@ goog.json.Serializer.prototype.serializeObject_ = function(obj, sb) {
   sb.push('{');
   var sep = '';
   for (var key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       var value = obj[key];
       // Skip functions.
-      // TODO Should we return something for function properties?
+      // TODO(ptucker) Should we return something for function properties?
       if (typeof value != 'function') {
         sb.push(sep);
         this.serializeString_(key, sb);

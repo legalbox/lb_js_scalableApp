@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+
 // Modifications Copyright 2010-2011 Legal-Box SAS
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logbuffer.js to goog.debug.LogBuffer.js
@@ -27,11 +27,10 @@
  *
  * @author agrieve@google.com (Andrew Grieve)
  */
-
 /*requires goog.js*/
 goog.provide('goog.debug.LogBuffer');
 
-// LB: disabled assertions
+// LB: asserts unused
 // goog.require('goog.asserts');
 /*requires goog.debug.LogRecord.js*/
 goog.require('goog.debug.LogRecord');
@@ -43,12 +42,13 @@ goog.require('goog.debug.LogRecord');
  * @constructor
  */
 goog.debug.LogBuffer = function() {
-  // LB: disabled assertions
+  // LB: asserts unused
   // goog.asserts.assert(goog.debug.LogBuffer.isBufferingEnabled(),
   //    'Cannot use goog.debug.LogBuffer without defining ' +
   //    'goog.debug.LogBuffer.CAPACITY.');
   this.clear();
 };
+
 
 /**
  * A static method that always returns the same instance of LogBuffer.
@@ -56,13 +56,14 @@ goog.debug.LogBuffer = function() {
  */
 goog.debug.LogBuffer.getInstance = function() {
   if (!goog.debug.LogBuffer.instance_) {
-  // This function is written with the return statement after the assignment to
-  // avoid the jscompiler StripCode bug described in http://b/issue?id=2608064
-  // After that bug is fixed this can be refactored.
+    // This function is written with the return statement after the assignment
+    // to avoid the jscompiler StripCode bug described in http://b/2608064.
+    // After that bug is fixed this can be refactored.
     goog.debug.LogBuffer.instance_ = new goog.debug.LogBuffer();
   }
   return goog.debug.LogBuffer.instance_;
 };
+
 
 /**
  * @define {number} The number of log records to buffer. 0 means disable

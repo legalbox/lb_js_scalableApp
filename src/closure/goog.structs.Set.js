@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +16,7 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/structs/set.js to goog.structs.Set.js
 // * added requires comments for goog.js, goog.structs.js, goog.structs.Map.js
+// * commented requirement for interface goog.structs.Collection.js
 
 /**
  * @fileoverview Datastructure: Set.
@@ -44,7 +33,10 @@ goog.provide('goog.structs.Set');
 /*requires goog.structs.js*/
 /*requires goog.structs.Map.js*/
 goog.require('goog.structs');
+// LB: unused, interface declaration
+// goog.require('goog.structs.Collection');
 goog.require('goog.structs.Map');
+
 
 
 /**
@@ -59,6 +51,7 @@ goog.require('goog.structs.Map');
  * identify objects, every object in the set will be mutated.
  * @param {Array|Object=} opt_values Initial values to start with.
  * @constructor
+ * @implements {goog.structs.Collection}
  */
 goog.structs.Set = function(opt_values) {
   this.map_ = new goog.structs.Map;
@@ -201,7 +194,7 @@ goog.structs.Set.prototype.intersection = function(col) {
 
 /**
  * Returns an array containing all the elements in this set.
- * @return {Array} An array containing all the elements in this set.
+ * @return {!Array} An array containing all the elements in this set.
  */
 goog.structs.Set.prototype.getValues = function() {
   return this.map_.getValues();
@@ -245,7 +238,7 @@ goog.structs.Set.prototype.isSubsetOf = function(col) {
   if (this.getCount() > colCount) {
     return false;
   }
-  // TODO Find the minimal collection size where the conversion makes
+  // TODO(user) Find the minimal collection size where the conversion makes
   // the contains() method faster.
   if (!(col instanceof goog.structs.Set) && colCount > 5) {
     // Convert to a goog.structs.Set so that goog.structs.contains runs in

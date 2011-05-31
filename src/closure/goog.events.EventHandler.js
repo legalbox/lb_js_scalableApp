@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2005 Google Inc. All Rights Reserved
+// Copyright 2005 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -88,6 +76,7 @@ goog.require('goog.object');
 goog.require('goog.structs.SimplePool');
 
 
+
 /**
  * Super class for objects that want to easily manage a number of event
  * listeners.  It allows a short cut to listen and also provides a quick way
@@ -99,6 +88,7 @@ goog.require('goog.structs.SimplePool');
  * @extends {goog.Disposable}
  */
 goog.events.EventHandler = function(opt_handler) {
+  goog.Disposable.call(this);
   this.handler_ = opt_handler;
 };
 goog.inherits(goog.events.EventHandler, goog.Disposable);
@@ -151,6 +141,16 @@ goog.events.EventHandler.key_ = null;
 
 
 /**
+ * Utility array used to unify the cases of listening for an array of types
+ * and listening for a single event, without using recursion or allocating
+ * an array each time.
+ * @type {Array.<string>}
+ * @private
+ */
+goog.events.EventHandler.typeArray_ = [];
+
+
+/**
  * Listen to an event on a DOM node or EventTarget.  If the function is omitted
  * then the EventHandler's handleEvent method will be used.
  * @param {goog.events.EventTarget|EventTarget} src Event source.
@@ -166,13 +166,13 @@ goog.events.EventHandler.key_ = null;
 goog.events.EventHandler.prototype.listen = function(src, type, opt_fn,
                                                      opt_capture,
                                                      opt_handler) {
-  if (goog.isArray(type)) {
-    for (var i = 0; i < type.length; i++) {
-      this.listen(src, type[i], opt_fn, opt_capture, opt_handler);
-    }
-  } else {
+  if (!goog.isArray(type)) {
+    goog.events.EventHandler.typeArray_[0] = /** @type {string} */(type);
+    type = goog.events.EventHandler.typeArray_;
+  }
+  for (var i = 0; i < type.length; i++) {
     var key = (/** @type {number} */
-        goog.events.listen(src, type, opt_fn || this,
+        goog.events.listen(src, type[i], opt_fn || this,
                            opt_capture || false,
                            opt_handler || this.handler_ || this));
     this.recordListenerKey_(key);

@@ -18,6 +18,12 @@
 // * added requires comments for goog.js, goog.array.js, goog.string.js,
 //   goog.structs.Set.js
 
+/**
+ * @fileoverview Logging and debugging utilities.
+ *
+
+ * @see ../demos/debug.html
+ */
 /*requires goog.js*/
 goog.provide('goog.debug');
 
@@ -44,10 +50,9 @@ goog.debug.catchErrors = function(logFunc, opt_cancel, opt_target) {
     if (oldErrorHandler) {
       oldErrorHandler(message, url, line);
     }
-    var file = String(url).split(/[\/\\]/).pop();
     logFunc({
       message: message,
-      fileName: file,
+      fileName: url,
       line: line
     });
     return Boolean(opt_cancel);
@@ -203,28 +208,50 @@ goog.debug.exposeException = function(err, opt_fn) {
  */
 goog.debug.normalizeErrorObject = function(err) {
   var href = goog.getObjectByName('window.location.href');
-  return (typeof err == 'string') ?
-      {
-        'message': err,
-        'name': 'Unknown error',
-        'lineNumber': 'Not available',
-        'fileName': href,
-        'stack': 'Not available'
-      } :
+  if (goog.isString(err)) {
+    return {
+      'message': err,
+      'name': 'Unknown error',
+      'lineNumber': 'Not available',
+      'fileName': href,
+      'stack': 'Not available'
+    };
+  }
 
-      // The IE Error object contains only the name and the message
-      // The Safari Error object uses the line and sourceURL fields
-      (!err.lineNumber || !err.fileName || !err.stack) ?
-      {
-        'message': err.message,
-        'name': err.name,
-        'lineNumber': err.lineNumber || err.line || 'Not available',
-        'fileName': err.fileName || err.filename || err.sourceURL || href,
-        'stack': err.stack || 'Not available'
-      } :
+  var lineNumber, fileName;
+  var threwError = false;
 
-      // Standards error object
-      err;
+  try {
+    lineNumber = err.lineNumber || err.line || 'Not available';
+  } catch (e) {
+    // Firefox 2 sometimes throws an error when accessing 'lineNumber':
+    // Message: Permission denied to get property UnnamedClass.lineNumber
+    lineNumber = 'Not available';
+    threwError = true;
+  }
+
+  try {
+    fileName = err.fileName || err.filename || err.sourceURL || href;
+  } catch (e) {
+    // Firefox 2 may also throw an error when accessing 'filename'.
+    fileName = 'Not available';
+    threwError = true;
+  }
+
+  // The IE Error object contains only the name and the message.
+  // The Safari Error object uses the line and sourceURL fields.
+  if (threwError || !err.lineNumber || !err.fileName || !err.stack) {
+    return {
+      'message': err.message,
+      'name': err.name,
+      'lineNumber': lineNumber,
+      'fileName': fileName,
+      'stack': err.stack || 'Not available'
+    };
+  }
+
+  // Standards error object
+  return err;
 };
 
 
@@ -419,10 +446,10 @@ goog.debug.getFunctionName = function(fn) {
  */
 goog.debug.makeWhitespaceVisible = function(string) {
   return string.replace(/ /g, '[_]')
-               .replace(/\f/g, '[f]')
-               .replace(/\n/g, '[n]\n')
-               .replace(/\r/g, '[r]')
-               .replace(/\t/g, '[t]');
+      .replace(/\f/g, '[f]')
+      .replace(/\n/g, '[n]\n')
+      .replace(/\r/g, '[r]')
+      .replace(/\t/g, '[t]');
 };
 
 

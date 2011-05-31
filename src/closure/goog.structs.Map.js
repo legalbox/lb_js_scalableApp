@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -49,6 +37,7 @@ goog.require('goog.iter.Iterator');
 goog.require('goog.iter.StopIteration');
 goog.require('goog.object');
 goog.require('goog.structs');
+
 
 
 /**
@@ -112,6 +101,7 @@ goog.structs.Map.prototype.count_ = 0;
  * @type {number}
  */
 goog.structs.Map.prototype.version_ = 0;
+
 
 /**
  * @return {number} The number of key-value pairs in the map.
@@ -231,6 +221,7 @@ goog.structs.Map.prototype.clear = function() {
   this.count_ = 0;
   this.version_ = 0;
 };
+
 
 /**
  * Removes a key-value pair based on the key. This is O(logN) amortized due to
@@ -378,6 +369,20 @@ goog.structs.Map.prototype.transpose = function() {
   }
 
   return transposed;
+};
+
+
+/**
+ * @return {!Object} Object representation of the map.
+ */
+goog.structs.Map.prototype.toObject = function() {
+  this.cleanupKeysArray_();
+  var obj = {};
+  for (var i = 0; i < this.keys_.length; i++) {
+    var key = this.keys_[i];
+    obj[key] = this.map_[key];
+  }
+  return obj;
 };
 
 

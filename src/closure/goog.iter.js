@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2007 Google Inc. All Rights Reserved
+// Copyright 2007 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,6 +16,7 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/iter/iter.js to goog.iter.js
 // * added requires comment for goog.js and goog.array.js
+// * commented use and requirement of goog.asserts
 
 /**
  * @fileoverview Python style iteration utilities.
@@ -39,12 +28,18 @@ goog.provide('goog.iter.StopIteration');
 
 /*requires goog.array.js*/
 goog.require('goog.array');
+// LB: not used
+// goog.require('goog.asserts');
+
+
+// TODO(user): Add more functions from Python's itertools.
+// http://docs.python.org/library/itertools.html
 
 
 /**
- * @type {goog.iter.Iterator|{length:number}|{__iterator__}}
+ * @typedef {goog.iter.Iterator|{length:number}|{__iterator__}}
  */
-goog.iter.Iterable = goog.typedef;
+goog.iter.Iterable;
 
 
 // For script engines that already support iterators.
@@ -101,7 +96,6 @@ goog.iter.Iterator.prototype.__iterator__ = function(opt_keys) {
 };
 
 
-
 /**
  * Returns an iterator that knows how to iterate over the values in the object.
  * @param {goog.iter.Iterable} iterable  If the object is an iterator it
@@ -138,7 +132,7 @@ goog.iter.toIterator = function(iterable) {
   }
 
 
-  // TODO: Should we fall back on goog.structs.getValues()?
+  // TODO(user): Should we fall back on goog.structs.getValues()?
   throw Error('Not implemented');
 };
 
@@ -166,7 +160,7 @@ goog.iter.forEach = function(iterable, f, opt_obj) {
                          opt_obj);
     } catch (ex) {
       if (ex !== goog.iter.StopIteration) {
-       throw ex;
+        throw ex;
       }
     }
   } else {
@@ -393,6 +387,11 @@ goog.iter.chain = function(var_args) {
   var length = args.length;
   var i = 0;
   var newIter = new goog.iter.Iterator;
+
+  /**
+   * @return {*} The next item in the iteration.
+   * @this {goog.iter.Iterator}
+   */
   newIter.next = function() {
     /** @preserveTry */
     try {
@@ -411,6 +410,7 @@ goog.iter.chain = function(var_args) {
       }
     }
   };
+
   return newIter;
 };
 
@@ -568,4 +568,68 @@ goog.iter.nextOrValue = function(iterable, defaultValue) {
     }
     return defaultValue;
   }
+};
+
+
+/**
+ * Cartesian product of zero or more sets.  Gives an iterator that gives every
+ * combination of one element chosen from each set.  For example,
+ * ([1, 2], [3, 4]) gives ([1, 3], [1, 4], [2, 3], [2, 4]).
+ * @see http://docs.python.org/library/itertools.html#itertools.product
+ * @param {...!goog.array.ArrayLike.<*>} var_args Zero or more sets, as arrays.
+ * @return {!goog.iter.Iterator} An iterator that gives each n-tuple (as an
+ *     array).
+ */
+goog.iter.product = function(var_args) {
+  var someArrayEmpty = goog.array.some(arguments, function(arr) {
+    return !arr.length;
+  });
+
+  // An empty set in a cartesian product gives an empty set.
+  if (someArrayEmpty || !arguments.length) {
+    return new goog.iter.Iterator();
+  }
+
+  var iter = new goog.iter.Iterator();
+  var arrays = arguments;
+
+  // The first indicies are [0, 0, ...]
+  var indicies = goog.array.repeat(0, arrays.length);
+
+  iter.next = function() {
+
+    if (indicies) {
+      var retVal = goog.array.map(indicies, function(valueIndex, arrayIndex) {
+        return arrays[arrayIndex][valueIndex];
+      });
+
+      // Generate the next-largest indicies for the next call.
+      // Increase the rightmost index. If it goes over, increase the next
+      // rightmost (like carry-over addition).
+      for (var i = indicies.length - 1; i >= 0; i--) {
+        // Assertion prevents compiler warning below.
+        // LB: not used
+        // goog.asserts.assert(indicies);
+        if (indicies[i] < arrays[i].length - 1) {
+          indicies[i]++;
+          break;
+        }
+
+        // We're at the last indicies (the last element of every array), so
+        // the iteration is over on the next call.
+        if (i == 0) {
+          indicies = null;
+          break;
+        }
+        // Reset the index in this column and loop back to increment the
+        // next one.
+        indicies[i] = 0;
+      }
+      return retVal;
+    }
+
+    throw goog.iter.StopIteration;
+  };
+
+  return iter;
 };

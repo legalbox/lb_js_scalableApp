@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -229,7 +217,7 @@ goog.userAgent.MOBILE = goog.userAgent.ASSUME_MOBILE_WEBKIT ||
  * Used while transitioning code to use WEBKIT instead.
  * @type {boolean}
  * @deprecated Use {@link goog.userAgent.product.SAFARI} instead.
- * TODO: Delete this from goog.userAgent.
+ * TODO(nicksantos): Delete this from goog.userAgent.
  */
 goog.userAgent.SAFARI = goog.userAgent.WEBKIT;
 
@@ -402,7 +390,29 @@ goog.userAgent.determineVersion_ = function() {
       version = arr ? arr[1] : '';
     }
   }
+  if (goog.userAgent.IE) {
+    // IE9 can be in document mode 9 but be reporting an inconsistent user agent
+    // version.  If it is identifying as a version lower than 9 we take the
+    // documentMode as the version instead.  IE8 has similar behavior.
+    // It is recommended to set the X-UA-Compatible header to ensure that IE9
+    // uses documentMode 9.
+    var docMode = goog.userAgent.getDocumentMode_();
+    if (docMode > parseFloat(version)) {
+      return String(docMode);
+    }
+  }
   return version;
+};
+
+
+/**
+ * @return {number|undefined} Returns the document mode (for testing).
+ * @private
+ */
+goog.userAgent.getDocumentMode_ = function() {
+  // NOTE(user): goog.userAgent may be used in context where there is no DOM.
+  var doc = goog.global['document'];
+  return doc ? doc['documentMode'] : undefined;
 };
 
 
@@ -457,4 +467,30 @@ goog.userAgent.isVersion = function(version) {
   return goog.userAgent.isVersionCache_[version] ||
       (goog.userAgent.isVersionCache_[version] =
           goog.string.compareVersions(goog.userAgent.VERSION, version) >= 0);
+};
+
+
+/**
+ * Cache for {@link goog.userAgent.isDocumentMode}. 
+ * Browsers document mode version number is unlikely to change during a session
+ * we cache the results.
+ * @type {Object}
+ * @private
+ */
+goog.userAgent.isDocumentModeCache_ = {};
+
+
+/**
+ * Whether the IE effective document mode is higher or the same as the given
+ * document mode version.
+ * NOTE: Only for IE, return false for another browser.
+ *
+ * @param {number} documentMode The document mode version to check.
+ * @return {boolean} Whether the IE effective document mode is higher or the
+ *     same as the given version.
+ */
+goog.userAgent.isDocumentMode  = function(documentMode) {
+  return goog.userAgent.isDocumentModeCache_[documentMode] ||
+      (goog.userAgent.isDocumentModeCache_[documentMode] = goog.userAgent.IE &&
+      document.documentMode && document.documentMode >= documentMode);
 };

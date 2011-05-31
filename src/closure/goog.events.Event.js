@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2005 Google Inc. All Rights Reserved
+// Copyright 2005 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,13 +28,15 @@ goog.provide('goog.events.Event');
 goog.require('goog.Disposable');
 
 
+
 /**
  * A base class for event objects, so that they can support preventDefault and
  * stopPropagation.
  *
  * @param {string} type Event Type.
  * @param {Object=} opt_target Reference to the object that is the target of
- *     this event.
+ *     this event. It has to implement the {@code EventTarget} interface
+ *     declared at {@link http://developer.mozilla.org/en/DOM/EventTarget}.
  * @constructor
  * @extends {goog.Disposable}
  */
@@ -85,7 +75,8 @@ goog.events.Event.prototype.disposeInternal = function() {
 /**
  * Whether to cancel the event in internal capture/bubble processing for IE.
  * @type {boolean}
- * @private
+ * @suppress {underscore} Technically public, but referencing this outside
+ *     this package is strongly discouraged.
  */
 goog.events.Event.prototype.propagationStopped_ = false;
 
@@ -93,7 +84,8 @@ goog.events.Event.prototype.propagationStopped_ = false;
 /**
  * Return value for in internal capture/bubble processing for IE.
  * @type {boolean}
- * @private
+ * @suppress {underscore} Technically public, but referencing this outside
+ *     this package is strongly discouraged.
  */
 goog.events.Event.prototype.returnValue_ = true;
 

@@ -11,13 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logger.js to goog.debug.Logger.js
 // * added requires comments for goog.js, goog.array.js, goog.debug.js,
 //   goog.debug.LogBuffer.js, goog.debug.LogRecord.js
-// * commented out all assertions (added in f223ba) and removed requirement
+// * commented out all assertions and removed requirement
 // * set goog.debug.Logger.ENABLE_HIERARCHY to false
 
 /**
@@ -27,7 +27,7 @@
  *
  * @see ../demos/debug.html
  */
-
+/*requires goog.js*/
 goog.provide('goog.debug.LogManager');
 goog.provide('goog.debug.Logger');
 goog.provide('goog.debug.Logger.Level');
@@ -37,11 +37,13 @@ goog.provide('goog.debug.Logger.Level');
 /*requires goog.debug.LogBuffer.js*/
 /*requires goog.debug.LogRecord.js*/
 goog.require('goog.array');
-//LB: disabled assertions
-//goog.require('goog.asserts');
+// LB: not used
+// goog.require('goog.asserts');
 goog.require('goog.debug');
 goog.require('goog.debug.LogBuffer');
 goog.require('goog.debug.LogRecord');
+
+
 
 /**
  * The Logger is an object used for logging debug messages. Loggers are
@@ -108,6 +110,7 @@ goog.debug.Logger.prototype.handlers_ = null;
  *     log handlers attached to them and whether they can have their log level
  *     set. Logging is a bit faster when this is set to false.
  */
+// LB: set to false because we define a single logger
 goog.debug.Logger.ENABLE_HIERARCHY = false;
 
 
@@ -125,6 +128,7 @@ if (!goog.debug.Logger.ENABLE_HIERARCHY) {
    */
   goog.debug.Logger.rootLevel_;
 }
+
 
 
 /**
@@ -185,6 +189,7 @@ goog.debug.Logger.Level.prototype.toString = function() {
 goog.debug.Logger.Level.OFF =
     new goog.debug.Logger.Level('OFF', Infinity);
 
+
 /**
  * SHOUT is a message level for extra debugging loudness.
  * This level is initialized to <CODE>1200</CODE>.
@@ -192,12 +197,14 @@ goog.debug.Logger.Level.OFF =
  */
 goog.debug.Logger.Level.SHOUT = new goog.debug.Logger.Level('SHOUT', 1200);
 
+
 /**
  * SEVERE is a message level indicating a serious failure.
  * This level is initialized to <CODE>1000</CODE>.
  * @type {!goog.debug.Logger.Level}
  */
 goog.debug.Logger.Level.SEVERE = new goog.debug.Logger.Level('SEVERE', 1000);
+
 
 /**
  * WARNING is a message level indicating a potential problem.
@@ -230,6 +237,7 @@ goog.debug.Logger.Level.CONFIG = new goog.debug.Logger.Level('CONFIG', 700);
  */
 goog.debug.Logger.Level.FINE = new goog.debug.Logger.Level('FINE', 500);
 
+
 /**
  * FINER indicates a fairly detailed tracing message.
  * This level is initialized to <CODE>400</CODE>.
@@ -244,6 +252,7 @@ goog.debug.Logger.Level.FINER = new goog.debug.Logger.Level('FINER', 400);
  */
 
 goog.debug.Logger.Level.FINEST = new goog.debug.Logger.Level('FINEST', 300);
+
 
 /**
  * ALL indicates that all messages should be logged.
@@ -371,8 +380,8 @@ goog.debug.Logger.prototype.addHandler = function(handler) {
     }
     this.handlers_.push(handler);
   } else {
-    // LB: disabled assertions
-    //goog.asserts.assert(!this.name_,
+    // LB: not used
+    // goog.asserts.assert(!this.name_,
     //    'Cannot call addHandler on a non-root logger when ' +
     //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
     goog.debug.Logger.rootHandlers_.push(handler);
@@ -428,7 +437,7 @@ goog.debug.Logger.prototype.setLevel = function(level) {
   if (goog.debug.Logger.ENABLE_HIERARCHY) {
     this.level_ = level;
   } else {
-    // LB: disabled assertions
+    // LB: not used
     // goog.asserts.assert(!this.name_,
     //    'Cannot call setLevel() on a non-root logger when ' +
     //    'goog.debug.Logger.ENABLE_HIERARCHY is false.');
@@ -465,7 +474,7 @@ goog.debug.Logger.prototype.getEffectiveLevel = function() {
   if (this.parent_) {
     return this.parent_.getEffectiveLevel();
   }
-  // LB: disabled assertions
+  // LB: not used
   // goog.asserts.fail('Root logger has no level set.');
   return null;
 };
@@ -634,11 +643,25 @@ goog.debug.Logger.prototype.logRecord = function(logRecord) {
 
 
 /**
+ * Logs the message to speed tracer, if it is available.
+ * {@see http://code.google.com/webtoolkit/speedtracer/logging-api.html}
+ * @param {string} msg The message to log.
+ * @private
+ */
+goog.debug.Logger.prototype.logToSpeedTracer_ = function(msg) {
+  if (goog.global['console'] && goog.global['console']['markTimeline']) {
+    goog.global['console']['markTimeline'](msg);
+  }
+};
+
+
+/**
  * Log a LogRecord.
  * @param {goog.debug.LogRecord} logRecord A log record to log.
  * @private
  */
 goog.debug.Logger.prototype.doLogRecord_ = function(logRecord) {
+  this.logToSpeedTracer_('log:' + logRecord.getMessage());
   if (goog.debug.Logger.ENABLE_HIERARCHY) {
     var target = this;
     while (target) {
@@ -695,6 +718,7 @@ goog.debug.Logger.prototype.addChild_ = function(name, logger) {
  */
 goog.debug.LogManager = {};
 
+
 /**
  * Map of logger names to logger objects
  *
@@ -703,12 +727,14 @@ goog.debug.LogManager = {};
  */
 goog.debug.LogManager.loggers_ = {};
 
+
 /**
  * The root logger which is the root of the logger tree.
  * @type {goog.debug.Logger}
  * @private
  */
 goog.debug.LogManager.rootLogger_ = null;
+
 
 /**
  * Initialize the LogManager if not already initialized
@@ -720,6 +746,7 @@ goog.debug.LogManager.initialize = function() {
     goog.debug.LogManager.rootLogger_.setLevel(goog.debug.Logger.Level.CONFIG);
   }
 };
+
 
 /**
  * Returns all the loggers

@@ -1,4 +1,4 @@
-// Copyright 2006 The Closure Library Authors. All Rights Reserved.
+// Copyright 2010 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,28 +14,21 @@
 
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
-// * renamed file from goog/net/eventtype.js to goog.net.EventType.js
+// * renamed file from goog/history/eventtype.js to goog.history.EventType.js
 // * added requires comment for goog.js
 
 /**
- * @fileoverview Common events for the network classes.
+ * @fileoverview Event types for goog.history.
+ *
  */
 /*requires goog.js*/
-goog.provide('goog.net.EventType');
+goog.provide('goog.history.EventType');
 
 
 /**
- * Event names for network events
+ * Event types for goog.history.
  * @enum {string}
  */
-goog.net.EventType = {
-  COMPLETE: 'complete',
-  SUCCESS: 'success',
-  ERROR: 'error',
-  ABORT: 'abort',
-  READY: 'ready',
-  READY_STATE_CHANGE: 'readystatechange',
-  TIMEOUT: 'timeout',
-  INCREMENTAL_DATA: 'incrementaldata',
-  PROGRESS: 'progress'
+goog.history.EventType = {
+  NAVIGATE: 'navigate'
 };

@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2005 Google Inc. All Rights Reserved
+// Copyright 2005 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Modifications Copyright 2009-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/pools.js to goog.events.pools.js
 // * added requires comments for goog.js, goog.events.BrowserEvent.js,
@@ -51,6 +39,12 @@ goog.require('goog.events.BrowserEvent');
 goog.require('goog.events.Listener');
 goog.require('goog.structs.SimplePool');
 goog.require('goog.userAgent.jscript');
+
+
+/**
+ * @define {boolean} Whether to always assume the garbage collector is good.
+ */
+goog.events.ASSUME_GOOD_GC = false;
 
 
 /**
@@ -98,7 +92,7 @@ goog.events.pools.getProxy;
 
 /**
  * Sets the callback function to use in the proxy.
- * @param {Function} cb The callback function to use.
+ * @param {function(string, (Event|undefined))} cb The callback function to use.
  */
 goog.events.pools.setProxyCallbackFunction;
 
@@ -149,7 +143,8 @@ goog.events.pools.releaseEvent;
 
 
 (function() {
-  var BAD_GC = goog.userAgent.jscript.HAS_JSCRIPT &&
+  var BAD_GC = !goog.events.ASSUME_GOOD_GC &&
+      goog.userAgent.jscript.HAS_JSCRIPT &&
       !goog.userAgent.jscript.isVersion('5.7');
 
   // These functions are shared between the pools' createObject functions and
@@ -242,7 +237,7 @@ goog.events.pools.releaseEvent;
     };
 
     goog.events.pools.getEvent = function() {
-      return /** @type {goog.events.BrowserEvent} */ (eventPool.getObject());
+      return /** @type {!goog.events.BrowserEvent} */ (eventPool.getObject());
     };
 
     goog.events.pools.releaseEvent = function(obj) {

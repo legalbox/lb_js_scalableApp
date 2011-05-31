@@ -1,16 +1,4 @@
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// Copyright 2006 Google Inc. All Rights Reserved
+// Copyright 2006 The Closure Library Authors. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -34,6 +22,7 @@
  */
 /*requires goog.js*/
 goog.provide('goog.math.Coordinate');
+
 
 
 /**
@@ -96,8 +85,8 @@ goog.math.Coordinate.equals = function(a, b) {
 
 /**
  * Returns the distance between two coordinates.
- * @param {goog.math.Coordinate} a A Coordinate.
- * @param {goog.math.Coordinate} b A Coordinate.
+ * @param {!goog.math.Coordinate} a A Coordinate.
+ * @param {!goog.math.Coordinate} b A Coordinate.
  * @return {number} The distance between {@code a} and {@code b}.
  */
 goog.math.Coordinate.distance = function(a, b) {
@@ -115,8 +104,8 @@ goog.math.Coordinate.distance = function(a, b) {
  * in lower-level languages, but the speed difference is not nearly as
  * pronounced in JavaScript (only a few percent.)
  *
- * @param {goog.math.Coordinate} a A Coordinate.
- * @param {goog.math.Coordinate} b A Coordinate.
+ * @param {!goog.math.Coordinate} a A Coordinate.
+ * @param {!goog.math.Coordinate} b A Coordinate.
  * @return {number} The squared distance between {@code a} and {@code b}.
  */
 goog.math.Coordinate.squaredDistance = function(a, b) {
@@ -129,9 +118,9 @@ goog.math.Coordinate.squaredDistance = function(a, b) {
 /**
  * Returns the difference between two coordinates as a new
  * goog.math.Coordinate.
- * @param {goog.math.Coordinate} a A Coordinate.
- * @param {goog.math.Coordinate} b A Coordinate.
- * @return {goog.math.Coordinate} A Coordinate representing the difference
+ * @param {!goog.math.Coordinate} a A Coordinate.
+ * @param {!goog.math.Coordinate} b A Coordinate.
+ * @return {!goog.math.Coordinate} A Coordinate representing the difference
  *     between {@code a} and {@code b}.
  */
 goog.math.Coordinate.difference = function(a, b) {
@@ -141,9 +130,9 @@ goog.math.Coordinate.difference = function(a, b) {
 
 /**
  * Returns the sum of two coordinates as a new goog.math.Coordinate.
- * @param {goog.math.Coordinate} a A Coordinate.
- * @param {goog.math.Coordinate} b A Coordinate.
- * @return {goog.math.Coordinate} A Coordinate representing the sum of the two
+ * @param {!goog.math.Coordinate} a A Coordinate.
+ * @param {!goog.math.Coordinate} b A Coordinate.
+ * @return {!goog.math.Coordinate} A Coordinate representing the sum of the two
  *     coordinates.
  */
 goog.math.Coordinate.sum = function(a, b) {
