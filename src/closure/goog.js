@@ -346,33 +346,33 @@ goog.require = function(name) {
   //            not remove this code for the compiled output
   // LB: changed COMPILED to goog.COMPILED
   // LB: commented out - !goog.COMPILED is always false
-  /*if (!goog.COMPILED) {
-    if (goog.isProvided_(name)) {
-      return;
-    }
+  //if (!goog.COMPILED) {
+  //  if (goog.isProvided_(name)) {
+  //    return;
+  //  }
 
-    if (goog.ENABLE_DEBUG_LOADER) {
-      var path = goog.getPathFromDeps_(name);
-      if (path) {
-        goog.included_[path] = true;
-        goog.writeScripts_();
-        return;
-      }
-    }
+  //  if (goog.ENABLE_DEBUG_LOADER) {
+  //    var path = goog.getPathFromDeps_(name);
+  //    if (path) {
+  //      goog.included_[path] = true;
+  //      goog.writeScripts_();
+  //      return;
+  //    }
+  //  }
 
-    var errorMessage = 'goog.require could not find: ' + name;
-    // LB: fixed unsafe check, error may not be available on the console
-    // if (goog.global.console) {
-    if (goog.global.console && goog.global.console.error){
-      // LB: replaced subscript notation with dot notation for consistency
-      // goog.global.console['error'](errorMessage);
-      goog.global.console.error(errorMessage);
-    }
+  //  var errorMessage = 'goog.require could not find: ' + name;
+  //  // LB: fixed unsafe check, error may not be available on the console
+  //  // if (goog.global.console) {
+  //  if (goog.global.console && goog.global.console.error){
+  //    // LB: replaced subscript notation with dot notation for consistency
+  //    // goog.global.console['error'](errorMessage);
+  //    goog.global.console.error(errorMessage);
+  //  }
 
 
-      throw Error(errorMessage);
+  //    throw Error(errorMessage);
 
-  }*/
+  //}
 };
 
 
