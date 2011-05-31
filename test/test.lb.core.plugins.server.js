@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-26
+ * Version:   2011-04-31
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -51,8 +51,8 @@
   function setUp(){
     // Set up to restore a neutral state before each unit test
 
-    // reset mock XHR object
-    empty( MockXmlHttp.all );
+    // reset list of instances created in mock XHR object
+    empty( MockXmlHttp.lb.all );
   }
 
   function testSend(){
@@ -70,8 +70,9 @@
     };
     ut(url, data, callback);
 
-    assert.equals( MockXmlHttp.all.length, 1, "one instance of XHR expected");
-    var xhr = MockXmlHttp.all[0];
+    assert.equals( MockXmlHttp.lb.all.length, 1,
+                                               "one instance of XHR expected");
+    var xhr = MockXmlHttp.lb.all[0];
     assert.equals( xhr.lb.url, url,   "same url expected in XHR call");
     assert.equals( xhr.lb.method, 'POST',      "POST method expected");
     assert.equals( xhr.lb.async, true, "  asynchronous call expected");
