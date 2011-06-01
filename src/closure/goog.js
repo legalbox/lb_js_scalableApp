@@ -30,6 +30,8 @@
 // * renamed goog.UID_PROPERTY_ from closure_uid_{random} to goog.uid.{random}
 //   to use the goog namespace (kind of). The uid still creates a second global
 //   variable as soon as an event listener is attached to the window.
+// * added hasOwnProperty filter in for..in loop in goog.globalize,
+//   goog.cloneObject, goog.mixin, goog.getMsg
 
 // TODO: this module definition should be wrapped in a closure scope,
 //       following JavaScript module pattern, to allow defining private
@@ -257,7 +259,10 @@ goog.getObjectByName = function(name, opt_obj) {
 goog.globalize = function(obj, opt_global) {
   var global = opt_global || goog.global;
   for (var x in obj) {
-    global[x] = obj[x];
+    // LB: added hasOwnProperty filter
+    if (obj.hasOwnProperty(x)){
+      global[x] = obj[x];
+    }
   }
 };
 
@@ -1034,7 +1039,10 @@ goog.cloneObject = function(obj) {
     }
     var clone = type == 'array' ? [] : {};
     for (var key in obj) {
-      clone[key] = goog.cloneObject(obj[key]);
+      // LB: added hasOwnProperty filter
+      if (obj.hasOwnProperty(key)){
+        clone[key] = goog.cloneObject(obj[key]);
+      }
     }
     return clone;
   }
@@ -1185,7 +1193,10 @@ goog.partial = function(fn, var_args) {
  */
 goog.mixin = function(target, source) {
   for (var x in source) {
-    target[x] = source[x];
+    // LB: added hasOwnProperty filter
+    if (source.hasOwnProperty(x)){
+      target[x] = source[x];
+    }
   }
 
   // For IE7 or lower, the for-in-loop does not contain any properties that are
@@ -1381,8 +1392,11 @@ goog.setCssNameMapping = function(mapping, style) {
 goog.getMsg = function(str, opt_values) {
   var values = opt_values || {};
   for (var key in values) {
-    var value = ('' + values[key]).replace(/\$/g, '$$$$');
-    str = str.replace(new RegExp('\\{\\$' + key + '\\}', 'gi'), value);
+    // LB: added hasOwnProperty filter
+    if (values.hasOwnProperty(key)){
+      var value = ('' + values[key]).replace(/\$/g, '$$$$');
+      str = str.replace(new RegExp('\\{\\$' + key + '\\}', 'gi'), value);
+    }
   }
   return str;
 };
