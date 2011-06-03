@@ -148,6 +148,7 @@ Language: JavaScript
    Line Comment: //
    Block Comment: /* */
    Enum Values: Under type
+   Variable Prototype Enders: ; = , }
 
 
 Language: Perl
