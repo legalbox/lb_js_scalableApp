@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-06
+ * 2011-06-06
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -110,7 +110,7 @@ lb.base.template.html = (function() {
       } catch ( childNodeFilterError ) {
         log(
           'Failed to apply HTML filters to child node '+childNodes[i]+
-          ' in position '+(i+1)+
+          ' in position '+String(i+1)+
           ' of element '+node.nodeName+ ( node.id? '#'+node.id :
           (node.className?' class="'+node.className+'"':'') )+
           ': '+childNodeFilterError
