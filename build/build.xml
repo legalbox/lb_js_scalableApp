@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-05-27
+  Version: 2011-06-06
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -43,7 +43,7 @@
     <attribute name="dir"  default="." />
     <sequential>
       <echo>jslint: checking @{file} in @{dir}</echo>
-      <jslint4java jslint="lib/jslint/fulljslint.js"
+      <jslint4java jslint="lib/jslint/jslint.js"
         encoding="UTF-8" haltOnFailure="true">
         <formatter type="plain" />
         <!-- The two file sets are combined to handle two use cases:
