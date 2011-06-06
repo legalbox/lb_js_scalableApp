@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-05-27
+  Version: 2011-06-06
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -105,34 +105,8 @@
 
   <target name="doc" depends="document" description="alias for document" />
 
-  <macrodef name="combiner">
-    <attribute name="in" />
-    <attribute name="out" />
-    <sequential>
-      <echo>combiner: started processing @{in} => @{out}</echo>
-      <java jar="lib/combiner/combiner-0.0.1.jar"
-          fork="true"
-          failonerror="true"
-      >
-        <arg value="-v" />
-        <arg line="--charset UTF-8" />
-        <arg line="-o @{out}" />
-        <arg line="@{in}" />
-      </java>
-      <echo>combiner: completed @{in} => @{out}</echo>
-      <echo/>
-    </sequential>
-  </macrodef>
-
-  <target name="combine-with-combiner" description="Combine JavaScript files with Combiner">
-    <mkdir dir="out/js"/>
-    <fileset id="allinfiles" dir="../src" includes="*.js" />
-    <pathconvert property="allin" pathsep=" " refid="allinfiles" />
-    <combiner in="${allin}" out="out/js/lb-full.js" />
-  </target>
-
-  <target name="combine" description="Combine JavaScript files using concat task">
-    <!-- Temporary replacement for Combiner to avoid issue: wrong order of dependencies -->
+  <target name="combine"
+    description="Combine JavaScript files using concat task">
     <mkdir dir="out/js"/>
     <concat binary="true" destfile="out/js/lb-full.js">
       <!-- Google Closure (extracts) -->
