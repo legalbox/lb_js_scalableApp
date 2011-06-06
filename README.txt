@@ -207,6 +207,9 @@ HISTORY
   2011-05-04, v1.7.2, Enhancement: return null when function fails in getString
   2011-05-06, v1.7.3, Enhancement: speed up build using jslint4java
   2011-06-03, v1.7.4, Upgraded Closure Library to add support for IE9
+  2011-XX-XX, v1.7.5, ROADMAP: Upgraded JSLint and Ant macro, removed rhino support
+  2011-XX-XX, v1.7.6, ROADMAP: Removed Combiner tool and Ant macro
+  2011-XX-XX, v1.7.7, ROADMAP: Moved Ant macros to a separate file to facilitate reuse
   2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
 
