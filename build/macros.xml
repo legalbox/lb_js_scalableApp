@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir=".">
+<project name="macros">
   <description>
   Macro definitions for projects based on
   The Scalable JavaScript Application Framework
@@ -11,15 +11,18 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-06
+  Version: 2011-06-07
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
   </description>
 
+  <!-- parent folder of the imported macros.xml file -->
+  <dirname property="macros.basedir" file="${ant.file.macros}" />
+
   <taskdef name="jslint4java"
-           classname="com.googlecode.jslint4java.ant.JSLintTask"
-           classpath="lib/jslint4java/jslint4java-1.4.7.jar" />
+    classname="com.googlecode.jslint4java.ant.JSLintTask"
+    classpath="${macros.basedir}/lib/jslint4java/jslint4java-1.4.7.jar" />
   <!--
   Check a set of JavaScript files with JSLint, using jslint4java
 
@@ -38,7 +41,7 @@
     <attribute name="dir"  default="." />
     <sequential>
       <echo>jslint: checking @{file} in @{dir}</echo>
-      <jslint4java jslint="lib/jslint/fulljslint.js"
+      <jslint4java jslint="${macros.basedir}/lib/jslint/fulljslint.js"
         encoding="UTF-8" haltOnFailure="true">
         <formatter type="plain" />
         <!-- The two file sets are combined to handle two use cases:
@@ -62,7 +65,7 @@
       <exec executable="perl" dir="${basedir}"
         failonerror="true"
       >
-        <arg line="lib/naturaldocs/NaturalDocs" />
+        <arg line="${macros.basedir}/lib/naturaldocs/NaturalDocs" />
         <arg line="-i @{in}" />
         <arg line="-o HTML @{out}" />
         <arg line="-cs UTF-8" />
@@ -78,7 +81,7 @@
     <attribute name="out" />
     <sequential>
       <echo>yuicompressor: started processing @{in} => @{out}</echo>
-      <java jar="lib/yuicompressor/yuicompressor-2.4.2.jar"
+      <java jar="${macros.basedir}/lib/yuicompressor/yuicompressor-2.4.2.jar"
           fork="true"
           failonerror="true"
       >
