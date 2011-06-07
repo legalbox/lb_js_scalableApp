@@ -150,21 +150,21 @@
     </concat>
   </target>
 
-  <target name="setToday">
+  <target name="setTimestamp">
     <tstamp>
-      <format property="TODAY" pattern="yyyy-MM-dd" timezone="GMT" />
+      <format property="NOW" pattern="yyyy-MM-dd-HHmm" timezone="GMT" />
     </tstamp>
   </target>
 
   <target name="compress"
    description="Compress JavaScript files with YUI Compressor"
-   depends="setToday"
+   depends="setTimestamp"
   >
     <yuicompressor in="out/js/${ant.project.name}-full.js"
                    out="out/js/${ant.project.name}-min.js" />
 
     <copy file="out/js/${ant.project.name}-min.js"
-      tofile="out/js/${ant.project.name}-min-${TODAY}.js" />
+      tofile="out/js/${ant.project.name}-min-${NOW}.js" />
   </target>
 
 </project>
