@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="lb_js_scalableApp" basedir="." default="build">
+<project name="lb" basedir="." default="build">
   <description>
   Build script for
   The Scalable JavaScript Application Framework
@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-06
+  Version: 2011-06-07
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -54,7 +54,7 @@
   <target name="combine"
     description="Combine JavaScript files using concat task">
     <mkdir dir="out/js"/>
-    <concat binary="true" destfile="out/js/lb-full.js">
+    <concat binary="true" destfile="out/js/${ant.project.name}-full.js">
       <!-- Google Closure (extracts) -->
       <file file="../src/closure/goog.js"/>
       <file file="../src/closure/goog.array.js"/>
@@ -160,10 +160,11 @@
    description="Compress JavaScript files with YUI Compressor"
    depends="setToday"
   >
-    <yuicompressor in="out/js/lb-full.js"
-                   out="out/js/lb-min.js" />
+    <yuicompressor in="out/js/${ant.project.name}-full.js"
+                   out="out/js/${ant.project.name}-min.js" />
 
-    <copy file="out/js/lb-min.js" tofile="out/js/lb-min-${TODAY}.js" />
+    <copy file="out/js/${ant.project.name}-min.js"
+      tofile="out/js/${ant.project.name}-min-${TODAY}.js" />
   </target>
 
 </project>
