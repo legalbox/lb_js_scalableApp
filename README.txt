@@ -195,7 +195,7 @@ HISTORY
   2011-05-06, v1.7.3, Enhancement: speed up build using jslint4java
   2011-06-03, v1.7.4, Upgraded Closure Library to add support for IE9
   2011-06-06, v1.7.5, Removed Combiner tool, cleaned-up build script
-  2011-XX-XX, v1.7.6, ROADMAP: Moved Ant macros to a separate file to facilitate reuse
+  2011-06-07, v1.7.6, Moved Ant macros to a separate file to facilitate reuse
   2011-XX-XX, v1.7.7, ROADMAP: Upgraded and renamed JSLint, updated Ant macro
   2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
