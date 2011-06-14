@@ -130,20 +130,13 @@
       {
         baseUrl: "../src",
         paths: {
-          "order": "requirejs/order"
+          "order": "requirejs/order",
+          "bezen.org": "../test/bezen.org"
         }
       },
       [
-        // bezen.org JavaScript library (extracts)
-        "order!bezen.org/bezen.js",
-        "order!bezen.org/bezen.array.js",
-        "order!bezen.org/bezen.object.js",
-        "order!bezen.org/bezen.log.js",
-        "order!bezen.org/bezen.assert.js",
-        "order!bezen.org/bezen.error.js",
-        "order!bezen.org/bezen.string.js",
-        "order!bezen.org/bezen.style.js",
-        "order!bezen.org/bezen.testrunner.js",
+        // Test runner from bezen.org JavaScript library
+        "order!bezen.org/bezen.testrunner",
 
         // Google Closure Library (extracts)
         "order!../src/closure/goog.js",
