@@ -7,12 +7,13 @@
     <link rel="schema.DCTERMS" href="http://purl.org/dc/terms/" />
     <meta name="DC.publisher" content="Legal-Box SAS" />
     <meta name="DC.creator" content="Eric Bréchemier" />
+    <meta name="DC.creator" content="Marc Delhommeau" />
     <meta name="DC.rights" content=
     "Copyright Legal-Box SAS (c) 2010-2011, All Rights Reserved.
      Licensed under a BSD License" />
     <meta name="DC.rights" scheme="DCTERMS.URI"
           content="http://creativecommons.org/licenses/BSD/" />
-    <meta name="DC.date" content="2011-05-27" />
+    <meta name="DC.date" content="2011-06-14" />
     <link rel="stylesheet" type="text/css" href="style/test.css" />
   </head>
   <body>
@@ -50,7 +51,7 @@
         src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
     </script-->
 
-    <div title='bezen.org JavaScript library (extracts)'>
+    <!--div title='bezen.org JavaScript library (extracts)'>
       <script src="bezen.org/bezen.js"></script>
       <script src="bezen.org/bezen.array.js"></script>
       <script src="bezen.org/bezen.object.js"></script>
@@ -121,6 +122,91 @@
     <script src="test.lb.js"></script>
     <script>
     bezen.testrunner.run();
+    </script-->
+
+    <script src="../src/requirejs/require.js"></script>
+    <script>
+    require(
+      {
+        baseUrl: "../src",
+        paths: {
+          "order": "requirejs/order"
+        }
+      },
+      [
+        // bezen.org JavaScript library (extracts)
+        "order!bezen.org/bezen.js",
+        "order!bezen.org/bezen.array.js",
+        "order!bezen.org/bezen.object.js",
+        "order!bezen.org/bezen.log.js",
+        "order!bezen.org/bezen.assert.js",
+        "order!bezen.org/bezen.error.js",
+        "order!bezen.org/bezen.string.js",
+        "order!bezen.org/bezen.style.js",
+        "order!bezen.org/bezen.testrunner.js",
+
+        // Google Closure Library (extracts)
+        "order!../src/closure/goog.js",
+        "order!../src/closure/goog.array.js",
+        "order!../src/closure/goog.string.js",
+        "order!../src/closure/goog.object.js",
+        "order!../src/closure/goog.structs.js",
+        "order!../src/closure/goog.iter.js",
+        "order!../src/closure/goog.structs.Map.js",
+        "order!../src/closure/goog.structs.Set.js",
+        "order!../src/closure/goog.debug.js",
+        "order!../src/closure/goog.debug.LogRecord.js",
+        "order!../src/closure/goog.debug.LogBuffer.js",
+        "order!../src/closure/goog.debug.Logger.js",
+        "order!../src/closure/goog.debug.RelativeTimeProvider.js",
+        "order!../src/closure/goog.debug.Formatter.js",
+        "order!../src/closure/goog.debug.Console.js",
+        "order!../src/closure/goog.userAgent.js",
+        "order!../src/closure/goog.dom.BrowserFeature.js",
+        "order!../src/closure/goog.dom.TagName.js",
+        "order!../src/closure/goog.dom.classes.js",
+        "order!../src/closure/goog.math.Coordinate.js",
+        "order!../src/closure/goog.math.Size.js",
+        "order!../src/closure/goog.dom.js",
+        "order!../src/closure/goog.debug.errorHandlerWeakDep.js",
+        "order!../src/closure/goog.Disposable.js",
+        "order!../src/closure/goog.events.Event.js",
+        "order!../src/closure/goog.events.EventType.js",
+        "order!../src/closure/goog.events.BrowserFeature.js",
+        "order!../src/closure/goog.reflect.js",
+        "order!../src/closure/goog.events.BrowserEvent.js",
+        "order!../src/closure/goog.events.EventWrapper.js",
+        "order!../src/closure/goog.events.Listener.js",
+        "order!../src/closure/goog.structs.SimplePool.js",
+        "order!../src/closure/goog.userAgent.jscript.js",
+        "order!../src/closure/goog.events.pools.js",
+        "order!../src/closure/goog.events.js",
+        "order!../src/closure/goog.events.EventTarget.js",
+        "order!../src/closure/goog.Timer.js",
+        "order!../src/closure/goog.events.EventHandler.js",
+        "order!../src/closure/goog.history.EventType.js",
+        "order!../src/closure/goog.history.Event.js",
+        "order!../src/closure/goog.History.js",
+        "order!../src/closure/goog.json.js",
+        "order!../src/closure/goog.net.ErrorCode.js",
+        "order!../src/closure/goog.net.EventType.js",
+        "order!../src/closure/goog.net.HttpStatus.js",
+        "order!../src/closure/goog.net.XmlHttpFactory.js",
+        "order!../src/closure/goog.net.WrapperXmlHttpFactory.js",
+        "order!../src/closure/goog.net.XmlHttp.js",
+        "order!../src/closure/goog.net.xhrMonitor.js",
+        "order!../src/closure/goog.uri.utils.js",
+        "order!../src/closure/goog.net.XhrIo.js",
+
+        // The Scalable JavaScript Application framework
+        "order!../src/lb.js",
+        "order!test.lb.js"
+      ],
+      function(){
+        bezen.testrunner.run();
+      }
+    );
     </script>
+
   </body>
 </html>
