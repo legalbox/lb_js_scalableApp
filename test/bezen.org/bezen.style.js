@@ -15,18 +15,21 @@
  *   Chrome 3, Safari 3, Safari 4,
  *   Opera 9.64, Opera 10.10
  */
-/*requires bezen.js */
-/*requires bezen.string.js */
-/*requires bezen.array.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen, document */
-bezen.style = (function() {
+/*global document */
+define(["./bezen","./bezen.string","./bezen.array"],
+       function(bezen,string,array) {
   // Builder of
   // Closure for DOM style and CSS class utilities
   
   // Define aliases
-  var hash = bezen.array.hash,
-      trim = bezen.string.trim;
+  var hash = array.hash,
+      trim = string.trim;
    
   var getClasses = function(node) {
     // return a hash of class names, with the ordered list of class name 
@@ -156,8 +159,11 @@ bezen.style = (function() {
       element.style.display = '';
     }
   };
-    
-  return { // public API
+
+  // Assign to global bezen.style,
+  // for backward compatibility in browser environment
+  bezen.style = {
+    // public API
     getClasses: getClasses,
     setClasses: setClasses,
     addClass: addClass,
@@ -169,4 +175,6 @@ bezen.style = (function() {
     _: { // private section, for unit tests
     }
   };
-}());
+
+  return bezen.style;
+});

@@ -58,20 +58,23 @@
  *   // force log with localOnOff switch set to true in last param
  *   log.error('Issue detected with '+object+' in callback '+callback,true);
  */
-/*requires bezen.js */
-/*requires bezen.object.js */
-/*requires bezen.array.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen, window, document */
-bezen.log = (function() {
+/*global window, document */
+define(["./bezen","./bezen.object","./bezen.array"],
+        function(bezen,object,array) {
   // Builder of 
   // Closure object for Logging functions
    
   // Define aliases
   var $ = bezen.$,
-      exists = bezen.object.exists,
-      pop = bezen.array.pop,
-      unshift = bezen.array.unshift;
+      exists = object.exists,
+      pop = array.pop,
+      unshift = array.unshift;
    
   var MAX_RECORDS = 100;
   var DOM_LOG_ID = 'bezen.log';
@@ -313,8 +316,11 @@ bezen.log = (function() {
      
     return lines;
   };
-   
-  return { // public API
+
+  // assign to global bezen.log
+  // for backward compatibility in browser environment
+  bezen.log = {
+    // public API
     on: on,
     off: off,
     info: info,
@@ -330,4 +336,6 @@ bezen.log = (function() {
       records: records
     }
   };
-}());
+
+  return bezen.log;
+});

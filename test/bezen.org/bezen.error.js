@@ -38,12 +38,14 @@
  * errors to window.onerror in the same way as this module does for setTimeout
  * and setInterval.
  */
-/*requires bezen.js */
-/*optional bezen.log.js */ // if defined, the default handler for 
-                           // window.onerror will log errors to bezen.log.error
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
-/*global bezen, window */
-bezen.error = (function() {
+/*global window */
+define(["./bezen"],function(bezen) {
   // Builder of 
   // Closure object for "catch all" mechanism for window.onerror,
   // setTimeout, and setInterval.
@@ -91,7 +93,8 @@ bezen.error = (function() {
     //   Error Object (Windows Scripting - JScript)
     //   http://msdn.microsoft.com/en-us/library/dww52sbt(VS.85).aspx
 
-    if (!bezen.log){
+    var log = require("./bezen.log");
+    if (!log){
       return;
     }
      
@@ -101,7 +104,7 @@ bezen.error = (function() {
       return;
     }
      
-    bezen.log.error(error + ' at ' + url + '[' + line + ']', true);
+    log.error(error + ' at ' + url + '[' + line + ']', true);
   };
    
   var onerror = function(message,url,line) { 
@@ -233,8 +236,10 @@ bezen.error = (function() {
     window.setTimeout = safeSetTimeout;
     window.setInterval = safeSetInterval;
   };
-   
-  return { // public API
+
+  // Assign to global bezen.error,
+  // for backward compatibility in browser environment
+  bezen.error = { // public API
     reportError: reportError,
     onerror: onerror,
     safeSetTimeout: safeSetTimeout,
@@ -245,4 +250,6 @@ bezen.error = (function() {
     _: { // private section, for unit tests
     }
   };
-}());
+
+  return bezen.error;
+});

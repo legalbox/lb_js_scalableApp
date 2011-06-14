@@ -15,23 +15,23 @@
  *   Chrome 3, Safari 3, Safari 4,
  *   Opera 9.64, Opera 10.10
  */
-/*requires bezen.js       */
-/*requires bezen.style.js */
-/*requires bezen.log.js   */
-/*requires bezen.error.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global bezen, window, navigator, setTimeout */
-bezen.testrunner = (function() {
+define(["./bezen","./bezen.style","./bezen.log","./bezen.error"],
+  function(bezen,style,log,error) {
   // Builder of
   // Closure object for Unit Tests Runner
  
   // Define aliases
-  var log = bezen.log,
-      error = bezen.error,
-      getClasses = bezen.style.getClasses,
-      removeClass = bezen.style.removeClass,
-      addClass = bezen.style.addClass,
-      setClasses = bezen.style.setClasses,
+  var getClasses = style.getClasses,
+      removeClass = style.removeClass,
+      addClass = style.addClass,
+      setClasses = style.setClasses,
       $ = bezen.$;
    
   // all unit tests defined by each separate test module
@@ -411,8 +411,11 @@ bezen.testrunner = (function() {
      
     return runSelected(unitTests,$(progressBarId),$(statusTextId));
   };  
-  
-  return { // public API
+
+  // Assign to global bezen.testrunner,
+  // for backward compatibility in browser environment
+  bezen.testrunner = {
+    // public API
     define: define,
     run: run,
      
@@ -423,4 +426,6 @@ bezen.testrunner = (function() {
       allUnitTests: allUnitTests
     }
   };
-}());
+
+  return bezen.testrunner;
+});

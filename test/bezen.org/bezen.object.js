@@ -15,10 +15,13 @@
  *   Chrome 3, Safari 3, Safari 4,
  *   Opera 9.64, Opera 10.10
  */
-/*requires bezen.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen */
-bezen.object = (function() {
+define(["./bezen"],function(bezen) {
   // Builder of
   // Closure for Object utilities
    
@@ -126,7 +129,10 @@ bezen.object = (function() {
            that instanceof String;
   };
 
-  return { // public API
+  // define global bezen.object
+  // for backward-compatibility in browser environment
+  bezen.object = {
+    // public API
     beget: beget,
     exists: exists,
     isArray: isArray,
@@ -135,4 +141,6 @@ bezen.object = (function() {
     _:{ // private section, for unit tests
     }
   };
-}());
+
+  return bezen.object;
+});

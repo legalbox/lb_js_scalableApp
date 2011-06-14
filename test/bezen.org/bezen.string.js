@@ -15,10 +15,15 @@
  *   Chrome 3, Safari 3, Safari 4,
  *   Opera 9.64, Opera 10.10
  */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*requires bezen.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global bezen */
-bezen.string = (function() {
+define(["./bezen"],function(bezen) {
   // Builder of
   // Closure for String utilities
 
@@ -77,7 +82,10 @@ bezen.string = (function() {
     return string.slice(string.length-suffix.length) === suffix;
   };
 
-  return { // public API
+  // Assign to global bezen.string,
+  // for backward compatibility in browser environment
+  bezen.string = {
+    // public API
     trim: trim,
     startsWith: startsWith,
     endsWith: endsWith,
@@ -85,4 +93,6 @@ bezen.string = (function() {
     _: { // private section, for unit tests
     }
   };
-}());
+
+  return bezen.string;
+});

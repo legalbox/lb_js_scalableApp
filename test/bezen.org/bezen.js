@@ -15,10 +15,15 @@
  *   Chrome 3, Safari 3, Safari 4,
  *   Opera 9.64, Opera 10.10
  */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global window, bezen, document */
 // preserve the library, if already loaded
-window.bezen = window.bezen || (function() {
+define(function() {
   // Builder of
   // Closure for Root of bezen.org Javascript library
 
@@ -40,12 +45,20 @@ window.bezen = window.bezen || (function() {
      
     return document.getElementById(id);
   };
-   
-  return { // public API
+
+  var bezen = {
+    // public API
     $: $,
     nix: nix,
-     
     _: { // private section, for unit tests
     }
-  };
-}());
+  }
+
+  // initialize global variable bezen in browser environment,
+  // for backward-compatibility
+  if (window){
+    window.bezen = window.bezen || bezen;
+  }
+
+  return bezen;
+});
