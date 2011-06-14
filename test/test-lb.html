@@ -128,10 +128,8 @@
     <script>
     require(
       {
-        baseUrl: "../src",
         paths: {
-          "order": "requirejs/order",
-          "bezen.org": "../test/bezen.org"
+          "order": "../src/requirejs/order"
         }
       },
       [
@@ -193,7 +191,7 @@
 
         // The Scalable JavaScript Application framework
         "order!../src/lb.js",
-        "order!test.lb.js"
+        "order!test.lb"
       ],
       function(){
         bezen.testrunner.run();
