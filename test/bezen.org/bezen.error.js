@@ -45,7 +45,8 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
 /*global window */
-define(["./bezen"],function(bezen) {
+define(["./bezen","require"],
+  function(bezen,require) {
   // Builder of 
   // Closure object for "catch all" mechanism for window.onerror,
   // setTimeout, and setInterval.
