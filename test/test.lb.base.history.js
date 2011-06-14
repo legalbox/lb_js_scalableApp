@@ -1,10 +1,13 @@
 /*
  * test.lb.base.history.js - Unit Tests of lb.base.history module
  *
- * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
+ *
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-05-06
+ * Version:   2011-06-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -190,10 +193,11 @@
       }
 
       assert.equals( capturedHash[currentStep], hashSequence[currentStep],
-                      "New hash expected to be captured at step "+currentStep);
+             "New hash expected to be captured at step "+String(currentStep));
 
       assert.equals( capturedHash2[currentStep], hashSequence[currentStep],
-   "New hash expected to be captured by second listener at step "+currentStep);
+              "New hash expected to be captured by second listener at step "+
+                                                        String(currentStep));
 
       // go to next step
       currentStep++;
