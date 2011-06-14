@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="lb_js_scalableApp" basedir="." default="build">
+<project name="lb" basedir="." default="build">
   <description>
   Build script for
   The Scalable JavaScript Application Framework
@@ -8,11 +8,13 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-06
+  Version: 2011-06-07
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
   </description>
+
+  <import file="macros.xml" />
 
   <target name="build"
     depends="doc,check,combine,compress"
@@ -21,40 +23,6 @@
   <target name="clean" description="Remove previous temps">
     <delete dir="out"/>
   </target>
-
-  <taskdef name="jslint4java"
-           classname="com.googlecode.jslint4java.ant.JSLintTask"
-           classpath="lib/jslint4java/jslint4java-1.4.7.jar" />
-  <!--
-  Check a set of JavaScript files with JSLint, using jslint4java
-
-  Usage:
-    * Check a single file
-    <jslint file="../src/singleFile.js" />
-
-    * Check all JavaScript files (*.js) in a directory (non-recursive)
-    <jslint dir="../src/wholeDir/" />
-
-    * Check all JavaScript files in a directory, recursively
-    <jslint dir="../src" file="**/*.js" />
-  -->
-  <macrodef name="jslint">
-    <attribute name="file" default="*.js" />
-    <attribute name="dir"  default="." />
-    <sequential>
-      <echo>jslint: checking @{file} in @{dir}</echo>
-      <jslint4java jslint="lib/jslint/jslint.js"
-        encoding="UTF-8" haltOnFailure="true">
-        <formatter type="plain" />
-        <!-- The two file sets are combined to handle two use cases:
-          1) only file attribute is present
-          2) only dir attribute, or both file and dir attributes are present
-        -->
-        <fileset file="@{file}" />
-        <fileset dir="@{dir}" includes="@{file}" />
-      </jslint4java>
-    </sequential>
-  </macrodef>
 
   <target name="checkLib"
           description="Check Google Closure source files with JSLint">
@@ -75,28 +43,6 @@
           depends="checkSrc, checkTest"
   />
 
-  <macrodef name="naturaldocs">
-    <attribute name="in" description="path to input folder for JS files" />
-    <attribute name="out" description="path to folder for HTML output" />
-    <attribute name="config" description="path to folder for configuration" />
-    <sequential>
-      <echo>naturaldocs: copy configuration to @{config}</echo>
-      <copy file="lib/naturaldocs/Config/Menu.txt" todir="@{config}" />
-      <echo>naturaldocs: started processing @{in} => @{out}</echo>
-      <exec executable="perl" dir="${basedir}"
-        failonerror="true"
-      >
-        <arg line="lib/naturaldocs/NaturalDocs" />
-        <arg line="-i @{in}" />
-        <arg line="-o HTML @{out}" />
-        <arg line="-cs UTF-8" />
-        <arg line="-p @{config}" />
-      </exec>
-      <echo>naturaldocs: completed @{in} => @{out}</echo>
-      <echo/>
-    </sequential>
-  </macrodef>
-
   <target name="document"
     description="Document JavaScript source files with Natural Docs">
     <mkdir dir="out/doc/config"/>
@@ -105,36 +51,10 @@
 
   <target name="doc" depends="document" description="alias for document" />
 
-  <macrodef name="combiner">
-    <attribute name="in" />
-    <attribute name="out" />
-    <sequential>
-      <echo>combiner: started processing @{in} => @{out}</echo>
-      <java jar="lib/combiner/combiner-0.0.1.jar"
-          fork="true"
-          failonerror="true"
-      >
-        <arg value="-v" />
-        <arg line="--charset UTF-8" />
-        <arg line="-o @{out}" />
-        <arg line="@{in}" />
-      </java>
-      <echo>combiner: completed @{in} => @{out}</echo>
-      <echo/>
-    </sequential>
-  </macrodef>
-
-  <target name="combine-with-combiner" description="Combine JavaScript files with Combiner">
+  <target name="combine"
+    description="Combine JavaScript files using concat task">
     <mkdir dir="out/js"/>
-    <fileset id="allinfiles" dir="../src" includes="*.js" />
-    <pathconvert property="allin" pathsep=" " refid="allinfiles" />
-    <combiner in="${allin}" out="out/js/lb-full.js" />
-  </target>
-
-  <target name="combine" description="Combine JavaScript files using concat task">
-    <!-- Temporary replacement for Combiner to avoid issue: wrong order of dependencies -->
-    <mkdir dir="out/js"/>
-    <concat binary="true" destfile="out/js/lb-full.js">
+    <concat binary="true" destfile="out/js/${ant.project.name}-full.js">
       <!-- Google Closure (extracts) -->
       <file file="../src/closure/goog.js"/>
       <file file="../src/closure/goog.array.js"/>
@@ -230,39 +150,21 @@
     </concat>
   </target>
 
-  <macrodef name="yuicompressor">
-    <attribute name="in" />
-    <attribute name="out" />
-    <sequential>
-      <echo>yuicompressor: started processing @{in} => @{out}</echo>
-      <java jar="lib/yuicompressor/yuicompressor-2.4.2.jar"
-          fork="true"
-          failonerror="true"
-      >
-        <arg value="-v" />
-        <arg line="--charset UTF-8" />
-        <arg line="-o @{out}" />
-        <arg line="@{in}" />
-      </java>
-      <echo>yuicompressor: completed @{in} => @{out}</echo>
-      <echo/>
-    </sequential>
-  </macrodef>
-
-  <target name="setToday">
+  <target name="setTimestamp">
     <tstamp>
-      <format property="TODAY" pattern="yyyy-MM-dd" timezone="GMT" />
+      <format property="NOW" pattern="yyyy-MM-dd-HHmm" timezone="GMT" />
     </tstamp>
   </target>
 
   <target name="compress"
    description="Compress JavaScript files with YUI Compressor"
-   depends="setToday"
+   depends="setTimestamp"
   >
-    <yuicompressor in="out/js/lb-full.js"
-                   out="out/js/lb-min.js" />
+    <yuicompressor in="out/js/${ant.project.name}-full.js"
+                   out="out/js/${ant.project.name}-min.js" />
 
-    <copy file="out/js/lb-min.js" tofile="out/js/lb-min-${TODAY}.js" />
+    <copy file="out/js/${ant.project.name}-min.js"
+      tofile="out/js/${ant.project.name}-min-${NOW}.js" />
   </target>
 
 </project>

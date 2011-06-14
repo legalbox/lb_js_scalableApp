@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="macros">
+  <description>
+  Macro definitions for projects based on
+  The Scalable JavaScript Application Framework
+  by Legal-Box, Paris
+
+  These macro definitions allow to use a simpler syntax to call the tools
+  included in lib folder.
+
+  Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
+  Author: Marc Delhommeau &lt;marc.delhommeau@legalbox.com>
+  Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
+  License: BSD License - http://creativecommons.org/licenses/BSD/
+  Version: 2011-06-14
+
+  Based on Build script for bezen.org JavaScript library
+  CC-BY: Eric Bréchemier - http://bezen.org/javascript/
+  </description>
+
+  <!-- parent folder of the imported macros.xml file -->
+  <dirname property="macros.basedir" file="${ant.file.macros}" />
+
+  <taskdef name="jslint4java"
+    classname="com.googlecode.jslint4java.ant.JSLintTask"
+    classpath="${macros.basedir}/lib/jslint4java/jslint4java-1.4.7.jar" />
+  <!--
+  Check a set of JavaScript files with JSLint, using jslint4java
+
+  Usage:
+    * Check a single file
+    <jslint file="../src/singleFile.js" />
+
+    * Check all JavaScript files (*.js) in a directory (non-recursive)
+    <jslint dir="../src/wholeDir/" />
+
+    * Check all JavaScript files in a directory, recursively
+    <jslint dir="../src" file="**/*.js" />
+  -->
+  <macrodef name="jslint">
+    <attribute name="file" default="*.js" />
+    <attribute name="dir"  default="." />
+    <sequential>
+      <echo>jslint: checking @{file} in @{dir}</echo>
+      <jslint4java jslint="${macros.basedir}/lib/jslint/jslint.js"
+        encoding="UTF-8" haltOnFailure="true">
+        <formatter type="plain" />
+        <!-- The two file sets are combined to handle two use cases:
+          1) only file attribute is present
+          2) only dir attribute, or both file and dir attributes are present
+        -->
+        <fileset file="@{file}" />
+        <fileset dir="@{dir}" includes="@{file}" />
+      </jslint4java>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="naturaldocs">
+    <attribute name="in" description="path to input folder for JS files" />
+    <attribute name="out" description="path to folder for HTML output" />
+    <attribute name="config" description="path to folder for configuration" />
+    <sequential>
+      <echo>naturaldocs: copy configuration to @{config}</echo>
+      <copy file="lib/naturaldocs/Config/Menu.txt" todir="@{config}" />
+      <echo>naturaldocs: started processing @{in} => @{out}</echo>
+      <exec executable="perl" dir="${basedir}"
+        failonerror="true"
+      >
+        <arg line="${macros.basedir}/lib/naturaldocs/NaturalDocs" />
+        <arg line="-i @{in}" />
+        <arg line="-o HTML @{out}" />
+        <arg line="-cs UTF-8" />
+        <arg line="-p @{config}" />
+      </exec>
+      <echo>naturaldocs: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <macrodef name="yuicompressor">
+    <attribute name="in" />
+    <attribute name="out" />
+    <sequential>
+      <echo>yuicompressor: started processing @{in} => @{out}</echo>
+      <java jar="${macros.basedir}/lib/yuicompressor/yuicompressor-2.4.2.jar"
+          fork="true"
+          failonerror="true"
+      >
+        <arg value="-v" />
+        <arg line="--charset UTF-8" />
+        <arg line="-o @{out}" />
+        <arg line="@{in}" />
+      </java>
+      <echo>yuicompressor: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+</project>
