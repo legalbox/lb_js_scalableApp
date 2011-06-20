@@ -1,10 +1,12 @@
 /*
  * test.lb.base.ajax.js - Unit Tests of lb.base.ajax module
  *
- * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-05-30
+ * Version:   2011-06-14
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -13,19 +15,19 @@
 /*requires lb.base.ajax.js */
 /*jslint white:false, onevar:false, plusplus:false */
 /*global lb, bezen, goog, window */
-(function() {
+define(
+  [
+    "bezen.org/bezen.assert",
+    "bezen.org/bezen.object",
+    "bezen.org/bezen.array",
+    "bezen.org/bezen.testrunner"
+  ],
+  function(assert,object,array,testrunner) {
   // Builder of
   // Closure object for Test of lb.base.ajax
 
   // Define aliases
-      /*requires bezen.assert.js */
-  var assert = bezen.assert,
-      /*requires bezen.object.js */
-      object = bezen.object,
-      /*requires bezen.array.js */
-      empty = bezen.array.empty,
-      /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner,
+  var empty = array.empty,
       /*requires goog.net.MockXmlHttp */
       MockXmlHttp = goog.net.MockXmlHttp;
 
@@ -85,4 +87,4 @@
   testrunner.define(tests, "lb.base.ajax");
   return tests;
 
-}());
+});
