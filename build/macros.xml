@@ -11,7 +11,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-07
+  Version: 2011-06-24
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -72,6 +72,46 @@
         <arg line="-p @{config}" />
       </exec>
       <echo>naturaldocs: completed @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <!-- Combine JavaScript files using requireJS -->
+  <macrodef name="requirejs">
+    <attribute name="in"
+      description="location of source folder with source JS files" />
+    <attribute name="out"
+      description="location of the combined file to create" />
+    <attribute name="config"
+      description="location of the folder for generated build config" />
+    <sequential>
+      <echo>requirejs: started combining @{in} => @{out}</echo>
+
+      <!-- list all scripts files found in source folder -->
+      <fileset id="src.files" dir="@{in}">
+        <include name="**/*.js" />
+      </fileset>
+
+      <!-- convert the list to the "inside" of an array of modules:
+           a", "b", "c", "d
+           The initial '["' and final '"]' are in the template file. -->
+      <pathconvert property="modules.list"
+        refid="src.files" dirsep="/" pathsep='","'>
+        <!-- convert to a path relative to source folder -->
+        <map from="@{in}/" to="" />
+        <!-- remove the .js extension to refer to the module, not the file -->
+        <mapper type="glob" from="*.js" to="*" />
+      </pathconvert>
+
+      <copy file="${macros.basedir}/lib/requirejs/build-config.json.tpl"
+            tofile="@{config}/build-config.json" />
+      <replace file="@{config}/build-config.js" encoding="UTF-8">
+        <replacefilter token="#src.dir#" value="@{in}" />
+        <replacefilter token="#modules.list#" value="${modules.list}" />
+        <replacefilter token="#out.file#" value="@{out}" />
+      </replace>
+
+      <echo>requirejs: completed @{in} => @{out}</echo>
       <echo/>
     </sequential>
   </macrodef>
