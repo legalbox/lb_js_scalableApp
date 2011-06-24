@@ -2,8 +2,9 @@
  * Namespace: lb.core
  * Core Modules for Legal Box Scalable JavaScript Application
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -13,17 +14,20 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-24
  */
-/*requires lb.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.core = (function() {
+/*global define, lb */
+define(["lb"],function(lb) {
   // Builder of
   // Closure for lb.core namespace
 
   // Note: no methods defined at this level currently
 
-  return { // public API
+  // Assign to lb.core
+  // for backward-compatibility in browser environment
+  lb.core = { // public API
   };
-}());
+
+  return lb.core;
+});

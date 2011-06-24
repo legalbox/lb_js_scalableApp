@@ -2,8 +2,9 @@
  * Namespace: lb
  * Root of Legal Box Scalable JavaScript Application
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -13,16 +14,24 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-24
  */
 /*jslint white:false, plusplus:false */
-/*global window */
-window.lb = (function() {
+/*global define, window */
+define(function() {
   // Builder of
   // Closure for Root of Legal Box Scalable JavaScript Application
 
   // Note: no methods defined at this level currently
 
-  return { // public API
+  var lb = { // public API
   };
-}());
+
+  // initialize global variable lb in browser environment,
+  // for backward-compatibility
+  if (window){
+    window.lb = lb;
+  }
+
+  return lb;
+});

@@ -4,6 +4,7 @@
  *
  * Author:
  * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Marc Delhommeau <marc.delhommeaulegalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
