@@ -22,7 +22,6 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, window, bezen, document */
-// preserve the library, if already loaded
 define(function() {
   // Builder of
   // Closure for Root of bezen.org Javascript library
@@ -57,6 +56,7 @@ define(function() {
   // initialize global variable bezen in browser environment,
   // for backward-compatibility
   if (window){
+    // preserve the library, if already loaded
     window.bezen = window.bezen || bezen;
   }
 
