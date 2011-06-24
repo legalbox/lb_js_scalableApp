@@ -21,7 +21,7 @@
 // * updated module pattern for use with requireJS
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global define, bezen */
+/*global define */
 define(["bezen"],function(bezen) {
   // Builder of
   // Closure for Array utilities

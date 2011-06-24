@@ -21,7 +21,7 @@
 // * updated module pattern for use with requireJS
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global define, bezen, window, navigator, setTimeout */
+/*global define, window, navigator, setTimeout */
 define(["bezen","bezen.style","bezen.log","bezen.error"],
   function(bezen,style,log,error) {
   // Builder of
