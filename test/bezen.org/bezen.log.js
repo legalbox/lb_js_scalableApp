@@ -64,7 +64,7 @@
 // * updated module pattern for use with requireJS
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, document */
+/*global define, bezen, window, document */
 define(["./bezen","./bezen.object","./bezen.array"],
         function(bezen,object,array) {
   // Builder of 

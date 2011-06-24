@@ -21,6 +21,7 @@
 // * updated module pattern for use with requireJS
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
+/*global define, bezen */
 define(["./bezen","./bezen.object"],
         function(bezen,object) {
   // Builder of

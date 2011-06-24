@@ -21,7 +21,7 @@
 // * updated module pattern for use with requireJS
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global window, bezen, document */
+/*global define, window, bezen, document */
 // preserve the library, if already loaded
 define(function() {
   // Builder of
