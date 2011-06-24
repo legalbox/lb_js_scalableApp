@@ -22,7 +22,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, bezen */
-define(["./bezen","./bezen.object"],
+define(["bezen","bezen.object"],
         function(bezen,object) {
   // Builder of
   // Closure object with utility assert methods for unit tests

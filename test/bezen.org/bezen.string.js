@@ -23,7 +23,7 @@
 /*requires bezen.js */
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, bezen */
-define(["./bezen"],function(bezen) {
+define(["bezen"],function(bezen) {
   // Builder of
   // Closure for String utilities
 

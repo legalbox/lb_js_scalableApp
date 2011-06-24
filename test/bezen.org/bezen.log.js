@@ -65,7 +65,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, bezen, window, document */
-define(["./bezen","./bezen.object","./bezen.array"],
+define(["bezen","bezen.object","bezen.array"],
         function(bezen,object,array) {
   // Builder of 
   // Closure object for Logging functions
