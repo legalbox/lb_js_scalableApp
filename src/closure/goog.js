@@ -18,7 +18,7 @@
 // * moved global var COMPILED to goog.COMPILED, moved declaration after
 //   initialization of namespace object goog
 // * set goog.COMPILED to true and commented out conditional code running when
-//   the flag is true
+//   the flag is false
 // * set CLOSURE_NO_DEPS to true
 // * set goog.ENABLE_DEBUG_LOADER to false and commented out conditional code
 //   running when the flag is true
@@ -116,25 +116,26 @@ goog.LOCALE = 'en';  // default to en
  */
 goog.provide = function(name) {
   // LB: changed COMPILED to goog.COMPILED
-  if (!goog.COMPILED) {
-    // Ensure that the same namespace isn't provided twice. This is intended
-    // to teach new developers that 'goog.provide' is effectively a variable
-    // declaration. And when JSCompiler transforms goog.provide into a real
-    // variable declaration, the compiled JS should work the same as the raw
-    // JS--even when the raw JS uses goog.provide incorrectly.
-    if (goog.isProvided_(name)) {
-      throw Error('Namespace "' + name + '" already declared.');
-    }
-    delete goog.implicitNamespaces_[name];
+  // LB: commented out - !goog.COMPILED is false
+  // if (!goog.COMPILED) {
+  //   // Ensure that the same namespace isn't provided twice. This is intended
+  //   // to teach new developers that 'goog.provide' is effectively a variable
+  //   // declaration. And when JSCompiler transforms goog.provide into a real
+  //   // variable declaration, the compiled JS should work the same as the raw
+  //   // JS--even when the raw JS uses goog.provide incorrectly.
+  //   if (goog.isProvided_(name)) {
+  //     throw Error('Namespace "' + name + '" already declared.');
+  //   }
+  //   delete goog.implicitNamespaces_[name];
 
-    var namespace = name;
-    while ((namespace = namespace.substring(0, namespace.lastIndexOf('.')))) {
-      if (goog.getObjectByName(namespace)) {
-        break;
-      }
-      goog.implicitNamespaces_[namespace] = true;
-    }
-  }
+  //   var namespace = name;
+  //   while ((namespace = namespace.substring(0, namespace.lastIndexOf('.')))) {
+  //     if (goog.getObjectByName(namespace)) {
+  //       break;
+  //     }
+  //     goog.implicitNamespaces_[namespace] = true;
+  //   }
+  // }
 
   goog.exportPath_(name);
 };
@@ -156,30 +157,31 @@ goog.setTestOnly = function(opt_message) {
 };
 
 
+// LB: commented out - goog.COMPILED is set to true
 // LB: changed COMPILED to goog.COMPILED
-if (!goog.COMPILED) {
-
-  /**
-   * Check if the given name has been goog.provided. This will return false for
-   * names that are available only as implicit namespaces.
-   * @param {string} name name of the object to look for.
-   * @return {boolean} Whether the name has been provided.
-   * @private
-   */
-  goog.isProvided_ = function(name) {
-    return !goog.implicitNamespaces_[name] && !!goog.getObjectByName(name);
-  };
-
-  /**
-   * Namespaces implicitly defined by goog.provide. For example,
-   * goog.provide('goog.events.Event') implicitly declares
-   * that 'goog' and 'goog.events' must be namespaces.
-   *
-   * @type {Object}
-   * @private
-   */
-  goog.implicitNamespaces_ = {};
-}
+// if (!goog.COMPILED) {
+// 
+//   /**
+//    * Check if the given name has been goog.provided. This will return false for
+//    * names that are available only as implicit namespaces.
+//    * @param {string} name name of the object to look for.
+//    * @return {boolean} Whether the name has been provided.
+//    * @private
+//    */
+//   goog.isProvided_ = function(name) {
+//     return !goog.implicitNamespaces_[name] && !!goog.getObjectByName(name);
+//   };
+// 
+//   /**
+//    * Namespaces implicitly defined by goog.provide. For example,
+//    * goog.provide('goog.events.Event') implicitly declares
+//    * that 'goog' and 'goog.events' must be namespaces.
+//    *
+//    * @type {Object}
+//    * @private
+//    */
+//   goog.implicitNamespaces_ = {};
+// }
 
 
 /**
@@ -276,25 +278,26 @@ goog.globalize = function(obj, opt_global) {
  *                         this file requires.
  */
 goog.addDependency = function(relPath, provides, requires) {
+  // LB: commented out - goog.COMPILED is set to true
   // LB: changed COMPILED to goog.COMPILED
-  if (!goog.COMPILED) {
-    var provide, require;
-    var path = relPath.replace(/\\/g, '/');
-    var deps = goog.dependencies_;
-    for (var i = 0; provide = provides[i]; i++) {
-      deps.nameToPath[provide] = path;
-      if (!(path in deps.pathToNames)) {
-        deps.pathToNames[path] = {};
-      }
-      deps.pathToNames[path][provide] = true;
-    }
-    for (var j = 0; require = requires[j]; j++) {
-      if (!(path in deps.requires)) {
-        deps.requires[path] = {};
-      }
-      deps.requires[path][require] = true;
-    }
-  }
+  // if (!goog.COMPILED) {
+  //   var provide, require;
+  //   var path = relPath.replace(/\\/g, '/');
+  //   var deps = goog.dependencies_;
+  //   for (var i = 0; provide = provides[i]; i++) {
+  //     deps.nameToPath[provide] = path;
+  //     if (!(path in deps.pathToNames)) {
+  //       deps.pathToNames[path] = {};
+  //     }
+  //     deps.pathToNames[path][provide] = true;
+  //   }
+  //   for (var j = 0; require = requires[j]; j++) {
+  //     if (!(path in deps.requires)) {
+  //       deps.requires[path] = {};
+  //     }
+  //     deps.requires[path][require] = true;
+  //   }
+  // }
 };
 
 
