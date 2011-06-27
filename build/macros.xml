@@ -11,7 +11,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-24
+  Version: 2011-06-27
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -54,6 +54,7 @@
     </sequential>
   </macrodef>
 
+  <!-- Generate HTML documentation from comments in source files -->
   <macrodef name="naturaldocs">
     <attribute name="in" description="path to input folder for JS files" />
     <attribute name="out" description="path to folder for HTML output" />
