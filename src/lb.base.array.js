@@ -2,9 +2,10 @@
  * Namespace: lb.base.array
  * Array Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- *
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
+
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
@@ -13,18 +14,14 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-24
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.array = (function() {
+/*global define */
+define(["lb.base","closure/goog.array"],
+  function(lbBase, gArray) {
   // Builder of
   // Closure for lb.base.array module
-
-  // Declare alias
-      /*requires closure/goog.array.js */
-  var gArray = goog.array;
 
   function addOne(array, item){
     // Function: addOne(array, item)
@@ -85,11 +82,15 @@ lb.base.array = (function() {
     return gArray.toArray(pseudoArray);
   }
 
-  return { // public API
+  // Assign to lb.base.array
+  // for backward-compatibility in browser environment$
+  lbBase.array = { // public API
     addOne: addOne,
     removeOne: removeOne,
     removeAll: removeAll,
     copy: copy,
     toArray: toArray
   };
-}());
+
+  return lbBase.array;
+});

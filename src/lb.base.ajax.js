@@ -2,9 +2,9 @@
  * Namespace: lb.base.ajax
  * AJAX (Asynchronous JavaScript And XML) Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- * Marc Delhommeau <marc.delhommeaulegalbox.com>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -14,22 +14,17 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-24
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.ajax = (function() {
+/*global define */
+define(["lb.base","closure/goog.net.XhrIo","lb.base.json","lb.base.log"],
+  function(lbBase, XhrIo,                   json,          logModule) {
   // Builder of
   // Closure for lb.base.ajax module
 
   // Declare alias
-      /*requires closure/goog.net.XhrIo.js */
-  var XhrIo = goog.net.XhrIo,
-      /*requires lb.base.json.js */
-      json = lb.base.json,
-      /*requires lb.base.log.js */
-      log = lb.base.log.print;
+  var log = logModule.print;
 
   function send(url, data, receive){
     // Function: send(url, data, receive)
@@ -64,7 +59,11 @@ lb.base.ajax = (function() {
     );
   }
 
-  return { // public API
+  // Assign to lb.base.ajax
+  // for backward-compatibility in browser environment
+  lbBase.ajax = { // public API
     send: send
   };
-}());
+
+  return lbBase.ajax;
+});

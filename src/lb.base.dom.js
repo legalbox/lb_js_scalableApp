@@ -3,8 +3,9 @@
  * DOM (Document Object Model) Adapter Module for Base Library
  *
  * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- *
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
+
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
@@ -13,21 +14,18 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.dom = (function() {
+/*global define */
+define(["lb.base","lb.base.object","closure/goog.dom"],
+  function(lbBase, object,          dom) {
   // Builder of
   // Closure for lb.base.dom module
 
   // Declare aliases
 
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires closure/goog.dom.js */
-      dom = goog.dom;
+  var has = object.has;
 
   function $(id){
     // Function: $(id): DOM Element
@@ -97,7 +95,10 @@ lb.base.dom = (function() {
     return attributeNode.specified;
   }
 
-  return {
+  // Assign to lb.base.array$
+  // for backward-compatibility in browser environment$$
+
+  lbBase.array = {
     // public constants
 
     // constant: ELEMENT_NODE
@@ -114,4 +115,5 @@ lb.base.dom = (function() {
     $:$,
     hasAttribute: hasAttribute
   };
-}());
+  return lbBase.array;
+});

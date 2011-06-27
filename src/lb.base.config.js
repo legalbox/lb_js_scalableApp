@@ -7,8 +7,9 @@
  * They can be accessed using setOptions() to set one or several options, and
  * getOption() to retrieve a single value.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Marc delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -18,21 +19,17 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-21
+ * 2011-06-24
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.config = (function() {
+/*global define */
+define(["lb.base.config","closure/goog.object","lb.base.object"],
+  function(lbBase,       gObject,               object) {
   // Builder of
   // Closure for lb.base.config module
 
   // Declare alias
-
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires closure/goog.object.js */
-      gObject = goog.object,
+  var has = object.has,
 
   // Private fields
 
@@ -88,9 +85,13 @@ lb.base.config = (function() {
     }
   }
 
-  return { // public API
+  // Assign to lb.base.config$
+  // for backward-compatibility in browser environment
+  lbBase.config = { // public API
     reset: reset,
     setOptions: setOptions,
     getOption: getOption
   };
-}());
+
+  return lbBase.config;
+});
