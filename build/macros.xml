@@ -117,9 +117,10 @@
     </sequential>
   </macrodef>
 
+  <!-- Minify JavaScript/CSS files -->
   <macrodef name="yuicompressor">
-    <attribute name="in" />
-    <attribute name="out" />
+    <attribute name="in" description="path to input file" />
+    <attribute name="out" description="path to output file (minified)" />
     <sequential>
       <echo>yuicompressor: started processing @{in} => @{out}</echo>
       <java jar="${macros.basedir}/lib/yuicompressor/yuicompressor-2.4.2.jar"
