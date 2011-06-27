@@ -43,8 +43,9 @@
  * The list of language codes associated with language properties is returned
  * by getLanguageCodes(). It is initially empty.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -54,22 +55,18 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-06
+ * 2011-06-27
  */
-/*requires lb.base.i18n.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.base.i18n.data = (function() {
+/*global define */
+define (["lb.base.i18n","lb.base.object","lb.base.type"],
+  function(i18n,         object,          type) {
   // Builder of
   // Closure for lb.base.i18n.data module
 
   // Declare aliases
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
-      /*requires lb.base.i18n.js */
-      i18n = lb.base.i18n,
+  var has = object.has,
+      is = type.is,
       equals = i18n.equals,
       languageCompare = i18n.languageCompare,
       contains = i18n.contains,
@@ -270,11 +267,14 @@ lb.base.i18n.data = (function() {
     languages.length = 0;
   }
 
-  return { // public API
+  // Assign to lb.base.i18n.data
+  // for backward-compatibility in browser environment
+  i18n.data = { // public API
     getLanguageCodes: getLanguageCodes,
     addLanguageProperties: addLanguageProperties,
     getDefaultLanguageCode: getDefaultLanguageCode,
     get: get,
     reset: reset
   };
-}());
+  return i18n.data;
+});

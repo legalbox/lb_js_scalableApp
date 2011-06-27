@@ -21,8 +21,9 @@
  * The definition and lookup of language properties associated with language
  * codes is managed in <lb.base.i18n.data>.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -32,23 +33,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog, navigator, document */
-lb.base.i18n = (function() {
+/*global define, navigator, document */
+define(["lb.base","lb.base.object","lb.base.type","lb.base.dom"],
+  function(lbBase, object,          type,          dom) {
   // Builder of
   // Closure for lb.base.i18n module
 
   // Define aliases
 
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
-      /*requires lb.base.dom.js */
-      dom = lb.base.dom,
+  var has = object.has,
+      is = type.is,
       hasAttribute = dom.hasAttribute,
       ELEMENT_NODE = dom.ELEMENT_NODE;
 
@@ -241,7 +238,9 @@ lb.base.i18n = (function() {
     return position===0 && languageCode1.charAt(languageCode2.length)==='-';
   }
 
-  return { // public API
+  // Assign to lb.base.i18n
+  // for backward-compatibility in browser environment
+   lbBase.i18n = { // public API
     getBrowserLanguage: getBrowserLanguage,
     getLanguage: getLanguage,
     setLanguage: setLanguage,
@@ -249,4 +248,5 @@ lb.base.i18n = (function() {
     equals: equals,
     contains: contains
   };
-}());
+  return lbBase.i18n;
+});

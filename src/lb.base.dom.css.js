@@ -3,8 +3,9 @@
  * DOM (Document Object Model) CSS (Cascading Style Sheets) Adapter Module for
  * Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -14,18 +15,14 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.dom.css = (function() {
+/*global define */
+define(["lb.base.dom","goog.dom.classes"],
+  function(lbBaseDom,     classes) {
   // Builder of
   // Closure for lb.base.dom.css module
-
-  // Declare aliases
-      /*requires closure/goog.dom.classes.js */
-  var classes = goog.dom.classes;
 
   function getClasses(element){
     // Function: getClasses(element): object
@@ -82,9 +79,13 @@ lb.base.dom.css = (function() {
     classes.remove(element,name);
   }
 
-  return { // public API
+  // Assign to lb.base.dom.css
+  // for backward-compatibility in browser environment
+
+  lbBase.css = { // public API
     getClasses: getClasses,
     addClass: addClass,
     removeClass: removeClass
   };
-}());
+  return lbBaseDom.css;
+});

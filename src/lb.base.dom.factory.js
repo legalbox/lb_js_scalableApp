@@ -28,8 +28,9 @@
  * point intended for use in custom factories:
  * o <initElement(element)>
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -39,26 +40,22 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.dom.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.dom.factory = (function() {
+/*global define */
+define(["lb.base.dom","closure/goog.dom","closure/goog.events",
+        "closure/goog.events/Event","lb.base.dom.Listener","lb.base.array"],
+  function(lbBaseDom, googDom,           events,
+         Event,                      Listener,              array) {
   // Builder of
   // Closure for lb.base.dom.factory module
 
   // Declare aliases
-      /*requires closure/goog.dom.js */
-  var createDom = goog.dom.createDom,
-      removeElement = goog.dom.removeNode,
-      /*requires closure/goog.events.js */
-      fireListeners = goog.events.fireListeners,
-      Event = goog.events.Event,
-      /*requires lb.base.dom.Listener.js */
-      Listener = lb.base.dom.Listener,
-      /*requires lb.base.array.js */
-      toArray = lb.base.array.toArray;
+  var createDom = googDom.createDom,
+      removeElement = googDom.removeNode,
+      fireListeners = events.fireListeners,
+      toArray = array.toArray;
 
   // Function: initElement(element)
   // (optional) Customize a newly inserted element.
@@ -216,7 +213,10 @@ lb.base.dom.factory = (function() {
     }
   }
 
-  return { // public API
+  // Assign to lb.base.dom.factory
+  // for backward-compatibility in browser environment
+
+   lbBaseDom.factory = { // public API
     createElement: createElement,
     destroyElement: destroyElement,
     createListener: createListener,
@@ -224,4 +224,5 @@ lb.base.dom.factory = (function() {
     createEvent: createEvent,
     destroyEvent: destroyEvent
   };
-}());
+  return lbBaseDom.factory;
+});

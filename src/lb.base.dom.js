@@ -2,7 +2,7 @@
  * Namespace: lb.base.dom
  * DOM (Document Object Model) Adapter Module for Base Library
  *
- * Author:
+ * Authors:
  * o Eric Bréchemier <legalbox@eric.brechemier.name>
  * o Marc Delhommeau <marc.delhommeau@legalbox.com>
 
@@ -95,10 +95,10 @@ define(["lb.base","lb.base.object","closure/goog.dom"],
     return attributeNode.specified;
   }
 
-  // Assign to lb.base.array$
-  // for backward-compatibility in browser environment$$
+  // Assign to lb.base.dom
+  // for backward-compatibility in browser environment
 
-  lbBase.array = {
+  lbBase.dom = {
     // public constants
 
     // constant: ELEMENT_NODE
@@ -115,5 +115,5 @@ define(["lb.base","lb.base.object","closure/goog.dom"],
     $:$,
     hasAttribute: hasAttribute
   };
-  return lbBase.array;
+  return lbBase.dom;
 });

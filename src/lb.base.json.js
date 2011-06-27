@@ -2,9 +2,10 @@
  * Namespace: lb.base.json
  * JSON (JavaScript Object Notation) Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- *
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
+
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
@@ -13,18 +14,16 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.json = (function() {
+/*global define */
+define(["lb.base","closure/goog.json"],
+  function(lbBase, json) {
   // Builder of
   // Closure for lb.base.json module
 
   // Declare alias
-      /*requires closure/goog.json.js */
-  var json = goog.json;
 
   function parse(string){
     // Function: parse(string): object|array
@@ -55,8 +54,11 @@ lb.base.json = (function() {
     return json.serialize(object);
   }
 
-  return { // public API
+  // Assign to lb.base.json
+  // for backward-compatibility in browser environment
+  lbBase.json =  { // public API
     parse: parse,
     serialize: serialize
   };
-}());
+  return lbBase.json;
+});

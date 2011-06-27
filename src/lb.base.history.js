@@ -62,9 +62,10 @@
  *   + [3] How to Add a Shortcut Icon to a Web Page
  *     http://msdn.microsoft.com/en-us/library/ms537656%28VS.85%29.aspx
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- *
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
+
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
@@ -73,27 +74,24 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-27
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog, window, document */
-lb.base.history = (function() {
+/*global define, window, document */
+define(["lb.base","lb.base.object","lb.base.type","closure/goog.History",
+        "closure/goog.events","lb.base.dom"],
+  function(lbBase, object,          type,          History,
+         events,               dom) {
   // Builder of
   // Closure for lb.base.history module
 
   // Declare aliases
 
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
-      /*requires closure/goog.History.js */
-      History = goog.History,
+  var has = object.has,
+      is = type.is,
       NAVIGATE = History.EventType.NAVIGATE,
-      /*requires closure/goog.events.js */
-      listen = goog.events.listen,
-      unlisten = goog.events.unlisten,
+      listen = events.listen,
+      unlisten = events.unlisten,
         // use encodeURI / decodeURI instead of encodeURIComponent and
         // decodeURIComponent because the hash may contain a path with slashes,
         // i.e. more than one URI component. The / character gets encoded as
@@ -108,9 +106,9 @@ lb.base.history = (function() {
       encodeHash = window.encodeURI,
       decodeHash = window.decodeURI,
       /*requires lb.base.dom.js */
-      $ = lb.base.dom.$,
+      $ = dom.$,
       /*requires lb.base.dom.Listener.js */
-      Listener = lb.base.dom.Listener,
+      Listener = dom.Listener,
 
   // Private fields
 
@@ -307,7 +305,9 @@ lb.base.history = (function() {
   history.setEnabled(true);
   unloadListener = new Listener(window, 'unload', destroy);
 
-  return { // public API
+  // Assign to lb.base.history
+  // for backward-compatibility in browser environment
+  lbBase.history = { // public API
     getFaviconUrl: getFaviconUrl,
     getHash: getHash,
     setHash: setHash,
@@ -315,4 +315,5 @@ lb.base.history = (function() {
     removeListener: removeListener,
     destroy: destroy
   };
-}());
+  return lbBase.history;
+});
