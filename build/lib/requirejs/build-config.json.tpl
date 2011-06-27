@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-24
+ * 2011-06-27
  */
 ({
     // output file, absolute or relative to the location of this file
@@ -34,7 +34,7 @@
     // absolute or relative to the location of this file
     baseUrl: "#src.dir#",
 
-    // list of all the JavaScript modules in source directory
-    // relative to the baseUrl, without .js extension
-    include: ["#modules.list#"]
+    // list of all the JavaScript modules to combine, with an absolute path or
+    // a path relative to the baseUrl, without .js extension
+    include: #modules.array#
 })
