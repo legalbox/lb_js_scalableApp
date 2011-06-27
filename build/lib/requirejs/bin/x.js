@@ -27,12 +27,8 @@ var console;
         argOffset = useRequireBuildPath ? 0 : 1,
         readFile = typeof readFileFunc !== 'undefined' ? readFileFunc : null;
 
-    print("x.js started");
-
     if (typeof Packages !== 'undefined') {
         env = 'rhino';
-
-        print("rhino detected");
 
         if (useRequireBuildPath) {
             requireBuildPath = args[0];
@@ -55,12 +51,8 @@ var console;
                 }
             };
         }
-        print('completed rhino setup');
-
     } else if (typeof process !== 'undefined') {
         env = 'node';
-
-        print("node.js detected");
 
         //Get the fs module via Node's require before it
         //gets replaced. Used in require/node.js
@@ -82,33 +74,27 @@ var console;
         }
 
         fileName = process.argv[3 - argOffset];
-
-        print('completed node.js setup');
     }
 
-    print("Make sure build path ends in a slash.");
+    //Make sure build path ends in a slash.
     requireBuildPath = requireBuildPath.replace(/\\/g, '/');
     if (requireBuildPath.charAt(requireBuildPath.length - 1) !== "/") {
         requireBuildPath += "/";
     }
 
-    print("Actual base directory is up one directory from this script.");
+    //Actual base directory is up one directory from this script.
     requireBuildPath += '../';
 
-    print("loading require.js at: "+requireBuildPath + 'require.js');
     exec(readFile(requireBuildPath + 'require.js'), 'require.js');
 
     //These are written out long-form so that they can be replaced by
     //the distribution script.
     if (env === 'rhino') {
-        print("loading rhino adapter at: "+requireBuildPath + 'adapt/rhino.js');
         exec(readFile(requireBuildPath + 'adapt/rhino.js'), 'rhino.js');
     } else if (env === 'node') {
-        print("loading node.js adapter at: "+requireBuildPath + 'adapt/node.js');
         exec(readFile(requireBuildPath + 'adapt/node.js'), 'node.js');
     }
 
-    print("bootstrapping jslib at: "+ requireBuildPath + "build/jslib/'");
     if (useRequireBuildPath) {
         exec("require({" +
             "baseUrl: '" + requireBuildPath + "build/jslib/'" +
@@ -119,12 +105,11 @@ var console;
     //like Joyent where it defaults to a server.js as the only executed
     //script.
     if (!fileName || !jsSuffixRegExp.test(fileName)) {
-        print("configure default file name");
         fileName = 'main.js';
     }
 
     if (!useRequireBuildPath) {
-        print("Use the file name's directory as the baseUrl if available.");
+        //Use the file name's directory as the baseUrl if available.
         dir = fileName.replace(/\\/g, '/');
         if (dir.indexOf('/') !== -1) {
             dir = dir.split('/');
@@ -134,7 +119,6 @@ var console;
         }
     }
 
-    print("run script: "+fileName);
     exec(readFile(fileName), fileName);
 
 }((typeof Packages !== 'undefined' ? arguments : []), (typeof readFile !== 'undefined' ? readFile: undefined)));
