@@ -45,7 +45,7 @@
 /*jslint white:false, plusplus:false */
 /*global define */
 define(["lb.base.dom","closure/goog.dom","closure/goog.events",
-        "closure/goog.events/Event","lb.base.dom.Listener","lb.base.array"],
+        "closure/goog.events.Event","lb.base.dom.Listener","lb.base.array"],
   function(lbBaseDom, googDom,           events,
          Event,                      Listener,              array) {
   // Builder of
