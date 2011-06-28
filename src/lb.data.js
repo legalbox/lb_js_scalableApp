@@ -18,7 +18,7 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb"],function(lb) {
+define(["./lb"],function(lb) {
   // Builder of
   // Closure for lb.data namespace
 
