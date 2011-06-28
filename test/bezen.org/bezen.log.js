@@ -4,16 +4,7 @@
  * author:    Eric Bréchemier <bezen@eric.brechemier.name>
  * license:   Creative Commons Attribution 3.0 Unported
  *            http://creativecommons.org/licenses/by/3.0/
- * version:   2010-01-14 "Calvin's Snowball"
- *
- * To Cecile, with Love,
- * you were the first to wait for the conception of this library
- *
- * Tested successfully in
- *   Firefox 2, Firefox 3, Firefox 3.5,
- *   Internet Explorer 6, Internet Explorer 7, Internet Explorer 8,
- *   Chrome 3, Safari 3, Safari 4,
- *   Opera 9.64, Opera 10.10
+ * version:   based on 2010-01-14
  *
  * Log is intended for (local) debugging purpose and is not sent back to 
  * the server.
@@ -65,277 +56,276 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, window, document */
-define(["bezen","bezen.object","bezen.array"],
-        function(bezen,object,array) {
-  // Builder of 
-  // Closure object for Logging functions
+define(["./bezen", "./bezen.object", "./bezen.array"],
+  function(bezen,  object,           array) {
    
-  // Define aliases
-  var $ = bezen.$,
-      exists = object.exists,
-      pop = array.pop,
-      unshift = array.unshift;
-   
-  var MAX_RECORDS = 100;
-  var DOM_LOG_ID = 'bezen.log';
-  
-  // log records
-  var records = [];
-  
-  var ON  = true;
-  var OFF = false;
-  var globalOnOff = OFF;
-  var on = function()  { globalOnOff = ON;  };
-  var off = function() { globalOnOff = OFF; };
-
-  var isOn = function(localOnOff) {
-    // check whether a message should be logged or not,
-    // based on local and global status
-    //
-    // param:
-    //   localOnOff - (boolean) always display this message if true,
-    //                always hide this message if false,
-    //                hide or show based on global on()/off() if missing 
-    //
-    // return:
-    //   true if localOnOff is ON
-    //   false if localOnOff is OFF
-    //   globalOnOff otherwise
-    //
+    // Define aliases
+    var $ = bezen.$,
+        exists = object.exists,
+        pop = array.pop,
+        unshift = array.unshift;
+     
+    var MAX_RECORDS = 100;
+    var DOM_LOG_ID = 'bezen.log';
     
-    if (localOnOff === ON) {
-      return true;
-    }
+    // log records
+    var records = [];
+    
+    var ON  = true;
+    var OFF = false;
+    var globalOnOff = OFF;
+    var on = function()  { globalOnOff = ON;  };
+    var off = function() { globalOnOff = OFF; };
+
+    var isOn = function(localOnOff) {
+      // check whether a message should be logged or not,
+      // based on local and global status
+      //
+      // param:
+      //   localOnOff - (boolean) always display this message if true,
+      //                always hide this message if false,
+      //                hide or show based on global on()/off() if missing 
+      //
+      // return:
+      //   true if localOnOff is ON
+      //   false if localOnOff is OFF
+      //   globalOnOff otherwise
+      //
       
-    if (localOnOff === OFF) {
-      return false;
-    }
-     
-    return globalOnOff;
-  };
-  
-  var log = function() {
-    // log message:
-    //   * on Firebug/Jash console if available,
-    //   * in $('bezen.log') if present
-    //   * and in log.records, up to 100 (MAX_RECORDS) records.
-    // params:
-    //   ... - (string, object, boolean, ...) messages for the logs
-    //
-    // Note: the arguments will be concatenated to a single string for records
-    //       and Jash console, but will be provided as separated parameters to
-    //       Firebug console, which then provides clickable links for objects.
-    //       In case window.console is defined without the firebug property,
-    //       e.g. with Safari console, the full string is printed as well.
-     
-    var message = arguments[0];
-    for (var i=1; i<arguments.length; i++) {
-      message += arguments[i];
-    }
-      
-    if ( records.length < MAX_RECORDS ) {
-      records.push(message);
-    }
-     
-    if ( exists(window,'jash','print') ) {
-      window.jash.print(message);
-    }
-     
-    if ( exists(window,'console','log') ) {
-      var console = window.console;
-      if ( exists(console,'firebug') ) {
-        console.log.apply(this,arguments);
+      if (localOnOff === ON) {
+        return true;
+      }
+        
+      if (localOnOff === OFF) {
+        return false;
+      }
+       
+      return globalOnOff;
+    };
+    
+    var log = function() {
+      // log message:
+      //   * on Firebug/Jash console if available,
+      //   * in $('bezen.log') if present
+      //   * and in log.records, up to 100 (MAX_RECORDS) records.
+      // params:
+      //   ... - (string, object, boolean, ...) messages for the logs
+      //
+      // Note: the arguments will be concatenated to a single string for records
+      //       and Jash console, but will be provided as separated parameters to
+      //       Firebug console, which then provides clickable links for objects.
+      //       In case window.console is defined without the firebug property,
+      //       e.g. with Safari console, the full string is printed as well.
+       
+      var message = arguments[0];
+      for (var i=1; i<arguments.length; i++) {
+        message += arguments[i];
+      }
+        
+      if ( records.length < MAX_RECORDS ) {
+        records.push(message);
+      }
+       
+      if ( exists(window,'jash','print') ) {
+        window.jash.print(message);
+      }
+       
+      if ( exists(window,'console','log') ) {
+        var console = window.console;
+        if ( exists(console,'firebug') ) {
+          console.log.apply(this,arguments);
+        } else {
+          console.log(message);
+        }
+      }
+       
+      var logDiv = $(DOM_LOG_ID);
+      if ( exists(logDiv) ) {
+        logDiv.appendChild( document.createTextNode(message) );
+        logDiv.appendChild( document.createElement('br') );
+      }
+    };
+    
+    var logIfOn = function() {
+      // log a message based on local and global on/off switches
+      //
+      // params:
+      //   ... - (string, object, boolean, ...) messages for the logs. In case
+      //         the last parameter is a boolean, it is considered as localOnOff
+      //         and not printed in logs, unless this is the *only* parameter:
+      //         the first parameter is always considered as a message to log.
+      //         Example:
+      //           on();
+      //           logIfOn( true );      // log(true)
+      //           logIfOn( true, true); // log(true), not log(true, true)
+      //
+      //   localOnOff - (boolean) (optional) always log this message if true,
+      //                always ignore this message if false, otherwise
+      //                log or ignore based on global on()/off().
+      //                Example:
+      //                  on();
+      //                  logIfOn("message"); // log("message")
+      //                  logIfOn("message",false); // force to ignore
+      //                  off();
+      //                  logIfOn("message"); // ignore
+      //                  logIfOn("message", true); // force to log
+        
+      if ( arguments.length>1 && 
+           typeof arguments[arguments.length-1] === 'boolean' ) {
+        var localOnOff = arguments[arguments.length-1];
+        if ( isOn(localOnOff) ) {
+          pop(arguments);
+          log.apply(null,arguments);
+        }
       } else {
-        console.log(message);
+        if ( isOn() ) {
+          log.apply(null,arguments);
+        }
       }
-    }
+    };
      
-    var logDiv = $(DOM_LOG_ID);
-    if ( exists(logDiv) ) {
-      logDiv.appendChild( document.createTextNode(message) );
-      logDiv.appendChild( document.createElement('br') );
-    }
-  };
-  
-  var logIfOn = function() {
-    // log a message based on local and global on/off switches
-    //
-    // params:
-    //   ... - (string, object, boolean, ...) messages for the logs. In case
-    //         the last parameter is a boolean, it is considered as localOnOff
-    //         and not printed in logs, unless this is the *only* parameter:
-    //         the first parameter is always considered as a message to log.
-    //         Example:
-    //           on();
-    //           logIfOn( true );      // log(true)
-    //           logIfOn( true, true); // log(true), not log(true, true)
-    //
-    //   localOnOff - (boolean) (optional) always log this message if true,
-    //                always ignore this message if false, otherwise
-    //                log or ignore based on global on()/off().
-    //                Example:
-    //                  on();
-    //                  logIfOn("message"); // log("message")
-    //                  logIfOn("message",false); // force to ignore
-    //                  off();
-    //                  logIfOn("message"); // ignore
-    //                  logIfOn("message", true); // force to log
+    var info = function() {
+      // Log an information message.
+      //
+      // params:
+      //   ... - (string, object, boolean, ...) messages for the logs. In case
+      //         the last parameter is a boolean, it is considered as localOnOff
+      //         and not printed in logs, unless this is the *only* parameter:
+      //         the first parameter is always considered as a message to log.
+      //         Example:
+      //           on();
+      //           info( true );      // log(true)
+      //           info( true, true); // log(true), not log(true, true)
+      //
+      //   localOnOff - (boolean) (optional) always log this message if true,
+      //                always ignore this message if false, otherwise
+      //                log or ignore based on global on()/off().
+      //                Example:
+      //                  on();
+      //                  info("message"); // log("message")
+      //                  info("message",false); // force to ignore
+      //                  off();
+      //                  info("message"); // ignore
+      //                  info("message", true); // force to log
       
-    if ( arguments.length>1 && 
-         typeof arguments[arguments.length-1] === 'boolean' ) {
-      var localOnOff = arguments[arguments.length-1];
-      if ( isOn(localOnOff) ) {
-        pop(arguments);
-        log.apply(null,arguments);
+      logIfOn.apply(null,arguments);
+    };
+
+    var warn = function(message,localOnOff) {
+      // Log a warning message.
+      //
+      // params:
+      //   ... - (string, object, boolean, ...) messages for the logs. In case
+      //         the last parameter is a boolean, it is considered as localOnOff
+      //         and not printed in logs, unless this is the *only* parameter:
+      //         the first parameter is always considered as a message to log.
+      //         Example:
+      //           on();
+      //           warn( true );      // log("Warning: ",true)
+      //           warn( true, true); // log("Warning: ",true),
+      //                              // not log("Warning: ",true, true)
+      //
+      //   localOnOff - (boolean) (optional) always log this message if true,
+      //                always ignore this message if false, otherwise
+      //                log or ignore based on global on()/off().
+      //                Example:
+      //                  on();
+      //                  warn("message"); // log("Warning: ","message")
+      //                  warn("message",false); // force to ignore
+      //                  off();
+      //                  warn("message"); // ignore
+      //                  warn("message", true); // force to log
+      
+      unshift(arguments,'Warning: ');
+      logIfOn.apply(null,arguments);
+    };
+
+    var error = function(message,localOnOff) {
+      // Log an error message.
+      //
+      // params:
+      //   ... - (string, object, boolean, ...) messages for the logs. In case
+      //         the last parameter is a boolean, it is considered as localOnOff
+      //         and not printed in logs, unless this is the *only* parameter:
+      //         the first parameter is always considered as a message to log.
+      //         Example:
+      //           on();
+      //           error( true );      // log("[ERROR] ",true)
+      //           error( true, true); // log("[ERROR] ",true),
+      //                               // not log("[ERROR ] ",true,true)
+      //
+      //   localOnOff - (boolean) (optional) always log this message if true,
+      //                always ignore this message if false, otherwise
+      //                log or ignore based on global on()/off().
+      //                Example:
+      //                  on();
+      //                  error("message"); // log("[ERROR] ","message")
+      //                  error("message",false); // force to ignore
+      //                  off();
+      //                  error("message"); // ignore
+      //                  error("message", true); // force to log
+      
+      unshift(arguments,'[ERROR] ');
+      logIfOn.apply(null,arguments);
+    };
+    
+    var view = function(offset, end) {
+      // return a multi-line string showing all logs in the following format:
+      //   1. ...\n
+      //   2. Warning: ...\n
+      //   4. [ERROR] ...\n
+      //   5. ...\n
+      //   6. ...\n
+      //   ...
+      //
+      // A simple bookmarlet may be defined to display this string in any
+      // browser, using window.alert:
+      //   javascript:window.alert(bezen.log.view())
+      //
+      // Two optional parameters allow to limit the number of records displayed:
+      // params:
+      //   offset - (string) (default:0) number of records to skip
+      //   end - (string) (default:records.length) highest position of record
+      //         to display. This value will be capped at records.length.
+      //
+      // The above bookmarklet may be rewritten to display only first 10 records
+      //   javascript:window.alert(bezen.log.view(0,10))
+      // and then modified to read the records 10 to 50
+      //   javascript:window.alert(bezen.log.view(10,50))
+      offset = offset || 0;
+      end = end || records.length;
+      if (end > records.length) {
+        end = records.length;
       }
-    } else {
-      if ( isOn() ) {
-        log.apply(null,arguments);
+       
+      var lines = '';
+      for (var i=offset; i<end; i++) {
+        lines += (i+1)+'. '+records[i]+'\n';
       }
-    }
-  };
-   
-  var info = function() {
-    // Log an information message.
-    //
-    // params:
-    //   ... - (string, object, boolean, ...) messages for the logs. In case
-    //         the last parameter is a boolean, it is considered as localOnOff
-    //         and not printed in logs, unless this is the *only* parameter:
-    //         the first parameter is always considered as a message to log.
-    //         Example:
-    //           on();
-    //           info( true );      // log(true)
-    //           info( true, true); // log(true), not log(true, true)
-    //
-    //   localOnOff - (boolean) (optional) always log this message if true,
-    //                always ignore this message if false, otherwise
-    //                log or ignore based on global on()/off().
-    //                Example:
-    //                  on();
-    //                  info("message"); // log("message")
-    //                  info("message",false); // force to ignore
-    //                  off();
-    //                  info("message"); // ignore
-    //                  info("message", true); // force to log
-    
-    logIfOn.apply(null,arguments);
-  };
+       
+      return lines;
+    };
 
-  var warn = function(message,localOnOff) {
-    // Log a warning message.
-    //
-    // params:
-    //   ... - (string, object, boolean, ...) messages for the logs. In case
-    //         the last parameter is a boolean, it is considered as localOnOff
-    //         and not printed in logs, unless this is the *only* parameter:
-    //         the first parameter is always considered as a message to log.
-    //         Example:
-    //           on();
-    //           warn( true );      // log("Warning: ",true)
-    //           warn( true, true); // log("Warning: ",true),
-    //                              // not log("Warning: ",true, true)
-    //
-    //   localOnOff - (boolean) (optional) always log this message if true,
-    //                always ignore this message if false, otherwise
-    //                log or ignore based on global on()/off().
-    //                Example:
-    //                  on();
-    //                  warn("message"); // log("Warning: ","message")
-    //                  warn("message",false); // force to ignore
-    //                  off();
-    //                  warn("message"); // ignore
-    //                  warn("message", true); // force to log
-    
-    unshift(arguments,'Warning: ');
-    logIfOn.apply(null,arguments);
-  };
+    // Assign to bezen.log
+    // for backward compatibility
+    bezen.log = {
+      // public API
+      on: on,
+      off: off,
+      info: info,
+      warn: warn,
+      error: error,
+      view: view,
+       
+      _: { // private section, for unit tests
+        isOn: isOn,
+        log: log,
+        logIfOn: logIfOn,
+        globalOnOff: globalOnOff,
+        records: records
+      }
+    };
 
-  var error = function(message,localOnOff) {
-    // Log an error message.
-    //
-    // params:
-    //   ... - (string, object, boolean, ...) messages for the logs. In case
-    //         the last parameter is a boolean, it is considered as localOnOff
-    //         and not printed in logs, unless this is the *only* parameter:
-    //         the first parameter is always considered as a message to log.
-    //         Example:
-    //           on();
-    //           error( true );      // log("[ERROR] ",true)
-    //           error( true, true); // log("[ERROR] ",true),
-    //                               // not log("[ERROR ] ",true,true)
-    //
-    //   localOnOff - (boolean) (optional) always log this message if true,
-    //                always ignore this message if false, otherwise
-    //                log or ignore based on global on()/off().
-    //                Example:
-    //                  on();
-    //                  error("message"); // log("[ERROR] ","message")
-    //                  error("message",false); // force to ignore
-    //                  off();
-    //                  error("message"); // ignore
-    //                  error("message", true); // force to log
-    
-    unshift(arguments,'[ERROR] ');
-    logIfOn.apply(null,arguments);
-  };
-  
-  var view = function(offset, end) {
-    // return a multi-line string showing all logs in the following format:
-    //   1. ...\n
-    //   2. Warning: ...\n
-    //   4. [ERROR] ...\n
-    //   5. ...\n
-    //   6. ...\n
-    //   ...
-    //
-    // A simple bookmarlet may be defined to display this string in any
-    // browser, using window.alert:
-    //   javascript:window.alert(bezen.log.view())
-    //
-    // Two optional parameters allow to limit the number of records displayed:
-    // params:
-    //   offset - (string) (default:0) number of records to skip
-    //   end - (string) (default:records.length) highest position of record
-    //         to display. This value will be capped at records.length.
-    //
-    // The above bookmarklet may be rewritten to display only first 10 records
-    //   javascript:window.alert(bezen.log.view(0,10))
-    // and then modified to read the records 10 to 50
-    //   javascript:window.alert(bezen.log.view(10,50))
-    offset = offset || 0;
-    end = end || records.length;
-    if (end > records.length) {
-      end = records.length;
-    }
-     
-    var lines = '';
-    for (var i=offset; i<end; i++) {
-      lines += (i+1)+'. '+records[i]+'\n';
-    }
-     
-    return lines;
-  };
-
-  // assign to global bezen.log
-  // for backward compatibility in browser environment
-  bezen.log = {
-    // public API
-    on: on,
-    off: off,
-    info: info,
-    warn: warn,
-    error: error,
-    view: view,
-     
-    _: { // private section, for unit tests
-      isOn: isOn,
-      log: log,
-      logIfOn: logIfOn,
-      globalOnOff: globalOnOff,
-      records: records
-    }
-  };
-
-  return bezen.log;
-});
+    return bezen.log;
+  }
+);

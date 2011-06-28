@@ -4,16 +4,7 @@
  * author:    Eric Bréchemier <bezen@eric.brechemier.name>
  * license:   Creative Commons Attribution 3.0 Unported
  *            http://creativecommons.org/licenses/by/3.0/
- * version:   2010-01-14 "Calvin's Snowball"
- *
- * To Cecile, with Love,
- * you were the first to wait for the conception of this library
- *
- * Tested successfully in
- *   Firefox 2, Firefox 3, Firefox 3.5,
- *   Internet Explorer 6, Internet Explorer 7, Internet Explorer 8,
- *   Chrome 3, Safari 3, Safari 4,
- *   Opera 9.64, Opera 10.10
+ * version:   based on 2010-01-14
  *
  * This module offers a template engine to create and update HTML elements
  * with dynamic data using Javascript. It grew from following principles:
@@ -618,474 +609,479 @@
  * instead of 'template', the 'repeat' class instead of 'list' and the class
  * 'hideIfNull' instead of 'optional'.
  */
-/*requires bezen.js */
-/*requires bezen.dom.js */
-/*requires bezen.style.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen, document, window */
-bezen.template = (function() {
-  // Builder of
-  // Closure object for HTML templating
-   
-  // Define Aliases
-  var remove = bezen.dom.remove,
-      insertAfter = bezen.dom.insertAfter, 
-      getClasses = bezen.style.getClasses,
-      removeClass = bezen.style.removeClass,
-      setClasses = bezen.style.setClasses,
-      ATTRIBUTE_NODE = bezen.dom.ATTRIBUTE_NODE;
-   
-  // format of a parameter to replace, e.g. #param#
-  var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
-   
-  var STATUS_NO_CHANGE = 0,          // no replacement done
-      STATUS_SUCCESS = 1,            // replacement succeeded
-      STATUS_OPTIONAL_NIXED = 2,     // optional removed after failure inside
-      STATUS_OPTIONAL_KEPT = 3,      // optional kept after success inside
-      STATUS_MISSING = 4,            // undefined value found for param/list
-      STATUS_FAILED = 5;             // null value found for param/list
-    
-  // meaningful CSS class names
-  var css = {
-    template: 'template',
-    list: 'list',
-    optional: 'optional'
-  };
-   
-  var setAliases = function(aliases){
-    // replace one or several class names meaningful to this template engine 
-    // with custom aliases
-    //
-    // This method may be used to avoid a conflict between the CSS classes
-    // expected by this template engine and existing classes or classes
-    // expected by different Javascript libraries such as widgets.
-    //
-    // Declaring an alias for an unknown/forgotten CSS class name will have
-    // no effect.
-    //
-    // param:
-    //   aliases - (object) an object with a set of properties, each
-    //             corresponding to the declaration of an alias to a CSS class
-    //             name meaningful to this template engine:
-    //               {template: aliasForTemplate,
-    //                list: aliasForList,
-    //                optional: aliasForOptional}
-     
-    for (var name in aliases) {
-      if ( aliases.hasOwnProperty(name) &&
-           css.hasOwnProperty(name)
-         ){
-        css[name] = aliases[name];
-      }
-    }
-  };
-   
-  var removeClones = function(templateNode) {
-    // Remove all clones of the template node.
-    //
-    // After creating a new clone, the addClone() method keeps track of this
-    // last clone by setting it to the property bezen.lastClone of the 
-    // template node.
-    // 
-    // This allows to remove only clone nodes in this method: all following
-    // siblings of the template node up to the one equal to bezen.lastClone
-    // will be removed.
-    //
-    // Notes:
-    //   * if the property bezen is not set on the template node (e.g. before 
-    //     the first clone has been added), the method terminates immediately
-    //   * in case the node reference by bezen.lastClone is not found in the 
-    //     following siblings of the template node, all following siblings 
-    //     are removed, up to the last
-    //
-    // param:
-    //   templateNode - (DOM node) (!nil) the template node
-    if (!templateNode.bezen){
-      return; 
-    }
-     
-    var last = templateNode.bezen.lastClone;
-    var next = templateNode.nextSibling;
-    while (next !== null) {
-      var node = next;
-      next = node===last? null: next.nextSibling;
-      remove(node);
-    }
-  };
-   
-  var getBaseUrl = function(url){
-    // get the base URL of the page (without the hash part)
-    //
-    // param:
-    //   url - (string) (optional) (default: window.location.href)
-    //         the url to truncate
-    //   Note: I switched from document.URL to window.location.href for 
-    //         accurate results with local files in Internet Explorer. 
-    //         Although both share the same value for online files using the
-    //         http/https protocols, with the file protocol, in IE, 
-    //         document.URL will look like
-    //           file://D:\web\bezen.org\javascript\test\test-template.html
-    //         while the corresponding window.location.href would be
-    //           file:///D:/web/bezen.org/javascript/test/test-template.html
-    //
-    // return: (string)
-    //   the full window URL, up to and excluding the hash part, if any 
-    url = url || window.location.href;
+/*global document, window */
+define(["./bezen", "./bezen.dom", "./bezen.style"],
+  function(bezen,  dom,           style){
 
-    // Remove the fragment part of the url
-    var pos = url.indexOf("#");
-    return ( pos<0? url: url.slice(0,pos) );
-  };
-
-  var getNodeValue = function(node) {
-    // Get the node value
-    //
-    // A specific processing is required for URLs in (A) href and (IMG) src
-    // attributes, which get transformed to an absolute form in IE, 
-    // prepending the web page URL to the left of the #param#.
-    // This method removes the web page URL if found at the start of a 
-    // href or src attribute.
-    // 
-    // params:
-    //   node - (DOM node) a node with a value
-    //          PRE: node.nodeValue is truthy
-    //
-    // return: (string or any)
-    //   the node value from node.nodeValue, with the URL of the page
-    //   removed from the start for href and src attributes.
-    //   This value is typically a string. It may also be null, e.g. for the
-    //   document itself, and may be a number or even an object (for custom
-    //   properties, considered as attributes) in Internet Explorer.
+    // Define Aliases
+    var remove = dom.remove,
+        insertAfter = dom.insertAfter, 
+        getClasses = style.getClasses,
+        removeClass = style.removeClass,
+        setClasses = style.setClasses,
+        ATTRIBUTE_NODE = dom.ATTRIBUTE_NODE;
      
-    if ( (node.nodeType === ATTRIBUTE_NODE) && 
-         (node.name === 'href' || node.name === 'src')  ) {
-      var baseUrl = getBaseUrl(); 
-      if ( node.nodeValue.indexOf(baseUrl) === 0 ) {
-        // Remove absolute URL added by IE at start of local href and src
-        // The URL is identical to the part of window.location.href before the '#'
-        return node.nodeValue.replace(baseUrl,'');
-      }
-    }
+    // format of a parameter to replace, e.g. #param#
+    var PARAM_REGEXP = /#([a-zA-Z0-9\-]+)#/g;
      
-    return node.nodeValue;
-  };
-   
-  var replaceParams = function(node,data){
-    // replace parameters in the node value with replacement values found in 
-    // the given data, in properties with the same name as the corresponding
-    // parameter
-    //
-    // params:
-    //   node - (DOM node) (!nil) a DOM node with a nodeValue
-    //   data - (object) (!nil) a hash object with replacement values in 
-    //          properties named after the parameter they aim to replace
-    //
-    // return: (integer)
-    //   the status of the replacement operation, one of
-    //   STATUS_NO_CHANGE if no param was found
-    //   STATUS_SUCCESS if all parameters were replaced successfully
-    //   STATUS_MISSING if an undefined value was found, and no null value
-    //   STATUS_FAIL if a null value was found
-    
-    var status = STATUS_NO_CHANGE;
+    var STATUS_NO_CHANGE = 0,          // no replacement done
+        STATUS_SUCCESS = 1,            // replacement succeeded
+        STATUS_OPTIONAL_NIXED = 2,     // optional removed after failure inside
+        STATUS_OPTIONAL_KEPT = 3,      // optional kept after success inside
+        STATUS_MISSING = 4,            // undefined value found for param/list
+        STATUS_FAILED = 5;             // null value found for param/list
+      
+    // meaningful CSS class names
+    var css = {
+      template: 'template',
+      list: 'list',
+      optional: 'optional'
+    };
      
-    var initialValue = getNodeValue(node);
-    if (typeof initialValue !== 'string'){
-      // may occur in IE for colSpan attribute (number) or custom attribute
-      // 'bezen' set to an object tracking properties on prototype element
-      return status;
-    }
-     
-    node.nodeValue = initialValue.replace(PARAM_REGEXP, 
-      function(match,param) {
-        // this replacement function is called each time a parameter is found
-        //
-        // This method relies on the external context for its input and its 
-        // output: it will both
-        //   - return the expected replacement text by looking for a property 
-        //     named like the parameter in the data part of the context,
-        //   - set the context status to STATUS_SUCCESS if a parameter is
-        //     replaced successfully, STATUS_MISSING if the value found for
-        //     the parameter was undefined, and STATUS_FAILED if the value
-        //     found for the parameter was null. The status is only updated
-        //     if the previous value is no greater than the new one, this to
-        //     ensure that only the most critical status is preserved after
-        //     processing multiple matches.
-        //     The order of priority is:
-        //       STATUS_NO_CHANGE          // no param found so far
-        //     < STATUS_SUCCESS            // replacement successful
-        //     < STATUS_MISSING            // undefined value found for param
-        //     < STATUS_FAILED             // null value found for param
-        //
-        // params:
-        //   match - (string) the matched parameter
-        //   param - (string) the name of the parameter (capture group #1)
-        //
-        // return: (string)
-        //   the replacement string
-        
-        var value = data[param],
-            replacement = value,
-            newstatus;
-         
-        if (value===undefined) {
-          // No/undefined value found for the match
-          // leave the value unchanged
-          newstatus = STATUS_MISSING;
-          replacement = match;
-
-        } else if (value===null) {
-          // null value found for the match
-          newstatus = STATUS_FAILED; 
-        } else {
-          // Successful match, the parameter will get replaced by its value
-          newstatus = STATUS_SUCCESS;
-        }
-         
-        if (status < newstatus) {
-           // update status if new status has higher priority
-           status = newstatus;
-        }
-        return replacement;
-      }
-    );
-    return status;
-  };
-   
-  var anonymize = function(node,idhash) {
-    // remove the id attribute of the node, if any
-    // 
-    // Optionally, This method allows to keep a link between the node and the
-    // removed id by setting the node to the property named after its id in
-    // the result object idhash.
-    //
-    // param:
-    //   node - (DOM node) (!nil) the node to anonymize
-    //   idhash - (object) (optional) a result parameter to keep a hash of
-    //            anonymized nodes associated with their original identifiers
-    if (!node.id){
-      return;
-    }
-     
-    if (idhash){
-      idhash[ node.id ] = node;
-    }
-    // Note: removeAttribute is ignored if no @id is present
-    node.removeAttribute('id');
-  };
-   
-  var initNode = function(node, data, id, parentStatus) {
-    // Process recursively all elements, attributes, and text nodes,
-    // replacing recursively parameters in the form #param# found
-    // in attribute and text values with the value of the parameter
-    // named 'param' in provided data.
-    //
-    // In addition,
-    //   * following CSS classes have a special meaning for this method:
-    //
-    //     - "list":
-    //       elements with the class 'list' are treated as the parent of a
-    //       set of elements to be duplicated a certain number of times by
-    //       looping over a data array found in a property named after 
-    //       the full class e.g. 'optional something list'. At each step of
-    //       the loop, elements get initialized with the corresponding item of 
-    //       the data array, which has parameters with values for replacements,
-    //       and may even have data arrays for child lists as well. Original 
-    //       child elements are removed after cloning.
-    //
-    //     - "optional":
-    //       in case a parameter remains unreplaced, or the array property
-    //       for a list is found null, the closest ancestor with the class
-    //       'optional' is removed and the processing of following child nodes
-    //       is halted. In case no such ancestor is found, nothing happens.
-    //       If all replacements succeed, without null and without undefined
-    //       values, the 'optional' class is removed, allowing the optional
-    //       block to become visible (typically, a CSS rule would be defined
-    //       to hide optional elements). When optional sections are nested
-    //       inside another, the ancestor section will be removed if all the
-    //       nested optional sections within are removed due to null values.
-    //       In case at least one of the optional subsections was succesfully
-    //       processed and kept in the document, the 'optional' class is 
-    //       removed from the ancestor optional element as well.
-    //
-    //   * elements get anonymized (unless removed)
-    //
-    //   * recursive processing is stopped at first failure in an attribute
-    //     or child node (motivated by optimization purpose, this behavior may
-    //     be nixed if it happens to make debugging of templates cumbersome)
-    //
-    // params:
-    //   node - (DOM node) (!nil) the node to initialize
-    //   data - (object) its properties give values for parameter replacement
-    //   id - (object) (optional) result hash object keeping track of 
-    //        elements with id after they get anonymized.
-    //        See anonymize() for details.
-    //   parentStatus - (integer) (optional) (default: STATUS_NO_CHANGE)
-    //        current status of the parent node. The returned status will 
-    //        compute the maximum of this status and the operation status
-    //
-    // return: (integer)
-    //   the updated status, which is the maximum of the parent status and 
-    //   the status of the initializaton operation, i.e. one of
-    //   STATUS_NO_CHANGE if no replacement occurred
-    //   STATUS_SUCCESS if a replacement succeeded
-    //   STATUS_MISSING if an undefined value was found (and no null value)
-    //   STATUS_FAILED if a null value was found within
-    parentStatus = parentStatus || STATUS_NO_CHANGE;
-    
-    // local variables used as iterators
-    var i, childNode, nextNode;
-     
-    var status = STATUS_NO_CHANGE;
-    if (node.nodeValue){
-      // TODO: after reading the DOM HTML recommendation, I wonder whether
-      //       processing instructions are reported... further tests needed
-      // attribute node, text node or processing instruction
-      status = replaceParams(node, data);
-      return Math.max(status,parentStatus);
-    }
-     
-    // recurse over attributes
-    var attributes = node.attributes;
-    if (attributes) {
-      for (i=0; i<attributes.length && status !== STATUS_FAILED; i++){
-        status = initNode(attributes[i], data, id, status);
-      }
-    }
-     
-    var classes = getClasses(node);
-    if ( classes[css.list] ){
-      // find array of data in property named after the list
-      var listData = data[node.className];
+    var setAliases = function(aliases){
+      // replace one or several class names meaningful to this template engine 
+      // with custom aliases
+      //
+      // This method may be used to avoid a conflict between the CSS classes
+      // expected by this template engine and existing classes or classes
+      // expected by different Javascript libraries such as widgets.
+      //
+      // Declaring an alias for an unknown/forgotten CSS class name will have
+      // no effect.
+      //
+      // param:
+      //   aliases - (object) an object with a set of properties, each
+      //             corresponding to the declaration of an alias to a CSS class
+      //             name meaningful to this template engine:
+      //               {template: aliasForTemplate,
+      //                list: aliasForList,
+      //                optional: aliasForOptional}
        
-      if (listData===null){
-        status = Math.max(STATUS_FAILED,status);
-      } else if (listData===undefined){
-        status = Math.max(STATUS_MISSING,status);
-      } else {
-        // move the original items to a temporary document fragment
-        var listContents = document.createDocumentFragment(); 
-        childNode = node.firstChild; 
-        while(childNode!==null) {
+      for (var name in aliases) {
+        if ( aliases.hasOwnProperty(name) &&
+             css.hasOwnProperty(name)
+           ){
+          css[name] = aliases[name];
+        }
+      }
+    };
+     
+    var removeClones = function(templateNode) {
+      // Remove all clones of the template node.
+      //
+      // After creating a new clone, the addClone() method keeps track of this
+      // last clone by setting it to the property bezen.lastClone of the 
+      // template node.
+      // 
+      // This allows to remove only clone nodes in this method: all following
+      // siblings of the template node up to the one equal to bezen.lastClone
+      // will be removed.
+      //
+      // Notes:
+      //   * if the property bezen is not set on the template node (e.g. before 
+      //     the first clone has been added), the method terminates immediately
+      //   * in case the node reference by bezen.lastClone is not found in the 
+      //     following siblings of the template node, all following siblings 
+      //     are removed, up to the last
+      //
+      // param:
+      //   templateNode - (DOM node) (!nil) the template node
+      if (!templateNode.bezen){
+        return; 
+      }
+       
+      var last = templateNode.bezen.lastClone;
+      var next = templateNode.nextSibling;
+      while (next !== null) {
+        var node = next;
+        next = node===last? null: next.nextSibling;
+        remove(node);
+      }
+    };
+     
+    var getBaseUrl = function(url){
+      // get the base URL of the page (without the hash part)
+      //
+      // param:
+      //   url - (string) (optional) (default: window.location.href)
+      //         the url to truncate
+      //   Note: I switched from document.URL to window.location.href for 
+      //         accurate results with local files in Internet Explorer. 
+      //         Although both share the same value for online files using the
+      //         http/https protocols, with the file protocol, in IE, 
+      //         document.URL will look like
+      //           file://D:\web\bezen.org\javascript\test\test-template.html
+      //         while the corresponding window.location.href would be
+      //           file:///D:/web/bezen.org/javascript/test/test-template.html
+      //
+      // return: (string)
+      //   the full window URL, up to and excluding the hash part, if any 
+      url = url || window.location.href;
+
+      // Remove the fragment part of the url
+      var pos = url.indexOf("#");
+      return ( pos<0? url: url.slice(0,pos) );
+    };
+
+    var getNodeValue = function(node) {
+      // Get the node value
+      //
+      // A specific processing is required for URLs in (A) href and (IMG) src
+      // attributes, which get transformed to an absolute form in IE, 
+      // prepending the web page URL to the left of the #param#.
+      // This method removes the web page URL if found at the start of a 
+      // href or src attribute.
+      // 
+      // params:
+      //   node - (DOM node) a node with a value
+      //          PRE: node.nodeValue is truthy
+      //
+      // return: (string or any)
+      //   the node value from node.nodeValue, with the URL of the page
+      //   removed from the start for href and src attributes.
+      //   This value is typically a string. It may also be null, e.g. for the
+      //   document itself, and may be a number or even an object (for custom
+      //   properties, considered as attributes) in Internet Explorer.
+       
+      if ( (node.nodeType === ATTRIBUTE_NODE) && 
+           (node.name === 'href' || node.name === 'src')  ) {
+        var baseUrl = getBaseUrl(); 
+        if ( node.nodeValue.indexOf(baseUrl) === 0 ) {
+          // Remove absolute URL added by IE at start of local href and src
+          // The URL is identical to the part of window.location.href before the '#'
+          return node.nodeValue.replace(baseUrl,'');
+        }
+      }
+       
+      return node.nodeValue;
+    };
+     
+    var replaceParams = function(node,data){
+      // replace parameters in the node value with replacement values found in 
+      // the given data, in properties with the same name as the corresponding
+      // parameter
+      //
+      // params:
+      //   node - (DOM node) (!nil) a DOM node with a nodeValue
+      //   data - (object) (!nil) a hash object with replacement values in 
+      //          properties named after the parameter they aim to replace
+      //
+      // return: (integer)
+      //   the status of the replacement operation, one of
+      //   STATUS_NO_CHANGE if no param was found
+      //   STATUS_SUCCESS if all parameters were replaced successfully
+      //   STATUS_MISSING if an undefined value was found, and no null value
+      //   STATUS_FAIL if a null value was found
+      
+      var status = STATUS_NO_CHANGE;
+       
+      var initialValue = getNodeValue(node);
+      if (typeof initialValue !== 'string'){
+        // may occur in IE for colSpan attribute (number) or custom attribute
+        // 'bezen' set to an object tracking properties on prototype element
+        return status;
+      }
+       
+      node.nodeValue = initialValue.replace(PARAM_REGEXP, 
+        function(match,param) {
+          // this replacement function is called each time a parameter is found
+          //
+          // This method relies on the external context for its input and its 
+          // output: it will both
+          //   - return the expected replacement text by looking for a property 
+          //     named like the parameter in the data part of the context,
+          //   - set the context status to STATUS_SUCCESS if a parameter is
+          //     replaced successfully, STATUS_MISSING if the value found for
+          //     the parameter was undefined, and STATUS_FAILED if the value
+          //     found for the parameter was null. The status is only updated
+          //     if the previous value is no greater than the new one, this to
+          //     ensure that only the most critical status is preserved after
+          //     processing multiple matches.
+          //     The order of priority is:
+          //       STATUS_NO_CHANGE          // no param found so far
+          //     < STATUS_SUCCESS            // replacement successful
+          //     < STATUS_MISSING            // undefined value found for param
+          //     < STATUS_FAILED             // null value found for param
+          //
+          // params:
+          //   match - (string) the matched parameter
+          //   param - (string) the name of the parameter (capture group #1)
+          //
+          // return: (string)
+          //   the replacement string
+          
+          var value = data[param],
+              replacement = value,
+              newstatus;
+           
+          if (value===undefined) {
+            // No/undefined value found for the match
+            // leave the value unchanged
+            newstatus = STATUS_MISSING;
+            replacement = match;
+
+          } else if (value===null) {
+            // null value found for the match
+            newstatus = STATUS_FAILED; 
+          } else {
+            // Successful match, the parameter will get replaced by its value
+            newstatus = STATUS_SUCCESS;
+          }
+           
+          if (status < newstatus) {
+             // update status if new status has higher priority
+             status = newstatus;
+          }
+          return replacement;
+        }
+      );
+      return status;
+    };
+     
+    var anonymize = function(node,idhash) {
+      // remove the id attribute of the node, if any
+      // 
+      // Optionally, This method allows to keep a link between the node and the
+      // removed id by setting the node to the property named after its id in
+      // the result object idhash.
+      //
+      // param:
+      //   node - (DOM node) (!nil) the node to anonymize
+      //   idhash - (object) (optional) a result parameter to keep a hash of
+      //            anonymized nodes associated with their original identifiers
+      if (!node.id){
+        return;
+      }
+       
+      if (idhash){
+        idhash[ node.id ] = node;
+      }
+      // Note: removeAttribute is ignored if no @id is present
+      node.removeAttribute('id');
+    };
+     
+    var initNode = function(node, data, id, parentStatus) {
+      // Process recursively all elements, attributes, and text nodes,
+      // replacing recursively parameters in the form #param# found
+      // in attribute and text values with the value of the parameter
+      // named 'param' in provided data.
+      //
+      // In addition,
+      //   * following CSS classes have a special meaning for this method:
+      //
+      //     - "list":
+      //       elements with the class 'list' are treated as the parent of a
+      //       set of elements to be duplicated a certain number of times by
+      //       looping over a data array found in a property named after 
+      //       the full class e.g. 'optional something list'. At each step of
+      //       the loop, elements get initialized with the corresponding item of 
+      //       the data array, which has parameters with values for replacements,
+      //       and may even have data arrays for child lists as well. Original 
+      //       child elements are removed after cloning.
+      //
+      //     - "optional":
+      //       in case a parameter remains unreplaced, or the array property
+      //       for a list is found null, the closest ancestor with the class
+      //       'optional' is removed and the processing of following child nodes
+      //       is halted. In case no such ancestor is found, nothing happens.
+      //       If all replacements succeed, without null and without undefined
+      //       values, the 'optional' class is removed, allowing the optional
+      //       block to become visible (typically, a CSS rule would be defined
+      //       to hide optional elements). When optional sections are nested
+      //       inside another, the ancestor section will be removed if all the
+      //       nested optional sections within are removed due to null values.
+      //       In case at least one of the optional subsections was succesfully
+      //       processed and kept in the document, the 'optional' class is 
+      //       removed from the ancestor optional element as well.
+      //
+      //   * elements get anonymized (unless removed)
+      //
+      //   * recursive processing is stopped at first failure in an attribute
+      //     or child node (motivated by optimization purpose, this behavior may
+      //     be nixed if it happens to make debugging of templates cumbersome)
+      //
+      // params:
+      //   node - (DOM node) (!nil) the node to initialize
+      //   data - (object) its properties give values for parameter replacement
+      //   id - (object) (optional) result hash object keeping track of 
+      //        elements with id after they get anonymized.
+      //        See anonymize() for details.
+      //   parentStatus - (integer) (optional) (default: STATUS_NO_CHANGE)
+      //        current status of the parent node. The returned status will 
+      //        compute the maximum of this status and the operation status
+      //
+      // return: (integer)
+      //   the updated status, which is the maximum of the parent status and 
+      //   the status of the initializaton operation, i.e. one of
+      //   STATUS_NO_CHANGE if no replacement occurred
+      //   STATUS_SUCCESS if a replacement succeeded
+      //   STATUS_MISSING if an undefined value was found (and no null value)
+      //   STATUS_FAILED if a null value was found within
+      parentStatus = parentStatus || STATUS_NO_CHANGE;
+      
+      // local variables used as iterators
+      var i, childNode, nextNode;
+       
+      var status = STATUS_NO_CHANGE;
+      if (node.nodeValue){
+        // TODO: after reading the DOM HTML recommendation, I wonder whether
+        //       processing instructions are reported... further tests needed
+        // attribute node, text node or processing instruction
+        status = replaceParams(node, data);
+        return Math.max(status,parentStatus);
+      }
+       
+      // recurse over attributes
+      var attributes = node.attributes;
+      if (attributes) {
+        for (i=0; i<attributes.length && status !== STATUS_FAILED; i++){
+          status = initNode(attributes[i], data, id, status);
+        }
+      }
+       
+      var classes = getClasses(node);
+      if ( classes[css.list] ){
+        // find array of data in property named after the list
+        var listData = data[node.className];
+         
+        if (listData===null){
+          status = Math.max(STATUS_FAILED,status);
+        } else if (listData===undefined){
+          status = Math.max(STATUS_MISSING,status);
+        } else {
+          // move the original items to a temporary document fragment
+          var listContents = document.createDocumentFragment(); 
+          childNode = node.firstChild; 
+          while(childNode!==null) {
+            nextNode = childNode.nextSibling;
+            listContents.appendChild(childNode);
+            childNode = nextNode;
+          }
+          // for each data item in the list
+          for (i=0; i<listData.length; i++){
+            // duplicate the whole document fragment
+            var cloneListContents = listContents.cloneNode(true);
+             
+            // initialize it as a regular node
+            status = initNode(cloneListContents, listData[i], id, status);
+             
+            // append it at the end of the list
+            node.appendChild(cloneListContents); 
+          } 
+        }
+         
+      } else if (status!==STATUS_FAILED){
+        // recurse over child nodes
+        // Beware: childNodes is a dynamic list where optional child nodes will
+        //         get removed when removed from the document 
+         
+        childNode = node.firstChild;
+        while( childNode !== null && status !== STATUS_FAILED ){
           nextNode = childNode.nextSibling;
-          listContents.appendChild(childNode);
+          status = initNode(childNode, data, id, status);
           childNode = nextNode;
         }
-        // for each data item in the list
-        for (i=0; i<listData.length; i++){
-          // duplicate the whole document fragment
-          var cloneListContents = listContents.cloneNode(true);
+      }
+      
+      if ( classes[css.optional] ){
+        if ( status===STATUS_FAILED ||
+             status===STATUS_OPTIONAL_NIXED) {
+          // remove the node
+          remove(node);
+          status = STATUS_OPTIONAL_NIXED;
+          return Math.max(status,parentStatus);
            
-          // initialize it as a regular node
-          status = initNode(cloneListContents, listData[i], id, status);
-           
-          // append it at the end of the list
-          node.appendChild(cloneListContents); 
-        } 
+        } else if ( status===STATUS_NO_CHANGE ||
+                    status===STATUS_SUCCESS   ||
+                    status===STATUS_OPTIONAL_KEPT ) {
+          // remove the 'optional' class associated with a rule to hide the node
+          // to let it show
+          removeClass(classes,css.optional); 
+          setClasses(node,classes);
+          status = STATUS_OPTIONAL_KEPT;
+        }
+        // else keep the 'optional' class
+      }
+      anonymize(node,id);
+      return Math.max(status,parentStatus); 
+    };
+     
+    var addClone = function(templateNode, data, id) {
+      // Add a single clone of the template node as next sibling if it is the 
+      // first clone, or next to the last clone added to this template
+      // 
+      // In addition, this method:
+      //   - sets the property bezen.lastClone of the template to the new clone
+      //   - removes all id attributes found in the clone (if any)
+      //   - removes the class 'template' from the clone (if present)
+      //   - processes 'list' and 'optional' elements and replaces parameters 
+      //     found in the clone, following the behaviors described in the
+      //     documentation at the top of this file
+      //
+      // param:
+      //   templateNode - (DOM node) (!nil) the prototype node to clone
+      //   data - (object) (!nil) dynamic data for parameter replacements and
+      //          the processing of 'list' elements
+      //   id - (object) (optional) a result parameter to collect the clones
+      //        of any element having an id in the template node. If the clone
+      //        is removed during the processing, it will not be set.
+      //
+      // return: (DOM node)
+      //   null when the clone is 'optional' and it was not added to the DOM
+      //   the new clone, just added to the DOM, otherwise
+       
+      var clone = templateNode.cloneNode(true);
+      var status = initNode(clone,data,id);
+      if (status === STATUS_OPTIONAL_NIXED){
+        return null;
       }
        
-    } else if (status!==STATUS_FAILED){
-      // recurse over child nodes
-      // Beware: childNodes is a dynamic list where optional child nodes will
-      //         get removed when removed from the document 
-       
-      childNode = node.firstChild;
-      while( childNode !== null && status !== STATUS_FAILED ){
-        nextNode = childNode.nextSibling;
-        status = initNode(childNode, data, id, status);
-        childNode = nextNode;
+      if (clone.className){
+        var classes = getClasses(clone);
+        removeClass(classes,css.template);
+        setClasses(clone, classes);
       }
-    }
+       
+      var meta = templateNode.bezen;
+      if (meta){
+        insertAfter(meta.lastClone, clone);
+        meta.lastClone = clone;
+      } else { 
+        insertAfter(templateNode, clone);
+        templateNode.bezen = {lastClone: clone};
+      }
+       
+      return clone;
+    };
     
-    if ( classes[css.optional] ){
-      if ( status===STATUS_FAILED ||
-           status===STATUS_OPTIONAL_NIXED) {
-        // remove the node
-        remove(node);
-        status = STATUS_OPTIONAL_NIXED;
-        return Math.max(status,parentStatus);
-         
-      } else if ( status===STATUS_NO_CHANGE ||
-                  status===STATUS_SUCCESS   ||
-                  status===STATUS_OPTIONAL_KEPT ) {
-        // remove the 'optional' class associated with a rule to hide the node
-        // to let it show
-        removeClass(classes,css.optional); 
-        setClasses(node,classes);
-        status = STATUS_OPTIONAL_KEPT;
+    // Assign to bezen.template
+    // for backward compatibility
+    bezen.template = { // public API
+      setAliases: setAliases,
+      removeClones: removeClones,
+      initNode: initNode,
+      addClone: addClone,
+       
+      _: { // private section, for unit tests
+        STATUS_NO_CHANGE: STATUS_NO_CHANGE,
+        STATUS_SUCCESS: STATUS_SUCCESS,
+        STATUS_OPTIONAL_NIXED: STATUS_OPTIONAL_NIXED,
+        STATUS_OPTIONAL_KEPT: STATUS_OPTIONAL_KEPT,
+        STATUS_MISSING: STATUS_MISSING,
+        STATUS_FAILED: STATUS_FAILED,
+        aliases: css,
+        getBaseUrl: getBaseUrl,
+        getNodeValue: getNodeValue,
+        replaceParams: replaceParams,
+        anonymize: anonymize
       }
-      // else keep the 'optional' class
-    }
-    anonymize(node,id);
-    return Math.max(status,parentStatus); 
-  };
-   
-  var addClone = function(templateNode, data, id) {
-    // Add a single clone of the template node as next sibling if it is the 
-    // first clone, or next to the last clone added to this template
-    // 
-    // In addition, this method:
-    //   - sets the property bezen.lastClone of the template to the new clone
-    //   - removes all id attributes found in the clone (if any)
-    //   - removes the class 'template' from the clone (if present)
-    //   - processes 'list' and 'optional' elements and replaces parameters 
-    //     found in the clone, following the behaviors described in the
-    //     documentation at the top of this file
-    //
-    // param:
-    //   templateNode - (DOM node) (!nil) the prototype node to clone
-    //   data - (object) (!nil) dynamic data for parameter replacements and
-    //          the processing of 'list' elements
-    //   id - (object) (optional) a result parameter to collect the clones
-    //        of any element having an id in the template node. If the clone
-    //        is removed during the processing, it will not be set.
-    //
-    // return: (DOM node)
-    //   null when the clone is 'optional' and it was not added to the DOM
-    //   the new clone, just added to the DOM, otherwise
-     
-    var clone = templateNode.cloneNode(true);
-    var status = initNode(clone,data,id);
-    if (status === STATUS_OPTIONAL_NIXED){
-      return null;
-    }
-     
-    if (clone.className){
-      var classes = getClasses(clone);
-      removeClass(classes,css.template);
-      setClasses(clone, classes);
-    }
-     
-    var meta = templateNode.bezen;
-    if (meta){
-      insertAfter(meta.lastClone, clone);
-      meta.lastClone = clone;
-    } else { 
-      insertAfter(templateNode, clone);
-      templateNode.bezen = {lastClone: clone};
-    }
-     
-    return clone;
-  };
-   
-  return { // public API
-    setAliases: setAliases,
-    removeClones: removeClones,
-    initNode: initNode,
-    addClone: addClone,
-     
-    _: { // private section, for unit tests
-      STATUS_NO_CHANGE: STATUS_NO_CHANGE,
-      STATUS_SUCCESS: STATUS_SUCCESS,
-      STATUS_OPTIONAL_NIXED: STATUS_OPTIONAL_NIXED,
-      STATUS_OPTIONAL_KEPT: STATUS_OPTIONAL_KEPT,
-      STATUS_MISSING: STATUS_MISSING,
-      STATUS_FAILED: STATUS_FAILED,
-      aliases: css,
-      getBaseUrl: getBaseUrl,
-      getNodeValue: getNodeValue,
-      replaceParams: replaceParams,
-      anonymize: anonymize
-    }
-  };
-}());
+    };
+    return bezen.template;
+  }
+);

@@ -4,60 +4,58 @@
  * author:    Eric Bréchemier <bezen@eric.brechemier.name>
  * license:   Creative Commons Attribution 3.0 Unported
  *            http://creativecommons.org/licenses/by/3.0/
- * version:   2010-01-14 "Calvin's Snowball"
- *
- * To Cecile, with Love,
- * you were the first to wait for the conception of this library
- *
- * Tested successfully in
- *   Firefox 2, Firefox 3, Firefox 3.5,
- *   Internet Explorer 6, Internet Explorer 7, Internet Explorer 8,
- *   Chrome 3, Safari 3, Safari 4,
- *   Opera 9.64, Opera 10.10
+ * version:   based on 2010-01-14
  */
-/*requires bezen.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen, document */
-bezen.focus = (function() {
-  // Builder of
-  // Closure for focus utilities
+/*global document */
+define(["./bezen"],
+  function(bezen) {
   
-  // whether the focus has been initialized (typically done in window.onload)
-  var isReadyToFocus = false;
-  
-  // a reference to the element to focus, stored until ready to focus
-  var elementToFocus = null;
+    // whether the focus has been initialized (typically done in window.onload)
+    var isReadyToFocus = false;
+    
+    // a reference to the element to focus, stored until ready to focus
+    var elementToFocus = null;
 
-  var focus = function(element) {
-    // Scroll to element
-    // If the focus is not ready yet, store the element for deferred focus.
+    var focus = function(element) {
+      // Scroll to element
+      // If the focus is not ready yet, store the element for deferred focus.
 
-    if ( isReadyToFocus ) {
-      if ( element.scrollIntoView ) {
-        element.scrollIntoView();
+      if ( isReadyToFocus ) {
+        if ( element.scrollIntoView ) {
+          element.scrollIntoView();
+        }
+      } else {
+        elementToFocus = element;
       }
-    } else {
-      elementToFocus = element;
-    }
-  };
-   
-  var initFocus = function() {
-    // Initialize focus
-    // If an element has been previous selected in focus() before the
-    // focus was ready, focus this element now.
-    
-    isReadyToFocus = true;
-    if (elementToFocus !== null) {
-      focus(elementToFocus);
-    }
-  };
-   
-  return { // public API
-    
-    init: initFocus,
-    focus: focus,
+    };
+     
+    var initFocus = function() {
+      // Initialize focus
+      // If an element has been previous selected in focus() before the
+      // focus was ready, focus this element now.
+      
+      isReadyToFocus = true;
+      if (elementToFocus !== null) {
+        focus(elementToFocus);
+      }
+    };
+     
+    // Assign to bezen.focus
+    // for backward compatibility
+    bezen.focus = { // public API
+      
+      init: initFocus,
+      focus: focus,
 
-    _: { // private section, for unit tests
-    }
-  };
-}());
+      _: { // private section, for unit tests
+      }
+    };
+    return bezen.focus;
+  }
+);
