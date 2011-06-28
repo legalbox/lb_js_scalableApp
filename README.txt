@@ -142,10 +142,21 @@ INCLUDED SOFTWARE
         http://www.opensource.org/licenses/mit-license
         adding "The Software shall be used for Good, not Evil."
 
+  * RequireJS by James Burke
+    http://requirejs.org/
+    Licensed under a New BSD License or MIT License
+    https://github.com/jrburke/requirejs/blob/master/LICENSE
+
+    Includes:
+
+      o Rhino by Mozilla
+        http://www.mozilla.org/rhino/
+        Licensed under Mozilla Public License
+        http://www.mozilla.org/MPL/
+
   * Yahoo! YUI Compressor by Julien Lecompte
     http://developer.yahoo.com/yui/compressor/
-    Licensed under a BSD License
-    http://developer.yahoo.com/yui/license.html
+    Licensed under a BSD License or MIT License
 
     Includes:
 
@@ -196,7 +207,8 @@ HISTORY
   2011-06-03, v1.7.4, Upgraded Closure Library to add support for IE9
   2011-06-06, v1.7.5, Removed Combiner tool, cleaned-up build script
   2011-06-07, v1.7.6, Moved Ant macros to a separate file to facilitate reuse
-  2011-XX-XX, v1.7.7, ROADMAP: Upgraded and renamed JSLint, updated Ant macro
-  2011-XX-XX, v1.8.0, ROADMAP: add animate() method to CSS API of Sandbox
+  2011-XX-XX, v1.8.0, ROADMAP: Now using RequireJS to manage dependencies
+  2011-XX-XX, v1.8.1, ROADMAP: Upgraded and renamed JSLint, updated Ant macro
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
+  2011-XX-XX, v1.10.0, ROADMAP: add animate() method to CSS API of Sandbox
 
