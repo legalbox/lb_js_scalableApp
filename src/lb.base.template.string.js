@@ -10,8 +10,9 @@
  * string. A function must be provided as argument, which is called to get
  * values for the replacement.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -21,20 +22,18 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-06
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.template.string = (function() {
+/*global define */
+define(["./lb.base.template","./lb.base.object","./lb.base.type"],
+  function(lbBaseTemplate,    object,            type) {
   // Builder of
   // Closure for lb.base.template.string module
 
   // Declare aliases
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
+  var has = object.has,
+      is = type.is,
 
   // Private fields
 
@@ -158,8 +157,11 @@ lb.base.template.string = (function() {
     };
   }
 
-  return { // public API
+  // Assign to lb.base.template.string
+  // for backward-compatibility in browser environment
+  lbBaseTemplate.string = { // public API
     withValuesFrom: withValuesFrom,
     replaceParams: replaceParams
   };
-}());
+  return lbBaseTemplate.string;
+});

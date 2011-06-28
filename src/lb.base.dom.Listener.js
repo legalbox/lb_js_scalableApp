@@ -23,8 +23,8 @@
 /*jslint white:false, plusplus:false */
 /*global define */
 
-define(["lb.base.dom.Listener","lb.base.object","closure/goog.events"],
-  function(Listener,            object,          events){
+define(["./lb.base.dom.Listener","./lb.base.object","./closure/goog.events"],
+  function(Listener,              object,            events){
   // Assign to lb.base.dom.Listener
   // for backward-compatibility in browser environment
 

@@ -18,8 +18,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base","closure/goog.json"],
-  function(lbBase, json) {
+define(["./lb.base","./closure/goog.json"],
+  function(lbBase,   json) {
   // Builder of
   // Closure for lb.base.json module
 

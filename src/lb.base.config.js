@@ -23,8 +23,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base.config","closure/goog.object","lb.base.object"],
-  function(lbBase,       gObject,               object) {
+define(["./lb.base.config","./closure/goog.object","./lb.base.object"],
+  function(lbBase,         gObject,                 object) {
   // Builder of
   // Closure for lb.base.config module
 

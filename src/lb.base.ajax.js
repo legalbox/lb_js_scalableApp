@@ -18,8 +18,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base","closure/goog.net.XhrIo","lb.base.json","lb.base.log"],
-  function(lbBase, XhrIo,                   json,          logModule) {
+define(["./lb.base","./closure/goog.net.XhrIo","./lb.base.json","./lb.base.log"],
+  function(lbBase,   XhrIo,                     json,            logModule) {
   // Builder of
   // Closure for lb.base.ajax module
 

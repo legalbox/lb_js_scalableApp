@@ -2,8 +2,9 @@
  * Namespace: lb.base.type
  * Utility method for type checking.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2011, All Rights Reserved
@@ -13,12 +14,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.base.type = (function() {
+/*global define */
+define(["./lb.base"],
+  function(lbBase) {
   // Builder of
   // Closure for lb.base.type module
 
@@ -156,7 +157,10 @@ lb.base.type = (function() {
     return value === type;
   }
 
-  return { // public API
+  // Assign to lb.base.type
+  // for backward-compatibility in browser environment
+  lbBase.type = { // public API
     is: is
   };
-}());
+  return lbBase.type;
+});

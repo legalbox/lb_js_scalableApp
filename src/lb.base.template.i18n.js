@@ -13,8 +13,9 @@
  *   o <setLanguage(htmlElement)>
  *   o <withValuesFromDataOrLanguageProperties([data[,languageCode]]): function>
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -24,43 +25,36 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-04
+ * 2011-06-28
  */
-/*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.base.template.i18n = (function() {
+/*global define */
+define(["./lb.base.template","./lb.base.object","./lb.base.type",
+        "./lb.base.dom","./lb.base.log","./lb.base.i18n","./lb.base.i18n.data",
+        "./lb.base.template", "./lb.base.template.string",
+        "./lb.base.tempate.html"],
+  function(lbBaseTemplate,    object,            type,
+         dom,            logModule,      i18n,            i18nData,
+         template,             stringTemplates,
+         htmlTemplates) {
   // Builder of
   // Closure for lb.base.template.i18n module
 
   // Declare aliases
 
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
-      /*requires lb.base.dom.js */
-      dom = lb.base.dom,
+  var has = object.has,
+      is = type.is,
       ELEMENT_NODE = dom.ELEMENT_NODE,
       hasAttribute = dom.hasAttribute,
-      /*requires lb.base.log.js */
-      log = lb.base.log.print,
-      /*requires lb.base.i18n.js */
+      log = logModule.print,
       i18n = lb.base.i18n,
-      /*requires lb.base.i18n.data.js */
-      i18nData = i18n.data,
-      getDefaultLanguageCode = i18n.data.getDefaultLanguageCode,
+      getDefaultLanguageCode = i18nData.getDefaultLanguageCode,
       get = i18nData.get,
-      /*requires lb.base.template.js */
-      template = lb.base.template,
       applyFilters = template.applyFilters,
-      /*requires lb.base.template.string.js */
-      stringTemplates = template.string,
       withValuesFrom = stringTemplates.withValuesFrom,
       replaceParamsInString = stringTemplates.replaceParams,
-      /*requires lb.base.template.html.js */
-      topDownParsing = template.html.topDownParsing,
-      replaceParams = template.html.replaceParams,
+      topDownParsing = htmlTemplates.topDownParsing,
+      replaceParams = htmlTemplates.replaceParams,
       // hack to let JSLint accept mutual recursion
       withValuesFromDataOrLanguageProperties2;
 
@@ -390,7 +384,9 @@ lb.base.template.i18n = (function() {
     );
   }
 
-  return { // public API
+  // Assign to lb.base.template.i18n
+  // for backward-compatibility in browser environment
+  lbBaseTemplate.i18n = { // public API
     getString: getString,
     withValuesFromDataOrLanguageProperties:
       withValuesFromDataOrLanguageProperties,
@@ -398,4 +394,5 @@ lb.base.template.i18n = (function() {
     setLanguage: setLanguage,
     filterHtml: filterHtml
   };
-}());
+return lbBaseTemplate.i18n;
+});

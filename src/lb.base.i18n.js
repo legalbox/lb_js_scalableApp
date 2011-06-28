@@ -37,8 +37,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define, navigator, document */
-define(["lb.base","lb.base.object","lb.base.type","lb.base.dom"],
-  function(lbBase, object,          type,          dom) {
+define(["./lb.base","./lb.base.object","./lb.base.type","./lb.base.dom"],
+  function(lbBase,   object,            type,            dom) {
   // Builder of
   // Closure for lb.base.i18n module
 

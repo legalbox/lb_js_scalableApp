@@ -2,9 +2,10 @@
  * Namespace: lb.base.log
  * Logging Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
- *
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
+
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
  *
@@ -13,21 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.log = (function() {
+/*global define */
+define(["./lb.base","./closure/goog.debug.Console",
+        "./closure/goog.debug.Logger"],
+  function(lbBase,   Console,
+         Logger) {
   // Builder of
   // Closure for lb.base.log module
 
   // Define aliases
-      /*requires closure/goog.debug.Console.js*/
-  var Console = goog.debug.Console,
-      /*requires closure/goog.debug.Logger.js*/
-      Logger = goog.debug.Logger,
-      Level  = goog.debug.Logger.Level,
+  var Level  = Logger.Level,
 
   // Private fields
 
@@ -55,7 +54,10 @@ lb.base.log = (function() {
     logger.info(message);
   }
 
-  return { // public API
+  // Assign to lb.base.log
+  // for backward-compatibility in browser environment
+  lbBase.log = { // public API
     print: print
   };
-}());
+  return lbBase.log;
+});

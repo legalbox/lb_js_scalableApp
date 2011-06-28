@@ -2,8 +2,9 @@
  * Namespace: lb.base.object
  * Object Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -13,22 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.object = (function() {
+/*global define */
+define(["./lb.base","./lb.base.type","./closure/goog","./closure/goog.object"],
+  function(lbBase,   type,            goog,            object) {
   // Builder of
   // Closure for lb.base.object module
 
   // Declare aliases
-      /*requires lb.base.type.js */
-  var is = lb.base.type.is,
-      /*requires closure/goog.js */
+  var is = type.is,
       deepCopy = goog.cloneObject,
-      /*requires closure/goog.object.js */
-      shallowCopy = goog.object.clone;
+      shallowCopy = object.clone;
 
   function has(object, property){
     // Function: has(object,property[,...]): boolean
@@ -110,8 +108,11 @@ lb.base.object = (function() {
     }
   }
 
-  return { // public API
+  // Assign to lb.base.object
+  // for backward-compatibility in browser environment
+  lbBase.object = { // public API
     has: has,
     clone: clone
   };
-}());
+  return lbBase.object;
+});

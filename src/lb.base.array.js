@@ -18,8 +18,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base","closure/goog.array"],
-  function(lbBase, gArray) {
+define(["./lb.base","./closure/goog.array"],
+  function(lbBase,   gArray) {
   // Builder of
   // Closure for lb.base.array module
 

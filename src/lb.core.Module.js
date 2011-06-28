@@ -8,8 +8,9 @@
  * created for each User Interface Module and each Data Model Module added on
  * the Core Application.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -19,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-22
+ * 2011-06-28
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */

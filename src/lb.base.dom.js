@@ -18,8 +18,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base","lb.base.object","closure/goog.dom"],
-  function(lbBase, object,          dom) {
+define(["./lb.base","./lb.base.object","./closure/goog.dom"],
+  function(lbBase,   object,            dom) {
   // Builder of
   // Closure for lb.base.dom module
 

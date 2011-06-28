@@ -2,8 +2,9 @@
  * Namespace: lb.base.string
  * String Adapter Module for Base Library
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -13,18 +14,17 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.string = (function() {
+/*global define */
+define(["./lb.base","./closure/goog.string"],
+  function(lbBase,   string) {
   // Builder of
   // Closure for lb.base.string module
 
   // Declare alias
-      /*requires closure/goog.string.js */
-  var gTrim = goog.string.trim;
+  var gTrim = string.trim;
 
   function trim(string){
     // Function: trim(string): string
@@ -40,7 +40,10 @@ lb.base.string = (function() {
     return gTrim(string);
   }
 
-  return { // public API
+  // Assign to lb.base.string
+  // for backward-compatibility in browser environment
+  lbBase.string = { // public API
     trim: trim
   };
-}());
+  return lbBase.string;
+});

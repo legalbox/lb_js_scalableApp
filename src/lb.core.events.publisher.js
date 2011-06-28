@@ -5,8 +5,9 @@
  * The publisher manages a list of subscribers, which get all notified of
  * every event published until they get removed from the list.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -16,22 +17,20 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.core.events.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.core.events.publisher = (function() {
+/*global define */
+define(["./lb.core.events","./lb.base.log","./lb.base.array"],
+  (function(lbCoreEvents,   logModule,      array) {
   // Builder of
   // Closure for lb.core.events.publisher module
 
   // Define aliases
-      /*requires lb.base.log.js */
-  var log = lb.base.log.print,
-      /*requires lb.base.array.js */
-      copy = lb.base.array.copy,
-      addOne = lb.base.array.addOne,
-      removeOne = lb.base.array.removeOne,
+  var log = logModule.print,
+      copy = array.copy,
+      addOne = array.addOne,
+      removeOne = array.removeOne,
 
   // Private members
 
@@ -101,10 +100,13 @@ lb.core.events.publisher = (function() {
     }
   }
 
-  return { // Facade API
+  // Assign to lb.core.events.publisher
+  // for backward-compatibility in browser environment
+  lbCoreEvents.publisher = { // Facade API
     getSubscribers: getSubscribers,
     addSubscriber: addSubscriber,
     removeSubscriber: removeSubscriber,
     publish: publish
   };
-}());
+  return lbCoreEvents.publisher;
+});

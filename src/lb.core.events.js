@@ -18,7 +18,7 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.core"],function(lbCore) {
+define(["./lb.core"],function(lbCore) {
   // Builder of
   // Closure for lb.core.events namespace
 

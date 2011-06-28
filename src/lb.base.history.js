@@ -78,10 +78,10 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define, window, document */
-define(["lb.base","lb.base.object","lb.base.type","closure/goog.History",
-        "closure/goog.events","lb.base.dom"],
-  function(lbBase, object,          type,          History,
-         events,               dom) {
+define(["./lb.base","./lb.base.object","./lb.base.type",
+        "./closure/goog.History","./closure/goog.events","./lb.base.dom"],
+  function(lbBase,   object,            type,
+         History,                  events,                dom) {
   // Builder of
   // Closure for lb.base.history module
 

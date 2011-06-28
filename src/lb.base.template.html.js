@@ -10,8 +10,9 @@
  * to keep the original template for reuse with a different set of values, the
  * node should be cloned before HTML filters are applied.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -21,33 +22,31 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-06
+ * 2011-06-28
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog, window */
-lb.base.template.html = (function() {
+/*global define, window */
+define(["./lb.base.template","./lb.base.object","./lb.base.type",
+        "./lb.base.array","./lb.base.dom","./lb.base.template.string",
+        "./lb.base.log"],
+  function(lbBaseTemplate,    object,            type,
+         array,            dom,            string, 
+         logModule) {
   // Builder of
   // Closure for lb.base.template.html module
 
   // Declare aliases
 
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.type.js */
-      is = lb.base.type.is,
-      /*requires lb.base.array.js */
-      toArray = lb.base.array.toArray,
-      /*requires lb.base.dom.js */
-      dom = lb.base.dom,
+  var has = object.has,
+      is = type.is,
+      toArray = array.toArray,
       ELEMENT_NODE = dom.ELEMENT_NODE,
       ATTRIBUTE_NODE = dom.ATTRIBUTE_NODE,
       TEXT_NODE = dom.TEXT_NODE,
-      applyFilters = lb.base.template.applyFilters,
-      /*requires lb.base.template.string.js */
-      replaceParamsInString = lb.base.template.string.replaceParams,
-      /*requires lb.base.log.js */
-      log = lb.base.log.print;
+      applyFilters = lbBaseTemplate.applyFilters,
+      replaceParamsInString = string.replaceParams,
+      log = logModule.print;
 
   function topDownParsing(node){
     // Function: topDownParsing(node[,context...],filters)
@@ -244,8 +243,11 @@ lb.base.template.html = (function() {
     };
   }
 
-  return { // public API
+  // Assign to lb.base.template.html
+  // for backward-compatibility in browser environment
+  lbBaseTemplate.html = { // public API
     topDownParsing: topDownParsing,
     replaceParams: replaceParams
   };
-}());
+  return lbBaseTemplate.html;²
+});

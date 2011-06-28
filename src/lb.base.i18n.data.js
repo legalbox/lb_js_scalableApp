@@ -59,8 +59,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define (["lb.base.i18n","lb.base.object","lb.base.type"],
-  function(i18n,         object,          type) {
+define (["./lb.base.i18n","./lb.base.object","./lb.base.type"],
+  function(i18n,           object,            type) {
   // Builder of
   // Closure for lb.base.i18n.data module
 

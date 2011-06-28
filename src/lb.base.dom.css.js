@@ -19,8 +19,8 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.base.dom","closure/goog.dom.classes"],
-  function(lbBaseDom,  classes) {
+define(["./lb.base.dom","./closure/goog.dom.classes"],
+  function(lbBaseDom,    classes) {
   // Builder of
   // Closure for lb.base.dom.css module
 

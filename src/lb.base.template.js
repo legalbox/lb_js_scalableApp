@@ -5,8 +5,9 @@
  * This module provides the basis for templates using a set of functions
  * as filters to modify the input. See applyFilters() for details.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -16,18 +17,17 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-20
+ * 2011-06-28
  */
-/*requires lb.base.js */
 /*jslint white:false, plusplus:false */
-/*global lb, goog */
-lb.base.template = (function() {
+/*global define */
+define(["./lb.base","./lb.base.object"],
+  function(lbBase,   object) {
   // Builder of
   // Closure for lb.base.template module
 
   // Define alias
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has;
+  var has = object.has;
 
   function applyFilters(){
     // Function: applyFilters(input...,filters): any
@@ -131,7 +131,10 @@ lb.base.template = (function() {
     }
   }
 
-  return { // public API
+  // Assign to lb.base.template
+  // for backward-compatibility in browser environment
+  lbBase.template = { // public API
     applyFilters: applyFilters
   };
-}());
+  return lbBase.template;
+});

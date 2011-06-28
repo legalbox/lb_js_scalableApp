@@ -4,8 +4,9 @@
  *
  * The Core Application manages the life cycle of modules.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -15,26 +16,23 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-05-06
+ * 2011-06-28
  */
-/*requires lb.core.js */
 /*jslint white:false, plusplus:false */
-/*global lb, window */
-lb.core.application = (function() {
+/*global define, window */
+define(["./lb.core","./lb.base.array","./lb.base.config",
+        "./lb.base.dom",".:lb.base.log"],
+  function(lbCore,   array,            config,
+         dom             logModule) {
   // Builder of
   // Closure for lb.core.application module
 
   // Declare aliases
-  var /*requires lb.base.array.js */
-      addOne = lb.base.array.addOne,
-      removeOne = lb.base.array.removeOne,
-      removeAll = lb.base.array.removeAll,
-      /*requires lb.base.config.js */
-      config = lb.base.config,
-      /*requires lb.base.dom.Listener.js */
-      Listener = lb.base.dom.Listener,
-      /*requires lb.base.log.js */
-      log = lb.base.log.print,
+  var addOne = array.addOne,
+      removeOne = array.removeOne,
+      removeAll = array.removeAll,
+      Listener = dom.Listener,
+      log = logModule.print,
 
   // Private members
 
@@ -156,7 +154,9 @@ lb.core.application = (function() {
     unloadListener = new Listener(window, 'unload', endAll);
   }
 
-  return { // Public API
+  // Assign to lb.core.application
+  // for backward-compatibility in browser environment
+  lbCore.application = { // Public API
     setOptions: config.setOptions,
     getModules: getModules,
     addModule: addModule,
@@ -165,4 +165,5 @@ lb.core.application = (function() {
     endAll: endAll,
     run: run
   };
-}());
+  return lbCore.application;
+});
