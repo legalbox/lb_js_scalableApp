@@ -31,8 +31,9 @@
  * defined in lb.core.plugins adds methods to the Sandbox grouped in a property
  * named after the plugin, e.g. sandbox.css for the plugin lb.core.plugins.css.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -42,36 +43,25 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-26
+ * 2011-06-28
  */
-/*requires lb.core.plugins.js */
 /*jslint white:false, plusplus:false */
-/*global lb */
-lb.core.plugins.builder = (function() {
+/*global define */
+define(["./lb.core.plugins","./lb.base.object","./lb.core.Sandbox",
+        "./lb.core.plugins.css","./lb.core.plugins.dom",
+        "./lb.core.plugins.events","./lb.core.plugins.i18n",
+        "./lb.core.plugins.server","./lb.core.plugins.url",
+        "./lb.core.plugins.utils"],
+  function(lbCorePlugins,    object,            Sandbox,
+         css,                    dom,
+         events,                    i18n,
+         server,                    url,
+         utils) {
   // Builder of
   // Closure for lb.core.plugins.builder module
 
   // Declare aliases
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.core.Sandbox.js */
-      Sandbox = lb.core.Sandbox,
-      /*requires lb.core.plugins.js */
-      plugins = lb.core.plugins,
-      /*requires lb.core.plugins.css.js */
-      css = plugins.css,
-      /*requires lb.core.plugins.dom.js */
-      dom = plugins.dom,
-      /*requires lb.core.plugins.events.js */
-      events = plugins.events,
-      /*requires lb.core.plugins.i18n.js */
-      i18n = plugins.i18n,
-      /*requires lb.core.plugins.server.js */
-      server = plugins.server,
-      /*requires lb.core.plugins.url.js */
-      url = plugins.url,
-      /*requires lb.core.plugins.utils.js */
-      utils = plugins.utils;
+  var has = object.has;
 
   function buildSandbox(id){
     // Function: buildSandbox(id)
@@ -107,7 +97,8 @@ lb.core.plugins.builder = (function() {
     return sandbox;
   }
 
-  return { // public API
+  lbCorePlugins.builder = { // public API
     buildSandbox: buildSandbox
   };
-}());
+  return lbCorePlugins.builder;
+});
