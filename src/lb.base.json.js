@@ -23,8 +23,6 @@ define(["./lb.base","./closure/goog.json"],
     // Builder of
     // Closure for lb.base.json module
 
-    // Declare alias
-
     function parse(string){
       // Function: parse(string): object|array
       // Parse a JSON string into corresponding object or array.

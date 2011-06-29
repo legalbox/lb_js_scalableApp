@@ -23,8 +23,7 @@ define(["./lb.base","./lb.base.object","./closure/goog.dom"],
     // Builder of
     // Closure for lb.base.dom module
 
-    // Declare aliases
-
+    // Declare alias
     var has = object.has;
 
     function $(id){

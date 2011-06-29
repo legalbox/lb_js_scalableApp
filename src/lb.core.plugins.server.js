@@ -47,7 +47,7 @@ define(["./lb.core.plugins.server","./lb.base.ajax"],
       sandbox.server = {
         send: send
       };
-    }
+    };
     return lbCorePluginsServer;
   }
 );

@@ -60,7 +60,7 @@ define(["./lb.core.plugins","./lb.base.object","./lb.core.Sandbox",
     // Builder of
     // Closure for lb.core.plugins.builder module
 
-    // Declare aliases
+    // Declare alias
     var has = object.has;
 
     function buildSandbox(id){

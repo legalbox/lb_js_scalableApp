@@ -46,8 +46,7 @@ define(["./lb.base.dom.Listener","./lb.base.object","./closure/goog.events"],
       //   [1] DOM Level 2 Events: addEventListener
       //   <http://bit.ly/9SQoL4>
 
-      // Declare aliases
-
+      // Declare alias
       var has = object.has,
 
       // Private fields

@@ -25,7 +25,7 @@ define(["./lb.base","./closure/goog.debug.Console",
     // Builder of
     // Closure for lb.base.log module
 
-    // Define aliases
+    // Define alias
     var Level  = Logger.Level,
 
     // Private fields
