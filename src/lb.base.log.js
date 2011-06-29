@@ -14,7 +14,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-06-29
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -22,42 +22,43 @@ define(["./lb.base","./closure/goog.debug.Console",
         "./closure/goog.debug.Logger"],
   function(lbBase,   Console,
          Logger) {
-  // Builder of
-  // Closure for lb.base.log module
+    // Builder of
+    // Closure for lb.base.log module
 
-  // Define aliases
-  var Level  = Logger.Level,
+    // Define aliases
+    var Level  = Logger.Level,
 
-  // Private fields
+    // Private fields
 
-    // object - the logger instance (goog.debug.Logger)
-    logger = null;
+      // object - the logger instance (goog.debug.Logger)
+      logger = null;
 
-  function print(message){
-    // Function: print(message)
-    // Print a message to the log console.
-    //
-    // Parameter:
-    //   message - string, the message to print
-    //
-    // Notes:
-    // The console will be activated if (and only if) Debug=true
-    // is present in the URL.
-    //
-    // The console is initialized on first call.
+    function print(message){
+      // Function: print(message)
+      // Print a message to the log console.
+      //
+      // Parameter:
+      //   message - string, the message to print
+      //
+      // Notes:
+      // The console will be activated if (and only if) Debug=true
+      // is present in the URL.
+      //
+      // The console is initialized on first call.
 
-    if (logger===null){
-      Console.autoInstall();
-      logger = Logger.getLogger('lb');
-      logger.setLevel(Level.INFO);
+      if (logger===null){
+        Console.autoInstall();
+        logger = Logger.getLogger('lb');
+        logger.setLevel(Level.INFO);
+      }
+      logger.info(message);
     }
-    logger.info(message);
-  }
 
-  // Assign to lb.base.log
-  // for backward-compatibility in browser environment
-  lbBase.log = { // public API
-    print: print
-  };
-  return lbBase.log;
-});
+    // Assign to lb.base.log
+    // for backward-compatibility in browser environment
+    lbBase.log = { // public API
+      print: print
+    };
+    return lbBase.log;
+  }
+);

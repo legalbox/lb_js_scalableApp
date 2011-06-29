@@ -66,8 +66,9 @@
  * customized by configuring a different sandbox builder to load additional or
  * alternative plugins. See <lb.core.plugins.builder> for details.
  *
- * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Authors:
+ * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
  * Legal-Box SAS (c) 2010-2011, All Rights Reserved
@@ -77,135 +78,135 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-04-26
+ * 2011-06-29
  */
-/*requires lb.core.js */
 /*jslint white:false, plusplus:false */
-/*global lb, document, window */
-lb.core.Sandbox = function (id){
-  // Function: new Sandbox(id): Sandbox
-  // Constructor of a new Sandbox.
-  //
-  // Parameters:
-  //   id - string, the identifier of the module, which is also the id of the 
-  //        root HTML element for this module. If the element does not exist in
-  //        the document, it will get created on the first call to getBox().
-  //
-  // Returns:
-  //   object, the new instance of Sandbox
+/*global define, document, window */
+define(["./lb.core.Sandbox","./lb.base.object","./lb.base.config",
+        "./lb.base.dom.factory","./lb.base.dom","./lb.base.log"],
+  function(lbCoreSandbox,    object,            config;
+         defaultFactory,         dom,            logModule) {
+    // Assign to lb.core.Sandbox
+    // for backward-compatibility in browser environment
+    lbCoreSandbox = function (id){
+      // Function: new Sandbox(id): Sandbox
+      // Constructor of a new Sandbox.
+      //
+      // Parameters:
+      //   id - string, the identifier of the module, which is also the id of the 
+      //        root HTML element for this module. If the element does not exist in
+      //        the document, it will get created on the first call to getBox().
+      //
+      // Returns:
+      //   object, the new instance of Sandbox
 
-  // Define aliases
-  var /*requires lb.base.object.js */
-      has = lb.base.object.has,
-      /*requires lb.base.config.js */
-      config = lb.base.config,
-      /*requires lb.base.dom.factory.js */
-      defaultFactory = lb.base.dom.factory,
-      /*requires lb.base.dom.js */
-      dom = lb.base.dom,
-      /*requires lb.base.log.js */
-      log = lb.base.log.print,
+      // Define aliases
+      var has = object.has,
+          log = logModule.print,
 
-  // Private fields
+      // Private fields
 
-      // DOM element, the root of the box, carrying the module identifier.
-      // Used only in getBox(), to avoid multiple lookups of the same element.
-      // Initialized on first call to getBox().
-      box = null;
+          // DOM element, the root of the box, carrying the module identifier.
+          // Used only in getBox(), to avoid multiple lookups of the same element.
+          // Initialized on first call to getBox().
+          box = null;
 
-  function getId(localId){
-    // Function: sandbox.getId([localId]): string
-    // Get the identifier of the module, when optional parameter is omitted.
-    // With optional parameter, get the full identifier corresponding to the
-    // given local identifier.
-    //
-    // Parameter:
-    //  localId - string, optional local identifier
-    //
-    // Returns:
-    //   string, the identifier of the module, as provided in constructor,
-    //   or the full identifier corresponding to given local identifier.
-    //
-    // Note:
-    //   The full identifier is made of the module identifier, followed by the
-    //   separator '.', followed by the local identifier.
+      function getId(localId){
+        // Function: sandbox.getId([localId]): string
+        // Get the identifier of the module, when optional parameter is omitted.
+        // With optional parameter, get the full identifier corresponding to the
+        // given local identifier.
+        //
+        // Parameter:
+        //  localId - string, optional local identifier
+        //
+        // Returns:
+        //   string, the identifier of the module, as provided in constructor,
+        //   or the full identifier corresponding to given local identifier.
+        //
+        // Note:
+        //   The full identifier is made of the module identifier, followed by the
+        //   separator '.', followed by the local identifier.
 
-    if ( has(localId) ) {
-      return id+'.'+localId;
-    } else {
-      return id;
-    }
-  }
-
-  function getBox(createIfMissing){
-    // Function: sandbox.getBox(createIfMissing): DOM Element
-    // Get the root HTML element for this module.
-    //
-    // Parameter:
-    //   createIfMissing - boolean, optional, defaults to true,
-    //                     Whether to create the box element if it is not found
-    //                     in the document.
-    // Note:
-    //   In case createIfMissing is true (by default) and no HTML element is
-    //   found in the document with the module id, a new div element is created
-    //   with this id and inserted last in the document body.
-    //
-    // Returns:
-    //   * DOM Element, the HTML element corresponding to the module id,
-    //   * or null, in case createIfMissing is false and the element is missing
-    createIfMissing = has(createIfMissing)? createIfMissing : true;
-
-    var factory;
-
-    if ( has(box) ) {
-      return box;
-    }
-    box = dom.$(id);
-    if ( !has(box) && createIfMissing){
-      log('Warning: no element "'+id+
-          '" found in box. Will be created at end of body.');
-      factory = config.getOption('lbFactory', defaultFactory);
-      box = factory.createElement('div',{'id': id});
-      document.body.appendChild(box);
-    }
-    return box;
-  }
-
-  function isInBox(element){
-    // Function: sandbox.isInBox(element): boolean
-    // Check whether the given element is in the box.
-    //
-    // Parameter:
-    //   element - DOM Element, an element
-    //
-    // Returns:
-    //   * true if the element is a descendant of or the root of the box itself
-    //   * false otherwise
-
-    // Note:
-    // if optimization or reuse is needed, isInBox() could rely on a new method
-    // to add to base DOM API: contains(ancestorElement,descendantElement)
-    // (available as goog.dom.contains(parent,descendant) in Closure library)
-
-    var ancestor = element;
-    while ( has(ancestor) ) {
-      // TODO: return false when a document node is reached without passing by
-      //       the root of the box
-
-      // TODO: allow document-fragment or null as last ancestor
-      //       for nodes not/no longer part of the DOM
-
-      // box must be found in ancestors or self
-      if ( ancestor === getBox(false) ) {
-        return true;
+        if ( has(localId) ) {
+          return id+'.'+localId;
+        } else {
+          return id;
+        }
       }
-      ancestor = ancestor.parentNode;
-    }
-    return false;
-  }
 
-  // Public methods
-  this.getId = getId;
-  this.getBox = getBox;
-  this.isInBox = isInBox;
-};
+      function getBox(createIfMissing){
+        // Function: sandbox.getBox(createIfMissing): DOM Element
+        // Get the root HTML element for this module.
+        //
+        // Parameter:
+        //   createIfMissing - boolean, optional, defaults to true,
+        //                     Whether to create the box element if it is not found
+        //                     in the document.
+        // Note:
+        //   In case createIfMissing is true (by default) and no HTML element is
+        //   found in the document with the module id, a new div element is created
+        //   with this id and inserted last in the document body.
+        //
+        // Returns:
+        //   * DOM Element, the HTML element corresponding to the module id,
+        //   * or null, in case createIfMissing is false and the element is missing
+        createIfMissing = has(createIfMissing)? createIfMissing : true;
+
+        var factory;
+
+        if ( has(box) ) {
+          return box;
+        }
+        box = dom.$(id);
+        if ( !has(box) && createIfMissing){
+          log('Warning: no element "'+id+
+              '" found in box. Will be created at end of body.');
+          factory = config.getOption('lbFactory', defaultFactory);
+          box = factory.createElement('div',{'id': id});
+          document.body.appendChild(box);
+        }
+        return box;
+      }
+
+      function isInBox(element){
+        // Function: sandbox.isInBox(element): boolean
+        // Check whether the given element is in the box.
+        //
+        // Parameter:
+        //   element - DOM Element, an element
+        //
+        // Returns:
+        //   * true if the element is a descendant of or the root of the box itself
+        //   * false otherwise
+
+        // Note:
+        // if optimization or reuse is needed, isInBox() could rely on a new method
+        // to add to base DOM API: contains(ancestorElement,descendantElement)
+        // (available as goog.dom.contains(parent,descendant) in Closure library)
+
+        var ancestor = element;
+        while ( has(ancestor) ) {
+          // TODO: return false when a document node is reached without passing by
+          //       the root of the box
+
+          // TODO: allow document-fragment or null as last ancestor
+          //       for nodes not/no longer part of the DOM
+
+          // box must be found in ancestors or self
+          if ( ancestor === getBox(false) ) {
+            return true;
+          }
+          ancestor = ancestor.parentNode;
+        }
+        return false;
+      }
+
+      // Public methods
+      this.getId = getId;
+      this.getBox = getBox;
+      this.isInBox = isInBox;
+    };
+    return lbCoreSandbox;
+  }
+);

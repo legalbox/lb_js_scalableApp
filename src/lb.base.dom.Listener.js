@@ -18,15 +18,15 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-06-29
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 
 define(["./lb.base.dom.Listener","./lb.base.object","./closure/goog.events"],
   function(Listener,              object,            events){
-  // Assign to lb.base.dom.Listener
-  // for backward-compatibility in browser environment
+    // Assign to lb.base.dom.Listener
+    // for backward-compatibility in browser environment
 
     Listener = function(element, type, callback, useCapture) {
       // Function: new Listener(element, type, callback[, useCapture])

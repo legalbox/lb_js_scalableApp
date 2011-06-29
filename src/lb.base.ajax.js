@@ -14,56 +14,57 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-06-29
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(["./lb.base","./closure/goog.net.XhrIo","./lb.base.json","./lb.base.log"],
   function(lbBase,   XhrIo,                     json,            logModule) {
-  // Builder of
-  // Closure for lb.base.ajax module
+    // Builder of
+    // Closure for lb.base.ajax module
 
-  // Declare alias
-  var log = logModule.print;
+    // Declare alias
+    var log = logModule.print;
 
-  function send(url, data, receive){
-    // Function: send(url, data, receive)
-    // Send data to given URL, and trigger receive() with asynchronous answer.
-    //
-    // Parameters:
-    //   url - string, the remote URL, respecting same origin policy
-    //   data - object|array, the data to send, to be converted to JSON.
-    //          No functions should be present in this data object.
-    //   receive - function, the callback to trigger.
-    //             The response object or array, converted from JSON, will be
-    //             provided as parameter.
+    function send(url, data, receive){
+      // Function: send(url, data, receive)
+      // Send data to given URL, and trigger receive() with asynchronous answer.
+      //
+      // Parameters:
+      //   url - string, the remote URL, respecting same origin policy
+      //   data - object|array, the data to send, to be converted to JSON.
+      //          No functions should be present in this data object.
+      //   receive - function, the callback to trigger.
+      //             The response object or array, converted from JSON, will be
+      //             provided as parameter.
 
-    var jsonString = json.serialize(data),
-        callback = function(event){
-          try {
-            receive( event.target.getResponseJson() );
-          } catch(e) {
-            log('ERROR: "'+e+
-                '" in response to POST "'+jsonString+'" to "'+url+'"');
-          }
-        };
+      var jsonString = json.serialize(data),
+          callback = function(event){
+            try {
+              receive( event.target.getResponseJson() );
+            } catch(e) {
+              log('ERROR: "'+e+
+                  '" in response to POST "'+jsonString+'" to "'+url+'"');
+            }
+          };
 
-    XhrIo.send(
-      url,
-      callback,
-      'POST',
-      jsonString,
-      {
-        'Content-Type': 'application/json;charset=utf-8'
-      }
-    );
+      XhrIo.send(
+        url,
+        callback,
+        'POST',
+        jsonString,
+        {
+          'Content-Type': 'application/json;charset=utf-8'
+        }
+      );
+    }
+
+    // Assign to lb.base.ajax
+    // for backward-compatibility in browser environment
+    lbBase.ajax = { // public API
+      send: send
+    };
+
+    return lbBase.ajax;
   }
-
-  // Assign to lb.base.ajax
-  // for backward-compatibility in browser environment
-  lbBase.ajax = { // public API
-    send: send
-  };
-
-  return lbBase.ajax;
-});
+);

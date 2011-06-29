@@ -14,12 +14,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-24
+ * 2011-06-29
  */
 /*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["lb.core"],function(lbCore) {
+define(["./lb.core"],function(lbCore) {
   // Builder of
   // Closure for lb.core.plugins namespace
 

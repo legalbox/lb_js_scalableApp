@@ -17,96 +17,97 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-06-29
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(["./lb.core.events","./lb.base.log","./lb.base.array"],
   (function(lbCoreEvents,   logModule,      array) {
-  // Builder of
-  // Closure for lb.core.events.publisher module
+    // Builder of
+    // Closure for lb.core.events.publisher module
 
-  // Define aliases
-  var log = logModule.print,
-      copy = array.copy,
-      addOne = array.addOne,
-      removeOne = array.removeOne,
+    // Define aliases
+    var log = logModule.print,
+        copy = array.copy,
+        addOne = array.addOne,
+        removeOne = array.removeOne,
 
-  // Private members
+    // Private members
 
-  // array, the list of subscribers (lb.core.events.Subscriber) subscribed to
-  // event notifications
-      subscribers = [];
+    // array, the list of subscribers (lb.core.events.Subscriber) subscribed to
+    // event notifications
+        subscribers = [];
 
-  function getSubscribers(){
-    // Function: getSubscribers(): array
-    // Get the list of subscribers.
-    //
-    // Returns:
-    //   array, the list of subscribers (<lb.core.events.Subscriber>)
+    function getSubscribers(){
+      // Function: getSubscribers(): array
+      // Get the list of subscribers.
+      //
+      // Returns:
+      //   array, the list of subscribers (<lb.core.events.Subscriber>)
 
-    return subscribers;
-  }
+      return subscribers;
+    }
 
-  function addSubscriber(subscriber){
-    // Function: addSubscriber(subscriber)
-    // Add a new subscriber to the list.
-    //
-    // Parameter:
-    //   subscriber - object, the new subscriber (<lb.core.events.Subscriber>)
-    //
-    // Note:
-    // Nothing happens in case the subscriber is already present.
+    function addSubscriber(subscriber){
+      // Function: addSubscriber(subscriber)
+      // Add a new subscriber to the list.
+      //
+      // Parameter:
+      //   subscriber - object, the new subscriber (<lb.core.events.Subscriber>)
+      //
+      // Note:
+      // Nothing happens in case the subscriber is already present.
 
-    addOne(subscribers, subscriber);
-  }
+      addOne(subscribers, subscriber);
+    }
 
-  function removeSubscriber(subscriber){
-    // Function: removeSubscriber(subscriber)
-    // Remove an existing subscriber from the list.
-    //
-    // Parameter:
-    //   subscriber - object, the old subscriber (<lb.core.events.Subscriber>)
-    //
-    // Note:
-    // Nothing happens in case the subscriber is not present.
+    function removeSubscriber(subscriber){
+      // Function: removeSubscriber(subscriber)
+      // Remove an existing subscriber from the list.
+      //
+      // Parameter:
+      //   subscriber - object, the old subscriber (<lb.core.events.Subscriber>)
+      //
+      // Note:
+      // Nothing happens in case the subscriber is not present.
 
-    removeOne(subscribers, subscriber);
-  }
+      removeOne(subscribers, subscriber);
+    }
 
-  function publish(event){
-    // Function: publish(event)
-    // Publish an event to be broadcast to all subscribers.
-    //
-    // Parameter:
-    //   event - object, the event object
-    //
-    // Note:
-    //   All subscribers present at the start of the call will get notified.
-    //   Adding or removing a subscriber during the publication of an event
-    //   will only have effect for subsequent events.
+    function publish(event){
+      // Function: publish(event)
+      // Publish an event to be broadcast to all subscribers.
+      //
+      // Parameter:
+      //   event - object, the event object
+      //
+      // Note:
+      //   All subscribers present at the start of the call will get notified.
+      //   Adding or removing a subscriber during the publication of an event
+      //   will only have effect for subsequent events.
 
-    // take a snapshot of the list of subscribers to avoid running into
-    // infinite loops or skipping subscribers in case the list is modified.
-    var currentSubscribers = copy(subscribers),
-        i;
-    for (i=0; i<currentSubscribers.length; i++){
-      try {
-        currentSubscribers[i].notify(event);
-      } catch(e) {
-        log('ERROR: Failed to notify subscriber "'+currentSubscribers[i]+
-            '", "'+e+'"');
+      // take a snapshot of the list of subscribers to avoid running into
+      // infinite loops or skipping subscribers in case the list is modified.
+      var currentSubscribers = copy(subscribers),
+          i;
+      for (i=0; i<currentSubscribers.length; i++){
+        try {
+          currentSubscribers[i].notify(event);
+        } catch(e) {
+          log('ERROR: Failed to notify subscriber "'+currentSubscribers[i]+
+              '", "'+e+'"');
+        }
       }
     }
-  }
 
-  // Assign to lb.core.events.publisher
-  // for backward-compatibility in browser environment
-  lbCoreEvents.publisher = { // Facade API
-    getSubscribers: getSubscribers,
-    addSubscriber: addSubscriber,
-    removeSubscriber: removeSubscriber,
-    publish: publish
-  };
-  return lbCoreEvents.publisher;
-});
+    // Assign to lb.core.events.publisher
+    // for backward-compatibility in browser environment
+    lbCoreEvents.publisher = { // Facade API
+      getSubscribers: getSubscribers,
+      addSubscriber: addSubscriber,
+      removeSubscriber: removeSubscriber,
+      publish: publish
+    };
+    return lbCoreEvents.publisher;
+  }
+);

@@ -25,14 +25,14 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-06-29
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(["./lb.core.events.Subscriber","./lb.base.object"],
   function(Subscriber,                 object){
-  // Assign to lb.base.core.Subscriber$
-  // for backward-compatibility in browser environment
+    // Assign to lb.core.Subscriber
+    // for backward-compatibility in browser environment
 
     Subscriber = function(filter, callback){
       // Function: new Subscriber(filter,callback): Subscriber

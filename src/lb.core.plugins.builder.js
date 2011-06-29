@@ -57,48 +57,51 @@ define(["./lb.core.plugins","./lb.base.object","./lb.core.Sandbox",
          events,                    i18n,
          server,                    url,
          utils) {
-  // Builder of
-  // Closure for lb.core.plugins.builder module
+    // Builder of
+    // Closure for lb.core.plugins.builder module
 
-  // Declare aliases
-  var has = object.has;
+    // Declare aliases
+    var has = object.has;
 
-  function buildSandbox(id){
-    // Function: buildSandbox(id)
-    // Build a new instance of Sandbox from parts defined by plugins.
-    //
-    // Parameter:
-    //   id - string, the identifier of the module for whom the Sandbox
-    //        instance is intended.
-    //
-    // Returns:
-    //   * null, in case the id argument is null or missing
-    //   * object, a new instance of the Sandbox otherwise
-    //
-    // Note:
-    // The module identifier may be used to customize the Sandbox methods
-    // included, e.g. to restrict usage of AJAX methods to a specific Data
-    // module, or to provide DOM manipulation methods only to User Interface
-    // modules and not to Data modules. There is no such customization done in
-    // the default Sandbox Builder, which always returns similar instances of
-    // Sandbox with the same set of methods.
-    if ( !has(id) ){
-      return null;
+    function buildSandbox(id){
+      // Function: buildSandbox(id)
+      // Build a new instance of Sandbox from parts defined by plugins.
+      //
+      // Parameter:
+      //   id - string, the identifier of the module for whom the Sandbox
+      //        instance is intended.
+      //
+      // Returns:
+      //   * null, in case the id argument is null or missing
+      //   * object, a new instance of the Sandbox otherwise
+      //
+      // Note:
+      // The module identifier may be used to customize the Sandbox methods
+      // included, e.g. to restrict usage of AJAX methods to a specific Data
+      // module, or to provide DOM manipulation methods only to User Interface
+      // modules and not to Data modules. There is no such customization done in
+      // the default Sandbox Builder, which always returns similar instances of
+      // Sandbox with the same set of methods.
+      if ( !has(id) ){
+        return null;
+      }
+
+      var sandbox = new Sandbox(id);
+      css(sandbox);
+      dom(sandbox);
+      events(sandbox);
+      i18n(sandbox);
+      server(sandbox);
+      url(sandbox);
+      utils(sandbox);
+      return sandbox;
     }
 
-    var sandbox = new Sandbox(id);
-    css(sandbox);
-    dom(sandbox);
-    events(sandbox);
-    i18n(sandbox);
-    server(sandbox);
-    url(sandbox);
-    utils(sandbox);
-    return sandbox;
+    // Assign to lb.core.plugins.builder
+    // for backward-compatibility in browser environment
+    lbCorePlugins.builder = { // public API
+      buildSandbox: buildSandbox
+    };
+    return lbCorePlugins.builder;
   }
-
-  lbCorePlugins.builder = { // public API
-    buildSandbox: buildSandbox
-  };
-  return lbCorePlugins.builder;
-});
+);

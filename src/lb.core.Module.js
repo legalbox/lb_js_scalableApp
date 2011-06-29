@@ -27,8 +27,10 @@
 define(["./lb.core.Module","./lb.base.type","./lb.base.log",
         "./lb.core.plugins","./lb.base.config","./lb.base.dom"],
   function(Module,          type,            logModule,
-         plugins,            config,         dom){
-    Module = function (id, creator){
+         plugins,            config,         dom) {
+     // Assign to lb.core.Module
+     // for backward-compatibility in browser environment
+    Module = function (id, creator) {
       // Function: new Module(id,creator): Module
       // Constructor of a new Core Module.
       //
