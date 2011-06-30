@@ -14,7 +14,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-24
+ * 2011-06-30
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
@@ -29,7 +29,7 @@ define(function() {
 
   // initialize global variable lb in browser environment,
   // for backward-compatibility
-  if (window){
+  if (window !== undefined){
     window.lb = lb;
   }
 
