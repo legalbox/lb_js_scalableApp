@@ -15,10 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/dom/classes.js to goog.dom.classes.js
-// * added requires comments for goog.js, goog.array.js,
-//   goog.dom.BrowserFeature.js, goog.dom.TagName.js, goog.dom.classes.js,
-//   goog.math.Coordinate.js, goog.math.Size.js, goog.object.js,
-//   goog.string.js, goog.userAgent.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

@@ -16,8 +16,6 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/eventhandler.js to
 //   goog.events.EventHandler.js
-// * added requires comment for goog.js, goog.events.js,
-//   goog.events.EventWrapper.js, goog.objects.js, goog.structs.SimplePool.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

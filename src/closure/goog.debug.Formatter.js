@@ -15,8 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/formatter.js to goog.debug.Formatter.js
-// * added requires comments for goog.js, goog.debug.RelativeTimeProvider.js,
-//   goog.string.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

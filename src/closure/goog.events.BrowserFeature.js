@@ -16,7 +16,6 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/browserfeature.js to
 //   goog.events.BrowserFeature.js
-// * added require comments for goog.js and goog.userAgent.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

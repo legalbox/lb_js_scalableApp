@@ -15,8 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logger.js to goog.debug.Logger.js
-// * added requires comments for goog.js, goog.array.js, goog.debug.js,
-//   goog.debug.LogBuffer.js, goog.debug.LogRecord.js
 // * commented out all assertions and removed requirement
 // * set goog.debug.Logger.ENABLE_HIERARCHY to false and commented out
 //   conditional code that runs when the flag is true

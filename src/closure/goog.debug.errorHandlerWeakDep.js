@@ -16,7 +16,6 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/errorhandlerweakdep.js to 
 //   goog.debug.errorHandlerWeakDep.js
-// * added requires comment for goog.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

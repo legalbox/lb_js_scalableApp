@@ -15,7 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logbuffer.js to goog.debug.LogBuffer.js
-// * added requires comment for goog.js, goog.debug.LogRecord.js
 // * commented all assertions and removed requirement
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS

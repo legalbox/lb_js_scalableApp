@@ -16,7 +16,6 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/relativetimeprovider.js to 
 //   goog.debug.RelativeTimeProvider.js
-// * added requires comments for goog.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

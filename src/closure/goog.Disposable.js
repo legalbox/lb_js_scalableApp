@@ -15,7 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/disposable/disposable.js to goog.Disposable.js
-// * added requires comment for goog.js
 // * commented requirement for interface goog.disposable.IDisposable
 // * commented out conditional code that runs when ENABLE_MONITORING is true
 //   (always false here)

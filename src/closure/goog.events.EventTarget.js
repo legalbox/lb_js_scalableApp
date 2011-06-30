@@ -15,7 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/eventtarget.js to goog.events.EventTarget.js
-// * added requires comments for goog.js, goog.Disposable.js, goog.events.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 
