@@ -4,91 +4,103 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-31
+ * Version:   2011-06-30
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.plugins.server.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window, goog */
-(function() {
-  // Builder of
-  // Closure object for Test of lb.core.plugins.server
+/*global define, window, lb */
+define(
+  [
+    "bezen.org/bezen.assert",
+    "bezen.org/bezen.array",
+    "bezen.org/bezen.object",
+    "bezen.org/bezen.testrunner",
+    "closure/goog.net.MockXmlHttp",
+    "lb/lb.core.Sandbox",
+    "lb/lb.core.plugins.server"
+  ],
+  function(
+    assert,
+    array,
+    object,
+    testrunner,
+    MockXmlHtpp,
+    Sandbox,
+    pluginsServer
+  ){
 
-  // Define aliases
-      /*requires bezen.assert.js */
-  var assert = bezen.assert,
-      /*requires bezen.object.js */
-      object = bezen.object,
-      /*requires bezen.array.js */
-      empty = bezen.array.empty,
-      /*requires goog.net.MockXmlHttp */
-      MockXmlHttp = goog.net.MockXmlHttp,
-      /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner,
-      /*requires lb.core.Sandbox.js */
-      Sandbox = lb.core.Sandbox;
+    // Define alias
+    var empty = array.empty;
 
-  function testNamespace(){
+    function testNamespace(){
 
-    assert.isTrue( object.exists(window,'lb','core','plugins','server'),
+      assert.isTrue( object.exists(pluginsServer),
+                                  "server module not found in dependencies");
+
+      if ( object.exists(window) ){
+        assert.isTrue( object.exists(window,'lb','core','plugins','server'),
                             "lb.core.plugins.server namespace was not found");
-  }
+        assert.equals( pluginsServer, lb.core.plugins.server,
+                              "same module expected in lb.core.plugins.server "+
+                                                "for backward compatibility");
+      }
+    }
 
-  function testPlugin(){
-    var ut = lb.core.plugins.server;
+    function testPlugin(){
+      var ut = pluginsServer;
 
-    var sandbox = new Sandbox('testPlugin');
-    ut(sandbox);
+      var sandbox = new Sandbox('testPlugin');
+      ut(sandbox);
 
-    // Asynchronous communication with a remote server (sandbox.server)
-    assert.isTrue( object.exists(sandbox,'server','send'),
+      // Asynchronous communication with a remote server (sandbox.server)
+      assert.isTrue( object.exists(sandbox,'server','send'),
                                 "sandbox.server.send expected to be defined");
-  }
+    }
 
-  function setUp(){
-    // Set up to restore a neutral state before each unit test
+    function setUp(){
+      // Set up to restore a neutral state before each unit test
 
-    // reset list of instances created in mock XHR object
-    empty( MockXmlHttp.lb.all );
-  }
+      // reset list of instances created in mock XHR object
+      empty( MockXmlHttp.lb.all );
+    }
 
-  function testSend(){
-    var sandbox = new Sandbox('testSend');
-    lb.core.plugins.server(sandbox);
-    var ut = sandbox.server.send;
+    function testSend(){
+      var sandbox = new Sandbox('testSend');
+      pluginsServer(sandbox);
+      var ut = sandbox.server.send;
 
-    setUp();
+      setUp();
 
-    var url = '/events/';
-    var data = {name: 'message', data: [{id:1, title:'Test'}]};
-    var responses = [];
-    var callback = function(response){
-      responses.push(response);
-    };
-    ut(url, data, callback);
+      var url = '/events/';
+      var data = {name: 'message', data: [{id:1, title:'Test'}]};
+      var responses = [];
+      var callback = function(response){
+        responses.push(response);
+      };
+      ut(url, data, callback);
 
-    assert.equals( MockXmlHttp.lb.all.length, 1,
+      assert.equals( MockXmlHttp.lb.all.length, 1,
                                                "one instance of XHR expected");
-    var xhr = MockXmlHttp.lb.all[0];
-    assert.equals( xhr.lb.url, url,   "same url expected in XHR call");
-    assert.equals( xhr.lb.method, 'POST',      "POST method expected");
-    assert.equals( xhr.lb.async, true, "  asynchronous call expected");
+      var xhr = MockXmlHttp.lb.all[0];
+      assert.equals( xhr.lb.url, url,   "same url expected in XHR call");
+      assert.equals( xhr.lb.method, 'POST',      "POST method expected");
+      assert.equals( xhr.lb.async, true, "  asynchronous call expected");
 
-    // trigger asynchronous response
-    xhr.complete();
-    assert.objectEquals(responses, [data],      "echo of given data expected");
+      // trigger asynchronous response
+      xhr.complete();
+      assert.objectEquals(responses, [data],    "echo of given data expected");
+    }
+
+    var tests = {
+      testNamespace: testNamespace,
+      testPlugin: testPlugin,
+      testSend: testSend
+    };
+
+    testrunner.define(tests, "lb.core.plugins.server");
+    return tests;
   }
-
-  var tests = {
-    testNamespace: testNamespace,
-    testPlugin: testPlugin,
-    testSend: testSend
-  };
-
-  testrunner.define(tests, "lb.core.plugins.server");
-  return tests;
-
-}());
+);

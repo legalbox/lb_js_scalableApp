@@ -4,16 +4,17 @@
  * Authors:
  *   o Eric Bréchemier <legalbox@eric.brechemier.name>
  *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
+ *
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-06-28
+ * Version:   2011-06-30
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
 /*jslint white:false, onevar:false, plusplus:false */
-/*global window, define, require */
+/*global define, window, lb */
 define(
   [
     "bezen.org/bezen.assert",
@@ -27,24 +28,24 @@ define(
     testrunner,
     lb
   ) {
-  // Builder of
-  // Closure object for Test of namespace lb
 
-  function testNamespace(){
+    function testNamespace(){
 
-    assert.isTrue( object.exists(lb),      "lb was not found in dependencies");
+      assert.isTrue( object.exists(lb),   "lb was not found in dependencies");
 
-    if ( object.exists(window) ) {
-      assert.isTrue( object.exists(window,'lb'),
-                                       "lb namespace was not found in window");
+      if ( object.exists(window) ) {
+        assert.isTrue( object.exists(window,'lb'),
+                                      "lb namespace was not found in window");
+        assert.equals( lb, window.lb,
+              "same module expected in window.lb for backward compatibility");
+      }
     }
+
+    var tests = {
+      testNamespace: testNamespace
+    };
+
+    testrunner.define(tests, "lb");
+    return tests;
   }
-
-  var tests = {
-    testNamespace: testNamespace
-  };
-
-  testrunner.define(tests, "lb");
-  return tests;
-
-});
+);
