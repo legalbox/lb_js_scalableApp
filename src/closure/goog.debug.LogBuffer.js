@@ -17,6 +17,8 @@
 // * renamed file from goog/debug/logbuffer.js to goog.debug.LogBuffer.js
 // * added requires comment for goog.js, goog.debug.LogRecord.js
 // * commented all assertions and removed requirement
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview A buffer for log records. The purpose of this is to improve
@@ -27,130 +29,132 @@
  *
  * @author agrieve@google.com (Andrew Grieve)
  */
-/*requires goog.js*/
-goog.provide('goog.debug.LogBuffer');
+define(["./goog","./goog.debug.LogRecord"], function(goog){
 
-// LB: asserts unused
-// goog.require('goog.asserts');
-/*requires goog.debug.LogRecord.js*/
-goog.require('goog.debug.LogRecord');
+  goog.provide('goog.debug.LogBuffer');
 
-
-
-/**
- * Creates the log buffer.
- * @constructor
- */
-goog.debug.LogBuffer = function() {
   // LB: asserts unused
-  // goog.asserts.assert(goog.debug.LogBuffer.isBufferingEnabled(),
-  //    'Cannot use goog.debug.LogBuffer without defining ' +
-  //    'goog.debug.LogBuffer.CAPACITY.');
-  this.clear();
-};
+  // goog.require('goog.asserts');
+  goog.require('goog.debug.LogRecord');
 
 
-/**
- * A static method that always returns the same instance of LogBuffer.
- * @return {!goog.debug.LogBuffer} The LogBuffer singleton instance.
- */
-goog.debug.LogBuffer.getInstance = function() {
-  if (!goog.debug.LogBuffer.instance_) {
-    // This function is written with the return statement after the assignment
-    // to avoid the jscompiler StripCode bug described in http://b/2608064.
-    // After that bug is fixed this can be refactored.
-    goog.debug.LogBuffer.instance_ = new goog.debug.LogBuffer();
-  }
-  return goog.debug.LogBuffer.instance_;
-};
+
+  /**
+   * Creates the log buffer.
+   * @constructor
+   */
+  goog.debug.LogBuffer = function() {
+    // LB: asserts unused
+    // goog.asserts.assert(goog.debug.LogBuffer.isBufferingEnabled(),
+    //    'Cannot use goog.debug.LogBuffer without defining ' +
+    //    'goog.debug.LogBuffer.CAPACITY.');
+    this.clear();
+  };
 
 
-/**
- * @define {number} The number of log records to buffer. 0 means disable
- * buffering.
- */
-goog.debug.LogBuffer.CAPACITY = 0;
+  /**
+   * A static method that always returns the same instance of LogBuffer.
+   * @return {!goog.debug.LogBuffer} The LogBuffer singleton instance.
+   */
+  goog.debug.LogBuffer.getInstance = function() {
+    if (!goog.debug.LogBuffer.instance_) {
+      // This function is written with the return statement after the assignment
+      // to avoid the jscompiler StripCode bug described in http://b/2608064.
+      // After that bug is fixed this can be refactored.
+      goog.debug.LogBuffer.instance_ = new goog.debug.LogBuffer();
+    }
+    return goog.debug.LogBuffer.instance_;
+  };
 
 
-/**
- * The array to store the records.
- * @type {!Array.<!goog.debug.LogRecord|undefined>}
- * @private
- */
-goog.debug.LogBuffer.prototype.buffer_;
+  /**
+   * @define {number} The number of log records to buffer. 0 means disable
+   * buffering.
+   */
+  goog.debug.LogBuffer.CAPACITY = 0;
 
 
-/**
- * The index of the most recently added record or -1 if there are no records.
- * @type {number}
- * @private
- */
-goog.debug.LogBuffer.prototype.curIndex_;
+  /**
+   * The array to store the records.
+   * @type {!Array.<!goog.debug.LogRecord|undefined>}
+   * @private
+   */
+  goog.debug.LogBuffer.prototype.buffer_;
 
 
-/**
- * Whether the buffer is at capacity.
- * @type {boolean}
- * @private
- */
-goog.debug.LogBuffer.prototype.isFull_;
+  /**
+   * The index of the most recently added record or -1 if there are no records.
+   * @type {number}
+   * @private
+   */
+  goog.debug.LogBuffer.prototype.curIndex_;
 
 
-/**
- * Adds a log record to the buffer, possibly overwriting the oldest record.
- * @param {goog.debug.Logger.Level} level One of the level identifiers.
- * @param {string} msg The string message.
- * @param {string} loggerName The name of the source logger.
- * @return {!goog.debug.LogRecord} The log record.
- */
-goog.debug.LogBuffer.prototype.addRecord = function(level, msg, loggerName) {
-  var curIndex = (this.curIndex_ + 1) % goog.debug.LogBuffer.CAPACITY;
-  this.curIndex_ = curIndex;
-  if (this.isFull_) {
-    var ret = this.buffer_[curIndex];
-    ret.reset(level, msg, loggerName);
-    return ret;
-  }
-  this.isFull_ = curIndex == goog.debug.LogBuffer.CAPACITY - 1;
-  return this.buffer_[curIndex] =
-      new goog.debug.LogRecord(level, msg, loggerName);
-};
+  /**
+   * Whether the buffer is at capacity.
+   * @type {boolean}
+   * @private
+   */
+  goog.debug.LogBuffer.prototype.isFull_;
 
 
-/**
- * @return {boolean} Whether the log buffer is enabled.
- */
-goog.debug.LogBuffer.isBufferingEnabled = function() {
-  return goog.debug.LogBuffer.CAPACITY > 0;
-};
+  /**
+   * Adds a log record to the buffer, possibly overwriting the oldest record.
+   * @param {goog.debug.Logger.Level} level One of the level identifiers.
+   * @param {string} msg The string message.
+   * @param {string} loggerName The name of the source logger.
+   * @return {!goog.debug.LogRecord} The log record.
+   */
+  goog.debug.LogBuffer.prototype.addRecord = function(level, msg, loggerName) {
+    var curIndex = (this.curIndex_ + 1) % goog.debug.LogBuffer.CAPACITY;
+    this.curIndex_ = curIndex;
+    if (this.isFull_) {
+      var ret = this.buffer_[curIndex];
+      ret.reset(level, msg, loggerName);
+      return ret;
+    }
+    this.isFull_ = curIndex == goog.debug.LogBuffer.CAPACITY - 1;
+    return this.buffer_[curIndex] =
+        new goog.debug.LogRecord(level, msg, loggerName);
+  };
 
 
-/**
- * Removes all buffered log records.
- */
-goog.debug.LogBuffer.prototype.clear = function() {
-  this.buffer_ = new Array(goog.debug.LogBuffer.CAPACITY);
-  this.curIndex_ = -1;
-  this.isFull_ = false;
-};
+  /**
+   * @return {boolean} Whether the log buffer is enabled.
+   */
+  goog.debug.LogBuffer.isBufferingEnabled = function() {
+    return goog.debug.LogBuffer.CAPACITY > 0;
+  };
 
 
-/**
- * Calls the given function for each buffered log record, starting with the
- * oldest one.
- * @param {function(!goog.debug.LogRecord)} func The function to call.
- */
-goog.debug.LogBuffer.prototype.forEachRecord = function(func) {
-  var buffer = this.buffer_;
-  // Corner case: no records.
-  if (!buffer[0]) {
-    return;
-  }
-  var curIndex = this.curIndex_;
-  var i = this.isFull_ ? curIndex : -1;
-  do {
-    i = (i + 1) % goog.debug.LogBuffer.CAPACITY;
-    func(/** @type {!goog.debug.LogRecord} */ (buffer[i]));
-  } while (i != curIndex);
-};
+  /**
+   * Removes all buffered log records.
+   */
+  goog.debug.LogBuffer.prototype.clear = function() {
+    this.buffer_ = new Array(goog.debug.LogBuffer.CAPACITY);
+    this.curIndex_ = -1;
+    this.isFull_ = false;
+  };
 
+
+  /**
+   * Calls the given function for each buffered log record, starting with the
+   * oldest one.
+   * @param {function(!goog.debug.LogRecord)} func The function to call.
+   */
+  goog.debug.LogBuffer.prototype.forEachRecord = function(func) {
+    var buffer = this.buffer_;
+    // Corner case: no records.
+    if (!buffer[0]) {
+      return;
+    }
+    var curIndex = this.curIndex_;
+    var i = this.isFull_ ? curIndex : -1;
+    do {
+      i = (i + 1) % goog.debug.LogBuffer.CAPACITY;
+      func(/** @type {!goog.debug.LogRecord} */ (buffer[i]));
+    } while (i != curIndex);
+  };
+
+  return goog.debug.LogBuffer;
+});

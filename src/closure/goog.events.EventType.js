@@ -16,97 +16,102 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/eventtype.js to goog.events.EventType.js
 // * added requires comment for goog.js and goog.userAgent.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Event Types.
  *
  */
-/*requires goog.js*/
-goog.provide('goog.events.EventType');
+define(["./goog","./goog.userAgent"], function(goog){
 
-/*requires goog.userAgent.js*/
-goog.require('goog.userAgent');
+  goog.provide('goog.events.EventType');
+
+  goog.require('goog.userAgent');
 
 
-/**
- * Constants for event names.
- * @enum {string}
- */
-goog.events.EventType = {
-  // Mouse events
-  CLICK: 'click',
-  DBLCLICK: 'dblclick',
-  MOUSEDOWN: 'mousedown',
-  MOUSEUP: 'mouseup',
-  MOUSEOVER: 'mouseover',
-  MOUSEOUT: 'mouseout',
-  MOUSEMOVE: 'mousemove',
-  SELECTSTART: 'selectstart', // IE, Safari, Chrome
+  /**
+   * Constants for event names.
+   * @enum {string}
+   */
+  goog.events.EventType = {
+    // Mouse events
+    CLICK: 'click',
+    DBLCLICK: 'dblclick',
+    MOUSEDOWN: 'mousedown',
+    MOUSEUP: 'mouseup',
+    MOUSEOVER: 'mouseover',
+    MOUSEOUT: 'mouseout',
+    MOUSEMOVE: 'mousemove',
+    SELECTSTART: 'selectstart', // IE, Safari, Chrome
 
-  // Key events
-  KEYPRESS: 'keypress',
-  KEYDOWN: 'keydown',
-  KEYUP: 'keyup',
+    // Key events
+    KEYPRESS: 'keypress',
+    KEYDOWN: 'keydown',
+    KEYUP: 'keyup',
 
-  // Focus
-  BLUR: 'blur',
-  FOCUS: 'focus',
-  DEACTIVATE: 'deactivate', // IE only
-  // NOTE: The following two events are not stable in cross-browser usage.
-  //     WebKit and Opera implement DOMFocusIn/Out.
-  //     IE implements focusin/out.
-  //     Gecko implements neither see bug at
-  //     https://bugzilla.mozilla.org/show_bug.cgi?id=396927.
-  // The DOM Events Level 3 Draft deprecates DOMFocusIn in favor of focusin:
-  //     http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html
-  // You can use FOCUS in Capture phase until implementations converge.
-  FOCUSIN: goog.userAgent.IE ? 'focusin' : 'DOMFocusIn',
-  FOCUSOUT: goog.userAgent.IE ? 'focusout' : 'DOMFocusOut',
+    // Focus
+    BLUR: 'blur',
+    FOCUS: 'focus',
+    DEACTIVATE: 'deactivate', // IE only
+    // NOTE: The following two events are not stable in cross-browser usage.
+    //     WebKit and Opera implement DOMFocusIn/Out.
+    //     IE implements focusin/out.
+    //     Gecko implements neither see bug at
+    //     https://bugzilla.mozilla.org/show_bug.cgi?id=396927.
+    // The DOM Events Level 3 Draft deprecates DOMFocusIn in favor of focusin:
+    //     http://dev.w3.org/2006/webapi/DOM-Level-3-Events/html/DOM3-Events.html
+    // You can use FOCUS in Capture phase until implementations converge.
+    FOCUSIN: goog.userAgent.IE ? 'focusin' : 'DOMFocusIn',
+    FOCUSOUT: goog.userAgent.IE ? 'focusout' : 'DOMFocusOut',
 
-  // Forms
-  CHANGE: 'change',
-  SELECT: 'select',
-  SUBMIT: 'submit',
-  INPUT: 'input',
-  PROPERTYCHANGE: 'propertychange', // IE only
+    // Forms
+    CHANGE: 'change',
+    SELECT: 'select',
+    SUBMIT: 'submit',
+    INPUT: 'input',
+    PROPERTYCHANGE: 'propertychange', // IE only
 
-  // Drag and drop
-  DRAGSTART: 'dragstart',
-  DRAGENTER: 'dragenter',
-  DRAGOVER: 'dragover',
-  DRAGLEAVE: 'dragleave',
-  DROP: 'drop',
+    // Drag and drop
+    DRAGSTART: 'dragstart',
+    DRAGENTER: 'dragenter',
+    DRAGOVER: 'dragover',
+    DRAGLEAVE: 'dragleave',
+    DROP: 'drop',
 
-  // WebKit touch events.
-  TOUCHSTART: 'touchstart',
-  TOUCHMOVE: 'touchmove',
-  TOUCHEND: 'touchend',
-  TOUCHCANCEL: 'touchcancel',
+    // WebKit touch events.
+    TOUCHSTART: 'touchstart',
+    TOUCHMOVE: 'touchmove',
+    TOUCHEND: 'touchend',
+    TOUCHCANCEL: 'touchcancel',
 
-  // Misc
-  CONTEXTMENU: 'contextmenu',
-  ERROR: 'error',
-  HELP: 'help',
-  LOAD: 'load',
-  LOSECAPTURE: 'losecapture',
-  READYSTATECHANGE: 'readystatechange',
-  RESIZE: 'resize',
-  SCROLL: 'scroll',
-  UNLOAD: 'unload',
+    // Misc
+    CONTEXTMENU: 'contextmenu',
+    ERROR: 'error',
+    HELP: 'help',
+    LOAD: 'load',
+    LOSECAPTURE: 'losecapture',
+    READYSTATECHANGE: 'readystatechange',
+    RESIZE: 'resize',
+    SCROLL: 'scroll',
+    UNLOAD: 'unload',
 
-  // HTML 5 History events
-  // See http://www.w3.org/TR/html5/history.html#event-definitions
-  HASHCHANGE: 'hashchange',
-  PAGEHIDE: 'pagehide',
-  PAGESHOW: 'pageshow',
-  POPSTATE: 'popstate',
+    // HTML 5 History events
+    // See http://www.w3.org/TR/html5/history.html#event-definitions
+    HASHCHANGE: 'hashchange',
+    PAGEHIDE: 'pagehide',
+    PAGESHOW: 'pageshow',
+    POPSTATE: 'popstate',
 
-  // Copy and Paste
-  COPY: 'copy',
-  PASTE: 'paste',
-  CUT: 'cut',
+    // Copy and Paste
+    COPY: 'copy',
+    PASTE: 'paste',
+    CUT: 'cut',
 
-  // HTML 5 worker events
-  MESSAGE: 'message',
-  CONNECT: 'connect'
-};
+    // HTML 5 worker events
+    MESSAGE: 'message',
+    CONNECT: 'connect'
+  };
+
+  return goog.events.EventType;
+});
