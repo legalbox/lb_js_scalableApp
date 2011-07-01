@@ -22,7 +22,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-01
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
@@ -249,6 +249,6 @@ define(["./lb.base.template","./lb.base.object","./lb.base.type",
       topDownParsing: topDownParsing,
       replaceParams: replaceParams
     };
-    return lbBaseTemplate.html;²
+    return lbBaseTemplate.html;
   }
 );
