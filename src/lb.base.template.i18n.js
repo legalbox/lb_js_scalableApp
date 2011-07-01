@@ -25,7 +25,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-01
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -47,7 +47,6 @@ define(["./lb.base.template","./lb.base.object","./lb.base.type",
         ELEMENT_NODE = dom.ELEMENT_NODE,
         hasAttribute = dom.hasAttribute,
         log = logModule.print,
-        i18n = lb.base.i18n,
         getDefaultLanguageCode = i18nData.getDefaultLanguageCode,
         get = i18nData.get,
         applyFilters = template.applyFilters,
