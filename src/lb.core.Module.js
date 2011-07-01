@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-07-01
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -56,7 +56,7 @@ define(["./lb.core.Module","./lb.base.type","./lb.base.log",
       var is = type.is,
           log = logModule.print,
           defaultBuilder = plugins.builder,
-          getOption = .config.getOption,
+          getOption = config.getOption,
           $ = dom.$,
 
       // Private fields
