@@ -16,11 +16,6 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/history/history.js to
 //   goog.History.js
-// * added requires comment for goog.js, goog.Timer.js, goog.dom.js,
-//   goog.events.js, goog.events.BrowserEvent.js, goog.events.Event.js,
-//   goog.events.EventHandler.js, goog.events.EventTarget.js,
-//   goog.events.EventType.js, goog.history.Event.js,
-//   goog.history.EventType.js, goog.string.js, goog.userAgent.js
 // * bug fix: avoid duplicate firing of initial hash in IE
 //   In goog.History.prototype.setEnabled, I moved the dispatchEvent call for
 //   the initial hash to the previous block in if (!goog.userAgent.IE).

@@ -14,7 +14,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/dom/browserfeature.js to goog.dom.BrowserFeature.js
-// * added require comments for goog.js and goog.userAgent.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

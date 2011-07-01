@@ -15,10 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/events.js to goog.events.js
-// * added requires comments for goog.js, goog.array.js, 
-//   goog.debug.errorHandlerWeakDep.js, goog.events.BrowserEvent.js,
-//   goog.events.Event.js, goog.events.EventWrapper.js, goog.events.pools.js,
-//   goog.object.js, goog.userAgent.js
 // * commented use and requirement of goog.debug.entryPointRegistry
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS

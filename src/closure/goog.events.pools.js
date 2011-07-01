@@ -15,9 +15,6 @@
 // Modifications Copyright 2009-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/events/pools.js to goog.events.pools.js
-// * added requires comments for goog.js, goog.events.BrowserEvent.js,
-//   goog.events.Listener.js, goog.structs.SimplePool.js,
-//   goog.userAgent.jscript.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

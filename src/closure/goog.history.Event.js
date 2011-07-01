@@ -15,8 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/history/event.js to goog.history.Event.js
-// * added requires comment for goog.js, goog.events.Event.js and
-//   goog.history.EventType.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

@@ -15,7 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/math/size.js to goog.math.Size.js
-// * added requires comment for goog.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
 

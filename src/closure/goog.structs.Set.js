@@ -15,7 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/structs/set.js to goog.structs.Set.js
-// * added requires comments for goog.js, goog.structs.js, goog.structs.Map.js
 // * commented requirement for interface goog.structs.Collection.js
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS

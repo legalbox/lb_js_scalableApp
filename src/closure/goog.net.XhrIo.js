@@ -15,11 +15,6 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/net/xhrio.js to goog.net.XhrIo.js
-// * added requires comments for goog.js, goog.Timer.js, goog.debug.Logger.js,
-//   goog.debug.errorHandlerWeakDep.js, goog.events.EventTarget.js,
-//   goog.json.js, goog.net.ErrorCode.js, goog.net.EventType.js,
-//   goog.net.HttpStatus.js, goog.net.XmlHttp.js, goog.net.xhrMonitor.js,
-//   goog.object.js, goog.structs.js, goog.structs.Map.js, goog.uri.utils.js
 // * commented use of and require call for goog.debug.entryPointRegistry
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
