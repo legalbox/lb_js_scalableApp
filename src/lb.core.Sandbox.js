@@ -78,13 +78,13 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-01
  */
 /*jslint white:false, plusplus:false */
 /*global define, document, window */
 define(["./lb.core.Sandbox","./lb.base.object","./lb.base.config",
         "./lb.base.dom.factory","./lb.base.dom","./lb.base.log"],
-  function(lbCoreSandbox,    object,            config;
+  function(lbCoreSandbox,    object,            config,
          defaultFactory,         dom,            logModule) {
     // Assign to lb.core.Sandbox
     // for backward-compatibility in browser environment
