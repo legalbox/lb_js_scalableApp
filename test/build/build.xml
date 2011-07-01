@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="requirejs" basedir="." default="build">
+  <description>
+  An experiment: Generate the build configuration for requireJS
+
+  We want to list all scripts in src/, removing the .js extension while
+  keeping the relative path:
+
+  lb
+  lb.base
+  lb.base.ajax
+  ...
+  closure/goog
+  closure/goog.array
+  ...
+
+  This list shall then be converted to a JavaScript/JSON Array for the include
+  property of the build configuration.
+
+  Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
+  Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
+  License: BSD License - http://creativecommons.org/licenses/BSD/
+  Version: 2011-06-27
+  </description>
+
+  <target name="build"
+    depends="clean, combineWithRequireJS"
+  />
+
+  <target name="clean" description="Remove previous temps">
+    <delete dir="out"/>
+  </target>
+
+  <property name="macros.basedir" location="../../build" />
+
+  <!-- Combine JavaScript files using requireJS -->
+  <macrodef name="requirejs">
+    <attribute name="in"
+      description="location of source folder with source JS files" />
+    <attribute name="modules"
+      description="list of modules, as JSON array of strings" />
+    <attribute name="out"
+      description="location of the combined file to create" />
+    <attribute name="config"
+      description="location of the folder for generated build config" />
+
+    <sequential>
+      <echo>requirejs: started combining @{modules} => @{out}</echo>
+
+      <mkdir dir="@{config}" />
+      <copy file="${macros.basedir}/lib/requirejs/build-config.json.tpl"
+            tofile="@{config}/build-config.json" />
+      <replace file="@{config}/build-config.json" encoding="UTF-8">
+        <replacefilter token="#src.dir#" value="@{in}" />
+        <replacefilter token="#modules.array#" value="@{modules}" />
+        <replacefilter token="#out.file#" value="@{out}" />
+      </replace>
+
+      <java jar="${macros.basedir}/lib/requirejs/rhino/js.jar"
+        fork="true" failonerror="true">
+        <arg line="${macros.basedir}/lib/requirejs/bin/x.js" />
+        <arg line="${macros.basedir}/lib/requirejs/bin" />
+        <arg line="${macros.basedir}/lib/requirejs/build.js" />
+        <arg line="@{config}/build-config.json" />
+      </java>
+
+      <echo>requirejs: completed combining @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <target name="generateBuildConfig"
+          description="Generate the config file for requireJS">
+    <!--
+    Note:
+    The modules to combine must be listed explicitly for the optimizer tool.
+    There is no option to combine all scripts found in the source folder.
+    https://groups.google.com/group/requirejs/browse_thread/thread/3dc1d075cb8cd4b4/52407c37e426adee?lnk=gst&q=%22concatenate+all+scripts%22#52407c37e426adee
+    -->
+    <property name="src.dir" location="../bezen.org" />
+    <property name="combined.file" location="out/js/bezen.full.js" />
+
+    <fileset dir="${src.dir}" id="src.files">
+      <include name="**/*.js" />
+    </fileset>
+
+    <pathconvert property="all.modules.inner"
+      dirsep="/" pathsep='","' refid="src.files">
+      <map from="${src.dir}/" to="" />
+      <mapper type="glob" from="*.js" to="*" />
+    </pathconvert>
+    <property name="all.modules" value='["${all.modules.inner}"]' />
+    <echo message="List of modules: ${all.modules}" />
+  </target>
+
+  <target name="combineWithRequireJS"
+          description="Combine JavaScript source files with RequireJS"
+          depends="generateBuildConfig">
+    <requirejs in="${src.dir}" modules="${all.modules}"
+               out="${combined.file}" config="out/config" />
+  </target>
+
+</project>
