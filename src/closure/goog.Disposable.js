@@ -25,7 +25,7 @@
  * @fileoverview Implements the disposable interface. The dispose method is used
  * to clean up references and resources.
  */
-defien(["./goog"], function(goog){
+define(["./goog"], function(goog){
 
   goog.provide('goog.Disposable');
   goog.provide('goog.dispose');
