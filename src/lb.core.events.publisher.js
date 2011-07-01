@@ -17,12 +17,12 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-01
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(["./lb.core.events","./lb.base.log","./lb.base.array"],
-  (function(lbCoreEvents,   logModule,      array) {
+  function(lbCoreEvents,   logModule,      array) {
     // Builder of
     // Closure for lb.core.events.publisher module
 
