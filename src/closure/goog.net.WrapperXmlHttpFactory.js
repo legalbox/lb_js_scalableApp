@@ -17,6 +17,8 @@
 // * renamed file from goog/net/wrapperxmlhttpfactory.js to
 //   goog.net.WrapperXmlHttpFactory.js
 // * added requires comments for goog.js and goog.net.XmlHttpFactory.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Implementation of XmlHttpFactory which allows construction from

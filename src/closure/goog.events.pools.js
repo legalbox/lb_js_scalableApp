@@ -18,6 +18,8 @@
 // * added requires comments for goog.js, goog.events.BrowserEvent.js,
 //   goog.events.Listener.js, goog.structs.SimplePool.js,
 //   goog.userAgent.jscript.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Helper object to manage the event system pools. This should not

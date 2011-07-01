@@ -20,6 +20,8 @@
 //   goog.events.Event.js, goog.events.EventWrapper.js, goog.events.pools.js,
 //   goog.object.js, goog.userAgent.js
 // * commented use and requirement of goog.debug.entryPointRegistry
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Event Manager.

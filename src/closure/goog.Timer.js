@@ -16,6 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/timer/timer.js to goog.Timer.js
 // * added requires comment for goog.js and goog.events.EventTarget.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview A timer class to which other classes and objects can

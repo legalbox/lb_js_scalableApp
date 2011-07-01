@@ -16,6 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/useragent/jscript.js to goog.userAgent.jscript.js
 // * added requires comments for goog.js and goog.string.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Detection of JScript version.

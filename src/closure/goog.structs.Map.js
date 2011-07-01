@@ -17,6 +17,8 @@
 // * renamed file from goog/structs/map.js to goog.structs.Map.js
 // * added requires comments for goog.js, goog.iter.js, goog.object.js,
 //   goog.structs.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Datastructure: Hash Map.

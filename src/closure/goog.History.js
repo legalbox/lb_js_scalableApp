@@ -54,6 +54,8 @@
 //   part of the behavior of "onhashchange" event in some browsers)
 // - to detect when a new listener is added and fire the current hash for this
 //   listener only, at this point (not only once in setEnabled).
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Browser history stack management class.

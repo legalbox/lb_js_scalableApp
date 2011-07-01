@@ -16,6 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/structs/structs.js to goog.structs.js
 // * added requires comments for goog.js, goog.array.js, goog.object.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Generics method for collection-like classes and objects.

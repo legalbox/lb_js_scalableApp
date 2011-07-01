@@ -36,6 +36,8 @@
 // TODO: this module definition should be wrapped in a closure scope,
 //       following JavaScript module pattern, to allow defining private
 //       variables and functions, then exported to public API in goog.*
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Bootstrap for the Google JS Library (Closure).

@@ -16,6 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/net/eventtype.js to goog.net.EventType.js
 // * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Common events for the network classes.

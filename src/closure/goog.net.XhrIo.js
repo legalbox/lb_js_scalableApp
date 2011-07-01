@@ -21,6 +21,8 @@
 //   goog.net.HttpStatus.js, goog.net.XmlHttp.js, goog.net.xhrMonitor.js,
 //   goog.object.js, goog.structs.js, goog.structs.Map.js, goog.uri.utils.js
 // * commented use of and require call for goog.debug.entryPointRegistry
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Wrapper class for handling XmlHttpRequests.

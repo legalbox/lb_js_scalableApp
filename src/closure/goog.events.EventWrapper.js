@@ -17,6 +17,8 @@
 // * renamed file from goog/events/eventwrapper.js to
 //   goog.events.EventWrapper.js
 // * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Definition of the goog.events.EventWrapper interface.

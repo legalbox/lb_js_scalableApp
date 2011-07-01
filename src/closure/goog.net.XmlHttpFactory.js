@@ -16,6 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/net/xmlhttpfactory.js to goog.net.XmlHttpFactory.js
 // * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Interface for a factory for creating XMLHttpRequest objects

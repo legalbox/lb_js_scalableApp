@@ -17,6 +17,8 @@
 // * renamed file from goog/uri/utils.js to goog.uri.utils.js
 // * added requires comment for goog.js and goog.string.js
 // * commented all calls to goog.asserts and associated require
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Simple utilities for dealing with URI strings.

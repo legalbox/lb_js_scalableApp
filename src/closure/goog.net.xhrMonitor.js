@@ -17,6 +17,8 @@
 // * renamed file goog/net/xhrmonitor.js to goog.net.xhrMonitor.js
 // * added requires comments for goog.js, goog.array.js, goog.debug.Logger.js,
 //   goog.userAgent.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Class used by XHR wrappers to publish their state to IframeIo

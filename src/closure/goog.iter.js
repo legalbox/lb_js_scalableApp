@@ -17,6 +17,8 @@
 // * renamed file from goog/iter/iter.js to goog.iter.js
 // * added requires comment for goog.js and goog.array.js
 // * commented use and requirement of goog.asserts
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Python style iteration utilities.
