@@ -16,14 +16,14 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-01
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
 define(["./lb.core","./lb.base.array","./lb.base.config",
         "./lb.base.dom",".:lb.base.log"],
   function(lbCore,   array,            config,
-         dom             logModule) {
+         dom,            logModule) {
     // Builder of
     // Closure for lb.core.application module
 
