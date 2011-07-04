@@ -39,7 +39,7 @@ define(
     "./lb.base.i18n",
     "./lb.base.i18n.data",
     "./lb.base.template.string",
-    "./lb.base.tempate.html"
+    "./lb.base.template.html"
   ],
   function(
     lbBaseTemplate,
