@@ -32,12 +32,10 @@
 //   variable as soon as an event listener is attached to the window.
 // * added hasOwnProperty filter in for..in loop in goog.globalize,
 //   goog.cloneObject, goog.mixin, goog.getMsg
-
-// TODO: this module definition should be wrapped in a closure scope,
-//       following JavaScript module pattern, to allow defining private
-//       variables and functions, then exported to public API in goog.*
 // * wrapped code in a function in a call to define for dependency management
 //   using requireJS
+// * modified declaration of global 'goog': replaced var declaration with
+//   assignment to 'this'
 
 /**
  * @fileoverview Bootstrap for the Google JS Library (Closure).
@@ -57,8 +55,9 @@ define(function(){
    *
    * @const
    */
-  var goog = goog || {}; // Identifies this file as the Closure base.
-
+  // LB: var now declares a local variable
+  // var goog = goog || {}; // Identifies this file as the Closure base.
+  this.goog = this.goog || {}; // create global 'goog', preserving existing one
 
   /**
    * @define {boolean} Overridden to true by the compiler when --closure_pass
@@ -1561,9 +1560,6 @@ define(function(){
   goog.scope = function(fn) {
     fn.call(goog.global);
   };
-
-  // Initialize global variable goog
-  goog.global.goog = goog;
 
   return goog;
 });
