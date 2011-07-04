@@ -40,10 +40,7 @@ define(
       //   sandbox - object, the sandbox instance to enrich with URL methods
 
       // Declare aliases
-      var /*requires lb.base.object.js */
-          has = lb.base.object.has,
-          /*requires lb.base.history.js */
-          history = lb.base.history,
+      var has = object.has,
           setHash = history.setHash,
 
       // Private fields

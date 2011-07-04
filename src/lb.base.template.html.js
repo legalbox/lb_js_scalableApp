@@ -24,7 +24,6 @@
  * Version:
  * 2011-07-04
  */
-/*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
 /*global define, window */
 define(

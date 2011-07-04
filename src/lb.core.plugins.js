@@ -16,7 +16,6 @@
  * Version:
  * 2011-07-04
  */
-/*requires lb.core.js */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(

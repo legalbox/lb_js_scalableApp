@@ -85,7 +85,8 @@ define(
     "./lb.base.type",
     "closure/goog.History",
     "closure/goog.events",
-    "./lb.base.dom"
+    "./lb.base.dom",
+    "./lb.base.dom.Listener"
   ],
   function(
     lbBase,
@@ -93,7 +94,8 @@ define(
     type,
     History,
     events,
-    dom
+    dom,
+    Listener
   ) {
 
     // Declare aliases
@@ -116,10 +118,7 @@ define(
           //                                   /Global_Functions/encodeURI
         encodeHash = window.encodeURI,
         decodeHash = window.decodeURI,
-        /*requires lb.base.dom.js */
         $ = dom.$,
-        /*requires lb.base.dom.Listener.js */
-        Listener = dom.Listener,
 
     // Private fields
 
