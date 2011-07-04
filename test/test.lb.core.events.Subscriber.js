@@ -38,7 +38,7 @@ define(
 
       if ( object.exists(window) ) {
         assert.isTrue( object.exists(window,'lb','core','events','Subscriber'),
-                          "lb.core.events.Suscriber namespace was not found");
+                          "lb.core.events.Subscriber namespace was not found");
         assert.equals( Subscriber, lb.core.events.Subscriber,
                         "same module expected in lb.core.events.Subscriber "+
                                                "for backward compatibility");
