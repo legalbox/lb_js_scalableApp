@@ -29,8 +29,10 @@
 
 define(["./goog","./goog.array","./goog.object"], function(goog){
 
-goog.provide('goog.structs');
+  goog.provide('goog.structs');
 
+  goog.require('goog.array');
+  goog.require('goog.object');
 
   // We treat an object as a dictionary if it has getKeys or it is an object that
   // isn't arrayLike.

@@ -62,7 +62,7 @@
  *
  */
 define(["./goog","./goog.Disposable","./goog.events",
-        "./goog.events.eventWrapper","./goog.object"
+        "./goog.events.EventWrapper","./goog.object",
         "./goog.structs.SimplePool"], function(goog){
 
   goog.provide('goog.events.EventHandler');

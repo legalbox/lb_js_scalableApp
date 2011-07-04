@@ -40,7 +40,7 @@
 define(["./goog","./goog.array","./goog.debug.Logger",
         "./goog.userAgent"], function(goog){
 
-goog.provide('goog.net.xhrMonitor');
+  goog.provide('goog.net.xhrMonitor');
 
   goog.require('goog.array');
   goog.require('goog.debug.Logger');

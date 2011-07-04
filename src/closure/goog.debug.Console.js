@@ -25,8 +25,9 @@
  * will start logging if "Debug=true" is in document.location.href
  *
  */
-define(["./goog","./goog.debug.Logger",
-        "./goog.debug.Formatter"], function(goog){
+define(
+  ["./goog","./goog.debug.Logger","./goog.debug.Formatter"],
+  function(goog){
 
   goog.provide('goog.debug.Console');
 

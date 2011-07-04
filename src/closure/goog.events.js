@@ -60,8 +60,8 @@
 // sources_: src uid -> [Listener]
 
 define(["./goog","./goog.array","./goog.debug.errorHandlerWeakDep",
-        "./goog.events/BrowserEvent","./goog.events.Event","
-        "./goog.events.eventWrapper","./goog.events.pools",
+        "./goog.events.BrowserEvent","./goog.events.Event",
+        "./goog.events.EventWrapper","./goog.events.pools",
         "./goog.object","./goog.userAgent"], function(goog){
 
   goog.provide('goog.events');

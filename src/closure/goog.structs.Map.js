@@ -28,8 +28,8 @@
  * internally they will be cast to strings.
  */
 
-define(["./goog""./goog.iter","./goog.object",
-        "./goog.structs"], function(goog){
+define(["./goog","./goog.iter","./goog.object","./goog.structs"],
+function(goog){
 
   goog.require('goog.iter.Iterator');
   goog.require('goog.iter.StopIteration');

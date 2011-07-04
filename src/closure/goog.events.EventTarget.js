@@ -28,11 +28,12 @@
 /**
  * Namespace for events
  */
-define(["./goog","./goog.Disposable","./goog.events"], fucntion(goog){
+define(["./goog","./goog.Disposable","./goog.events"], function(goog){
 
   goog.provide('goog.events.EventTarget');
 
-
+  goog.require('goog.Disposable');
+  goog.require('goog.events');
 
   /**
    * This implements the EventTarget interface as defined by W3C DOM 2/3. The

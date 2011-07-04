@@ -30,7 +30,8 @@
  */
 
 define(["./goog","./goog.structs","./goog.structs.Map"], function(goog){
-goog.provide('goog.structs.Set');
+
+  goog.provide('goog.structs.Set');
 
   goog.require('goog.structs');
   // LB: unused, interface declaration

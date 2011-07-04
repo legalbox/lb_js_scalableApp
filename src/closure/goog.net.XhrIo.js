@@ -44,10 +44,10 @@
  *
  */
 
-define(["./goog","./goog.Timer","./goog.debug.Logger"
+define(["./goog","./goog.Timer","./goog.debug.Logger",
         "./goog.debug.errorHandlerWeakDep","./goog.events.EventTarget",
         "./goog.json","./goog.net.ErrorCode","./goog.net.EventType",
-        "./goog.net.HttpStatus","./goog.net.XmlHttp","./goog.xhrMonitor",
+        "./goog.net.HttpStatus","./goog.net.XmlHttp","./goog.net.xhrMonitor",
         "./goog.object","./goog.structs","./goog.structs.Map",
         "./goog.uri.utils"],function(goog){
 

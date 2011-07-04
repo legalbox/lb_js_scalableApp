@@ -25,7 +25,7 @@
  * @see ../demos/timers.html
  */
 
-define(["./goog","./goog.evnts.EventTarget"], function(goog){
+define(["./goog","./goog.events.EventTarget"], function(goog){
 
   goog.provide('goog.Timer');
 
