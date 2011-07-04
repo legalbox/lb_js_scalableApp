@@ -39,7 +39,8 @@ define(
   ){
 
     // Define aliases
-    var last = array.last,
+    var nix = bezen.nix,
+        last = array.last,
         startsWith = string.startsWith;
 
     function testNamespace(){
