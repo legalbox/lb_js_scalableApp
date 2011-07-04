@@ -14,17 +14,31 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins.dom","./lb.base.array","./lb.base.config",
-        "./lb.base.dom.factory","./lb.base.dom","./lb.base.log"],
-  function(lbCorePluginsDom,     array,            config,
-         defaultFactory,         dom,              logModule) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.array",
+    "./lb.base.config",
+    "./lb.base.dom.factory",
+    "./lb.base.dom",
+    "./lb.base.log"
+  ],
+  function(
+    lbCorePlugins,
+    array,
+    config,
+    defaultFactory,
+    dom,
+    logModule
+  ) {
+
     // Assign to lb.core.plugins.dom
     // for backward-compatibility in browser environment$
-    lbCorePluginsDom = function(sandbox) {
+    lbCorePlugins.dom = function(sandbox) {
       // Function: dom(sandbox)
       // Define methods in the 'dom' property of given sandbox.
       //
@@ -222,6 +236,7 @@ define(["./lb.core.plugins.dom","./lb.base.array","./lb.base.config",
         removeAllListeners: removeAllListeners
       };
     };
-    return lbCorePluginsDom;
+
+    return lbCorePlugins.dom;
   }
 );

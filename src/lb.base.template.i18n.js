@@ -25,20 +25,33 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base.template","./lb.base.object","./lb.base.type",
-        "./lb.base.dom","./lb.base.log","./lb.base.i18n","./lb.base.i18n.data",
-        "./lb.base.template", "./lb.base.template.string",
-        "./lb.base.tempate.html"],
-  function(lbBaseTemplate,    object,            type,
-         dom,            logModule,      i18n,            i18nData,
-         template,             stringTemplates,
-         htmlTemplates) {
-    // Builder of
-    // Closure for lb.base.template.i18n module
+define(
+  [
+    "./lb.base.template",
+    "./lb.base.object",
+    "./lb.base.type",
+    "./lb.base.dom",
+    "./lb.base.log",
+    "./lb.base.i18n",
+    "./lb.base.i18n.data",
+    "./lb.base.template.string",
+    "./lb.base.tempate.html"
+  ],
+  function(
+    lbBaseTemplate,
+    object,
+    type,
+    dom,
+    logModule,
+    i18n,
+    i18nData,
+    stringTemplates,
+    htmlTemplates
+  ) {
 
     // Declare aliases
 
@@ -49,7 +62,7 @@ define(["./lb.base.template","./lb.base.object","./lb.base.type",
         log = logModule.print,
         getDefaultLanguageCode = i18nData.getDefaultLanguageCode,
         get = i18nData.get,
-        applyFilters = template.applyFilters,
+        applyFilters = lbBaseTemplate.applyFilters,
         withValuesFrom = stringTemplates.withValuesFrom,
         replaceParamsInString = stringTemplates.replaceParams,
         topDownParsing = htmlTemplates.topDownParsing,
@@ -393,6 +406,7 @@ define(["./lb.base.template","./lb.base.object","./lb.base.type",
       setLanguage: setLanguage,
       filterHtml: filterHtml
     };
-  return lbBaseTemplate.i18n;
+
+    return lbBaseTemplate.i18n;
   }
 );

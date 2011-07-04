@@ -14,17 +14,25 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins.events","./lb.core.events.publisher",
-        "./lb.core.events.Subscriber"],
-  function(lbCorePluginsEvents,     publisher,
-         Subscriber) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.core.events.publisher",
+    "./lb.core.events.Subscriber"
+  ],
+  function(
+    lbCorePlugins,
+    publisher,
+    Subscriber
+  ) {
+
     // Assign to lb.core.plugins.events
     // for backward-compatibility in browser environment
-    lbCorePluginsEvents = function(sandbox) {
+    lbCorePlugins.events = function(sandbox) {
       // Function: events(sandbox)
       // Define methods in the 'events' property of given sandbox.
       //
@@ -107,6 +115,7 @@ define(["./lb.core.plugins.events","./lb.core.events.publisher",
         publish: publisher.publish
       };
     };
-    return lbCorePluginsEvents;
+
+    return lbCorePlugins.events;
   }
 );

@@ -14,15 +14,25 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins.css","./lb.base.dom","./lb.base.log"],
-  function(lbCorePluginsCss,     dom,            logModule) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.dom",
+    "./lb.base.log"
+  ],
+  function(
+    lbCorePlugins,
+    dom,
+    logModule
+  ) {
+
     // Assign to lb.core.plugins.css
     // for backward-compatibility in browser environment
-    lbCorePluginsCss = function(sandbox) {
+    lbCorePlugins.css = function(sandbox) {
       // Function: css(sandbox)
       // Define methods in the 'css' property of given sandbox.
       //
@@ -109,6 +119,7 @@ define(["./lb.core.plugins.css","./lb.base.dom","./lb.base.log"],
         removeClass: removeClass
       };
     };
-    return lbCorePluginsCss;
+
+    return lbCorePlugins.css;
   }
 );

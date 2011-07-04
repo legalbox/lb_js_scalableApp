@@ -22,19 +22,30 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*requires lb.base.template.js */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(["./lb.base.template","./lb.base.object","./lb.base.type",
-        "./lb.base.array","./lb.base.dom","./lb.base.template.string",
-        "./lb.base.log"],
-  function(lbBaseTemplate,    object,            type,
-         array,            dom,            string, 
-         logModule) {
-    // Builder of
-    // Closure for lb.base.template.html module
+define(
+  [
+    "./lb.base.template",
+    "./lb.base.object",
+    "./lb.base.type",
+    "./lb.base.array",
+    "./lb.base.dom",
+    "./lb.base.template.string",
+    "./lb.base.log"
+  ],
+  function(
+    lbBaseTemplate,
+    object,
+    type,
+    array,
+    dom,
+    string, 
+    logModule
+  ) {
 
     // Declare aliases
 
@@ -249,6 +260,7 @@ define(["./lb.base.template","./lb.base.object","./lb.base.type",
       topDownParsing: topDownParsing,
       replaceParams: replaceParams
     };
+
     return lbBaseTemplate.html;
   }
 );

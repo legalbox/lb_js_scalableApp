@@ -14,14 +14,23 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./closure/goog.net.XhrIo","./lb.base.json","./lb.base.log"],
-  function(lbBase,   XhrIo,                     json,            logModule) {
-    // Builder of
-    // Closure for lb.base.ajax module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.net.XhrIo",
+    "./lb.base.json",
+    "./lb.base.log"
+  ],
+  function(
+    lbBase,
+    XhrIo,
+    json,
+    logModule
+  ) {
 
     // Declare alias
     var log = logModule.print;

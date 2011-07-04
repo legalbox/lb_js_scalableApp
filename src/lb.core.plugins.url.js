@@ -14,15 +14,25 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(["./lb.core.plugins.url","./lb.base.object","./lb.base.history"],
-  function(lbCorePluginsUrl,     object,            history) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.object",
+    "./lb.base.history"
+  ],
+  function(
+    lbCorePlugins,
+    object,
+    history
+  ) {
+
     // Assign to lb.core.plugins.url
     // for backward-compatibility in browser environment
-    lbCorePluginsUrl = function(sandbox) {
+    lbCorePlugins.url = function(sandbox) {
       // Function: url(sandbox)
       // Define methods in the 'url' property of given sandbox.
       //
@@ -105,14 +115,13 @@ define(["./lb.core.plugins.url","./lb.base.object","./lb.base.history"],
         }
       }
 
-      
-
       sandbox.url = {
         getLocation: getLocation,
         setHash: setHash,
         onHashChange: onHashChange
       };
     };
-    return lbCorePluginsUrl;
+
+    return lbCorePluginsi.url;
   }
 );

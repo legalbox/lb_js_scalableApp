@@ -14,14 +14,17 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base"],
-  function(lbBase) {
-    // Builder of
-    // Closure for lb.base.type module
+define(
+  [
+    "./lb.base"
+  ],
+  function(
+    lbBase
+  ) {
 
     function is(value){
       // Function: is([...,]value[,type]): boolean

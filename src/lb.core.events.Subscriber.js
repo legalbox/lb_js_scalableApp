@@ -25,16 +25,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.events.Subscriber","./lb.base.object"],
-  function(Subscriber,                 object){
-    // Assign to lb.core.Subscriber
-    // for backward-compatibility in browser environment
+define(
+  [
+    "./lb.core.events",
+    "./lb.base.object"
+  ],
+  function(
+    lbCoreEvents,
+    object
+  ){
 
-    Subscriber = function(filter, callback){
+    lbCoreEvents.Subscriber = function(filter, callback){
       // Function: new Subscriber(filter,callback): Subscriber
       // Constructor of a new Core Events Subscriber.
       //
@@ -119,6 +124,7 @@ define(["./lb.core.events.Subscriber","./lb.base.object"],
       this.includes = includes;
       this.notify = notify;
     };
-    return Subscriber;
+
+    return lbCoreEvents.Subscriber;
   }
 );

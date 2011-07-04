@@ -14,14 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./closure/goog.string"],
-  function(lbBase,   string) {
-    // Builder of
-    // Closure for lb.base.string module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.string"
+  ],
+  function(
+    lbBase,
+    string
+  ) {
 
     // Declare alias
     var gTrim = string.trim;
@@ -45,6 +50,7 @@ define(["./lb.base","./closure/goog.string"],
     lbBase.string = { // public API
       trim: trim
     };
+
     return lbBase.string;
   }
 );

@@ -14,13 +14,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-30
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
 define(function() {
-  // Builder of
-  // Closure for Root of Legal Box Scalable JavaScript Application
 
   // Note: no methods defined at this level currently
 

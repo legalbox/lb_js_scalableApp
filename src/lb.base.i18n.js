@@ -33,14 +33,23 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, navigator, document */
-define(["./lb.base","./lb.base.object","./lb.base.type","./lb.base.dom"],
-  function(lbBase,   object,            type,            dom) {
-    // Builder of
-    // Closure for lb.base.i18n module
+define(
+  [
+    "./lb.base",
+    "./lb.base.object",
+    "./lb.base.type",
+    "./lb.base.dom"
+  ],
+  function(
+    lbBase,
+    object,
+    type,
+    dom
+  ) {
 
     // Define aliases
 
@@ -240,7 +249,7 @@ define(["./lb.base","./lb.base.object","./lb.base.type","./lb.base.dom"],
 
     // Assign to lb.base.i18n
     // for backward-compatibility in browser environment
-     lbBase.i18n = { // public API
+    lbBase.i18n = { // public API
       getBrowserLanguage: getBrowserLanguage,
       getLanguage: getLanguage,
       setLanguage: setLanguage,

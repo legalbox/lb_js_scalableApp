@@ -14,12 +14,20 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins.server","./lb.base.ajax"],
-  function(lbCorePluginsServer,   ajax) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.ajax"
+  ],
+  function(
+    lbCorePlugins,
+    ajax
+  ) {
+
     // Assign to lb.core.plugins.sever
     // for backward-compatibility in browser environment
     lbCorePluginsServer = function(sandbox) {
@@ -48,6 +56,7 @@ define(["./lb.core.plugins.server","./lb.base.ajax"],
         send: send
       };
     };
-    return lbCorePluginsServer;
+
+    return lbCorePlugins;
   }
 );

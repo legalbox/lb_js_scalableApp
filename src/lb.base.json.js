@@ -14,14 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./closure/goog.json"],
-  function(lbBase,   json) {
-    // Builder of
-    // Closure for lb.base.json module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.json"
+  ],
+  function(
+    lbBase,
+    json
+  ) {
 
     function parse(string){
       // Function: parse(string): object|array

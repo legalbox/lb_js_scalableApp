@@ -14,14 +14,23 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./lb.base.type","./closure/goog","./closure/goog.object"],
-  function(lbBase,   type,            goog,            object) {
-    // Builder of
-    // Closure for lb.base.object module
+define(
+  [
+    "./lb.base",
+    "./lb.base.type",
+    "./closure/goog",
+    "./closure/goog.object"
+  ],
+  function(
+    lbBase,
+    type,
+    goog,
+    object
+  ) {
 
     // Declare aliases
     var is = type.is,
@@ -114,6 +123,7 @@ define(["./lb.base","./lb.base.type","./closure/goog","./closure/goog.object"],
       has: has,
       clone: clone
     };
+
     return lbBase.object;
   }
 );

@@ -17,14 +17,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.events","./lb.base.log","./lb.base.array"],
-  function(lbCoreEvents,   logModule,      array) {
-    // Builder of
-    // Closure for lb.core.events.publisher module
+define(
+  [
+    "./lb.core.events",
+    "./lb.base.log",
+    "./lb.base.array"
+  ],
+  function(
+    lbCoreEvents,
+    logModule,
+    array
+  ) {
 
     // Define aliases
     var log = logModule.print,
@@ -108,6 +115,7 @@ define(["./lb.core.events","./lb.base.log","./lb.base.array"],
       removeSubscriber: removeSubscriber,
       publish: publish
     };
+
     return lbCoreEvents.publisher;
   }
 );

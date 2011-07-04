@@ -14,16 +14,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./closure/goog.debug.Console",
-        "./closure/goog.debug.Logger"],
-  function(lbBase,   Console,
-         Logger) {
-    // Builder of
-    // Closure for lb.base.log module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.debug.Console",
+    "./closure/goog.debug.Logger"
+  ],
+  function(
+    lbBase,
+    Console,
+    Logger
+  ){
 
     // Define alias
     var Level  = Logger.Level,
@@ -59,6 +64,7 @@ define(["./lb.base","./closure/goog.debug.Console",
     lbBase.log = { // public API
       print: print
     };
+
     return lbBase.log;
   }
 );

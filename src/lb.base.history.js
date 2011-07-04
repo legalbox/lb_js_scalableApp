@@ -74,16 +74,27 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, window, document */
-define(["./lb.base","./lb.base.object","./lb.base.type",
-        "./closure/goog.History","./closure/goog.events","./lb.base.dom"],
-  function(lbBase,   object,            type,
-         History,                  events,                dom) {
-    // Builder of
-    // Closure for lb.base.history module
+define(
+  [
+    "./lb.base",
+    "./lb.base.object",
+    "./lb.base.type",
+    "./closure/goog.History",
+    "./closure/goog.events",
+    "./lb.base.dom"
+  ],
+  function(
+    lbBase,
+    object,
+    type,
+    History,
+    events,
+    dom
+  ) {
 
     // Declare aliases
 

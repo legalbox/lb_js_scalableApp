@@ -16,16 +16,25 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(["./lb.core","./lb.base.array","./lb.base.config",
-        "./lb.base.dom",".:lb.base.log"],
-  function(lbCore,   array,            config,
-         dom,            logModule) {
-    // Builder of
-    // Closure for lb.core.application module
+define(
+  [
+    "./lb.core",
+    "./lb.base.array",
+    "./lb.base.config",
+    "./lb.base.dom",
+    "./lb.base.log"
+  ],
+  function(
+    lbCore,
+    array,
+    config,
+    dom,
+    logModule
+  ) {
 
     // Declare aliases
     var addOne = array.addOne,
@@ -165,6 +174,7 @@ define(["./lb.core","./lb.base.array","./lb.base.config",
       endAll: endAll,
       run: run
     };
+
     return lbCore.application;
   }
 );

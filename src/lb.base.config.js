@@ -19,14 +19,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base.config","./closure/goog.object","./lb.base.object"],
-  function(lbBase,         gObject,                 object) {
-    // Builder of
-    // Closure for lb.base.config module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.object",
+    "./lb.base.object"
+  ],
+  function(
+    lbBase,
+    gObject,
+    object
+  ) {
 
     // Declare alias
     var has = object.has,

@@ -14,17 +14,29 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(["./lb.core.plugins.utils","./lb.base.object","./lb.base.type",
-        "./lb.base.string","./lb.base.log"],
-  function(lbCorePluginsUtils,     object,            type,
-         string,            logModule) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.object",
+    "./lb.base.type",
+    "./lb.base.string",
+    "./lb.base.log"
+  ],
+  function(
+    lbCorePlugins,
+    object,
+    type,
+    string,
+    logModule
+  ) {
+
     // Assign to lb.core.plugins.utils
     // for backward-compatibility in browser environment
-    lbCorePluginsUtils = function(sandbox) {
+    lbCorePlugins.utils = function(sandbox) {
       // Function: utils(sandbox)
       // Define methods in the 'utils' property of given sandbox.
       //
@@ -249,6 +261,7 @@ define(["./lb.core.plugins.utils","./lb.base.object","./lb.base.type",
         confirm: confirm
       };
     };
-    return lbCorePluginsUtils;
+
+    return lbCorePlugins.utils;
   }
 );

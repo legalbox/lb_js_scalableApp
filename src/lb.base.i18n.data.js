@@ -55,14 +55,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define (["./lb.base.i18n","./lb.base.object","./lb.base.type"],
-  function(i18n,           object,            type) {
-    // Builder of
-    // Closure for lb.base.i18n.data module
+define (
+  [
+    "./lb.base.i18n",
+    "./lb.base.object",
+    "./lb.base.type"
+  ],
+  function(
+    i18n,
+    object,
+    type
+  ) {
 
     // Declare aliases
     var has = object.has,

@@ -43,22 +43,35 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins","./lb.base.object","./lb.core.Sandbox",
-        "./lb.core.plugins.css","./lb.core.plugins.dom",
-        "./lb.core.plugins.events","./lb.core.plugins.i18n",
-        "./lb.core.plugins.server","./lb.core.plugins.url",
-        "./lb.core.plugins.utils"],
-  function(lbCorePlugins,    object,            Sandbox,
-         css,                    dom,
-         events,                    i18n,
-         server,                    url,
-         utils) {
-    // Builder of
-    // Closure for lb.core.plugins.builder module
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.object",
+    "./lb.core.Sandbox",
+    "./lb.core.plugins.css",
+    "./lb.core.plugins.dom",
+    "./lb.core.plugins.events",
+    "./lb.core.plugins.i18n",
+    "./lb.core.plugins.server",
+    "./lb.core.plugins.url",
+    "./lb.core.plugins.utils"
+  ],
+  function(
+    lbCorePlugins,
+    object,
+    Sandbox,
+    css,
+    dom,
+    events,
+    i18n,
+    server,
+    url,
+    utils
+  ) {
 
     // Declare alias
     var has = object.has;

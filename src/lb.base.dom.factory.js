@@ -40,18 +40,27 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base.dom","./closure/goog.dom","./closure/goog.events",
-        "./closure/goog.events.Event","./lb.base.dom.Listener",
-        "./lb.base.array"],
-  function(lbBaseDom,    googDom,             events,
-         Event,                        Listener,
-         array) {
-    // Builder of
-    // Closure for lb.base.dom.factory module
+define(
+  [
+    "./lb.base.dom",
+    "./closure/goog.dom",
+    "./closure/goog.events",
+    "./closure/goog.events.Event",
+    "./lb.base.dom.Listener",
+    "./lb.base.array"
+  ],
+  function(
+    lbBaseDom,
+    googDom,
+    events,
+    Event,
+    Listener,
+    array
+  ) {
 
     // Declare aliases
     var createDom = googDom.createDom,
@@ -217,7 +226,6 @@ define(["./lb.base.dom","./closure/goog.dom","./closure/goog.events",
 
     // Assign to lb.base.dom.factory
     // for backward-compatibility in browser environment
-
      lbBaseDom.factory = { // public API
       createElement: createElement,
       destroyElement: destroyElement,
@@ -226,6 +234,7 @@ define(["./lb.base.dom","./closure/goog.dom","./closure/goog.events",
       createEvent: createEvent,
       destroyEvent: destroyEvent
     };
+
     return lbBaseDom.factory;
   }
 );

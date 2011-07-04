@@ -14,17 +14,27 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.plugins.i18n","./lb.base.i18n","./lb.base.i18n.data",
-        "./lb.base.template.i18n"],
-  function(lbCorePluginsI18n,     i18n,           i18nData,
-         i18nTemplate) {
+define(
+  [
+    "./lb.core.plugins",
+    "./lb.base.i18n",
+    "./lb.base.i18n.data",
+    "./lb.base.template.i18n"
+  ],
+  function(
+    lbCorePlugins,
+    i18n,
+    i18nData,
+    i18nTemplate
+  ) {
+
     // Assign to lb.core.plugins.i18n
     // for backward-compatibility in browser environment
-    lbCorePluginsI18n = function(sandbox) {
+    lbCorePlugins.i18n = function(sandbox) {
       // Function: i18n(sandbox)
       // Define methods in the 'i18n' property of given sandbox.
       //
@@ -283,6 +293,7 @@ define(["./lb.core.plugins.i18n","./lb.base.i18n","./lb.base.i18n.data",
         filterHtml: i18nTemplate.filterHtml
       };
     };
-    return lbCorePluginsI18n;
+
+    return lbCorePlugins.i18n;
   }
 );

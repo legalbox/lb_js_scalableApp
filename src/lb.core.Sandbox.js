@@ -78,17 +78,31 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define, document, window */
-define(["./lb.core.Sandbox","./lb.base.object","./lb.base.config",
-        "./lb.base.dom.factory","./lb.base.dom","./lb.base.log"],
-  function(lbCoreSandbox,    object,            config,
-         defaultFactory,         dom,            logModule) {
+define(
+  [
+    "./lb.core",
+    "./lb.base.object",
+    "./lb.base.config",
+    "./lb.base.dom.factory",
+    "./lb.base.dom",
+    "./lb.base.log"
+  ],
+  function(
+    lbCore,
+    object,
+    config,
+    defaultFactory,
+    dom,
+    logModule
+  ) {
+
     // Assign to lb.core.Sandbox
     // for backward-compatibility in browser environment
-    lbCoreSandbox = function (id){
+    lbCore.Sandbox = function (id){
       // Function: new Sandbox(id): Sandbox
       // Constructor of a new Sandbox.
       //
@@ -207,6 +221,6 @@ define(["./lb.core.Sandbox","./lb.base.object","./lb.base.config",
       this.getBox = getBox;
       this.isInBox = isInBox;
     };
-    return lbCoreSandbox;
+    return lbCore.Sandbox;
   }
 );

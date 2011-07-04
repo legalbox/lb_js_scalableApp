@@ -20,17 +20,31 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-01
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.core.Module","./lb.base.type","./lb.base.log",
-        "./lb.core.plugins","./lb.base.config","./lb.base.dom"],
-  function(Module,          type,            logModule,
-         plugins,            config,         dom) {
-     // Assign to lb.core.Module
-     // for backward-compatibility in browser environment
-    Module = function (id, creator) {
+define(
+  [
+    "./lb.core",
+    "./lb.base.type",
+    "./lb.base.log",
+    "./lb.core.plugins",
+    "./lb.base.config",
+    "./lb.base.dom"
+  ],
+  function(
+    lbCore,
+    type,
+    logModule,
+    plugins,
+    config,
+    dom
+  ) {
+
+    // Assign to lb.core.Module
+    // for backward-compatibility in browser environment
+    lbCore.Module = function (id, creator) {
       // Function: new Module(id,creator): Module
       // Constructor of a new Core Module.
       //
@@ -162,6 +176,7 @@ define(["./lb.core.Module","./lb.base.type","./lb.base.log",
       this.start = start;
       this.end = end;
     };
-  return Module;
+
+    return lbCore.Module;
   }
 );

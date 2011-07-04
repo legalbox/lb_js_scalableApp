@@ -22,14 +22,21 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base.template","./lb.base.object","./lb.base.type"],
-  function(lbBaseTemplate,    object,            type) {
-    // Builder of
-    // Closure for lb.base.template.string module
+define(
+  [
+    "./lb.base.template",
+    "./lb.base.object",
+    "./lb.base.type"
+  ],
+  function(
+    lbBaseTemplate,
+    object,
+    type
+  ) {
 
     // Declare aliases
     var has = object.has,

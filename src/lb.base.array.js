@@ -14,14 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-29
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb.base","./closure/goog.array"],
-  function(lbBase,   gArray) {
-    // Builder of
-    // Closure for lb.base.array module
+define(
+  [
+    "./lb.base",
+    "./closure/goog.array"
+  ],
+  function(
+    lbBase,
+    gArray
+  ) {
 
     function addOne(array, item){
       // Function: addOne(array, item)

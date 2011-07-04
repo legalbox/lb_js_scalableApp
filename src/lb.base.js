@@ -14,20 +14,23 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb"],function(lb) {
-  // Builder of
-  // Closure for lb.base namespace
+define(
+  [
+    "./lb"
+  ],
+  function(lb) {
 
-  // Note: no methods defined at this level currently
+    // Note: no methods defined at this level currently
 
-  // Assign to lb.base
-  // for backward-compatibility in browser environment
-  lb.base = { // public API
-  };
+    // Assign to lb.base
+    // for backward-compatibility in browser environment
+    lb.base = { // public API
+    };
 
-  return lb.base;
-});
+    return lb.base;
+  }
+);

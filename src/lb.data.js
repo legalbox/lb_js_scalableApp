@@ -14,13 +14,15 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-28
+ * 2011-07-04
  */
 /*jslint white:false, plusplus:false */
 /*global define */
-define(["./lb"],function(lb) {
-  // Builder of
-  // Closure for lb.data namespace
+define(
+  [
+    "./lb"
+  ],
+  function(lb) {
 
   // Note: no methods defined at this level currently
 
