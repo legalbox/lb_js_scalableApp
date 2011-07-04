@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-06-30
+ * Version:   2011-07-04
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -17,16 +17,19 @@ define(
     "bezen.org/bezen.assert",
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
-    "closure/goog.debug.LogManager",
-    "lb/lb.base.log"
+    "lb/lb.base.log",
+    "closure/goog.debug.Logger" // contains goog.debug.LogManager
   ],
   function(
     assert,
     object,
     testrunner,
-    LogManager,
-    log
+    log,
+    Logger
   ){
+
+    // Declare alias
+    var LogManager = goog.debug.LogManager;
 
     function testNamespace(){
 

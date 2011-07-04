@@ -17,18 +17,21 @@ define(
     "bezen.org/bezen.assert",
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
-    "closure/goog.debug.LogManager",
     "lb/lb.core.Sandbox",
-    "lb/lb.core.plugins.utils"
+    "lb/lb.core.plugins.utils",
+    "closure/goog.debug.Logger" // contains goog.debug.LogManager
   ],
   function(
     assert,
     object,
     testrunner,
-    LogManager,
     Sandbox,
-    pluginsUtils
+    pluginsUtils,
+    Logger
   ){
+
+    // Declare alias
+    var LogManager = goog.debug.LogManager;
 
     function testNamespace(){
 
