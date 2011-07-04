@@ -11,7 +11,7 @@
  */
 
 /*jslint white:false, onevar:false, plusplus:false */
-/*global define, window, lb */
+/*global define, window, lb, goog */
 define(
   [
     "bezen.org/bezen.assert",
