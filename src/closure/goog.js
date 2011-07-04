@@ -1562,5 +1562,8 @@ define(function(){
     fn.call(goog.global);
   };
 
+  // Initialize global variable goog
+  goog.global.goog = goog;
+
   return goog;
 });
