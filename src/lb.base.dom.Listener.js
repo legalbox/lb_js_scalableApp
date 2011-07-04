@@ -27,7 +27,7 @@ define(
   [
     "./lb.base.dom",
     "./lb.base.object",
-    "./closure/goog.events"
+    "closure/goog.events"
   ],
   function(
     lbBaseDom,

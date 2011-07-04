@@ -22,7 +22,7 @@
 define(
   [
     "./lb.base.dom",
-    "./closure/goog.dom.classes"
+    "closure/goog.dom.classes"
   ],
   function(
     lbBaseDom,

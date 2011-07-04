@@ -83,8 +83,8 @@ define(
     "./lb.base",
     "./lb.base.object",
     "./lb.base.type",
-    "./closure/goog.History",
-    "./closure/goog.events",
+    "closure/goog.History",
+    "closure/goog.events",
     "./lb.base.dom"
   ],
   function(

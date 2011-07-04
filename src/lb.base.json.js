@@ -21,7 +21,7 @@
 define(
   [
     "./lb.base",
-    "./closure/goog.json"
+    "closure/goog.json"
   ],
   function(
     lbBase,

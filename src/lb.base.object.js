@@ -22,8 +22,8 @@ define(
   [
     "./lb.base",
     "./lb.base.type",
-    "./closure/goog",
-    "./closure/goog.object"
+    "closure/goog",
+    "closure/goog.object"
   ],
   function(
     lbBase,

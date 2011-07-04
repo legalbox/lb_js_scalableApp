@@ -21,8 +21,8 @@
 define(
   [
     "./lb.base",
-    "./closure/goog.debug.Console",
-    "./closure/goog.debug.Logger"
+    "closure/goog.debug.Console",
+    "closure/goog.debug.Logger"
   ],
   function(
     lbBase,

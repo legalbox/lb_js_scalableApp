@@ -21,7 +21,7 @@
 define(
   [
     "./lb.base",
-    "./closure/goog.array"
+    "closure/goog.array"
   ],
   function(
     lbBase,

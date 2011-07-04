@@ -21,7 +21,7 @@
 define(
   [
     "./lb.base",
-    "./closure/goog.net.XhrIo",
+    "closure/goog.net.XhrIo",
     "./lb.base.json",
     "./lb.base.log"
   ],

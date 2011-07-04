@@ -47,9 +47,9 @@
 define(
   [
     "./lb.base.dom",
-    "./closure/goog.dom",
-    "./closure/goog.events",
-    "./closure/goog.events.Event",
+    "closure/goog.dom",
+    "closure/goog.events",
+    "closure/goog.events.Event",
     "./lb.base.dom.Listener",
     "./lb.base.array"
   ],
