@@ -23,48 +23,53 @@
  * and metadata about them.
  * @author dbk@google.com (David Barrett-Kahn)
  */
-/*requires goog.js*/
-goog.provide('goog.net.XmlHttpFactory');
+
+define(["./goog"], function(goog){
+
+  goog.provide('goog.net.XmlHttpFactory');
 
 
 
-/**
- * Abstract base class for an XmlHttpRequest factory.
- * @constructor
- */
-goog.net.XmlHttpFactory = function() {
-};
+  /**
+   * Abstract base class for an XmlHttpRequest factory.
+   * @constructor
+   */
+  goog.net.XmlHttpFactory = function() {
+  };
 
 
-/**
- * Cache of options - we only actually call internalGetOptions once.
- * @type {Object}
- * @private
- */
-goog.net.XmlHttpFactory.prototype.cachedOptions_ = null;
+  /**
+   * Cache of options - we only actually call internalGetOptions once.
+   * @type {Object}
+   * @private
+   */
+  goog.net.XmlHttpFactory.prototype.cachedOptions_ = null;
 
 
-/**
- * @return {!(XMLHttpRequest|GearsHttpRequest)} A new XMLHttpRequest instance.
- */
-goog.net.XmlHttpFactory.prototype.createInstance = goog.abstractMethod;
+  /**
+   * @return {!(XMLHttpRequest|GearsHttpRequest)} A new XMLHttpRequest instance.
+   */
+  goog.net.XmlHttpFactory.prototype.createInstance = goog.abstractMethod;
 
 
-/**
- * @return {Object} Options describing how xhr objects obtained from this
- *     factory should be used.
- */
-goog.net.XmlHttpFactory.prototype.getOptions = function() {
-  return this.cachedOptions_ ||
-      (this.cachedOptions_ = this.internalGetOptions());
-};
+  /**
+   * @return {Object} Options describing how xhr objects obtained from this
+   *     factory should be used.
+   */
+  goog.net.XmlHttpFactory.prototype.getOptions = function() {
+    return this.cachedOptions_ ||
+        (this.cachedOptions_ = this.internalGetOptions());
+  };
 
 
-/**
- * Override this method in subclasses to preserve the caching offered by
- * getOptions().
- * @return {Object} Options describing how xhr objects obtained from this
- *     factory should be used.
- * @protected
- */
-goog.net.XmlHttpFactory.prototype.internalGetOptions = goog.abstractMethod;
+  /**
+   * Override this method in subclasses to preserve the caching offered by
+   * getOptions().
+   * @return {Object} Options describing how xhr objects obtained from this
+   *     factory should be used.
+   * @protected
+   */
+  goog.net.XmlHttpFactory.prototype.internalGetOptions = goog.abstractMethod;
+
+  return goog.net.XmlHttpFactory;
+});

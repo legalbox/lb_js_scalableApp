@@ -32,9 +32,6 @@ define(["./goog","./goog.Disposable","./goog.events"], fucntion(goog){
 
   goog.provide('goog.events.EventTarget');
 
-  /*requires goog.Disposable.js*/
-  /*requires goog.events.js*/
-
 
 
   /**

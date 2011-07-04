@@ -21,22 +21,27 @@
 /**
  * @fileoverview Common events for the network classes.
  */
-/*requires goog.js*/
-goog.provide('goog.net.EventType');
+
+define(["./goog"], function(goog){
+
+  goog.provide('goog.net.EventType');
 
 
-/**
- * Event names for network events
- * @enum {string}
- */
-goog.net.EventType = {
-  COMPLETE: 'complete',
-  SUCCESS: 'success',
-  ERROR: 'error',
-  ABORT: 'abort',
-  READY: 'ready',
-  READY_STATE_CHANGE: 'readystatechange',
-  TIMEOUT: 'timeout',
-  INCREMENTAL_DATA: 'incrementaldata',
-  PROGRESS: 'progress'
-};
+  /**
+   * Event names for network events
+   * @enum {string}
+   */
+  goog.net.EventType = {
+    COMPLETE: 'complete',
+    SUCCESS: 'success',
+    ERROR: 'error',
+    ABORT: 'abort',
+    READY: 'ready',
+    READY_STATE_CHANGE: 'readystatechange',
+    TIMEOUT: 'timeout',
+    INCREMENTAL_DATA: 'incrementaldata',
+    PROGRESS: 'progress'
+  };
+
+  return goog.net.EventType;
+});
