@@ -18,16 +18,17 @@
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(function(undefined) {
+define(function() {
 
   // Note: no methods defined at this level currently
 
-  var lb = { // public API
-  };
+  var undef, // undefined value, for safe comparison
+      lb = { // public API
+      };
 
   // initialize global variable lb in browser environment,
   // for backward-compatibility
-  if (window !== undefined){
+  if (window !== undef){
     window.lb = lb;
   }
 
