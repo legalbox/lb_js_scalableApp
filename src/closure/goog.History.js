@@ -190,7 +190,7 @@
  * implementation.
  */
 
-define(["./goog","./goog.Timer.js","./goog.dom","./goog.events",
+define(["./goog","./goog.Timer","./goog.dom","./goog.events",
         "./goog.events.BrowserEvent","./goog.events.Event",
         "./goog.events.EventHandler","./goog.events.EventTarget",
         "./goog.events.EventType","./goog.history.Event",
