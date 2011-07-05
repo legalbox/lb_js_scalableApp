@@ -20,7 +20,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-05
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -29,7 +29,7 @@ define(
     "./lb.core",
     "./lb.base.type",
     "./lb.base.log",
-    "./lb.core.plugins",
+    "./lb.core.plugins.builder",
     "./lb.base.config",
     "./lb.base.dom"
   ],
@@ -37,7 +37,7 @@ define(
     lbCore,
     type,
     logModule,
-    plugins,
+    defaultBuilder,
     config,
     dom
   ) {
@@ -69,7 +69,6 @@ define(
       // Define aliases
       var is = type.is,
           log = logModule.print,
-          defaultBuilder = plugins.builder,
           getOption = config.getOption,
           $ = dom.$,
 
