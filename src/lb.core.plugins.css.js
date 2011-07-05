@@ -14,19 +14,19 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-05
  */
 /*jslint white:false, plusplus:false */
 /*global define */
 define(
   [
     "./lb.core.plugins",
-    "./lb.base.dom",
+    "./lb.base.dom.css",
     "./lb.base.log"
   ],
   function(
     lbCorePlugins,
-    dom,
+    css,
     logModule
   ) {
 
@@ -42,7 +42,6 @@ define(
       // Define aliases
       var getId = sandbox.getId,
           isInBox = sandbox.isInBox,
-          css = dom.css,
           log = logModule.print;
 
       function getClasses(element){
