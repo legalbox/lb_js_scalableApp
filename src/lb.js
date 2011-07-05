@@ -14,11 +14,11 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-05
  */
 /*jslint white:false, plusplus:false */
 /*global define, window */
-define(function() {
+define(function(undefined) {
 
   // Note: no methods defined at this level currently
 
