@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-07-04
+ * Version:   2011-07-05
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -20,6 +20,7 @@ define(
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
     "lb/lb.core.application",
+    "lb/lb.base.config",
     "lb/lb.core.Module"
   ],
   function(
@@ -29,11 +30,14 @@ define(
     object,
     testrunner,
     application,
+    config,
     Module
   ){
 
     // Define aliases
-    var $ = bezen.$;
+    var $ = bezen.$,
+        setOptions = application.setOptions,
+        getOption = config.getOption;
 
     function testNamespace(){
 
@@ -50,7 +54,7 @@ define(
 
     function setUp(){
       // remove custom factory
-      application.setOptions({lbBuilder: null, lbFactory: null});
+      setOptions({lbBuilder: null, lbFactory: null});
     }
 
     var sandboxCreated;
@@ -119,7 +123,7 @@ define(
         capturedId = id;
         return stubSandbox;
       }
-      application.setOptions({
+      setOptions({
         lbBuilder: {
           buildSandbox: stubBuildSandbox
         }
@@ -174,8 +178,8 @@ define(
           initialized.push(element);
         }
       };
-      application.setOptions({lbFactory: customFactory});
-      assert.equals( config.getOption('lbFactory'), customFactory,
+      setOptions({lbFactory: customFactory});
+      assert.equals( getOption('lbFactory'), customFactory,
                          "assert: custom factory expected to be configured");
 
       var boxInitialized = false;
