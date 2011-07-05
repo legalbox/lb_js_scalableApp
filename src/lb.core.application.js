@@ -25,14 +25,14 @@ define(
     "./lb.core",
     "./lb.base.array",
     "./lb.base.config",
-    "./lb.base.dom",
+    "./lb.base.dom.Listener",
     "./lb.base.log"
   ],
   function(
     lbCore,
     array,
     config,
-    dom,
+    Listener,
     logModule
   ) {
 
@@ -40,7 +40,6 @@ define(
     var addOne = array.addOne,
         removeOne = array.removeOne,
         removeAll = array.removeAll,
-        Listener = dom.Listener,
         log = logModule.print,
 
     // Private members
