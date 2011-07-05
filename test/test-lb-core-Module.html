@@ -12,8 +12,7 @@
      Licensed under a BSD License" />
     <meta name="DC.rights" scheme="DCTERMS.URI"
           content="http://creativecommons.org/licenses/BSD/" />
-    <meta name="DC.date" content="2011-07-04" />
-    <!-- Needed in IE for history manager because no iframe is included -->
+    <meta name="DC.date" content="2011-07-05" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" href="style/test.css" />
   </head>
@@ -51,6 +50,12 @@
     <!--script type="text/javascript" 
         src="http://www.billyreisinger.com/jash/source/latest/Jash.js">
     </script-->
+
+    <!--[if IE]>
+      <iframe id="lb.base.history.iframe" src="favicon.ico" class="hidden"
+      ></iframe>
+    <![endif]-->
+    <input id="lb.base.history.input" type="hidden" />
 
     <script src="../build/lib/requirejs/require.js"></script>
     <script>
