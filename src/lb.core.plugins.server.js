@@ -14,7 +14,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-05
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -30,7 +30,7 @@ define(
 
     // Assign to lb.core.plugins.sever
     // for backward-compatibility in browser environment
-    lbCorePluginsServer = function(sandbox) {
+    lbCorePlugins.server = function(sandbox) {
       // Function: server(sandbox)
       // Define methods in the 'server' property of given sandbox.
       //
@@ -57,6 +57,6 @@ define(
       };
     };
 
-    return lbCorePlugins;
+    return lbCorePlugins.server;
   }
 );
