@@ -18,6 +18,7 @@ define(
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
     "bezen.org/bezen.dom",
+    "lb/lb.base.i18n.data",
     "lb/lb.core.Sandbox",
     "lb/lb.core.plugins.i18n"
   ],
@@ -26,6 +27,7 @@ define(
     object,
     testrunner,
     dom,
+    i18nData,
     Sandbox,
     pluginsI18n
   ){
