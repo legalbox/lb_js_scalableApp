@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-06-27
+ * 2011-07-06
  */
 ({
     // output file, absolute or relative to the location of this file
@@ -30,7 +30,7 @@
     // only combine files, do not minify at this step
     optimize: "none",
 
-    // base directory for the resolution of relative paths
+    // base directory for the resolution of relative paths of modules;
     // absolute or relative to the location of this file
     baseUrl: "#src.dir#",
 
