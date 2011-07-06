@@ -34,6 +34,9 @@
     // absolute or relative to the location of this file
     baseUrl: "#src.dir#",
 
+    // deprecated option: include require.js library before the modules
+    includeRequire: true,
+
     // list of all the JavaScript modules to combine, with an absolute path or
     // a path relative to the baseUrl, without .js extension
     include: #modules.array#
