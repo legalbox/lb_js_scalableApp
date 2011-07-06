@@ -11,7 +11,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-27
+  Version: 2011-07-06
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -103,7 +103,7 @@
         fork="true" failonerror="true">
         <arg line="${macros.basedir}/lib/requirejs/bin/x.js" />
         <arg line="${macros.basedir}/lib/requirejs/bin" />
-        <arg line="${macros.basedir}/lib/requirejs/build.js" />
+        <arg line="${macros.basedir}/lib/requirejs/build/build.js" />
         <arg line="@{config}/build-config.json" />
       </java>
 
