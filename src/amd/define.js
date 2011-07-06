@@ -1,0 +1,159 @@
+/*
+ * Namespace: amd/define
+ * Null implementation of CommonJS Asynchronous Module Definition (AMD).
+ *
+ * This null implementation triggers the callback functions registered with
+ * define() immediately or throws an error. It does not load missing modules,
+ * and does not wait for the definition of all dependencies to trigger the
+ * factory callback at a later time.
+ *
+ * This null implementation is intended to replace requireJS when optimized
+ * scripts are combined into a single file by the optimization tool. It expects
+ * that all dependencies will be defined before they are required.
+ *
+ * When a define() function is already available, which supports CommonJS AMD,
+ * this module registers itself. This allows to load this module dynamically
+ * for unit tests using requireJS. The existing define() method is preserved.
+ *
+ * Reference:
+ * http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
+ *
+ * Author: Eric Bréchemier <legalbox@eric.brechemier.name>
+ *
+ * Copyright:
+ * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ *
+ * License:
+ * BSD License
+ * http://creativecommons.org/licenses/BSD/
+ *
+ * Version:
+ * 2011-07-06
+ */
+/*jslint white:false, plusplus:false */
+/*global define */
+(function(){
+  // Builder of
+  // Closure for amd/define
+
+  var undef,       // undefined value, do not trust global undefined
+      cache = {};  // hash of module id => exports
+
+  function require(id){
+    // (private) Function: require(id)
+    // Get the cached module matching given id.
+    // An error is thrown in case no module has been cached with given id.
+    //
+    // Parameter:
+    //   id - string, module identifier
+    //
+    // Returns:
+    //   any, the exports of the module defined with given id
+
+    var exports = cache[id];
+    if (exports === undef){
+      throw Error("Module not loaded yet: '"+id+"'");
+    }
+    return exports;
+  }
+
+  function define(){
+    // Function: define(id?, dependencies?, factory)
+    // Define a module.
+    //
+    // Parameters:
+    //   id - string, optional identifier of the module.
+    //   dependencies - array of strings, optional, defaults to
+    //                  ["require", "exports", "module"].
+    //   factory - function, callback which will be called at most once, when
+    //             all dependencies are available. If truthy, the return value
+    //             of the function will be cached and associated with given id,
+    //             unless the id is omitted. For each dependency, the cached
+    //             value associated with the dependency id is provided as
+    //             argument to the factory callback, in the same order.
+    //
+    // Note:
+    // The dependencies "require", "exports" and "module" have a special
+    // meaning, and special values are provided for corresponding arguments:
+    //   require - function, require(id) returns the cached value associated
+    //             with the id, or throws an error if the module is not loaded.
+    //             In this null implementation, any module defined without an
+    //             id will be considered as missing.
+    //   exports - object, an alternate way to define the return value of the
+    //             factory function. In this implementation, the exports is
+    //             cached instead of the return value of the factory when
+    //             the return value is falsy. It is ignored otherwise.
+    //   module - object, with a property 'id' set to the value provided in
+    //            the call to define. In this null implementation, in case the
+    //            id is omitted, the module.id is undefined. The module object
+    //            has no 'uri' property.
+
+    var id = undef,
+        dependencies,
+        factory,
+        i,
+        length,
+        dependencyId,
+        args = [],
+        exports = {},
+        result;
+
+    switch(arguments.length){
+      case 0:   // define()
+        return; // nothing to define
+      case 1:   // define(factory)
+        dependencies = ["require", "exports", "module"];
+        factory = arguments[0];
+        break;
+      case 2:   // define(dependencies,factory)
+        dependencies = arguments[0];
+        factory = arguments[1];
+        break;
+      default: // define(id,dependencies,factory)
+        id = arguments[0];
+        dependencies = arguments[1];
+        factory = arguments[2];
+    }
+
+    for (i=0, length=dependencies.length; i<length; i++){
+      dependencyId = dependencies[i];
+      switch (dependencyId){
+        case "require":
+          args.push(require);
+          break;
+        case "exports":
+          args.push(exports);
+          break;
+        case "module":
+          args.push({id: id});
+          break;
+        default:
+          try {
+            args.push( require(dependencyId) );
+          } catch (e1) {
+            throw Error("Failed to load module id '"+id+"': "+e1);
+          }
+      }
+    }
+
+    try {
+      result = factory.apply(null,args);
+    } catch(e2) {
+      throw Error("Failed to load module id '"+id+"': "+e2);
+    }
+
+    if (id !== undef) {
+      cache[id] = result? result : exports;
+    }
+  };
+
+  if (this.define === undef){     // preserve existing define
+    this.define = define;         // set this implementation to global define
+    define.amd = {};              // claim support for CommonJS AMD
+  } else if (typeof this.define.amd === 'object') {
+    this.define(function(){       // register this implementation for tests
+      return define
+    });
+  }
+
+}());
