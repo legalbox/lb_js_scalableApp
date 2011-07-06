@@ -98,6 +98,10 @@
         exports = {},
         result;
 
+    function fail(error){
+      throw Error("Failed to load module id '"+id+"': "+error);
+    }
+
     switch(arguments.length){
       case 0:   // define()
         return; // nothing to define
@@ -131,7 +135,7 @@
           try {
             args.push( require(dependencyId) );
           } catch (e1) {
-            throw Error("Failed to load module id '"+id+"': "+e1);
+            fail(e1);
           }
       }
     }
@@ -139,7 +143,7 @@
     try {
       result = factory.apply(null,args);
     } catch(e2) {
-      throw Error("Failed to load module id '"+id+"': "+e2);
+      fail(e2);
     }
 
     if (id !== undef) {
