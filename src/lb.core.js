@@ -14,10 +14,10 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-06
  */
 /*jslint white:false, plusplus:false */
-/*global define, lb */
+/*global define */
 define(
   [
     "./lb"
