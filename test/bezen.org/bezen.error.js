@@ -36,8 +36,8 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false, evil:true */
 /*global define, window */
-define(["./bezen", "require"],
-  function(bezen,  require) {
+define(["./bezen", "./bezen.log"],
+  function(bezen,  log) {
    
     // Define aliases
     var unsafeSetTimeout = window.setTimeout,
@@ -82,11 +82,6 @@ define(["./bezen", "require"],
       //   Error Object (Windows Scripting - JScript)
       //   http://msdn.microsoft.com/en-us/library/dww52sbt(VS.85).aspx
 
-      var log = require("./bezen.log");
-      if (!log){
-        return;
-      }
-       
       if (typeof error === 'object'){
         // convert 1-param call to 3-param call
         reportError(error.message, error.fileName, error.lineNumber);

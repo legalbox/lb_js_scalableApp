@@ -45,8 +45,8 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global window, document */
-define(["./bezen", "./bezen.dom", "./bezen.domwrite"],
-  function(bezen,  dom,           domwrite) {
+define(["./bezen", "./bezen.dom", "./bezen.domwrite", "./bezen.error"],
+  function(bezen,  dom,           domwrite,           error) {
   
     // Define aliases
     var parseMarkup = domwrite.parseMarkup,
@@ -234,13 +234,7 @@ define(["./bezen", "./bezen.dom", "./bezen.domwrite"],
       listener = listener.handleEvent || listener;
       description = description || 'bezen.onready';
 
-      var error = require("bezen.error");
-
-      var safelistener = 
-        error?
-        error.catchError(listener,description):
-        listener;
-       
+      var safelistener = error.catchError(listener,description);
       listeners.push(safelistener); 
     };
 
