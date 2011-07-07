@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-07-06
+  Version: 2011-07-07
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -32,7 +32,7 @@
 
   <target name="checkSrc"
           description="Check JavaScript source files with JSLint">
-    <jslint dir="../src" />
+    <jslint dir="../src/${ant.project.name}" />
   </target>
 
   <target name="checkTest" description="Check test files with JSLint">
