@@ -36,32 +36,70 @@ define(['uglifyjs/index'], function (uglify) {
     }
 
     /**
+     * Converts a regular JS array of strings to an AST node that
+     * represents that array.
+     * @param {Array} ary
+     * @param {Node} an AST node that represents an array of strings.
+     */
+    function toAstArray(ary) {
+        var output = [
+            'array',
+            []
+        ],
+        i, item;
+
+        for (i = 0; (item = ary[i]); i++) {
+            output[1].push([
+                'string',
+                item
+            ]);
+        }
+
+        return output;
+    }
+
+    /**
      * Validates a node as being an object literal (like for i18n bundles)
-     * or an array literal with just string members.
+     * or an array literal with just string members. If an array literal,
+     * only return array members that are full strings. So the caller of
+     * this function should use the return value as the new value for the
+     * node.
+     *
      * This function does not need to worry about comments, they are not
      * present in this AST.
+     *
+     * @param {Node} node an AST node.
+     *
+     * @returns {Node} an AST node to use for the valid dependencies.
+     * If null is returned, then it means the input node was not a valid
+     * dependency.
      */
     function validateDeps(node) {
-        var arrayArgs, i, dep;
+        var newDeps = ['array', []],
+            arrayArgs, i, dep;
+
+        if (!node) {
+            return null;
+        }
 
         if (isObjectLiteral(node) || node[0] === 'function') {
-            return true;
+            return node;
         }
 
         //Dependencies can be an object literal or an array.
         if (!isArrayLiteral(node)) {
-            return false;
+            return null;
         }
 
         arrayArgs = node[1];
 
         for (i = 0; i < arrayArgs.length; i++) {
             dep = arrayArgs[i];
-            if (dep[0] !== 'string') {
-                return false;
+            if (dep[0] === 'string') {
+                newDeps[1].push(dep);
             }
         }
-        return true;
+        return newDeps[1].length ? newDeps : null;
     }
 
     /**
@@ -77,7 +115,12 @@ define(['uglifyjs/index'], function (uglify) {
         var matches = [], result = null,
             astRoot = parser.parse(fileContents);
 
-        parse.recurse(astRoot, matches);
+        parse.recurse(astRoot, function () {
+            var parsed = parse.callToString.apply(parse, arguments);
+            if (parsed) {
+                matches.push(parsed);
+            }
+        });
 
         if (matches.length) {
             result = matches.join("\n");
@@ -94,19 +137,16 @@ define(['uglifyjs/index'], function (uglify) {
     /**
      * Handles parsing a file recursively for require calls.
      * @param {Array} parentNode the AST node to start with.
-     * @param {Array} matches where to store the string matches
+     * @param {Function} onMatch function to call on a parse match.
      */
-    parse.recurse = function (parentNode, matches) {
-        var i, node, parsed;
+    parse.recurse = function (parentNode, onMatch) {
+        var i, node;
         if (isArray(parentNode)) {
             for (i = 0; i < parentNode.length; i++) {
                 node = parentNode[i];
                 if (isArray(node)) {
-                    parsed = this.parseNode(node);
-                    if (parsed) {
-                        matches.push(parsed);
-                    }
-                    this.recurse(node, matches);
+                    this.parseNode(node, onMatch);
+                    this.recurse(node, onMatch);
                 }
             }
         }
@@ -135,18 +175,34 @@ define(['uglifyjs/index'], function (uglify) {
      */
     parse.getAnonDeps = function (fileName, fileContents) {
         var astRoot = parser.parse(fileContents),
-            deps = [],
             defFunc = this.findAnonRequireDefCallback(astRoot);
 
-        //Now look inside the def call's function for require calls.
-        if (defFunc) {
-            this.findRequireDepNames(defFunc, deps);
+        return parse.getAnonDepsFromNode(defFunc);
+    };
+
+    /**
+     * Finds require("") calls inside a CommonJS anonymous module wrapped
+     * in a define function, given an AST node for the definition function.
+     * @param {Node} node the AST node for the definition function.
+     * @returns {Array} and array of dependency names. Can be of zero length.
+     */
+    parse.getAnonDepsFromNode = function (node) {
+        var deps = [],
+            funcArgLength;
+
+        if (node) {
+            this.findRequireDepNames(node, deps);
 
             //If no deps, still add the standard CommonJS require, exports, module,
-            //in that order, to the deps.
-            deps = ["require", "exports", "module"].concat(deps);
+            //in that order, to the deps, but only if specified as function args.
+            //In particular, if exports is used, it is favored over the return
+            //value of the function, so only add it if asked.
+            funcArgLength = node[2] && node[2].length;
+            if (funcArgLength) {
+                deps = (funcArgLength > 1 ? ["require", "exports", "module"] :
+                        ["require"]).concat(deps);
+            }
         }
-
         return deps;
     };
 
@@ -185,6 +241,42 @@ define(['uglifyjs/index'], function (uglify) {
         return null;
     };
 
+    /**
+     * Finds all dependencies specified in dependency arrays and inside
+     * simplified commonjs wrappers.
+     * @param {String} fileName
+     * @param {String} fileContents
+     *
+     * @returns {Array} an array of dependency strings. The dependencies
+     * have not been normalized, they may be relative IDs.
+     */
+    parse.findDependencies = function (fileName, fileContents) {
+        //This is a litle bit inefficient, it ends up with two uglifyjs parser
+        //calls. Can revisit later, but trying to build out larger functional
+        //pieces first.
+        var dependencies = parse.getAnonDeps(fileName, fileContents),
+            astRoot = parser.parse(fileContents),
+            i, dep;
+
+        parse.recurse(astRoot, function (callName, config, name, deps) {
+            //Normalize the input args.
+            if (name && isArrayLiteral(name)) {
+                deps = name;
+                name = null;
+            }
+
+            if (!(deps = validateDeps(deps)) || !isArrayLiteral(deps)) {
+                return;
+            }
+
+            for (i = 0; (dep = deps[1][i]); i++) {
+                dependencies.push(dep[1]);
+            }
+        });
+
+        return dependencies;
+    };
+
     parse.findRequireDepNames = function (node, deps) {
         var moduleName, i, n, call, args;
 
@@ -217,7 +309,7 @@ define(['uglifyjs/index'], function (uglify) {
      * @returns {Boolean}
      */
     parse.nodeHasRequire = function (node) {
-        if (this.isRequireNode(node)) {
+        if (this.isDefineNode(node)) {
             return true;
         }
 
@@ -234,12 +326,13 @@ define(['uglifyjs/index'], function (uglify) {
     };
 
     /**
-     * Is the given node the actual definition of require()
+     * Is the given node the actual definition of define(). Actually uses
+     * the definition of define.amd to find require.
      * @param {Array} node
      * @returns {Boolean}
      */
-    parse.isRequireNode = function (node) {
-        //Actually look for the require.s = assignment, since
+    parse.isDefineNode = function (node) {
+        //Actually look for the define.amd = assignment, since
         //that is more indicative of RequireJS vs a plain require definition.
         var assign;
         if (!node) {
@@ -249,7 +342,7 @@ define(['uglifyjs/index'], function (uglify) {
         if (node[0] === 'assign' && node[1] === true) {
             assign = node[2];
             if (assign[0] === 'dot' && assign[1][0] === 'name' &&
-                assign[1][1] === 'require' && assign[2] === 's') {
+                assign[1][1] === 'define' && assign[2] === 'amd') {
                 return true;
             }
         }
@@ -283,7 +376,7 @@ define(['uglifyjs/index'], function (uglify) {
             name = null;
         }
 
-        if (deps && !validateDeps(deps)) {
+        if (!(deps = validateDeps(deps))) {
             return null;
         }
 
@@ -303,12 +396,15 @@ define(['uglifyjs/index'], function (uglify) {
     /**
      * Determines if a specific node is a valid require or define/require.def call.
      * @param {Array} node
+     * @param {Function} onMatch a function to call when a match is found.
+     * It is passed the match name, and the config, name, deps possible args.
+     * The config, name and deps args are not normalized.
      *
      * @returns {String} a JS source string with the valid require/define call.
      * Otherwise null.
      */
-    parse.parseNode = function (node) {
-        var call, name, config, deps, args;
+    parse.parseNode = function (node, onMatch) {
+        var call, name, config, deps, args, cjsDeps;
 
         if (!isArray(node)) {
             return null;
@@ -318,29 +414,57 @@ define(['uglifyjs/index'], function (uglify) {
             call = node[1];
             args = node[2];
 
-            if (call[0] === 'name' && call[1] === 'require') {
+            if (call) {
+                if (call[0] === 'name' && call[1] === 'require') {
 
-                //It is a plain require() call.
-                config = args[0];
-                deps = args[1];
-                if (isArrayLiteral(config)) {
-                    deps = config;
-                    config = null;
+                    //It is a plain require() call.
+                    config = args[0];
+                    deps = args[1];
+                    if (isArrayLiteral(config)) {
+                        deps = config;
+                        config = null;
+                    }
+
+                    if (!(deps = validateDeps(deps))) {
+                        return null;
+                    }
+
+                    return onMatch("require", null, null, deps);
+
+                } else if ((call[0] === 'name' && call[1] === 'define') ||
+                           (call[0] === 'dot' && call[1][1] === 'require' &&
+                            call[2] === 'def')) {
+
+                    //A define or require.def call
+                    name = args[0];
+                    deps = args[1];
+                    //Only allow define calls that match what is expected
+                    //in an AMD call:
+                    //* first arg should be string, array, function or object
+                    //* second arg optional, or array, function or object.
+                    //This helps weed out calls to a non-AMD define, but it is
+                    //not completely robust. Someone could create a define
+                    //function that still matches this shape, but this is the
+                    //best that is possible, and at least allows UglifyJS,
+                    //which does create its own internal define in one file,
+                    //to be inlined.
+                    if (((name[0] === 'string' || isArrayLiteral(name) ||
+                          name[0] === 'function' || isObjectLiteral(name))) &&
+                        (!deps || isArrayLiteral(deps) ||
+                         deps[0] === 'function' || isObjectLiteral(deps))) {
+
+                        //If first arg is a function, could be a commonjs wrapper,
+                        //look inside for commonjs dependencies.
+                        if (name && name[0] === 'function') {
+                            cjsDeps = parse.getAnonDepsFromNode(name);
+                            if (cjsDeps.length) {
+                                name = toAstArray(cjsDeps);
+                            }
+                        }
+
+                        return onMatch("define", null, name, deps);
+                    }
                 }
-
-                if (!deps || !validateDeps(deps)) {
-                    return null;
-                }
-
-                return this.callToString("require", null, null, deps);
-
-            } else if ((call[0] === 'name' && call[1] === 'define') ||
-                       (call[0] === 'dot' && call[1][1] === 'require' && call[2] === 'def')) {
-
-                //A define or require.def call
-                name = args[0];
-                deps = args[1];
-                return this.callToString("define", null, name, deps);
             }
         }
 
