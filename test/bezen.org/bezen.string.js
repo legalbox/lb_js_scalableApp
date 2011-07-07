@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define */
-define(["./bezen"],
+define("bezen.org/bezen.string",["./bezen"],
   function(bezen) {
 
     var trim = function(string) {

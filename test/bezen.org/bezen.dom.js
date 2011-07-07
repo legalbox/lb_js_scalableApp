@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global document */
-define(["./bezen", "./bezen.error"],
+define("bezen.org/bezen.dom",["./bezen", "./bezen.error"],
   function(bezen,  error) {
 
     // Declare aliases

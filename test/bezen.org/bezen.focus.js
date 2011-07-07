@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global document */
-define(["./bezen"],
+define("bezen.org/bezen.focus",["./bezen"],
   function(bezen) {
   
     // whether the focus has been initialized (typically done in window.onload)

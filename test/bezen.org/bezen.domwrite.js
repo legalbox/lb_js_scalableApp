@@ -164,7 +164,7 @@
 
 /*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
 /*global document, setTimeout */
-define(["./bezen", "./bezen.string", "./bezen.array", "./bezen.dom"],
+define("bezen.org/bezen.domwrite",["./bezen", "./bezen.string", "./bezen.array", "./bezen.dom"],
   function(bezen,  string,           array,           dom) {
 
     // Define aliases

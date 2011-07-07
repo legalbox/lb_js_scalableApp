@@ -616,7 +616,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global document, window */
-define(["./bezen", "./bezen.dom", "./bezen.style"],
+define("bezen.org/bezen.template",["./bezen", "./bezen.dom", "./bezen.style"],
   function(bezen,  dom,           style){
 
     // Define Aliases

@@ -56,7 +56,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, window, document */
-define(["./bezen", "./bezen.object", "./bezen.array"],
+define("bezen.org/bezen.log",["./bezen", "./bezen.object", "./bezen.array"],
   function(bezen,  object,           array) {
    
     // Define aliases

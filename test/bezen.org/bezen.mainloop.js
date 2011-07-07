@@ -26,7 +26,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global bezen, window, setTimeout */
-define(["./bezen", "./bezen.error"],
+define("bezen.org/bezen.mainloop",["./bezen", "./bezen.error"],
   function(bezen,  error) {
  
     // Declare aliases

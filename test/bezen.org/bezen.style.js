@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, document */
-define(["./bezen", "./bezen.string", "./bezen.array"],
+define("bezen.org/bezen.style",["./bezen", "./bezen.string", "./bezen.array"],
   function(bezen,  string,           array) {
   
     // Define aliases

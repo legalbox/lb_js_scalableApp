@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, window, navigator, setTimeout */
-define(["./bezen", "./bezen.style", "./bezen.log", "./bezen.error"],
+define("bezen.org/bezen.testrunner",["./bezen", "./bezen.style", "./bezen.log", "./bezen.error"],
   function(bezen,  style,           log,           error) {
  
     // Define aliases

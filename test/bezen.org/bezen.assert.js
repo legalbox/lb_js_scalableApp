@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define */
-define(["./bezen", "./bezen.object"],
+define("bezen.org/bezen.assert",["./bezen", "./bezen.object"],
   function(bezen,  object) {
   
     // Define aliases

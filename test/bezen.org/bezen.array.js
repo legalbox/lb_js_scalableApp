@@ -13,7 +13,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define */
-define(["./bezen"],
+define("bezen.org/bezen.array",["./bezen"],
   function(bezen) {
 
     // Constant

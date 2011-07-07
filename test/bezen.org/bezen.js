@@ -14,6 +14,7 @@
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global define, window, bezen, document */
 define(
+  "bezen.org/bezen",
   function() {
 
     var nix = function(){  

@@ -45,7 +45,7 @@
 
 /*jslint nomen:false, white:false, onevar:false, plusplus:false */
 /*global window, document */
-define(["./bezen", "./bezen.dom", "./bezen.domwrite", "./bezen.error"],
+define("bezen.org/bezen.ready",["./bezen", "./bezen.dom", "./bezen.domwrite", "./bezen.error"],
   function(bezen,  dom,           domwrite,           error) {
   
     // Define aliases
