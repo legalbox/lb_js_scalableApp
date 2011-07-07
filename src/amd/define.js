@@ -110,7 +110,7 @@
 
       var exports = cache[absoluteId];
       if (exports === undef){
-        throw Error("Module not loaded yet: '"+absoluteId+"'");
+        fail("Module not loaded yet: '"+absoluteId+"'");
       }
       return exports;
     }
@@ -148,18 +148,14 @@
           args.push({id: id});
           break;
         default:
-          try {
-            args.push( require(dependencyId) );
-          } catch (e1) {
-            fail(e1);
-          }
+          args.push( require(dependencyId) );
       }
     }
 
     try {
       result = factory.apply(null,args);
-    } catch(e2) {
-      fail(e2);
+    } catch(e) {
+      fail(e);
     }
 
     if (id !== undef) {
