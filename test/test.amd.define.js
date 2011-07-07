@@ -61,21 +61,21 @@ define(
 
       capturedArgs = null;
       returnValue = module2;
-      ut('module2',['module1'],factory);
+      ut('a/module2',['module1'],factory);
       assert.arrayEquals(capturedArgs, [module1],
                                         "module1 expected in args of module2");
 
       capturedArgs = null;
       returnValue = module3;
-      ut('module3',['module2','module1'],factory);
+      ut('a/b/module3',['a/module2','module1'],factory);
       assert.arrayEquals(capturedArgs, [module2,module1],
                            "module2 and module1 expected in args of module3");
 
       capturedArgs = null;
       returnValue = module4;
-      ut('module4',['module3'],factory);
-      assert.arrayEquals(capturedArgs, [module3],
-                                      "module3 expected in args of module4");
+      ut('a/b/module4',['./module3','../module2','../../module1'],factory);
+      assert.arrayEquals(capturedArgs, [module3,module2,module1],
+       "module3, module2, module1 expected in args of module4 (relative ids)");
 
       capturedArgs = null;
       returnValue = module5;
@@ -104,8 +104,8 @@ define(
 
       assert.objectEquals(
         [
-          require('module1'), require('module2'), require('module3'),
-          require('module4'), require('module5')
+          require('module1'), require('a/module2'), require('a/b/module3'),
+          require('a/b/module4'), require('module5')
         ],
         [
           module1, module2, module3,
@@ -136,8 +136,8 @@ define(
 
       assert.objectEquals(
         [
-          require('module1'), require('module2'), require('module3'),
-          require('module4'), require('module5'),
+          require('module1'), require('module2'), require('a/module3'),
+          require('a/b/module4'), require('a/b/module5'),
           require('module6')
         ],
         [
@@ -151,8 +151,8 @@ define(
       // define(dependencies,factory)
       capturedArgs = null;
       var dependencies = [
-        'module1','module2','module3',          // truthy
-        'module4','module5',                    // falsy
+        'module1','module2','a/module3',        // truthy
+        'a/b/module4','a/b/module5',            // falsy
         'module6','module7'                     // falsy + exports
       ];
       ut(dependencies,factory);
@@ -190,8 +190,8 @@ define(
 
       assert.objectEquals(
         [
-          require('module1'), require('module2'), require('module3'),
-          require('module4'), require('module5'),
+          require('module1'), require('module2'), require('a/module3'),
+          require('a/b/module4'), require('a/b/module5'),
           require('module6'), require('module7')
         ],
         [
