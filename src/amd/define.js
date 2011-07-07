@@ -101,7 +101,9 @@
       // An error is thrown in case no module has been cached with given id.
       //
       // Parameter:
-      //   relativeId - string, module identifier
+      //   relativeId - string, identifier of a dependency, relative to the
+      //                identifier of the module who received this require
+      //                method as argument.
       //
       // Returns:
       //   any, the exports of the module defined with given id
