@@ -44,14 +44,11 @@
     // Define a module.
     //
     // Parameters:
-    //   id - string, optional identifier of the module. This must be an
-    //        absolute id (not a relative id starting with './').
+    //   id - string, optional identifier of the module.
+    //        This must be an absolute id (not starting with '.' or '..').
     //   dependencies - array of strings, optional, defaults to
     //                  ["require", "exports", "module"]. The dependencies ids
-    //                  may be relative: if they start with './', their value
-    //                  will be converted to an absolute id by replacing './'
-    //                  with the start of the module id up to and including the
-    //                  last '/' character.
+    //                  may be relative to the module id if it is specified.
     //   factory - function, callback which will be called at most once, when
     //             all dependencies are available. If truthy, the return value
     //             of the function will be cached and associated with given id,
