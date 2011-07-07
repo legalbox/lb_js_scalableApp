@@ -28,7 +28,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-06
+ * 2011-07-07
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -58,13 +58,18 @@
   }
 
   function define(){
-    // Function: define(id?, dependencies?, factory)
+    // Function: define([id,] [dependencies,] factory)
     // Define a module.
     //
     // Parameters:
-    //   id - string, optional identifier of the module.
+    //   id - string, optional identifier of the module. This must be an
+    //        absolute id (not a relative id starting with './').
     //   dependencies - array of strings, optional, defaults to
-    //                  ["require", "exports", "module"].
+    //                  ["require", "exports", "module"]. The dependencies ids
+    //                  may be relative: if they start with './', their value
+    //                  will be converted to an absolute id by replacing './'
+    //                  with the start of the module id up to and including the
+    //                  last '/' character.
     //   factory - function, callback which will be called at most once, when
     //             all dependencies are available. If truthy, the return value
     //             of the function will be cached and associated with given id,
@@ -89,7 +94,7 @@
     //            has no 'uri' property.
 
     var id = undef,
-        dependencies,
+        dependencies = ["require", "exports", "module"],
         factory,
         i,
         length,
@@ -106,11 +111,14 @@
       case 0:   // define()
         return; // nothing to define
       case 1:   // define(factory)
-        dependencies = ["require", "exports", "module"];
         factory = arguments[0];
         break;
-      case 2:   // define(dependencies,factory)
-        dependencies = arguments[0];
+      case 2:
+        if (typeof arguments[0]==='string'){  // define(id,factory)
+          id = arguments[0];
+        } else {                              // define(dependencies,factory)
+          dependencies = arguments[0];
+        }
         factory = arguments[1];
         break;
       default: // define(id,dependencies,factory)

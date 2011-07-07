@@ -4,7 +4,7 @@
  * Author: Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-07-06
+ * Version:   2011-07-07
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -84,33 +84,66 @@ define(
                                "no argument expected for empty dependencies");
 
       capturedArgs = null;
-      returnValue = module7;
-      ut('module6',[],factory);
-
-      capturedArgs = null;
       returnValue = module6;
-      ut('module7',['module','require','exports'],factory);
+      ut('module6',['module','require','exports'],factory);
       assert.equals( capturedArgs.length, 3,
-                            "3 arguments expected: module,require,exports");
+                      "3 arguments expected with id, missing dependencies: "+
+                                                    "module,require,exports");
       var module = capturedArgs[0]
           require = capturedArgs[1],
           exports = capturedArgs[2];
-      assert.equals( typeof module, 'object',    "object expected for module");
+      assert.equals( typeof module, 'object',
+                                   "object expected for module (id,deps)");
       assert.equals( typeof require, 'function',
-                                              "function expected for require");
-      assert.equals( typeof exports, 'object',  "object expected for exports");
+                                "function expected for require (id,deps)");
+      assert.equals( typeof exports, 'object',
+                                  "object expected for exports (id,deps)");
 
-      assert.equals( module.id, 'module7',
+      assert.equals( module.id, 'module6',
                                     "module.id must match given id 'module6'");
 
       assert.objectEquals(
         [
           require('module1'), require('module2'), require('module3'),
-          require('module4'), require('module5'), require('module6')
+          require('module4'), require('module5')
         ],
         [
           module1, module2, module3,
-          {}, {}, {}
+          {}, {}
+        ],                 "require arg expected to return 5 cached modules");
+
+      exports.testModule6 = 'ok';
+
+
+      // define(id,factory)
+      capturedArgs = null;
+      returnValue = module7;
+      ut('module7',factory);
+      assert.equals( capturedArgs.length, 3,
+                               "3 arguments expected: require,exports,module");
+      require = capturedArgs[0],
+      exports = capturedArgs[1];
+      module = capturedArgs[2]
+      assert.equals( typeof module, 'object',
+                                           "object expected for module (id)");
+      assert.equals( typeof require, 'function',
+                                        "function expected for require (id)");
+      assert.equals( typeof exports, 'object',
+                                          "object expected for exports (id)");
+
+      assert.equals( module.id, 'module7',
+                                    "module.id must match given id 'module7'");
+
+      assert.objectEquals(
+        [
+          require('module1'), require('module2'), require('module3'),
+          require('module4'), require('module5'),
+          require('module6')
+        ],
+        [
+          module1, module2, module3,
+          {}, {},
+          {testModule6:'ok'}
         ],                 "require arg expected to return 6 cached modules");
 
       exports.testModule7 = 'ok';
@@ -119,17 +152,17 @@ define(
       capturedArgs = null;
       var dependencies = [
         'module1','module2','module3',          // truthy
-        'module4','module5','module6',          // falsy
-        'module7'                               // falsy + exports
+        'module4','module5',                    // falsy
+        'module6','module7'                     // falsy + exports
       ];
       ut(dependencies,factory);
       assert.objectEquals(
         capturedArgs,
         [
-          module1, module2, module3,          // truthy
-          {}, {}, {},                         // falsy: defaults to exports
-          {testModule7:'ok'}                  // falsy + exports
-        ],   "7 dependencies expected, with empty objects for falsy exports");
+          module1, module2, module3,              // truthy
+          {}, {},                                 // falsy: defaults to exports
+          {testModule6:'ok'}, {testModule7:'ok'}  // falsy + exports
+        ],                                        "7 dependencies expected");
 
       dependencies = ["other"];
       try {
@@ -158,13 +191,13 @@ define(
       assert.objectEquals(
         [
           require('module1'), require('module2'), require('module3'),
-          require('module4'), require('module5'), require('module6'),
-          require('module7')
+          require('module4'), require('module5'),
+          require('module6'), require('module7')
         ],
         [
           module1, module2, module3,
-          {}, {}, {},
-          {testModule7: 'ok'}
+          {}, {},
+          {testModule6:'ok'}, {testModule7: 'ok'}
         ],                "require arg expected to return 7 cached modules");
     }
 
