@@ -11,7 +11,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-07-06
+  Version: 2011-07-07
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -92,7 +92,7 @@
 
       <mkdir dir="@{config}" />
       <copy file="${macros.basedir}/lib/requirejs/build-config.json.tpl"
-            tofile="@{config}/build-config.json" />
+            tofile="@{config}/build-config.json" overwrite="true" />
       <replace file="@{config}/build-config.json" encoding="UTF-8">
         <replacefilter token="#src.dir#" value="@{in}" />
         <replacefilter token="#modules.array#" value="@{modules}" />
