@@ -39,26 +39,6 @@
   var undef,       // undefined value, do not trust global undefined
       cache = {};  // hash of module id => exports
 
-  function require(relativeId){
-    // (private) Function: require(relativeId)
-    // Get the cached module matching given id, relative to current module id.
-    // An error is thrown in case no module has been cached with given id.
-    //
-    // Parameter:
-    //   relativeId - string, module identifier
-    //
-    // Returns:
-    //   any, the exports of the module defined with given id
-
-    var absoluteId = relativeId; // TODO: convert to absolute id
-
-    var exports = cache[absoluteId];
-    if (exports === undef){
-      throw Error("Module not loaded yet: '"+absoluteId+"'");
-    }
-    return exports;
-  }
-
   function define(){
     // Function: define([id,] [dependencies,] factory)
     // Define a module.
@@ -107,6 +87,26 @@
 
     function fail(error){
       throw Error("Failed to load module id '"+id+"': "+error);
+    }
+
+    function require(relativeId){
+      // (private) Function: require(relativeId)
+      // Get the cached module matching given id, relative to current module id.
+      // An error is thrown in case no module has been cached with given id.
+      //
+      // Parameter:
+      //   relativeId - string, module identifier
+      //
+      // Returns:
+      //   any, the exports of the module defined with given id
+
+      var absoluteId = relativeId; // TODO: convert to absolute id
+
+      var exports = cache[absoluteId];
+      if (exports === undef){
+        throw Error("Module not loaded yet: '"+absoluteId+"'");
+      }
+      return exports;
     }
 
     switch(arguments.length){
