@@ -92,6 +92,59 @@
       throw Error("Failed to load module id '"+id+"': "+message);
     }
 
+    function getAbsoluteId(relativeId){
+      // (private) Function: getAbsoluteId(relativeId)
+      // Resolve an identifier relative to the module id.
+      //
+      // Parameter:
+      //   relativeId - string, relative or absolute id
+      //
+      // Returns:
+      //   string, the corresponding absolute id
+
+      if (typeof relativeId !== 'string'){
+        fail("string id expected for dependency: '"+relativeId+"'");
+      }
+
+      if ( relativeId.charAt(0) !== '.' ) { // starts with '.' or '..'
+        return relativeId; // already an absolute id
+      }
+
+      var absoluteParts, // array, parts of path of the absolute id
+          relativeParts, // array, parts of path of the relative id
+          i,
+          length,
+          pathPart;
+
+      // start with parent module id
+      if (typeof id !== 'string'){
+        absoluteParts = [];
+      } else {
+        absoluteParts = id.split('/');
+        absoluteParts.pop(); // remove the parent module name at the end
+      }
+
+      // relative id of the dependency module
+      relativeParts = relativeId.split('/');
+
+      for (i=0, length=relativeParts.length; i<length; i++){
+        pathPart = relativeParts[i];
+        switch(pathPart){
+          case ".":
+            // skip
+            break;
+          case "..":
+            // pop one level
+            absoluteParts.pop();
+            break;
+          default:
+            absoluteParts.push(pathPart);
+        }
+      }
+
+      return absoluteParts.join('/');
+    }
+
     function require(relativeId){
       // (private) Function: require(relativeId)
       // Get the cached module matching given id, relative to current module id.
@@ -105,7 +158,7 @@
       // Returns:
       //   any, the exports of the module defined with given id
 
-      var absoluteId = relativeId; // TODO: convert to absolute id
+      var absoluteId = getAbsoluteId(relativeId);
 
       var exports = cache[absoluteId];
       if (exports === undef){
