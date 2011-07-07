@@ -136,8 +136,8 @@ define(
 
       assert.objectEquals(
         [
-          require('module1'), require('module2'), require('a/module3'),
-          require('a/b/module4'), require('a/b/module5'),
+          require('module1'), require('a/module2'), require('a/b/module3'),
+          require('a/b/module4'), require('module5'),
           require('module6')
         ],
         [
@@ -151,8 +151,8 @@ define(
       // define(dependencies,factory)
       capturedArgs = null;
       var dependencies = [
-        'module1','module2','a/module3',        // truthy
-        'a/b/module4','a/b/module5',            // falsy
+        'module1','a/module2','a/b/module3',    // truthy
+        'a/b/module4','module5',                // falsy
         'module6','module7'                     // falsy + exports
       ];
       ut(dependencies,factory);
@@ -190,8 +190,8 @@ define(
 
       assert.objectEquals(
         [
-          require('module1'), require('module2'), require('a/module3'),
-          require('a/b/module4'), require('a/b/module5'),
+          require('module1'), require('a/module2'), require('a/b/module3'),
+          require('a/b/module4'), require('module5'),
           require('module6'), require('module7')
         ],
         [
