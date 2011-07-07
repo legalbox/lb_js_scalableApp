@@ -48,7 +48,7 @@ define(
           module3 = 'abc',
           module4 = null,
           module5 = false,
-          module6 = undefined,
+          module6, // undefined
           module7 = '';
 
       // define(id,dependencies,factory)
