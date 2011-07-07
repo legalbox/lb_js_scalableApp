@@ -4,7 +4,7 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-06-30
+ * Version:   2011-07-07
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -62,10 +62,17 @@ define(
       // Initialization is done automatically during script loading,
       // so as to happen before the page load event.
 
-      assert.isTrue( object.exists( $('lb.base.history.input') ),
-         "assert: input with id 'lb.base.history.input' expected in document");
+      if (  object.exists( $('lb.base.history.input') )  ){
+        // the input shall be present only in unit tests page, otherwise they
+        // would be reset due to a document.write call in a module loaded
+        // dynamically after page load; the input shall be omitted in the all
+        // tests page to check that the page is not reset when using the
+        // combined/minified script
+        assert.equals( $('lb.base.history.input').type, "hidden",
+                                  "input for history expected to be hidden");
+      }
 
-      if ( $('lb.base.history.iframe') ){
+      if (  object.exists( $('lb.base.history.iframe') )  ){
         // Only present in IE, when there is no onhashchange event available
         // check that the iframe src is set to the favicon href
         assert.isTrue(  endsWith( $('lb.base.history.iframe').src,
