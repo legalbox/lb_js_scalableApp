@@ -24,15 +24,26 @@
     <delete dir="out"/>
   </target>
 
-  <target name="checkLib"
+  <target name="checkAmd"
+    description="Check Asynchronous Module Definition source with JSLint">
+    <jslint dir="../src/amd" />
+  </target>
+
+  <target name="checkClosure"
           description="Check Google Closure source files with JSLint">
     <!-- food for thought: fails with terrible errors -->
     <jslint dir="../src/closure" />
   </target>
 
   <target name="checkSrc"
-          description="Check JavaScript source files with JSLint">
-    <jslint dir="../src/${ant.project.name}" />
+          description="Check JavaScript modules source files with JSLint">
+    <!-- check ../src/{project name} if available -->
+    <available file="../src/${ant.project.name}"
+      property="modules.src" value="../src/${ant.project.name}" />
+    <!-- otherwise check ../src -->
+    <property name="modules.src" value="../src" />
+
+    <jslint dir="${modules.src}" />
   </target>
 
   <target name="checkTest" description="Check test files with JSLint">
