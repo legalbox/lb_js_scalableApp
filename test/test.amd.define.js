@@ -73,7 +73,7 @@ define(
 
       capturedArgs = null;
       returnValue = module4;
-      ut('a/b/module4',['./module3','../module2','../../module1'],factory);
+      ut('a/b/module4',['./module3','.././module2','../../module1'],factory);
       assert.arrayEquals(capturedArgs, [module3,module2,module1],
        "module3, module2, module1 expected in args of module4 (relative ids)");
 
