@@ -35,6 +35,7 @@
  */
 
 define(
+  "closure/goog.net.MockXmlHttp",
   [
     "closure/goog",
     "closure/goog.net.XmlHttp",
