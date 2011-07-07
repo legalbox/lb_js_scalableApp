@@ -39,20 +39,22 @@
   var undef,       // undefined value, do not trust global undefined
       cache = {};  // hash of module id => exports
 
-  function require(id){
-    // (private) Function: require(id)
-    // Get the cached module matching given id.
+  function require(relativeId){
+    // (private) Function: require(relativeId)
+    // Get the cached module matching given id, relative to current module id.
     // An error is thrown in case no module has been cached with given id.
     //
     // Parameter:
-    //   id - string, module identifier
+    //   relativeId - string, module identifier
     //
     // Returns:
     //   any, the exports of the module defined with given id
 
-    var exports = cache[id];
+    var absoluteId = relativeId; // TODO: convert to absolute id
+
+    var exports = cache[absoluteId];
     if (exports === undef){
-      throw Error("Module not loaded yet: '"+id+"'");
+      throw Error("Module not loaded yet: '"+absoluteId+"'");
     }
     return exports;
   }
