@@ -21,7 +21,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-06
+ * 2011-07-07
  */
 ({
     // output file, absolute or relative to the location of this file
@@ -33,9 +33,6 @@
     // base directory for the resolution of relative paths of modules;
     // absolute or relative to the location of this file
     baseUrl: "#src.dir#",
-
-    // deprecated option: include require.js library before the modules
-    includeRequire: true,
 
     // list of all the JavaScript modules to combine, with an absolute path or
     // a path relative to the baseUrl, without .js extension
