@@ -85,8 +85,14 @@
         exports = {},
         result;
 
-    function fail(error){
-      throw Error("Failed to load module id '"+id+"': "+error);
+    function fail(message){
+      // (private) Function: fail(message)
+      // Throw an Error including given message in the description.
+      //
+      // Parameter:
+      //   message - string, message to include in the error description
+
+      throw Error("Failed to load module id '"+id+"': "+message);
     }
 
     function require(relativeId){
