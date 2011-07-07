@@ -213,14 +213,14 @@
     if (id !== undef) {
       cache[id] = result? result : exports;
     }
-  };
+  }
 
   if (this.define === undef){     // preserve existing define
     this.define = define;         // set this implementation to global define
     define.amd = {};              // claim support for CommonJS AMD
   } else if (typeof this.define.amd === 'object') {
     this.define(function(){       // register this implementation for tests
-      return define
+      return define;
     });
   }
 
