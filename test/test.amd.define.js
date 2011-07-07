@@ -89,7 +89,7 @@ define(
       assert.equals( capturedArgs.length, 3,
                       "3 arguments expected with id, missing dependencies: "+
                                                     "module,require,exports");
-      var module = capturedArgs[0]
+      var module = capturedArgs[0],
           require = capturedArgs[1],
           exports = capturedArgs[2];
       assert.equals( typeof module, 'object',
@@ -121,9 +121,9 @@ define(
       ut('module7',factory);
       assert.equals( capturedArgs.length, 3,
                                "3 arguments expected: require,exports,module");
-      require = capturedArgs[0],
+      require = capturedArgs[0];
       exports = capturedArgs[1];
-      module = capturedArgs[2]
+      module = capturedArgs[2];
       assert.equals( typeof module, 'object',
                                            "object expected for module (id)");
       assert.equals( typeof require, 'function',
@@ -177,8 +177,8 @@ define(
       ut(factory);
       assert.equals( capturedArgs.length, 3,
                                             "3 arguments expected by default");
-      require = capturedArgs[0],
-      exports = capturedArgs[1],
+      require = capturedArgs[0];
+      exports = capturedArgs[1];
       module = capturedArgs[2];
       assert.equals( typeof require, 'function',  "require function expected");
       assert.equals( typeof exports, 'object',      "exports object expected");
