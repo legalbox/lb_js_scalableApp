@@ -147,6 +147,7 @@ INCLUDED SOFTWARE
     http://requirejs.org/
     Licensed under a New BSD License or MIT License
     https://github.com/jrburke/requirejs/blob/master/LICENSE
+    in build/lib/requirejs
 
     Includes:
 
@@ -158,6 +159,7 @@ INCLUDED SOFTWARE
   * Yahoo! YUI Compressor by Julien Lecompte
     http://developer.yahoo.com/yui/compressor/
     Licensed under a BSD License or MIT License
+    in build/lib/yuicompressor
 
     Includes:
 
