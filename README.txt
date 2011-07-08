@@ -76,9 +76,10 @@ REQUIREMENTS
   * OpenOffice.org Writer (3.2.0) for the design document
   http://www.openoffice.org/
 
-AUTHOR
+AUTHORS
 
   Eric Bréchemier <legalbox@eric.brechemier.name>
+  Marc Delhommeau <marc.delhommeau@legalbox.com>
 
 COPYRIGHT
 
