@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-07-07
+  Version: 2011-07-08
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -65,18 +65,26 @@
   <target name="combine"
     description="Combine JavaScript files using requireJS optimization tool">
     <!--
+      Absolute locations are needed for the build config;
+      otherwise, locations are relative to the config file.
+
+      Paths use '/' as separator even on Windows, otherwise
+      '\' results in escape sequences in JavaScript strings
+    -->
+    <pathconvert property="src.dir" dirsep="/">
+      <path location="../src" />
+    </pathconvert>
+
+    <pathconvert property="out.dir" dirsep="/">
+      <path location="out" />
+    </pathconvert>
+
+    <!--
     Note:
     The modules to combine must be listed explicitly for the optimizer tool.
     There is no option to combine all scripts found in the source folder.
     https://groups.google.com/group/requirejs/browse_thread/thread/3dc1d075cb8cd4b4/52407c37e426adee?lnk=gst&q=%22concatenate+all+scripts%22#52407c37e426adee
     -->
-
-    <!--
-      absolute locations are needed for the build config;
-      otherwise, locations are relative to the config file.
-    -->
-    <property name="src.dir" location="../src" />
-    <property name="out.dir" location="out" />
 
     <!-- list all scripts files found in source folder -->
     <fileset id="src.files" dir="${src.dir}">
