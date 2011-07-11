@@ -105,7 +105,7 @@ define(["./goog","./goog.array","./goog.debug",
 
 
   /**
-   * @define {boolean} Toggles whether loggers other than the root logger can have
+   * @const {boolean} Toggles whether loggers other than the root logger can have
    *     log handlers attached to them and whether they can have their log level
    *     set. Logging is a bit faster when this is set to false.
    */

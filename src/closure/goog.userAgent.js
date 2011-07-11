@@ -34,32 +34,32 @@ define(["./goog","./goog.string"], function(goog){
 
 
   /**
-   * @define {boolean} Whether we know at compile-time that the browser is IE.
+   * @const {boolean} Whether we know at compile-time that the browser is IE.
    */
   goog.userAgent.ASSUME_IE = false;
 
 
   /**
-   * @define {boolean} Whether we know at compile-time that the browser is GECKO.
+   * @const {boolean} Whether we know at compile-time that the browser is GECKO.
    */
   goog.userAgent.ASSUME_GECKO = false;
 
 
   /**
-   * @define {boolean} Whether we know at compile-time that the browser is WEBKIT.
+   * @const {boolean} Whether we know at compile-time that the browser is WEBKIT.
    */
   goog.userAgent.ASSUME_WEBKIT = false;
 
 
   /**
-   * @define {boolean} Whether we know at compile-time that the browser is a
+   * @const {boolean} Whether we know at compile-time that the browser is a
    *     mobile device running WebKit e.g. iPhone or Android.
    */
   goog.userAgent.ASSUME_MOBILE_WEBKIT = false;
 
 
   /**
-   * @define {boolean} Whether we know at compile-time that the browser is OPERA.
+   * @const {boolean} Whether we know at compile-time that the browser is OPERA.
    */
   goog.userAgent.ASSUME_OPERA = false;
 
@@ -246,28 +246,28 @@ define(["./goog","./goog.string"], function(goog){
 
 
   /**
-   * @define {boolean} Whether the user agent is running on a Macintosh operating
+   * @const {boolean} Whether the user agent is running on a Macintosh operating
    *     system.
    */
   goog.userAgent.ASSUME_MAC = false;
 
 
   /**
-   * @define {boolean} Whether the user agent is running on a Windows operating
+   * @const {boolean} Whether the user agent is running on a Windows operating
    *     system.
    */
   goog.userAgent.ASSUME_WINDOWS = false;
 
 
   /**
-   * @define {boolean} Whether the user agent is running on a Linux operating
+   * @const {boolean} Whether the user agent is running on a Linux operating
    *     system.
    */
   goog.userAgent.ASSUME_LINUX = false;
 
 
   /**
-   * @define {boolean} Whether the user agent is running on a X11 windowing
+   * @const {boolean} Whether the user agent is running on a X11 windowing
    *     system.
    */
   goog.userAgent.ASSUME_X11 = false;

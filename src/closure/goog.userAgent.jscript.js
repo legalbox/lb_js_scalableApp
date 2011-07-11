@@ -31,7 +31,7 @@ define(["./goog","./goog.string"], function(goog){
 
 
   /**
-   * @define {boolean} True if it is known at compile time that the runtime
+   * @const {boolean} True if it is known at compile time that the runtime
    *     environment will not be using JScript.
    */
   goog.userAgent.jscript.ASSUME_NO_JSCRIPT = false;

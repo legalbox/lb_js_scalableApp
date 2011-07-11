@@ -55,14 +55,14 @@ define(["./goog","./goog.array","./goog.dom.BrowserFeature",
 
 
   /**
-   * @define {boolean} Whether we know at compile time that the browser is in
+   * @const {boolean} Whether we know at compile time that the browser is in
    * quirks mode.
    */
   goog.dom.ASSUME_QUIRKS_MODE = false;
 
 
   /**
-   * @define {boolean} Whether we know at compile time that the browser is in
+   * @const {boolean} Whether we know at compile time that the browser is in
    * standards compliance mode.
    */
   goog.dom.ASSUME_STANDARDS_MODE = false;

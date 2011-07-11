@@ -33,7 +33,7 @@ define(["./goog"], function(goog){
 
 
   /**
-   * @define {boolean} NATIVE_ARRAY_PROTOTYPES indicates whether the code should
+   * @const {boolean} NATIVE_ARRAY_PROTOTYPES indicates whether the code should
    * rely on Array.prototype functions, if available.
    *
    * The Array.prototype functions can be defined by external libraries like

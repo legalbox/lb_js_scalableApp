@@ -60,7 +60,7 @@ define(function(){
   this.goog = this.goog || {}; // create global 'goog', preserving existing one
 
   /**
-   * @define {boolean} Overridden to true by the compiler when --closure_pass
+   * @const {boolean} Overridden to true by the compiler when --closure_pass
    *     or --mark_as_compiled is specified.
    */
   // LB: set to true to trigger deployment behaviors
@@ -75,7 +75,7 @@ define(function(){
 
 
   /**
-   * @define {boolean} DEBUG is provided as a convenience so that debugging code
+   * @const {boolean} DEBUG is provided as a convenience so that debugging code
    * that should not be included in a production js_binary can be easily stripped
    * by specifying --define goog.DEBUG=false to the JSCompiler. For example, most
    * toString() methods should be declared inside an "if (goog.DEBUG)" conditional
@@ -86,7 +86,7 @@ define(function(){
 
 
   /**
-   * @define {string} LOCALE defines the locale being used for compilation. It is
+   * @const {string} LOCALE defines the locale being used for compilation. It is
    * used to select locale specific data to be compiled in js binary. BUILD rule
    * can specify this value by "--define goog.LOCALE=<locale_name>" as JSCompiler
    * option.
@@ -324,7 +324,7 @@ define(function(){
 
 
   /**
-   * @define {boolean} Whether to enable the debug loader.
+   * @const {boolean} Whether to enable the debug loader.
    *
    * If enabled, a call to goog.require() will attempt to load the namespace by
    * appending a script tag to the DOM (if the namespace has been registered).

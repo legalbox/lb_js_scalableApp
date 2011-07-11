@@ -106,7 +106,7 @@ define(["./goog"], function(goog){
 
 
   /**
-   * @define {boolean} Whether to enable log sequence numbers.
+   * @const {boolean} Whether to enable log sequence numbers.
    */
   goog.debug.LogRecord.ENABLE_SEQUENCE_NUMBERS = true;
 

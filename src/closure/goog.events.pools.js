@@ -41,7 +41,7 @@ define (["./goog","./goog.events.BrowserEvent","./goog.events.Listener",
 
 
   /**
-   * @define {boolean} Whether to always assume the garbage collector is good.
+   * @const {boolean} Whether to always assume the garbage collector is good.
    */
   goog.events.ASSUME_GOOD_GC = false;
 

@@ -67,7 +67,7 @@ define(["./goog","./goog.debug.LogRecord"], function(goog){
 
 
   /**
-   * @define {number} The number of log records to buffer. 0 means disable
+   * @const {number} The number of log records to buffer. 0 means disable
    * buffering.
    */
   goog.debug.LogBuffer.CAPACITY = 0;

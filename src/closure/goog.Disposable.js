@@ -52,7 +52,7 @@ define(["./goog"], function(goog){
 
 
   /**
-   * @define {boolean} Whether to enable the monitoring of the goog.Disposable
+   * @const {boolean} Whether to enable the monitoring of the goog.Disposable
    *     instances. Switching on the monitoring is only recommended for debugging
    *     because it has a significant impact on performance and memory usage.
    *     If switched off, the monitoring code compiles down to 0 bytes.
