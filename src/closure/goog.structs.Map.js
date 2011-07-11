@@ -31,6 +31,8 @@
 define(["./goog","./goog.iter","./goog.object","./goog.structs"],
 function(goog){
 
+  goog.provide('goog.structs.Map');
+
   goog.require('goog.iter.Iterator');
   goog.require('goog.iter.StopIteration');
   goog.require('goog.object');
