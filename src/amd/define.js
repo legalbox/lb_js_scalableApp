@@ -38,7 +38,7 @@
   var undef,       // undefined value, do not trust global undefined
       cache = {};  // hash of module id => exports
 
-  function define(){
+  function define(arg0,arg1,arg2){
     // Function: define([id,] [dependencies,] factory)
     // Define a module.
     //
@@ -85,20 +85,20 @@
       case 0:   // define()
         return; // nothing to define
       case 1:   // define(factory)
-        factory = arguments[0];
+        factory = arg0;
         break;
       case 2:
-        if (typeof arguments[0]==='string'){  // define(id,factory)
-          id = arguments[0];
-        } else {                              // define(dependencies,factory)
-          dependencies = arguments[0];
+        if (typeof arg0==='string'){  // define(id,factory)
+          id = arg0;
+        } else {                      // define(dependencies,factory)
+          dependencies = arg0;
         }
-        factory = arguments[1];
+        factory = arg1;
         break;
       default: // define(id,dependencies,factory)
-        id = arguments[0];
-        dependencies = arguments[1];
-        factory = arguments[2];
+        id = arg0;
+        dependencies = arg1;
+        factory = arg2;
     }
 
     function fail(message){
