@@ -20,9 +20,8 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-05
+ * 2011-07-12
  */
-/*jslint white:false, plusplus:false */
 /*global define */
 define(
   [
