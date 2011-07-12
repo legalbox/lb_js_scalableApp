@@ -1,5 +1,5 @@
 // jslint.js
-// 2011-06-12
+// 2011-07-04
 
 // Copyright (c) 2002 Douglas Crockford  (www.JSLint.com)
 
@@ -92,9 +92,9 @@
 //                 name: STRING,
 //                 line: NUMBER,
 //                 last: NUMBER,
-//                 param: [
+//                 params: [
 //                     {
-//                         value: STRING
+//                         string: STRING
 //                     }
 //                 ],
 //                 closure: [
@@ -142,7 +142,7 @@
 // with
 
 //     JSON.stringify(JSLINT.tree, [
-//         'value',  'arity', 'name',  'first',
+//         'string',  'arity', 'name',  'first',
 //         'second', 'third', 'block', 'else'
 //     ], 4));
 
@@ -159,6 +159,7 @@
 //     bitwise    true, if bitwise operators should be allowed
 //     browser    true, if the standard browser globals should be predefined
 //     cap        true, if upper case HTML should be allowed
+//     confusion  true, if types can be used inconsistently
 //     'continue' true, if the continuation statement should be tolerated
 //     css        true, if CSS workarounds should be tolerated
 //     debug      true, if debugger statements should be allowed
@@ -177,6 +178,7 @@
 //     on         true, if HTML event handlers should be allowed
 //     passfail   true, if the scan should stop on first error
 //     plusplus   true, if increment/decrement should be allowed
+//     properties true, if all property names must be declared with /*properties*/
 //     regexp     true, if the . should be allowed in regexp literals
 //     rhino      true, if the Rhino environment globals should be predefined
 //     undef      true, if variables can be declared out of order
@@ -184,7 +186,6 @@
 //     safe       true, if use of some browser features should be restricted
 //     sloppy     true, if the 'use strict'; pragma is optional
 //     sub        true, if all forms of subscript notation are tolerated
-//     type       true, if types can be used inconsistently
 //     vars       true, if multiple var statements per function should be allowed
 //     white      true, if sloppy whitespace is tolerated
 //     widget     true  if the Yahoo Widgets globals should be predefined
@@ -202,158 +203,198 @@
 
 // For example:
 
-/*properties '\b', '\t', '\n', '\f', '\r', '!=', '!==', '"', '%',
-    '&', '\'', '(', '(array)', '(begin)', '(breakage)', '(complexity)', '(context)',
-    '(error)', '(function)', '(identifier)', '(line)', '(loopage)', '(name)',
-    '(number)', '(object)', '(params)', '(scope)', '(statement)', '(string)',
-    '(token)', '(vars)', '(verb)', ')', '*', '+', '-', '/', ';', '?', '<',
-    '<<', '<=', '==', '===', '>', '>=', '>>',
-    '>>>', ADSAFE, ActiveXObject, Array, Boolean, Buffer, COM,
-    CScript, Canvas, CustomAnimation, Date, Debug, E, Enumerator, Error,
-    EvalError, FadeAnimation, Flash, FormField, Frame, Function, HotKey,
-    Image, JSON, LN10, LN2, LOG10E, LOG2E, MAX_VALUE, MIN_VALUE, Math,
-    MenuItem, MoveAnimation, NEGATIVE_INFINITY, Number, Object, Option, PI,
-    POSITIVE_INFINITY, Point, RangeError, Rectangle, ReferenceError, RegExp,
-    ResizeAnimation, RotateAnimation, SQRT1_2, SQRT2, ScrollBar, Storage,
-    String, Style, SyntaxError, System, Text, TextArea, Timer, TypeError,
-    URIError, URL, VBArray, WScript, Web, Window, XMLDOM, XMLHttpRequest,
-    '\\', '^', __dirname, __filename, a, a_label, a_not_allowed,
-    a_not_defined, a_scope, abbr, acronym, activeborder, activecaption,
-    address, adsafe, adsafe_a, adsafe_autocomplete, adsafe_bad_id,
-    adsafe_div, adsafe_fragment, adsafe_go, adsafe_html, adsafe_id,
-    adsafe_id_go, adsafe_lib, adsafe_lib_second, adsafe_missing_id,
-    adsafe_name_a, adsafe_placement, adsafe_prefix_a, adsafe_script,
-    adsafe_source, adsafe_subscript_a, adsafe_tag, alert, aliceblue, all,
-    already_defined, and, animator, antiquewhite, appleScript, applet,
-    apply, approved, appworkspace, aqua, aquamarine, area, arguments, arity,
-    article, aside, assign, assign_exception,
-    assignment_function_expression, at, attribute_case_a, audio,
-    autocomplete, avoid_a, azure, b, background, 'background-attachment',
-    'background-color', 'background-image', 'background-position',
-    'background-repeat', bad_assignment, bad_color_a, bad_constructor,
-    bad_entity, bad_html, bad_id_a, bad_in_a, bad_invocation, bad_name_a,
-    bad_new, bad_number, bad_operand, bad_type, bad_url, bad_wrap, base,
-    bdo, beep, beige, big, bisque, bitwise, black, blanchedalmond, block,
-    blockquote, blue, blueviolet, body, border, 'border-bottom',
-    'border-bottom-color', 'border-bottom-style', 'border-bottom-width',
-    'border-collapse', 'border-color', 'border-left', 'border-left-color',
-    'border-left-style', 'border-left-width', 'border-right',
-    'border-right-color', 'border-right-style', 'border-right-width',
-    'border-spacing', 'border-style', 'border-top', 'border-top-color',
-    'border-top-style', 'border-top-width', 'border-width', bottom, br,
-    braille, brown, browser, burlywood, button, buttonface, buttonhighlight,
-    buttonshadow, buttontext, bytesToUIString, c, cadetblue, call, callee,
-    caller, canvas, cap, caption, 'caption-side', captiontext, center,
-    charAt, charCodeAt, character, chartreuse, chocolate, chooseColor,
-    chooseFile, chooseFolder, cite, clear, clearInterval, clearTimeout,
-    clip, closeWidget, closure, cm, code, col, colgroup, color, combine_var,
-    command, comment, comments, concat, conditional_assignment, confirm,
-    confusing_a, confusing_regexp, console, constructor, constructor_name_a,
-    content, continue, control_a, convertPathToHFS, convertPathToPlatform,
-    coral, cornflowerblue, cornsilk, 'counter-increment', 'counter-reset',
-    create, crimson, css, cursor, cyan, d, dangerous_comment, dangling_a,
-    darkblue, darkcyan, darkgoldenrod, darkgray, darkgreen, darkkhaki,
-    darkmagenta, darkolivegreen, darkorange, darkorchid, darkred,
-    darksalmon, darkseagreen, darkslateblue, darkslategray, darkturquoise,
-    darkviolet, data, datalist, dd, debug, decodeURI, decodeURIComponent,
-    deeppink, deepskyblue, defineClass, del, deleted, deserialize, details,
-    devel, dfn, dialog, dimgray, dir, direction, display, disrupt, div, dl,
-    document, dodgerblue, dt, duplicate_a, edge, edition, else, em, embed,
-    embossed, empty, 'empty-cells', empty_block, empty_case, empty_class,
-    encodeURI, encodeURIComponent, entityify, eqeq, errors, es5, escape, eval,
-    event, evidence, evil, ex, exception, exec, expected_a,
-    expected_a_at_b_c, expected_a_b, expected_a_b_from_c_d, expected_at_a,
-    expected_attribute_a, expected_attribute_value_a, expected_class_a,
-    expected_fraction_a, expected_id_a, expected_identifier_a,
-    expected_identifier_a_reserved, expected_lang_a, expected_linear_a,
-    expected_media_a, expected_name_a, expected_nonstandard_style_attribute,
-    expected_number_a, expected_operator_a, expected_percent_a,
-    expected_positive_a, expected_pseudo_a, expected_selector_a,
-    expected_small_a, expected_space_a_b, expected_string_a,
-    expected_style_attribute, expected_style_pattern, expected_tagname_a,
-    exports, f, fieldset, figure, filesystem, filter, firebrick, first,
-    float, floor, floralwhite, focusWidget, font, 'font-family',
-    'font-size', 'font-size-adjust', 'font-stretch', 'font-style',
-    'font-variant', 'font-weight', footer, forEach, for_if, forestgreen,
-    forin, form, fragment, frame, frames, frameset, from, fromCharCode,
-    fuchsia, fud, funct, function, function_block, function_eval,
-    function_loop, function_statement, function_strict, functions, g,
-    gainsboro, gc, ghostwhite, global, globals, gold, goldenrod, gray,
-    graytext, green, greenyellow, h1, h2, h3, h4, h5, h6, handheld,
-    hasOwnProperty, head, header, height, help, hgroup, highlight,
-    highlighttext, history, honeydew, hotpink, hr, 'hta:application', html,
-    html_confusion_a, html_handlers, i, iTunes, id, identifier,
-    identifier_function, iframe, img, immed, implied_evil, in,
-    inactiveborder, inactivecaption, inactivecaptiontext, include, indent,
-    indexOf, indianred, indigo, infix_in, infobackground, infotext, init,
-    input, ins, insecure_a, isAlpha, isApplicationRunning, isArray, isDigit,
-    isFinite, isNaN, ivory, join, jslint, json, kbd, keygen, keys, khaki,
-    konfabulatorVersion, label, label_a_b, labeled, lang, lastIndexOf,
-    lavender, lavenderblush, lawngreen, lbp, leading_decimal_a, led, left,
-    legend, lemonchiffon, length, 'letter-spacing', li, lib, lightblue,
-    lightcoral, lightcyan, lightgoldenrodyellow, lightgreen, lightpink,
-    lightsalmon, lightseagreen, lightskyblue, lightslategray,
-    lightsteelblue, lightyellow, lime, limegreen, line, 'line-height',
-    linen, link, 'list-style', 'list-style-image', 'list-style-position',
-    'list-style-type', load, loadClass, localStorage, location, log, m,
-    magenta, map, margin, 'margin-bottom', 'margin-left', 'margin-right',
-    'margin-top', mark, 'marker-offset', maroon, match, 'max-height',
-    'max-width', maxerr, maxlen, md5, mediumaquamarine, mediumblue,
-    mediumorchid, mediumpurple, mediumseagreen, mediumslateblue,
-    mediumspringgreen, mediumturquoise, mediumvioletred, member, menu,
-    menutext, message, meta, meter, midnightblue, 'min-height', 'min-width',
-    mintcream, missing_a, missing_a_after_b, missing_option,
-    missing_property, missing_space_a_b, missing_url, missing_use_strict,
-    mistyrose, mixed, mm, moccasin, mode, module, move_invocation, move_var,
-    n, name, name_function, nav, navajowhite, navigator, navy,
-    nested_comment, newcap, next, node, noframes, nomen, noscript, not,
-    not_a_constructor, not_a_defined, not_a_function, not_a_label,
-    not_a_scope, not_greater, nud, object, ol, oldlace, olive, olivedrab,
-    on, opacity, open, openURL, opera, optgroup, option, orange, orangered,
-    orchid, outer, outline, 'outline-color', 'outline-style',
-    'outline-width', output, overflow, 'overflow-x', 'overflow-y', p,
-    padding, 'padding-bottom', 'padding-left', 'padding-right',
-    'padding-top', 'page-break-after', 'page-break-before', palegoldenrod,
-    palegreen, paleturquoise, palevioletred, papayawhip, param,
-    parameter_a_get_b, parameter_set_a, paren, parent, parseFloat, parseInt,
-    passfail, pc, peachpuff, peru, pink, play, plum, plusplus, pop,
-    popupMenu, position, postscript, powderblue, pre, predef,
-    preferenceGroups, preferences, prev, print, process, progress,
-    projection, prompt, prototype, pt, purple, push, px, q, querystring,
-    quit, quote, quotes, r, radix, random, range, raw, readFile, readUrl,
-    read_only, reason, red, redefinition_a, regexp, reloadWidget, replace,
-    report, require, reserved, reserved_a, resolvePath, resumeUpdates,
-    rhino, right, rosybrown, royalblue, rp, rt, ruby, runCommand,
-    runCommandInBg, saddlebrown, safe, salmon, samp, sandybrown, saveAs,
-    savePreferences, scanned_a_b, screen, script, scrollbar, seagreen, seal,
-    search, seashell, second, section, select, serialize, sessionStorage,
-    setInterval, setTimeout, shift, showWidgetPreferences, sienna, silver,
-    skyblue, slash_equal, slateblue, slategray, sleep, slice, sloppy, small,
-    snow, sort, source, span, spawn, speak, speech, split, springgreen, src,
-    stack, statement_block, steelblue, stopping, strange_loop, strict,
-    strong, style, styleproperty, sub, subscript, substr, sup, supplant,
-    suppressUpdates, sync, system, t, table, 'table-layout', tag_a_in_b,
-    tan, tbody, td, teal, tellWidget, test, 'text-align', 'text-decoration',
-    'text-indent', 'text-shadow', 'text-transform', textarea, tfoot, th,
-    thead, third, thistle, threeddarkshadow, threedface, threedhighlight,
-    threedlightshadow, threedshadow, thru, time, title, toLowerCase,
-    toString, toUpperCase, toint32, token, tomato, too_long, too_many, top,
-    tr, trailing_decimal_a, tree, tt, tty, turquoise, tv, type,
-    type_inconsistency_a_b, typeof, u, ul, unclosed, unclosed_comment,
-    unclosed_regexp, undef, unescape, unescaped_a, unexpected_a,
-    unexpected_char_a_b, unexpected_comment, unexpected_property_a,
-    unexpected_space_a_b, 'unicode-bidi', unnecessary_initialize,
-    unnecessary_use, unparam, unreachable_a_b,
-    unrecognized_style_attribute_a, unrecognized_tag_a, unsafe, unused,
-    unwatch, updateNow, url, urls, use_array, use_braces, use_charAt, use_object,
-    use_or, use_param, used_before_a, value, valueOf, var, var_a_not, vars,
-    version, 'vertical-align', video, violet, visibility, was, watch,
-    weird_assignment, weird_condition, weird_new, weird_program,
-    weird_relation, weird_ternary, wheat, white, 'white-space', whitesmoke,
-    widget, width, window, windowframe, windows, windowtext, 'word-spacing',
-    'word-wrap', wrap, wrap_immediate, wrap_regexp, write_is_wrong,
-    writeable, yahooCheckLogin, yahooLogin, yahooLogout, yellow,
-    yellowgreen, 'z-index', '|', '~'
+/*properties
+    '\b': string, '\t': string, '\n': string, '\f': string, '\r': string,
+    '!=': boolean, '!==': boolean, '"': string, '%': boolean, '\'': string,
+    '(begin)', '(breakage)': number, '(complexity)',
+    '(confusion)': boolean, '(context)': object,
+    '(error)', '(identifier)', '(line)': number, '(loopage)': number, '(name)',
+    '(old_property_type)', '(params)', '(return_type)', '(scope)': object,
+    '(statement)', '(token)', '(vars)', '(verb)', '*': boolean, '+': boolean,
+    '-': boolean, '/': *, '<': boolean, '<=': boolean, '==': boolean,
+    '===': boolean, '>': boolean, '>=': boolean, ADSAFE: boolean, Array,
+    Date, E: string, Function, LN10: string, LN2: string, LOG10E: string,
+    LOG2E: string, MAX_VALUE: string, MIN_VALUE: string,
+    NEGATIVE_INFINITY: string, Object, PI: string, POSITIVE_INFINITY: string,
+    SQRT1_2: string, SQRT2: string, '\\': string, a: object, a_label: string,
+    a_not_allowed: string, a_not_defined: string, a_scope: string,
+    abbr: object, acronym: object, address: object, adsafe, adsafe_a: string,
+    adsafe_autocomplete: string, adsafe_bad_id: string, adsafe_div: string,
+    adsafe_fragment: string, adsafe_go: string, adsafe_html: string,
+    adsafe_id: string, adsafe_id_go: string, adsafe_lib: string,
+    adsafe_lib_second: string, adsafe_missing_id: string,
+    adsafe_name_a: string, adsafe_placement: string, adsafe_prefix_a: string,
+    adsafe_script: string, adsafe_source: string, adsafe_subscript_a: string,
+    adsafe_tag: string, all: boolean, already_defined: string, and: string,
+    applet: object, apply: string, approved: array, area: object,
+    arity: string, article: object, aside: object, assign: boolean,
+    assign_exception: string, assignment_function_expression: string,
+    at: number, attribute_case_a: string, audio: object, autocomplete: string,
+    avoid_a: string, b: *, background: array, 'background-attachment': array,
+    'background-color': array, 'background-image': array,
+    'background-position': array, 'background-repeat': array,
+    bad_assignment: string, bad_color_a: string, bad_constructor: string,
+    bad_entity: string, bad_html: string, bad_id_a: string, bad_in_a: string,
+    bad_invocation: string, bad_name_a: string, bad_new: string,
+    bad_number: string, bad_operand: string, bad_type: string, bad_url: string,
+    bad_wrap: string, base: object, bdo: object, big: object, bind: string,
+    bitwise: boolean, block: array, blockquote: object, body: object,
+    border: array, 'border-bottom': array, 'border-bottom-color',
+    'border-bottom-style': array, 'border-bottom-width',
+    'border-collapse': array, 'border-color': array, 'border-left': array,
+    'border-left-color', 'border-left-style': array, 'border-left-width',
+    'border-right': array, 'border-right-color', 'border-right-style': array,
+    'border-right-width', 'border-spacing': array, 'border-style': array,
+    'border-top': array, 'border-top-color', 'border-top-style': array,
+    'border-top-width', 'border-width': array, bottom: array, br: object,
+    braille: boolean, browser: boolean, button: object, c, call: string,
+    canvas: object, cap, caption: object, 'caption-side': array, ceil: string,
+    center: object, charAt: *, charCodeAt: *, character, cite: object,
+    clear: array, clip: array, closure, cm: boolean, code: object, col: object,
+    colgroup: object, color, combine_var: string, command: object, comment,
+    comments: array, concat: string, conditional_assignment: string,
+    confusing_a: string, confusing_regexp: string, confusion: boolean,
+    constructor: string, constructor_name_a: string, content: array, continue,
+    control_a: string, 'counter-increment': array, 'counter-reset': array,
+    create: *, css: string, cursor: array, d, dangerous_comment: string,
+    dangling_a: string, data: function object, datalist: object, dd: object,
+    debug, defineProperties: string, defineProperty: string, del: object,
+    deleted: string, details: object, devel: boolean, dfn: object,
+    dialog: object, dir: object, direction: array, display: array,
+    disrupt: boolean, div: object, dl: object, dt: object, duplicate_a: string,
+    edge: string, edition: string, else, em: *, embed: object,
+    embossed: boolean, empty: boolean, 'empty-cells': array,
+    empty_block: string, empty_case: string, empty_class: string,
+    entityify: function, eqeq, errors: array, es5: string, eval, every: string,
+    evidence, evil: string, ex: boolean, exception, exec: *,
+    expected_a: string, expected_a_at_b_c: string, expected_a_b: string,
+    expected_a_b_from_c_d: string, expected_at_a: string,
+    expected_attribute_a: string, expected_attribute_value_a: string,
+    expected_class_a: string, expected_fraction_a: string,
+    expected_id_a: string, expected_identifier_a: string,
+    expected_identifier_a_reserved: string, expected_lang_a: string,
+    expected_linear_a: string, expected_media_a: string,
+    expected_name_a: string, expected_nonstandard_style_attribute: string,
+    expected_number_a: string, expected_operator_a: string,
+    expected_percent_a: string, expected_positive_a: string,
+    expected_pseudo_a: string, expected_selector_a: string,
+    expected_small_a: string, expected_space_a_b: string,
+    expected_string_a: string, expected_style_attribute: string,
+    expected_style_pattern: string, expected_tagname_a: string,
+    expected_type_a: string, f: string, fieldset: object, figure: object,
+    filter: *, first: *, float: array, floor: *, font: *, 'font-family',
+    'font-size': array, 'font-size-adjust': array, 'font-stretch': array,
+    'font-style': array, 'font-variant': array, 'font-weight': array,
+    footer: object, forEach: *, for_if: string, forin, form: object, fragment,
+    frame: object, frameset: object, freeze: string, from: number,
+    fromCharCode: function, fud: function, funct: object, function,
+    function_block: string, function_eval: string, function_loop: string,
+    function_statement: string, function_strict: string, functions: array,
+    getDate: string, getDay: string, getFullYear: string, getHours: string,
+    getMilliseconds: string, getMinutes: string, getMonth: string,
+    getOwnPropertyDescriptor: string, getOwnPropertyNames: string,
+    getPrototypeOf: string, getSeconds: string, getTime: string,
+    getTimezoneOffset: string, getUTCDate: string, getUTCDay: string,
+    getUTCFullYear: string, getUTCHours: string, getUTCMilliseconds: string,
+    getUTCMinutes: string, getUTCMonth: string, getUTCSeconds: string,
+    getYear: string, global, globals, h1: object, h2: object, h3: object,
+    h4: object, h5: object, h6: object, handheld: boolean, hasOwnProperty: *,
+    head: object, header: object, height: array, hgroup: object, hr: object,
+    'hta:application': object, html: *, html_confusion_a: string,
+    html_handlers: string, i: object, id: string, identifier: boolean,
+    identifier_function: string, iframe: object, img: object, immed: boolean,
+    implied_evil: string, in: boolean, indent: number, indexOf: *,
+    infix_in: string, init: function, input: object, ins: object,
+    insecure_a: string, isAlpha: function, isArray: function boolean,
+    isDigit: function, isExtensible: string, isFrozen: string, isNaN: string,
+    isPrototypeOf: string, isSealed: string, join: *, jslint: function boolean,
+    json: boolean, kbd: object, keygen: object, keys: *, label: object,
+    label_a_b: string, labeled: boolean, lang: string, lastIndex: string,
+    lastIndexOf: *, lbp: number, leading_decimal_a: string, led: function,
+    left: array, legend: object, length: *, 'letter-spacing': array,
+    li: object, lib: boolean, line: number, 'line-height': array, link: object,
+    'list-style': array, 'list-style-image': array,
+    'list-style-position': array, 'list-style-type': array, map: *,
+    margin: array, 'margin-bottom', 'margin-left', 'margin-right',
+    'margin-top', mark: object, 'marker-offset': array, match: function,
+    'max-height': array, 'max-width': array, maxerr: number, maxlen: number,
+    member: object, menu: object, message, meta: object, meter: object,
+    'min-height': function, 'min-width': function, missing_a: string,
+    missing_a_after_b: string, missing_option: string,
+    missing_property: string, missing_space_a_b: string, missing_url: string,
+    missing_use_strict: string, mixed: string, mm: boolean, mode: string,
+    move_invocation: string, move_var: string, n: string, name: string,
+    name_function: string, nav: object, nested_comment: string,
+    newcap: boolean, next, node: boolean, noframes: object, nomen,
+    noscript: object, not: string, not_a_constructor: string,
+    not_a_defined: string, not_a_function: string, not_a_label: string,
+    not_a_scope: string, not_greater: string, now: string, nud: function,
+    number: number, object: object, ol: object, on, opacity, open: boolean,
+    optgroup: object, option: object, outer: regexp, outline: array,
+    'outline-color': array, 'outline-style': array, 'outline-width',
+    output: object, overflow: array, 'overflow-x': array, 'overflow-y': array,
+    p: object, padding: array, 'padding-bottom': function,
+    'padding-left': function, 'padding-right': function,
+    'padding-top': function, 'page-break-after': array,
+    'page-break-before': array, param: object, parameter_a_get_b: string,
+    parameter_set_a: string, params: array, paren: boolean, parent: string,
+    parse: string, passfail, pc: boolean, plusplus, pop: *, position: array,
+    postscript: boolean, pre: object, predef, prev, preventExtensions: string,
+    print: boolean, progress: object, projection: boolean, properties: boolean,
+    propertyIsEnumerable: string, prototype: string, pt: boolean, push: *,
+    px: boolean, q: object, quote, quotes: array, r: string, radix: string,
+    range: function, raw, read_only: string, reason, redefinition_a: string,
+    reduce: string, reduceRight: string, regexp, replace: function,
+    report: function, reserved: boolean, reserved_a: string, reverse: string,
+    rhino: boolean, right: array, rp: object, rt: object, ruby: object,
+    safe: boolean, samp: object, scanned_a_b: string, screen: boolean,
+    script: object, seal: string, search: function, second: *, section: object,
+    select: object, setDate: string, setDay: string, setFullYear: string,
+    setHours: string, setMilliseconds: string, setMinutes: string,
+    setMonth: string, setSeconds: string, setTime: string,
+    setTimezoneOffset: string, setUTCDate: string, setUTCDay: string,
+    setUTCFullYear: string, setUTCHours: string, setUTCMilliseconds: string,
+    setUTCMinutes: string, setUTCMonth: string, setUTCSeconds: string,
+    setYear: string, shift: *, slash_equal: string, slice: string, sloppy,
+    small: object, some: string, sort: *, source: object, span: object,
+    speech: boolean, splice: string, split: function, src,
+    statement_block: string, stopping: string, strange_loop: string,
+    strict: string, string: string, stringify: string, strong: object, style: *,
+    styleproperty: regexp, sub: object, subscript: string, substr: *,
+    substring: string, sup: object, supplant: function, t: string,
+    table: object, 'table-layout': array, tag_a_in_b: string, tbody: object,
+    td: object, test: *, 'text-align': array, 'text-decoration': array,
+    'text-indent': function, 'text-shadow': array, 'text-transform': array,
+    textarea: object, tfoot: object, th: object, thead: object, third: array,
+    thru: number, time: object, title: object, toDateString: string,
+    toExponential: string, toFixed: string, toISOString: string,
+    toJSON: string, toLocaleDateString: string, toLocaleLowerCase: string,
+    toLocaleString: string, toLocaleTimeString: string,
+    toLocaleUpperCase: string, toLowerCase: *, toPrecision: string,
+    toString: function, toTimeString: string, toUTCString: string,
+    toUpperCase: *, token: function, too_long: string, too_many: string,
+    top: array, tr: object, trailing_decimal_a: string, tree: string,
+    trim: string, tt: object, tty: boolean, tv: boolean, type: string,
+    type_confusion_a_b: string, u: object, ul: object, unclosed: string,
+    unclosed_comment: string, unclosed_regexp: string, undef: boolean,
+    undefined, unescaped_a: string, unexpected_a: string,
+    unexpected_char_a_b: string, unexpected_comment: string,
+    unexpected_property_a: string, unexpected_space_a_b: string,
+    'unicode-bidi': array, unnecessary_initialize: string,
+    unnecessary_use: string, unparam, unreachable_a_b: string,
+    unrecognized_style_attribute_a: string, unrecognized_tag_a: string,
+    unsafe: string, unshift: string, unused: array, url: string, urls: array,
+    use_array: string, use_braces: string, use_charAt: string,
+    use_object: string, use_or: string, use_param: string,
+    used_before_a: string, valueOf: string, var: object,
+    var_a_not: string, vars, 'vertical-align': array, video: object,
+    visibility: array, was: object, weird_assignment: string,
+    weird_condition: string, weird_new: string, weird_program: string,
+    weird_relation: string, weird_ternary: string, white: boolean,
+    'white-space': array, widget: boolean, width: array, windows: boolean,
+    'word-spacing': array, 'word-wrap': array, wrap: boolean,
+    wrap_immediate: string, wrap_regexp: string, write_is_wrong: string,
+    writeable: boolean, 'z-index': array
 */
 
 // The global directive is used to declare global variables that can
@@ -367,6 +408,15 @@
 
 var JSLINT = (function () {
     'use strict';
+
+    function array_to_object(array, value) {
+        var i, object = {};
+        for (i = 0; i < array.length; i += 1) {
+            object[array[i]] = value;
+        }
+        return object;
+    }
+
 
     var adsafe_id,      // The widget's ADsafe id.
         adsafe_may,     // The widget may load approved scripts.
@@ -395,45 +445,21 @@ var JSLINT = (function () {
 
 // These are property names that should not be permitted in the safe subset.
 
-        banned = {
-            'arguments' : true,
-            callee      : true,
-            caller      : true,
-            constructor : true,
-            'eval'      : true,
-            prototype   : true,
-            stack       : true,
-            unwatch     : true,
-            valueOf     : true,
-            watch       : true
-        },
+        banned = array_to_object([
+            'arguments', 'callee', 'caller', 'constructor', 'eval', 'prototype',
+            'stack', 'unwatch', 'valueOf', 'watch'
+        ], true),
         begin,          // The root token
 
 // browser contains a set of global names that are commonly provided by a
 // web browser environment.
 
-        browser = {
-            clearInterval  : false,
-            clearTimeout   : false,
-            document       : false,
-            event          : false,
-            frames         : false,
-            history        : false,
-            Image          : false,
-            localStorage   : false,
-            location       : false,
-            name           : false,
-            navigator      : false,
-            Option         : false,
-            parent         : false,
-            screen         : false,
-            sessionStorage : false,
-            setInterval    : false,
-            setTimeout     : false,
-            Storage        : false,
-            window         : false,
-            XMLHttpRequest : false
-        },
+        browser = array_to_object([
+            'clearInterval', 'clearTimeout', 'document', 'event', 'frames',
+            'history', 'Image', 'localStorage', 'location', 'name', 'navigator',
+            'Option', 'parent', 'screen', 'sessionStorage', 'setInterval',
+            'setTimeout', 'Storage', 'window', 'XMLHttpRequest'
+        ], false),
 
 // bundle contains the text messages.
 
@@ -442,7 +468,6 @@ var JSLINT = (function () {
             a_not_allowed: "'{a}' is not allowed.",
             a_not_defined: "'{a}' is not defined.",
             a_scope: "'{a}' used out of scope.",
-            adsafe: "ADsafe violation.",
             adsafe_a: "ADsafe violation: '{a}'.",
             adsafe_autocomplete: "ADsafe autocomplete violation.",
             adsafe_bad_id: "ADSAFE violation: bad id.",
@@ -538,6 +563,7 @@ var JSLINT = (function () {
             expected_style_attribute: "Excepted a style attribute, and instead saw '{a}'.",
             expected_style_pattern: "Expected a style pattern, and instead saw '{a}'.",
             expected_tagname_a: "Expected a tagName, and instead saw {a}.",
+            expected_type_a: "Expected a type, and instead saw {a}.",
             for_if: "The body of a for in should be wrapped in an if " +
                 "statement to filter unwanted properties from the prototype.",
             function_block: "Function statements should not be placed in blocks. " +
@@ -599,7 +625,7 @@ var JSLINT = (function () {
             trailing_decimal_a: "A trailing decimal point can be confused " +
                 "with a dot: '.{a}'.",
             type: "type is unnecessary.",
-            type_inconsistency_a_b: "Type inconsistency: {a} and {b}.",
+            type_confusion_a_b: "Type confusion: {a} and {b}.",
             unclosed: "Unclosed string.",
             unclosed_comment: "Unclosed comment.",
             unclosed_regexp: "Unclosed regular expression.",
@@ -642,176 +668,46 @@ var JSLINT = (function () {
         css_attribute_data,
         css_any,
 
-        css_colorData = {
-            "aliceblue"             : true,
-            "antiquewhite"          : true,
-            "aqua"                  : true,
-            "aquamarine"            : true,
-            "azure"                 : true,
-            "beige"                 : true,
-            "bisque"                : true,
-            "black"                 : true,
-            "blanchedalmond"        : true,
-            "blue"                  : true,
-            "blueviolet"            : true,
-            "brown"                 : true,
-            "burlywood"             : true,
-            "cadetblue"             : true,
-            "chartreuse"            : true,
-            "chocolate"             : true,
-            "coral"                 : true,
-            "cornflowerblue"        : true,
-            "cornsilk"              : true,
-            "crimson"               : true,
-            "cyan"                  : true,
-            "darkblue"              : true,
-            "darkcyan"              : true,
-            "darkgoldenrod"         : true,
-            "darkgray"              : true,
-            "darkgreen"             : true,
-            "darkkhaki"             : true,
-            "darkmagenta"           : true,
-            "darkolivegreen"        : true,
-            "darkorange"            : true,
-            "darkorchid"            : true,
-            "darkred"               : true,
-            "darksalmon"            : true,
-            "darkseagreen"          : true,
-            "darkslateblue"         : true,
-            "darkslategray"         : true,
-            "darkturquoise"         : true,
-            "darkviolet"            : true,
-            "deeppink"              : true,
-            "deepskyblue"           : true,
-            "dimgray"               : true,
-            "dodgerblue"            : true,
-            "firebrick"             : true,
-            "floralwhite"           : true,
-            "forestgreen"           : true,
-            "fuchsia"               : true,
-            "gainsboro"             : true,
-            "ghostwhite"            : true,
-            "gold"                  : true,
-            "goldenrod"             : true,
-            "gray"                  : true,
-            "green"                 : true,
-            "greenyellow"           : true,
-            "honeydew"              : true,
-            "hotpink"               : true,
-            "indianred"             : true,
-            "indigo"                : true,
-            "ivory"                 : true,
-            "khaki"                 : true,
-            "lavender"              : true,
-            "lavenderblush"         : true,
-            "lawngreen"             : true,
-            "lemonchiffon"          : true,
-            "lightblue"             : true,
-            "lightcoral"            : true,
-            "lightcyan"             : true,
-            "lightgoldenrodyellow"  : true,
-            "lightgreen"            : true,
-            "lightpink"             : true,
-            "lightsalmon"           : true,
-            "lightseagreen"         : true,
-            "lightskyblue"          : true,
-            "lightslategray"        : true,
-            "lightsteelblue"        : true,
-            "lightyellow"           : true,
-            "lime"                  : true,
-            "limegreen"             : true,
-            "linen"                 : true,
-            "magenta"               : true,
-            "maroon"                : true,
-            "mediumaquamarine"      : true,
-            "mediumblue"            : true,
-            "mediumorchid"          : true,
-            "mediumpurple"          : true,
-            "mediumseagreen"        : true,
-            "mediumslateblue"       : true,
-            "mediumspringgreen"     : true,
-            "mediumturquoise"       : true,
-            "mediumvioletred"       : true,
-            "midnightblue"          : true,
-            "mintcream"             : true,
-            "mistyrose"             : true,
-            "moccasin"              : true,
-            "navajowhite"           : true,
-            "navy"                  : true,
-            "oldlace"               : true,
-            "olive"                 : true,
-            "olivedrab"             : true,
-            "orange"                : true,
-            "orangered"             : true,
-            "orchid"                : true,
-            "palegoldenrod"         : true,
-            "palegreen"             : true,
-            "paleturquoise"         : true,
-            "palevioletred"         : true,
-            "papayawhip"            : true,
-            "peachpuff"             : true,
-            "peru"                  : true,
-            "pink"                  : true,
-            "plum"                  : true,
-            "powderblue"            : true,
-            "purple"                : true,
-            "red"                   : true,
-            "rosybrown"             : true,
-            "royalblue"             : true,
-            "saddlebrown"           : true,
-            "salmon"                : true,
-            "sandybrown"            : true,
-            "seagreen"              : true,
-            "seashell"              : true,
-            "sienna"                : true,
-            "silver"                : true,
-            "skyblue"               : true,
-            "slateblue"             : true,
-            "slategray"             : true,
-            "snow"                  : true,
-            "springgreen"           : true,
-            "steelblue"             : true,
-            "tan"                   : true,
-            "teal"                  : true,
-            "thistle"               : true,
-            "tomato"                : true,
-            "turquoise"             : true,
-            "violet"                : true,
-            "wheat"                 : true,
-            "white"                 : true,
-            "whitesmoke"            : true,
-            "yellow"                : true,
-            "yellowgreen"           : true,
+        css_colorData = array_to_object([
+            "aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige",
+            "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown",
+            "burlywood", "cadetblue", "chartreuse", "chocolate", "coral",
+            "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue",
+            "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki",
+            "darkmagenta", "darkolivegreen", "darkorange", "darkorchid",
+            "darkred", "darksalmon", "darkseagreen", "darkslateblue",
+            "darkslategray", "darkturquoise", "darkviolet", "deeppink",
+            "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite",
+            "forestgreen", "fuchsia", "gainsboro", "ghostwhite", "gold",
+            "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink",
+            "indianred", "indigo", "ivory", "khaki", "lavender",
+            "lavenderblush", "lawngreen", "lemonchiffon", "lightblue",
+            "lightcoral", "lightcyan", "lightgoldenrodyellow", "lightgreen",
+            "lightpink", "lightsalmon", "lightseagreen", "lightskyblue",
+            "lightslategray", "lightsteelblue", "lightyellow", "lime",
+            "limegreen", "linen", "magenta", "maroon", "mediumaquamarine",
+            "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen",
+            "mediumslateblue", "mediumspringgreen", "mediumturquoise",
+            "mediumvioletred", "midnightblue", "mintcream", "mistyrose",
+            "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab",
+            "orange", "orangered", "orchid", "palegoldenrod", "palegreen",
+            "paleturquoise", "palevioletred", "papayawhip", "peachpuff",
+            "peru", "pink", "plum", "powderblue", "purple", "red", "rosybrown",
+            "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen",
+            "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray",
+            "snow", "springgreen", "steelblue", "tan", "teal", "thistle",
+            "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke",
+            "yellow", "yellowgreen",
 
-            "activeborder"          : true,
-            "activecaption"         : true,
-            "appworkspace"          : true,
-            "background"            : true,
-            "buttonface"            : true,
-            "buttonhighlight"       : true,
-            "buttonshadow"          : true,
-            "buttontext"            : true,
-            "captiontext"           : true,
-            "graytext"              : true,
-            "highlight"             : true,
-            "highlighttext"         : true,
-            "inactiveborder"        : true,
-            "inactivecaption"       : true,
-            "inactivecaptiontext"   : true,
-            "infobackground"        : true,
-            "infotext"              : true,
-            "menu"                  : true,
-            "menutext"              : true,
-            "scrollbar"             : true,
-            "threeddarkshadow"      : true,
-            "threedface"            : true,
-            "threedhighlight"       : true,
-            "threedlightshadow"     : true,
-            "threedshadow"          : true,
-            "window"                : true,
-            "windowframe"           : true,
-            "windowtext"            : true
-        },
+            "activeborder", "activecaption", "appworkspace", "background",
+            "buttonface", "buttonhighlight", "buttonshadow", "buttontext",
+            "captiontext", "graytext", "highlight", "highlighttext",
+            "inactiveborder", "inactivecaption", "inactivecaptiontext",
+            "infobackground", "infotext", "menu", "menutext", "scrollbar",
+            "threeddarkshadow", "threedface", "threedhighlight",
+            "threedlightshadow", "threedshadow", "window", "windowframe",
+            "windowtext"
+        ], true),
 
         css_border_style,
         css_break,
@@ -842,14 +738,9 @@ var JSLINT = (function () {
             '\\': '\\'
         },
 
-        devel = {
-            alert           : false,
-            confirm         : false,
-            console         : false,
-            Debug           : false,
-            opera           : false,
-            prompt          : false
-        },
+        devel = array_to_object([
+            'alert', 'confirm', 'console', 'Debug', 'opera', 'prompt'
+        ], false),
 
         escapes = {
             '\b': '\\b',
@@ -997,121 +888,174 @@ var JSLINT = (function () {
         ids,            // HTML ids
         in_block,
         indent,
+        is_type = array_to_object([
+            '*', 'array', 'boolean', 'function', 'number', 'object',
+            'regexp', 'string'
+        ], true),
         itself,         //  JSLint itself
         json_mode,
         lex,            // the tokenizer
         lines,
         lookahead,
         member,
-        node = {
-            Buffer       : false,
-            clearInterval: false,
-            clearTimeout : false,
-            console      : false,
-            exports      : false,
-            global       : false,
-            module       : false,
-            process      : false,
-            querystring  : false,
-            require      : false,
-            setInterval  : false,
-            setTimeout   : false,
-            __dirname    : false,
-            __filename   : false
-        },
+        node = array_to_object([
+            'Buffer', 'clearInterval', 'clearTimeout', 'console', 'exports',
+            'global', 'module', 'process', 'querystring', 'require',
+            'setInterval', 'setTimeout', '__dirname', '__filename'
+        ], false),
         node_js,
-        numbery = {
-            indexOf     : true,
-            lastIndexOf : true,
-            search      : true
-        },
+        numbery = array_to_object(['indexOf', 'lastIndexOf', 'search'], true),
         next_token,
         older_token,
         option,
         predefined,     // Global variables defined by option
         prereg,
         prev_token,
-        properties,
-        regexp_flag = {
-            g: true,
-            i: true,
-            m: true
-        },
-        rhino = {
-            defineClass : false,
-            deserialize : false,
-            gc          : false,
-            help        : false,
-            load        : false,
-            loadClass   : false,
-            print       : false,
-            quit        : false,
-            readFile    : false,
-            readUrl     : false,
-            runCommand  : false,
-            seal        : false,
-            serialize   : false,
-            spawn       : false,
-            sync        : false,
-            toint32     : false,
-            version     : false
-        },
+        property_type,
+        regexp_flag = array_to_object(['g', 'i', 'm'], true),
+        rhino = array_to_object([
+            'defineClass', 'deserialize', 'gc', 'help', 'load', 'loadClass',
+            'print', 'quit', 'readFile', 'readUrl', 'runCommand', 'seal',
+            'serialize', 'spawn', 'sync', 'toint32', 'version'
+        ], false),
 
         scope,      // An object containing an object for each variable in scope
-        semicolon_coda = {
-            ';' : true,
-            '"' : true,
-            '\'': true,
-            ')' : true
-        },
+        semicolon_coda = array_to_object([';', '"', '\'', ')'], true),
         src,
         stack,
 
 // standard contains the global names that are provided by the
 // ECMAScript standard.
 
-        standard = {
-            Array               : false,
-            Boolean             : false,
-            Date                : false,
-            decodeURI           : false,
-            decodeURIComponent  : false,
-            encodeURI           : false,
-            encodeURIComponent  : false,
-            Error               : false,
-            'eval'              : false,
-            EvalError           : false,
-            Function            : false,
-            isFinite            : false,
-            isNaN               : false,
-            JSON                : false,
-            Math                : false,
-            Number              : false,
-            Object              : false,
-            parseInt            : false,
-            parseFloat          : false,
-            RangeError          : false,
-            ReferenceError      : false,
-            RegExp              : false,
-            String              : false,
-            SyntaxError         : false,
-            TypeError           : false,
-            URIError            : false
-        },
+        standard = array_to_object([
+            'Array', 'Boolean', 'Date', 'decodeURI', 'decodeURIComponent',
+            'encodeURI', 'encodeURIComponent', 'Error', 'eval', 'EvalError',
+            'Function', 'isFinite', 'isNaN', 'JSON', 'Math', 'Number', 'Object',
+            'parseInt', 'parseFloat', 'RangeError', 'ReferenceError', 'RegExp',
+            'String', 'SyntaxError', 'TypeError', 'URIError'
+        ], false),
 
-        standard_property = {
-            E                   : true,
-            LN2                 : true,
-            LN10                : true,
-            LOG2E               : true,
-            LOG10E              : true,
-            MAX_VALUE           : true,
-            MIN_VALUE           : true,
-            NEGATIVE_INFINITY   : true,
-            PI                  : true,
-            POSITIVE_INFINITY   : true,
-            SQRT1_2             : true,
-            SQRT2               : true
+        standard_property_type = {
+            E                   : 'number',
+            LN2                 : 'number',
+            LN10                : 'number',
+            LOG2E               : 'number',
+            LOG10E              : 'number',
+            MAX_VALUE           : 'number',
+            MIN_VALUE           : 'number',
+            NEGATIVE_INFINITY   : 'number',
+            PI                  : 'number',
+            POSITIVE_INFINITY   : 'number',
+            SQRT1_2             : 'number',
+            SQRT2               : 'number',
+            apply               : 'function',
+            bind                : 'function function',
+            call                : 'function',
+            ceil                : 'function number',
+            charAt              : 'function string',
+            concat              : 'function',
+            constructor         : 'function object',
+            create              : 'function object',
+            defineProperty      : 'function object',
+            defineProperties    : 'function object',
+            every               : 'function boolean',
+            exec                : 'function array',
+            filter              : 'function array',
+            floor               : 'function number',
+            forEach             : 'function',
+            freeze              : 'function object',
+            getDate             : 'function number',
+            getDay              : 'function number',
+            getFullYear         : 'function number',
+            getHours            : 'function number',
+            getMilliseconds     : 'function number',
+            getMinutes          : 'function number',
+            getMonth            : 'function number',
+            getOwnPropertyDescriptor
+                                : 'function object',
+            getOwnPropertyNames : 'function array',
+            getPrototypeOf      : 'function object',
+            getSeconds          : 'function number',
+            getTime             : 'function number',
+            getTimezoneOffset   : 'function number',
+            getUTCDate          : 'function number',
+            getUTCDay           : 'function number',
+            getUTCFullYear      : 'function number',
+            getUTCHours         : 'function number',
+            getUTCMilliseconds  : 'function number',
+            getUTCMinutes       : 'function number',
+            getUTCMonth         : 'function number',
+            getUTCSeconds       : 'function number',
+            getYear             : 'function number',
+            hasOwnProperty      : 'function boolean',
+            indexOf             : 'function number',
+            isExtensible        : 'function boolean',
+            isFrozen            : 'function boolean',
+            isPrototypeOf       : 'function boolean',
+            isSealed            : 'function boolean',
+            join                : 'function string',
+            keys                : 'function array',
+            lastIndexOf         : 'function number',
+            lastIndex           : 'number',
+            length              : 'number',
+            map                 : 'function array',
+            now                 : 'function number',
+            parse               : 'function',
+            pop                 : 'function',
+            preventExtensions   : 'function object',
+            propertyIsEnumerable: 'function boolean',
+            prototype           : 'object',
+            push                : 'function number',
+            reduce              : 'function',
+            reduceRight         : 'function',
+            reverse             : 'function',
+            seal                : 'function object',
+            setDate             : 'function',
+            setDay              : 'function',
+            setFullYear         : 'function',
+            setHours            : 'function',
+            setMilliseconds     : 'function',
+            setMinutes          : 'function',
+            setMonth            : 'function',
+            setSeconds          : 'function',
+            setTime             : 'function',
+            setTimezoneOffset   : 'function',
+            setUTCDate          : 'function',
+            setUTCDay           : 'function',
+            setUTCFullYear      : 'function',
+            setUTCHours         : 'function',
+            setUTCMilliseconds  : 'function',
+            setUTCMinutes       : 'function',
+            setUTCMonth         : 'function',
+            setUTCSeconds       : 'function',
+            setYear             : 'function',
+            shift               : 'function',
+            slice               : 'function',
+            some                : 'function boolean',
+            sort                : 'function',
+            splice              : 'function',
+            stringify           : 'function string',
+            substr              : 'function string',
+            substring           : 'function string',
+            test                : 'function boolean',
+            toDateString        : 'function string',
+            toExponential       : 'function string',
+            toFixed             : 'function string',
+            toJSON              : 'function',
+            toISOString         : 'function string',
+            toLocaleDateString  : 'function string',
+            toLocaleLowerCase   : 'function string',
+            toLocaleUpperCase   : 'function string',
+            toLocaleString      : 'function string',
+            toLocaleTimeString  : 'function string',
+            toLowerCase         : 'function string',
+            toPrecision         : 'function string',
+            toTimeString        : 'function string',
+            toUpperCase         : 'function string',
+            toUTCString         : 'function string',
+            trim                : 'function string',
+            unshift             : 'function number',
+            valueOf             : 'function'
         },
 
         strict_mode,
@@ -1125,92 +1069,29 @@ var JSLINT = (function () {
 // widget contains the global names which are provided to a Yahoo
 // (fna Konfabulator) widget.
 
-        widget = {
-            alert                   : true,
-            animator                : true,
-            appleScript             : true,
-            beep                    : true,
-            bytesToUIString         : true,
-            Canvas                  : true,
-            chooseColor             : true,
-            chooseFile              : true,
-            chooseFolder            : true,
-            closeWidget             : true,
-            COM                     : true,
-            convertPathToHFS        : true,
-            convertPathToPlatform   : true,
-            CustomAnimation         : true,
-            escape                  : true,
-            FadeAnimation           : true,
-            filesystem              : true,
-            Flash                   : true,
-            focusWidget             : true,
-            form                    : true,
-            FormField               : true,
-            Frame                   : true,
-            HotKey                  : true,
-            Image                   : true,
-            include                 : true,
-            isApplicationRunning    : true,
-            iTunes                  : true,
-            konfabulatorVersion     : true,
-            log                     : true,
-            md5                     : true,
-            MenuItem                : true,
-            MoveAnimation           : true,
-            openURL                 : true,
-            play                    : true,
-            Point                   : true,
-            popupMenu               : true,
-            preferenceGroups        : true,
-            preferences             : true,
-            print                   : true,
-            prompt                  : true,
-            random                  : true,
-            Rectangle               : true,
-            reloadWidget            : true,
-            ResizeAnimation         : true,
-            resolvePath             : true,
-            resumeUpdates           : true,
-            RotateAnimation         : true,
-            runCommand              : true,
-            runCommandInBg          : true,
-            saveAs                  : true,
-            savePreferences         : true,
-            screen                  : true,
-            ScrollBar               : true,
-            showWidgetPreferences   : true,
-            sleep                   : true,
-            speak                   : true,
-            Style                   : true,
-            suppressUpdates         : true,
-            system                  : true,
-            tellWidget              : true,
-            Text                    : true,
-            TextArea                : true,
-            Timer                   : true,
-            unescape                : true,
-            updateNow               : true,
-            URL                     : true,
-            Web                     : true,
-            widget                  : true,
-            Window                  : true,
-            XMLDOM                  : true,
-            XMLHttpRequest          : true,
-            yahooCheckLogin         : true,
-            yahooLogin              : true,
-            yahooLogout             : true
-        },
+        widget = array_to_object([
+            'alert', 'animator', 'appleScript', 'beep', 'bytesToUIString',
+            'Canvas', 'chooseColor', 'chooseFile', 'chooseFolder',
+            'closeWidget', 'COM', 'convertPathToHFS', 'convertPathToPlatform',
+            'CustomAnimation', 'escape', 'FadeAnimation', 'filesystem', 'Flash',
+            'focusWidget', 'form', 'FormField', 'Frame', 'HotKey', 'Image',
+            'include', 'isApplicationRunning', 'iTunes', 'konfabulatorVersion',
+            'log', 'md5', 'MenuItem', 'MoveAnimation', 'openURL', 'play',
+            'Point', 'popupMenu', 'preferenceGroups', 'preferences', 'print',
+            'prompt', 'random', 'Rectangle', 'reloadWidget', 'ResizeAnimation',
+            'resolvePath', 'resumeUpdates', 'RotateAnimation', 'runCommand',
+            'runCommandInBg', 'saveAs', 'savePreferences', 'screen',
+            'ScrollBar', 'showWidgetPreferences', 'sleep', 'speak', 'Style',
+            'suppressUpdates', 'system', 'tellWidget', 'Text', 'TextArea',
+            'Timer', 'unescape', 'updateNow', 'URL', 'Web', 'widget', 'Window',
+            'XMLDOM', 'XMLHttpRequest', 'yahooCheckLogin', 'yahooLogin',
+            'yahooLogout'
+        ], true),
 
-        windows = {
-            ActiveXObject: false,
-            CScript      : false,
-            Debug        : false,
-            Enumerator   : false,
-            System       : false,
-            VBArray      : false,
-            WScript      : false
-        },
+        windows = array_to_object([
+            'ActiveXObject', 'CScript', 'Debug', 'Enumerator', 'System',
+            'VBArray', 'WScript'
+        ], false),
 
 //  xmode is used to adapt to the exceptions in html parsing.
 //  It can have these states:
@@ -1292,14 +1173,13 @@ var JSLINT = (function () {
 
     if (typeof Array.prototype.forEach !== 'function') {
         Array.prototype.forEach = function (f) {
-            var i, length = this.length, result = [];
+            var i, length = this.length;
             for (i = 0; i < length; i += 1) {
                 try {
                     f(this[i]);
                 } catch (ignore) {
                 }
             }
-            return result;
         };
     }
 
@@ -1405,6 +1285,9 @@ var JSLINT = (function () {
                 option.widget = false;
             }
         }
+        if (option.type) {
+            option.confusion = true;
+        }
     }
 
 
@@ -1433,7 +1316,8 @@ var JSLINT = (function () {
             evidence: lines[line - 1] || '',
             line: line,
             character: character,
-            a: a || offender.value,
+            a: a || (offender.id === '(number)' ?
+                String(offender.number) : offender.string),
             b: b,
             c: c,
             d: d
@@ -1471,7 +1355,7 @@ var JSLINT = (function () {
 
     function expected_at(at) {
         if (!option.white && next_token.from !== at) {
-            warn('expected_a_at_b_c', next_token, next_token.value, at,
+            warn('expected_a_at_b_c', next_token, '', at,
                 next_token.from);
         }
     }
@@ -1565,8 +1449,10 @@ var JSLINT = (function () {
                     warn_at('dangling_a', line, from, value);
                 }
             }
-            if (value !== undefined) {
-                the_token.value = value;
+            if (type === '(number)') {
+                the_token.number = +value;
+            } else if (value !== undefined) {
+                the_token.string = String(value);
             }
             if (quote) {
                 the_token.quote = quote;
@@ -1599,11 +1485,11 @@ var JSLINT = (function () {
         }
 
         function string(x) {
-            var c, j, r = '';
+            var c, pos = 0, r = '';
 
             function hex(n) {
-                var i = parseInt(source_row.substr(j + 1, n), 16);
-                j += n;
+                var i = parseInt(source_row.substr(pos + 1, n), 16);
+                pos += n;
                 if (i >= 32 && i <= 126 &&
                         i !== 34 && i !== 92 && i !== 39) {
                     warn_at('unexpected_a', line, character, '\\');
@@ -1620,18 +1506,17 @@ var JSLINT = (function () {
                 return it('(punctuator)', x);
             }
 
-            j = 0;
             for (;;) {
-                while (j >= source_row.length) {
-                    j = 0;
+                while (pos >= source_row.length) {
+                    pos = 0;
                     if (xmode !== 'html' || !next_line()) {
                         stop_at('unclosed', line, from);
                     }
                 }
-                c = source_row.charAt(j);
+                c = source_row.charAt(pos);
                 if (c === x) {
                     character += 1;
-                    source_row = source_row.slice(j + 1);
+                    source_row = source_row.slice(pos + 1);
                     return it('(string)', r, x);
                 }
                 if (c < ' ') {
@@ -1641,7 +1526,7 @@ var JSLINT = (function () {
                     warn_at('control_a',
                         line, character + pos, source_row.slice(0, pos));
                 } else if (c === xquote) {
-                    warn_at('bad_html', line, character + j);
+                    warn_at('bad_html', line, character + pos);
                 } else if (c === '<') {
                     if (option.safe && xmode === 'html') {
                         warn_at('adsafe_a', line, character + pos, c);
@@ -1657,26 +1542,26 @@ var JSLINT = (function () {
                             warn_at('adsafe_a', line, character + pos, c);
                         }
                     } else if (xmode === 'styleproperty') {
-                        j += 1;
+                        pos += 1;
                         character += 1;
-                        c = source_row.charAt(j);
+                        c = source_row.charAt(pos);
                         if (c !== x) {
                             warn_at('unexpected_a', line, character, '\\');
                         }
                     } else {
-                        j += 1;
+                        pos += 1;
                         character += 1;
-                        c = source_row.charAt(j);
+                        c = source_row.charAt(pos);
                         switch (c) {
                         case '':
                             if (!option.es5) {
                                 warn_at('es5', line, character);
                             }
                             next_line();
-                            j = -1;
+                            pos = -1;
                             break;
                         case xquote:
-                            warn_at('bad_html', line, character + j);
+                            warn_at('bad_html', line, character + pos);
                             break;
                         case '\'':
                             if (json_mode) {
@@ -1708,7 +1593,7 @@ var JSLINT = (function () {
                 }
                 r += c;
                 character += 1;
-                j += 1;
+                pos += 1;
             }
         }
 
@@ -2277,7 +2162,7 @@ klass:              do {
 
 // Define the symbol in the current function in the current scope.
 
-        name = name || token.value;
+        name = name || token.string;
 
 // Global variables cannot be created in the safe subset. If a global variable
 // already exists, do nothing. If it is predefined, define it.
@@ -2446,15 +2331,15 @@ klass:              do {
             break;
         }
         if (token.id === '(string)' || token.identifier) {
-            anonname = token.value;
+            anonname = token.string;
         }
 
         if (id && next_token.id !== id) {
             if (match) {
                 warn('expected_a_b_from_c_d', next_token, id,
-                    match.id, match.line, next_token.value);
-            } else if (!next_token.identifier || next_token.value !== id) {
-                warn('expected_a_b', next_token, id, next_token.value);
+                    match.id, match.line, next_token.string);
+            } else if (!next_token.identifier || next_token.string !== id) {
+                warn('expected_a_b', next_token, id, next_token.string);
             }
         }
         prev_token = token;
@@ -2509,7 +2394,7 @@ klass:              do {
             if (next_token.id !== '(string)' && !next_token.identifier) {
                 return;
             }
-            name = next_token.value;
+            name = next_token.string;
             advance();
             writeable = false;
             if (next_token.id === ':') {
@@ -2538,36 +2423,31 @@ klass:              do {
     function do_jslint() {
         var name, value;
         while (next_token.id === '(string)' || next_token.identifier) {
-            name = next_token.value;
+            name = next_token.string;
             advance();
             if (next_token.id !== ':') {
-                stop('expected_a_b', next_token, ':', next_token.value);
+                stop('expected_a_b', next_token, ':', next_token.string);
             }
             advance(':');
             switch (name) {
             case 'indent':
-                value = +next_token.value;
-                if (typeof value !== 'number' ||
-                        !isFinite(value) || value < 0 ||
-                        Math.floor(value) !== value) {
+                value = next_token.number;
+                if (!isFinite(value) || value < 0 || Math.floor(value) !== value) {
                     stop('expected_small_a');
                 }
                 option.indent = value;
                 break;
             case 'maxerr':
-                value = +next_token.value;
-                if (typeof value !== 'number' ||
-                        !isFinite(value) ||
-                        value <= 0 ||
-                        Math.floor(value) !== value) {
-                    stop('expected_small_a', next_token);
+                value = +next_token.string;
+                value = next_token.number;
+                if (!isFinite(value) || value <= 0 || Math.floor(value) !== value) {
+                    stop('expected_small_a');
                 }
                 option.maxerr = value;
                 break;
             case 'maxlen':
-                value = +next_token.value;
-                if (typeof value !== 'number' || !isFinite(value) || value < 0 ||
-                        Math.floor(value) !== value) {
+                value = next_token.number;
+                if (!isFinite(value) || value <= 0 || Math.floor(value) !== value) {
                     stop('expected_small_a');
                 }
                 option.maxlen = value;
@@ -2580,11 +2460,14 @@ klass:              do {
                 } else {
                     stop('unexpected_a');
                 }
-                if (name === 'adsafe') {
+                switch (name) {
+                case 'adsafe':
                     option.adsafe = option.safe = true;
                     do_safe();
-                } else if (name === 'safe') {
+                    break;
+                case 'safe':
                     do_safe();
+                    break;
                 }
             }
             advance();
@@ -2597,15 +2480,39 @@ klass:              do {
 
 
     function do_properties() {
-        if (!properties) {
-            properties = {};
+        var name, type;
+        option.properties = true;
+        if (!funct['(old_property_type)']) {
+            funct['(old_property_type)'] = property_type;
+            property_type = Object.create(property_type);
         }
         for (;;) {
             if (next_token.id !== '(string)' && !next_token.identifier) {
                 return;
             }
-            properties[next_token.value] = true;
+            name = next_token.string;
+            type = '';
             advance();
+            if (next_token.id === ':') {
+                advance(':');
+                if (next_token.id === 'function') {
+                    advance('function');
+                    if (is_type[next_token.string] === true) {
+                        type = 'function ' + next_token.string;
+                        advance();
+                    } else {
+                        type = 'function';
+                    }
+                } else {
+                    type = next_token.string;
+                    if (is_type[type] !== true) {
+                        warn('expected_type_a', next_token);
+                        type = '';
+                    }
+                    advance();
+                }
+            }
+            property_type[name] = type;
             if (next_token.id !== ',') {
                 return;
             }
@@ -2616,12 +2523,13 @@ klass:              do {
 
     function directive() {
         var command = this.id,
-            old_comments_off = comments_off;
-        if (next_token.line === token.line && next_token.from === token.thru) {
-            warn('missing_space_a_b', next_token, token.value, next_token.value);
-        }
+            old_comments_off = comments_off,
+            old_indent = indent;
         comments_off = true;
-        option.white = true;
+        indent = null;
+        if (next_token.line === token.line && next_token.from === token.thru) {
+            warn('missing_space_a_b', next_token, token.string, next_token.string);
+        }
         if (lookahead.length > 0 || next_token.comments) {
             warn('unexpected_a', this);
         }
@@ -2646,17 +2554,18 @@ klass:              do {
             do_globals();
             break;
         default:
-            stop('unpexpected_a', this);
+            stop('unexpected_a', this);
         }
         comments_off = old_comments_off;
         advance('*/');
+        indent = old_indent;
     }
 
 
 // Indentation intention
 
     function edge(mode) {
-        next_token.edge = !indent || (indent.open && (mode || true));
+        next_token.edge = indent ? indent.open && (mode || 'edge') : '';
     }
 
 
@@ -2664,7 +2573,7 @@ klass:              do {
         var open, was;
         if (typeof mode === 'number') {
             indent = {
-                at: mode,
+                at: +mode,
                 open: true,
                 was: was
             };
@@ -2713,7 +2622,7 @@ klass:              do {
         if (right.id !== '(end)' && !option.white &&
                 (token.line !== right.line ||
                 token.thru + 1 !== right.from)) {
-            warn('expected_space_a_b', right, token.value, right.value);
+            warn('expected_space_a_b', right, token.string, right.string);
         }
     }
 
@@ -2722,7 +2631,7 @@ klass:              do {
         right = right || next_token;
         if (right.id !== '(end)' && (left.line !== right.line ||
                 (!option.white && left.thru + 1 !== right.from))) {
-            warn('expected_space_a_b', right, left.value, right.value);
+            warn('expected_space_a_b', right, left.string, right.string);
         }
     }
 
@@ -2731,7 +2640,7 @@ klass:              do {
         right = right || next_token;
         if ((!option.white || xmode === 'styleproperty' || xmode === 'style') &&
                 left.thru !== right.from && left.line === right.line) {
-            warn('unexpected_space_a_b', right, left.value, right.value);
+            warn('unexpected_space_a_b', right, left.string, right.string);
         }
     }
 
@@ -2740,7 +2649,7 @@ klass:              do {
         right = right || next_token;
         if (right.id !== '(end)' && (left.line !== right.line ||
                 (!option.white && left.thru !== right.from))) {
-            warn('unexpected_space_a_b', right, left.value, right.value);
+            warn('unexpected_space_a_b', right, left.string, right.string);
         }
     }
 
@@ -2749,14 +2658,14 @@ klass:              do {
             left = left || token;
             right = right || next_token;
             if (left.thru === right.from && left.line === right.line) {
-                warn('missing_space_a_b', right, left.value, right.value);
+                warn('missing_space_a_b', right, left.string, right.string);
             }
         }
     }
 
     function comma() {
         if (next_token.id !== ',') {
-            warn_at('expected_a_b', token.line, token.thru, ',', next_token.value);
+            warn_at('expected_a_b', token.line, token.thru, ',', next_token.string);
         } else {
             if (!option.white) {
                 no_space_only();
@@ -2770,7 +2679,7 @@ klass:              do {
 
     function semicolon() {
         if (next_token.id !== ';') {
-            warn_at('expected_a_b', token.line, token.thru, ';', next_token.value);
+            warn_at('expected_a_b', token.line, token.thru, ';', next_token.string);
         } else {
             if (!option.white) {
                 no_space_only();
@@ -2784,7 +2693,7 @@ klass:              do {
     }
 
     function use_strict() {
-        if (next_token.value === 'use strict') {
+        if (next_token.string === 'use strict') {
             if (strict_mode) {
                 warn('unnecessary_use');
             }
@@ -2820,7 +2729,10 @@ klass:              do {
         if (Array.isArray(b)) {
             return false;
         }
-        if (a.arity === b.arity && a.value === b.value) {
+        if (a.id === '(number)' && b.id === '(number)') {
+            return a.number === b.number;
+        }
+        if (a.arity === b.arity && a.string === b.string) {
             switch (a.arity) {
             case 'prefix':
             case 'suffix':
@@ -2841,9 +2753,9 @@ klass:              do {
             }
         } else {
             if (a.id === '.' && b.id === '[' && b.arity === 'infix') {
-                return a.second.value === b.second.value && b.second.id === '(string)';
+                return a.second.string === b.second.string && b.second.id === '(string)';
             } else if (a.id === '[' && a.arity === 'infix' && b.id === '.') {
-                return a.second.value === b.second.value && a.second.id === '(string)';
+                return a.second.string === b.second.string && a.second.id === '(string)';
             }
         }
         return false;
@@ -2874,14 +2786,14 @@ klass:              do {
             stop('unexpected_a', token, next_token.id);
         }
         advance();
-        if (option.safe && scope[token.value] &&
-                scope[token.value] === global_scope[token.value] &&
+        if (option.safe && scope[token.string] &&
+                scope[token.string] === global_scope[token.string] &&
                 (next_token.id !== '(' && next_token.id !== '.')) {
-            warn('adsafe', token);
+            warn('adsafe_a', token);
         }
         if (initial) {
             anonname = 'anonymous';
-            funct['(verb)'] = token.value;
+            funct['(verb)'] = token.string;
         }
         if (initial === true && token.fud) {
             left = token.fud();
@@ -2891,7 +2803,7 @@ klass:              do {
             } else {
                 if (next_token.id === '(number)' && token.id === '.') {
                     warn('leading_decimal_a', token,
-                        next_token.value);
+                        next_token.string);
                     advance();
                     return token;
                 } else {
@@ -2920,7 +2832,7 @@ klass:              do {
             syntax[s] = x = {
                 id: s,
                 lbp: p,
-                value: s
+                string: s
             };
         }
         return x;
@@ -2942,8 +2854,8 @@ klass:              do {
         x.from = 1;
         x.thru = 1;
         x.line = 0;
-        x.edge = true;
-        s.value = s;
+        x.edge = 'edge';
+        s.string = s;
         return postscript(x);
     }
 
@@ -3010,46 +2922,74 @@ klass:              do {
         return x;
     }
 
+
     function get_type(one) {
-        var a = (one.identifier && scope[one.value]) || one;
-        return a && a.type;
+        var type;
+        if (typeof one !== 'object') {
+            return one;
+        } if (one.id === '.') {
+            type = property_type[one.second.string];
+            return typeof type === 'string' ? type : '';
+        } else {
+            return ((one.identifier && scope[one.string]) || one).type;
+        }
     }
 
 
-    function conform_type(one, two, three) {
-
-// This takes a type string or a token, or two tokens. Optionally, it can
-// take a third token that is used as the site of the warning.
-
-        var match = '', one_type, two_type, one_token, two_token;
-        if (typeof one === 'string') {
-            one_type = one;
-        } else {
-            one_token = (one.identifier && scope[one.value]) || one;
-            one_type = one_token.type;
+    function set_type(one, type) {
+        if (type && typeof one === 'object') {
+            if (one.id === '.') {
+                property_type[one.second.string] = type;
+            } else {
+                ((one.identifier && scope[one.string]) || one).type = type;
+            }
         }
-        two_token = (two.identifier && scope[two.value]) || two;
-        two_type = two_token.type;
+        return type;
+    }
+
+
+    function conform_type(one, two) {
+
+// This takes a type string or a token, or two tokens.
+
+        var one_type = get_type(one),
+            two_type = get_type(two),
+            one_string,
+            two_string;
         if (one_type) {
             if (two_type) {
-                if (one_type === two_type) {
-                    match = one_type;
+                if (one_type === two_type || one_type === '*') {
+                    return two_type !== '*' ?  two_type : '';
+                } else if (one_type === 'function' &&
+                        two_type.slice(0, 8) === 'function') {
+                    return set_type(one, two_type);
+                } else if (two_type === 'function' &&
+                        one_type.slice(0, 8) === 'function') {
+                    return set_type(two, one_type);
                 } else {
-                    if (!option.type) {
-                        warn('type_inconsistency_a_b', three || two,
-                            one_type, two_type);
+                    if (two_type !== '*' && !option.confusion) {
+                        if (typeof one === 'string') {
+                            one_string = one_type;
+                        } else if (one.id === '.') {
+                            one_string = '.' + one.second.string + ': ' + one_type;
+                        } else {
+                            one_string = '\'' + (one.number || one.string) + '\': ' + one_type;
+                        }
+                        if (two.id === '.') {
+                            two_string = '.' + two.second.string + ': ' + two_type;
+                        } else {
+                            two_string = '\'' + (two.number || two.string) + '\': ' + two_type;
+                        }
+                        warn('type_confusion_a_b', two, one_string, two_string);
                     }
+                    return one_type;
                 }
-            } else {
-                two_token.type = match = one_type;
+            } else if (one_type !== '*') {
+                return set_type(two, one_type);
             }
-        } else if (two_type) {
-            if (one_token) {
-                one_token.type = two_type;
-            }
-            match = two_type;
+        } else if (two_type && two_type !== '*') {
+            return set_type(one, two_type);
         }
-        return match;
     }
 
 
@@ -3063,10 +3003,10 @@ klass:              do {
     }
 
 
-    function constant(name, type, value) {
+    function constant(name, type) {
         var x = reserve(name);
         x.type = type;
-        x.value = value;
+        x.string = name;
         x.nud = return_this;
         return x;
     }
@@ -3138,7 +3078,7 @@ klass:              do {
             warn(message || bundle.weird_condition, node);
             break;
         case '(':
-            if (node.first.id === '.' && numbery[node.first.second.value] === true) {
+            if (node.first.id === '.' && numbery[node.first.second.string] === true) {
                 warn(message || bundle.weird_condition, node);
             }
             break;
@@ -3197,8 +3137,8 @@ klass:              do {
             var l;
             that.first = left;
             if (left.identifier) {
-                if (scope[left.value]) {
-                    if (scope[left.value].writeable === false) {
+                if (scope[left.string]) {
+                    if (scope[left.string].writeable === false) {
                         warn('read_only', left);
                     }
                 } else {
@@ -3207,8 +3147,8 @@ klass:              do {
             } else if (option.safe) {
                 l = left;
                 do {
-                    if (typeof predefined[l.value] === 'boolean') {
-                        warn('adsafe', l);
+                    if (typeof predefined[l.string] === 'boolean') {
+                        warn('adsafe_a', l);
                     }
                     l = l.first;
                 } while (l);
@@ -3217,27 +3157,23 @@ klass:              do {
                 warn('identifier_function', token);
             }
             if (left.id === '.' || left.id === '[') {
-                if (!left.first || left.first.value === 'arguments') {
+                if (!left.first || left.first.string === 'arguments') {
                     warn('bad_assignment', that);
                 }
-                that.second = expression(19);
-                if (that.id === '=' && are_similar(that.first, that.second)) {
-                    warn('weird_assignment', that);
-                }
             } else if (left.identifier && !left.reserved) {
-                if (funct[left.value] === 'exception') {
+                if (funct[left.string] === 'exception') {
                     warn('assign_exception', left);
                 }
-                that.second = expression(19);
-                if (that.id === '=' && are_similar(that.first, that.second)) {
-                    warn('weird_assignment', that);
-                }
-                if (that.type) {
-                    conform_type(left, that);
-                    conform_type(that, that.second, that);
-                } else {
-                    conform_type(left, that.second, that);
-                }
+            }
+            that.second = expression(19);
+            if (that.id === '=' && are_similar(that.first, that.second)) {
+                warn('weird_assignment', that);
+            }
+            if (that.type) {
+                conform_type(left, that);
+                conform_type(that, that.second);
+            } else {
+                conform_type(left, that.second);
             }
             return that;
         });
@@ -3282,12 +3218,12 @@ klass:              do {
     function optional_identifier() {
         if (next_token.identifier) {
             advance();
-            if (option.safe && banned[token.value]) {
+            if (option.safe && banned[token.string]) {
                 warn('adsafe_a', token);
             } else if (token.reserved && !option.es5) {
                 warn('expected_identifier_a_reserved', token);
             }
-            return token.value;
+            return token.string;
         }
     }
 
@@ -3326,8 +3262,8 @@ klass:              do {
             scope = Object.create(old_scope);
             add_label(label, 'label');
             if (next_token.labeled !== true) {
-                warn('label_a_b', next_token, label.value, next_token.value);
-            } else if (jx.test(label.value + ':')) {
+                warn('label_a_b', next_token, label.string, next_token.string);
+            } else if (jx.test(label.string + ':')) {
                 warn('url', label);
             } else if (funct === global_funct) {
                 stop('unexpected_a', token);
@@ -3390,15 +3326,15 @@ klass:              do {
                 warn('unexpected_a', next_token);
                 semicolon();
             } else {
-                if (next_token.value === 'use strict') {
+                if (next_token.string === 'use strict') {
                     if (!node_js || funct !== global_funct || array.length > 0) {
                         warn('function_strict');
                     }
                     use_strict();
                 }
                 if (disruptor) {
-                    warn('unreachable_a_b', next_token, next_token.value,
-                        disruptor.value);
+                    warn('unreachable_a_b', next_token, next_token.string,
+                        disruptor.string);
                     disruptor = null;
                 }
                 the_statement = statement();
@@ -3442,9 +3378,9 @@ klass:              do {
             step_out('}', curly);
             discard();
         } else if (!ordinary) {
-            stop('expected_a_b', next_token, '{', next_token.value);
+            stop('expected_a_b', next_token, '{', next_token.string);
         } else {
-            warn('expected_a_b', next_token, '{', next_token.value);
+            warn('expected_a_b', next_token, '{', next_token.string);
             array = [statement()];
             array.disrupt = array[0].disrupt;
         }
@@ -3459,7 +3395,7 @@ klass:              do {
 
 
     function tally_property(name) {
-        if (properties && typeof properties[name] !== 'boolean') {
+        if (option.properties && typeof property_type[name] !== 'string') {
             warn('unexpected_property_a', token, name);
         }
         if (typeof member[name] === 'number') {
@@ -3476,7 +3412,7 @@ klass:              do {
         lbp: 0,
         identifier: true,
         nud: function () {
-            var name = this.value,
+            var name = this.string,
                 variable = scope[name],
                 site,
                 writeable;
@@ -3489,7 +3425,7 @@ klass:              do {
                 writeable = predefined[name];
                 if (typeof writeable === 'boolean') {
                     global_scope[name] = variable = {
-                        value:     name,
+                        string:    name,
                         writeable: writeable,
                         funct:     global_funct
                     };
@@ -3503,7 +3439,7 @@ klass:              do {
                         warn('used_before_a', token);
                     }
                     scope[name] = variable = {
-                        value: name,
+                        string: name,
                         writeable: true,
                         funct: funct
                     };
@@ -3561,11 +3497,11 @@ klass:              do {
 // it was unused, make it var.
 
                     switch (site[name]) {
+                    case 'becoming':
                     case 'function':
                     case 'unction':
                     case 'var':
                     case 'unused':
-                    case 'becoming':
                     case 'closure':
                     case 'parameter':
                         site[name] = 'closure';
@@ -3631,28 +3567,28 @@ klass:              do {
         if (strict_mode && funct === global_funct) {
             warn('strict', x);
         } else if (option.safe) {
-            warn('adsafe', x);
+            warn('adsafe_a', x);
         }
     });
     reservevar('eval', function (x) {
         if (option.safe) {
-            warn('adsafe', x);
+            warn('adsafe_a', x);
         }
     });
-    constant('false', 'boolean', false);
-    constant('Infinity', 'number', Infinity);
-    constant('NaN', 'number', NaN);
-    constant('null', '', null);
+    constant('false', 'boolean');
+    constant('Infinity', 'number');
+    constant('NaN', 'number');
+    constant('null', '');
     reservevar('this', function (x) {
         if (strict_mode && ((funct['(statement)'] &&
                 funct['(name)'].charAt(0) > 'Z') || funct === global_funct)) {
             warn('strict', x);
         } else if (option.safe) {
-            warn('adsafe', x);
+            warn('adsafe_a', x);
         }
     });
-    constant('true', 'boolean', true);
-    constant('undefined', '', undefined);
+    constant('true', 'boolean');
+    constant('undefined', '');
 
     infix('?', 30, function (left, that) {
         that.first = expected_condition(expected_relation(left));
@@ -3664,7 +3600,7 @@ klass:              do {
         spaces();
         that.third = expression(10);
         that.arity = 'ternary';
-        that.type = conform_type(that.second, that.third);
+        set_type(that, conform_type(that.second, that.third));
         if (are_similar(that.second, that.third)) {
             warn('weird_ternary', colon);
         } else if (are_similar(that.first, that.second)) {
@@ -3700,7 +3636,8 @@ klass:              do {
 
     prefix('void', function () {
         this.first = expression(0);
-        if (this.first.id !== '(number)' || this.first.value) {
+        this.arity = 'prefix';
+        if (this.first.id !== '(number)' || this.first.string) {
             warn('unexpected_a', this);
             return this;
         }
@@ -3733,35 +3670,44 @@ klass:              do {
     }, 'boolean');
     infix('instanceof', 120, null, 'boolean');
     infix('+', 130, function (left, that) {
-        if (!left.value) {
-            if (left.id === '(number)') {
-                warn('unexpected_a', left);
-            } else if (left.id === '(string)') {
+        if (left.id === '(number)') {
+            if (left.number === 0) {
+                warn('unexpected_a', left, '0');
+            }
+        } else if (left.id === '(string)') {
+            if (left.string === '') {
                 warn('expected_a_b', left, 'String', '\'\'');
             }
         }
         var right = expression(130);
-        if (!right.value) {
-            if (right.id === '(number)') {
-                warn('unexpected_a', right);
-            } else if (right.id === '(string)') {
+        if (right.id === '(number)') {
+            if (right.number === 0) {
+                warn('unexpected_a', right, '0');
+            }
+        } else if (right.id === '(string)') {
+            if (right.string === '') {
                 warn('expected_a_b', right, 'String', '\'\'');
             }
         }
-        if (left.id === right.id &&
-                (left.id === '(string)' || left.id === '(number)')) {
-            left.value += right.value;
-            left.thru = right.thru;
-            if (left.id === '(string)' && jx.test(left.value)) {
-                warn('url', left);
+        if (left.id === right.id) {
+            if (left.id === '(string)' || left.id === '(number)') {
+                if (left.id === '(string)') {
+                    left.string += right.string;
+                    if (jx.test(left.string)) {
+                        warn('url', left);
+                    }
+                } else {
+                    left.number += right.number;
+                }
+                left.thru = right.thru;
+                discard(right);
+                discard(that);
+                return left;
             }
-            discard(right);
-            discard(that);
-            return left;
         }
         that.first = left;
         that.second = right;
-        that.type = conform_type(left, right, that);
+        set_type(that, conform_type(left, right));
         return that;
     });
     prefix('+', 'num');
@@ -3778,15 +3724,15 @@ klass:              do {
         return this;
     });
     infix('-', 130, function (left, that) {
-        if ((left.id === '(number)' && left.value === 0) || left.id === '(string)') {
+        if ((left.id === '(number)' && left.number === 0) || left.id === '(string)') {
             warn('unexpected_a', left);
         }
         var right = expression(130);
-        if ((right.id === '(number)' && right.value === 0) || right.id === '(string)') {
+        if ((right.id === '(number)' && right.number === 0) || right.id === '(string)') {
             warn('unexpected_a', left);
         }
         if (left.id === right.id && left.id === '(number)') {
-            left.value -= right.value;
+            left.number -= right.number;
             left.thru = right.thru;
             discard(right);
             discard(that);
@@ -3810,15 +3756,15 @@ klass:              do {
         return this;
     });
     infix('*', 140, function (left, that) {
-        if ((left.id === '(number)' && (left.value === 0 || left.value === 1)) || left.id === '(string)') {
+        if ((left.id === '(number)' && (left.number === 0 || left.number === 1)) || left.id === '(string)') {
             warn('unexpected_a', left);
         }
         var right = expression(140);
-        if ((right.id === '(number)' && (right.value === 0 || right.value === 1)) || right.id === '(string)') {
+        if ((right.id === '(number)' && (right.number === 0 || right.number === 1)) || right.id === '(string)') {
             warn('unexpected_a', right);
         }
         if (left.id === right.id && left.id === '(number)') {
-            left.value *= right.value;
+            left.number *= right.number;
             left.thru = right.thru;
             discard(right);
             discard(that);
@@ -3829,15 +3775,15 @@ klass:              do {
         return that;
     }, 'number');
     infix('/', 140, function (left, that) {
-        if ((left.id === '(number)' && left.value === 0) || left.id === '(string)') {
+        if ((left.id === '(number)' && left.number === 0) || left.id === '(string)') {
             warn('unexpected_a', left);
         }
         var right = expression(140);
-        if ((right.id === '(number)' && (right.value === 0 || right.value === 1)) || right.id === '(string)') {
+        if ((right.id === '(number)' && (right.number === 0 || right.number === 1)) || right.id === '(string)') {
             warn('unexpected_a', right);
         }
         if (left.id === right.id && left.id === '(number)') {
-            left.value /= right.value;
+            left.number /= right.number;
             left.thru = right.thru;
             discard(right);
             discard(that);
@@ -3848,15 +3794,15 @@ klass:              do {
         return that;
     }, 'number');
     infix('%', 140, function (left, that) {
-        if ((left.id === '(number)' && (left.value === 0 || left.value === 1)) || left.id === '(string)') {
+        if ((left.id === '(number)' && (left.number === 0 || left.number === 1)) || left.id === '(string)') {
             warn('unexpected_a', left);
         }
         var right = expression(140);
-        if ((right.id === '(number)' && right.value === 0) || right.id === '(string)') {
+        if ((right.id === '(number)' && right.number === 0) || right.id === '(string)') {
             warn('unexpected_a', right);
         }
         if (left.id === right.id && left.id === '(number)') {
-            left.value %= right.value;
+            left.number %= right.number;
             left.thru = right.thru;
             discard(right);
             discard(that);
@@ -3903,11 +3849,11 @@ klass:              do {
     prefix('typeof', null, 'string');
     prefix('new', function () {
         one_space();
-        var c = expression(160), i, p, v;
+        var c = expression(160), n, p, v;
         this.first = c;
         if (c.id !== 'function') {
             if (c.identifier) {
-                switch (c.value) {
+                switch (c.string) {
                 case 'Object':
                     warn('use_object', token);
                     break;
@@ -3917,19 +3863,14 @@ klass:              do {
                         p.first = this;
                         advance('(');
                         if (next_token.id !== ')') {
-                            p.second = expression(0);
-                            if (p.second.id !== '(string)' || !p.second.value) {
-                                expected_condition(p.second,  bundle.use_array);
-                                i = false;
-                            } else {
-                                i = true;
+                            n = expression(0);
+                            p.second = [n];
+                            if (get_type(n) !== 'number' || next_token.id === ',') {
+                                warn('use_array', p);
                             }
-                            while (next_token.id !== ')' && next_token.id !== '(end)') {
-                                if (i) {
-                                    warn('use_array', p);
-                                    i = false;
-                                }
-                                advance();
+                            while (next_token.id === ',') {
+                                advance(',');
+                                p.second.push(expression(0));
                             }
                         } else {
                             warn('use_array', token);
@@ -3957,7 +3898,7 @@ klass:              do {
                     break;
                 default:
                     if (c.id !== 'function') {
-                        v = c.value.charAt(0);
+                        v = c.string.charAt(0);
                         if (!option.newcap && (v < 'A' || v > 'Z')) {
                             warn('constructor_name_a', token);
                         }
@@ -3978,6 +3919,7 @@ klass:              do {
     });
 
     infix('(', 160, function (left, that) {
+        var p;
         if (indent && indent.mode === 'expression') {
             no_space(prev_token, token);
         } else {
@@ -3986,30 +3928,57 @@ klass:              do {
         if (!left.immed && left.id === 'function') {
             warn('wrap_immediate');
         }
-        var p = [];
-        if (left) {
-            conform_type('function', left);
-            if (left.identifier) {
-                if (left.value.match(/^[A-Z]([A-Z0-9_$]*[a-z][A-Za-z0-9_$]*)?$/)) {
-                    if (left.value !== 'Number' && left.value !== 'String' &&
-                            left.value !== 'Boolean' && left.value !== 'Date') {
-                        if (left.value === 'Math' || left.value === 'JSON') {
-                            warn('not_a_function', left);
-                        } else if (left.value === 'Object') {
-                            warn('use_object', token);
-                        } else if (left.value === 'Array' || !option.newcap) {
-                            warn('missing_a', left, 'new');
-                        }
+        p = [];
+        if (left.identifier) {
+            if (left.string === 'String') {
+                conform_type('string', that);
+            } else if (left.string === 'Number') {
+                conform_type('number', that);
+            } else if (left.string === 'Boolean') {
+                conform_type('boolean', that);
+            } else {
+                set_type(that, conform_type('function', left).slice(9));
+            }
+        } else if (left.id === '.') {
+            switch (left.second.string) {
+            case 'apply':
+            case 'call':
+                set_type(that, conform_type('function', left.first).slice(9));
+                break;
+            case 'concat':
+            case 'slice':
+                conform_type(that, left.first);
+                break;
+            case 'parse':
+            case 'toJSON':
+                conform_type('function', left);
+                break;
+            default:
+                set_type(that, conform_type('function', left).slice(9));
+            }
+        } else {
+            set_type(that, conform_type('function', left).slice(9));
+        }
+        if (left.identifier) {
+            if (left.string.match(/^[A-Z]([A-Z0-9_$]*[a-z][A-Za-z0-9_$]*)?$/)) {
+                if (left.string !== 'Number' && left.string !== 'String' &&
+                        left.string !== 'Boolean' && left.string !== 'Date') {
+                    if (left.string === 'Math' || left.string === 'JSON') {
+                        warn('not_a_function', left);
+                    } else if (left.string === 'Object') {
+                        warn('use_object', token);
+                    } else if (left.string === 'Array' || !option.newcap) {
+                        warn('missing_a', left, 'new');
                     }
                 }
-            } else if (left.id === '.') {
-                if (option.safe && left.first.value === 'Math' &&
-                        left.second === 'random') {
-                    warn('adsafe', left);
-                } else if (left.second.value === 'split' &&
-                        left.first.id === '(string)') {
-                    warn('use_array', left.second);
-                }
+            }
+        } else if (left.id === '.') {
+            if (option.safe && left.first.string === 'Math' &&
+                    left.second === 'random') {
+                warn('adsafe_a', left);
+            } else if (left.second.string === 'split' &&
+                    left.first.id === '(string)') {
+                warn('use_array', left.second);
             }
         }
         step_in();
@@ -4027,16 +3996,16 @@ klass:              do {
         no_space();
         step_out(')', that);
         if (typeof left === 'object') {
-            if (left.value === 'parseInt' && p.length === 1) {
+            if (left.string === 'parseInt' && p.length === 1) {
                 warn('radix', left);
             }
             if (!option.evil) {
-                if (left.value === 'eval' || left.value === 'Function' ||
-                        left.value === 'execScript') {
+                if (left.string === 'eval' || left.string === 'Function' ||
+                        left.string === 'execScript') {
                     warn('evil', left);
                 } else if (p[0] && p[0].id === '(string)' &&
-                        (left.value === 'setTimeout' ||
-                        left.value === 'setInterval')) {
+                        (left.string === 'setTimeout' ||
+                        left.string === 'setInterval')) {
                     warn('implied_evil', left);
                 }
             }
@@ -4048,23 +4017,6 @@ klass:              do {
         }
         that.first = left;
         that.second = p;
-        if (!option.type) {
-            if (left.id === '.') {
-                if (left.second.value === 'charAt' || left.second.value === 'substring') {
-                    conform_type('string', that);
-                    conform_type('string', left.first);
-                    p.forEach(function (value) {
-                        conform_type('number', value);
-                    });
-                } else if (left.second.value === 'toString' || left.second.value === 'stringify') {
-                    conform_type('string', that);
-                }
-            } else if (left.identifier) {
-                if (left.value === 'String') {
-                    conform_type('string', that);
-                }
-            }
-        }
         return that;
     }, '', true);
 
@@ -4094,28 +4046,28 @@ klass:              do {
     infix('.', 170, function (left, that) {
         no_space(prev_token, token);
         no_space();
-        var name = identifier();
+        var name = identifier(), type;
         if (typeof name === 'string') {
             tally_property(name);
         }
         that.first = left;
         that.second = token;
-        if (left && left.value === 'arguments' &&
+        if (left && left.string === 'arguments' &&
                 (name === 'callee' || name === 'caller')) {
             warn('avoid_a', left, 'arguments.' + name);
-        } else if (!option.evil && left && left.value === 'document' &&
+        } else if (!option.evil && left && left.string === 'document' &&
                 (name === 'write' || name === 'writeln')) {
             warn('write_is_wrong', left);
         } else if (option.adsafe) {
-            if (!adsafe_top && left.value === 'ADSAFE') {
+            if (!adsafe_top && left.string === 'ADSAFE') {
                 if (name === 'id' || name === 'lib') {
-                    warn('adsafe', that);
+                    warn('adsafe_a', that);
                 } else if (name === 'go') {
                     if (xmode !== 'script') {
-                        warn('adsafe', that);
+                        warn('adsafe_a', that);
                     } else if (adsafe_went || next_token.id !== '(' ||
                             peek(0).id !== '(string)' ||
-                            peek(0).value !== adsafe_id ||
+                            peek(0).string !== adsafe_id ||
                             peek(1).id !== ',') {
                         stop('adsafe_a', that, 'go');
                     }
@@ -4132,18 +4084,12 @@ klass:              do {
                 if (banned[name] === true) {
                     warn('adsafe_a', token, name);
                 }
-                if (typeof predefined[left.value] !== 'boolean' ||    //// check for writeable
+                if (typeof predefined[left.string] !== 'boolean' ||    //// check for writeable
                         next_token.id === '(') {
                     break;
                 }
-                if (standard_property[name] === true) {
-                    if (next_token.id === '.') {
-                        warn('adsafe', that);
-                    }
-                    break;
-                }
                 if (next_token.id !== '.') {
-                    warn('adsafe', that);
+                    warn('adsafe_a', that);
                     break;
                 }
                 advance('.');
@@ -4156,14 +4102,15 @@ klass:              do {
                 }
             }
         }
-        if (name === 'length') {
-            conform_type('number', that);
+        type = property_type[name];
+        if (type && typeof type === 'string' && type !== '*') {
+            that.type = type;
         }
         return that;
     }, '', true);
 
     infix('[', 170, function (left, that) {
-        var left_type = get_type(left), e, s;
+        var e, s;
         no_space_only(prev_token, token);
         no_space();
         step_in();
@@ -4174,25 +4121,23 @@ klass:              do {
             if (e.id === '(number)' && left.id === 'arguments') {
                 warn('use_param', left);
             }
-            if (!left_type) {
-                conform_type('array', left);
-            }
+            conform_type('array', left);
             break;
         case 'string':
             if (e.id === '(string)') {
-                if (option.safe && (banned[e.value] ||
-                        e.value.charAt(0) === '_' || e.value.slice(-1) === '_')) {
+                if (option.safe && (banned[e.string] ||
+                        e.string.charAt(0) === '_' || e.string.slice(-1) === '_')) {
                     warn('adsafe_subscript_a', e);
                 } else if (!option.evil &&
-                        (e.value === 'eval' || e.value === 'execScript')) {
+                        (e.string === 'eval' || e.string === 'execScript')) {
                     warn('evil', e);
-                } else if (!option.sub && ix.test(e.value)) {
-                    s = syntax[e.value];
+                } else if (!option.sub && ix.test(e.string)) {
+                    s = syntax[e.string];
                     if (!s || !s.reserved) {
                         warn('subscript', e);
                     }
                 }
-                tally_property(e.value);
+                tally_property(e.string);
             } else if (option.safe && e.id !== 'typeof') {
                 warn('adsafe_subscript_a', e);
             }
@@ -4207,10 +4152,10 @@ klass:              do {
                 conform_type('string', e);
                 break;
             case 'string':
-                if (!option.type) {
+                if (!option.confusion) {
                     warn('use_charAt', that);
                 }
-                that.type = 'string';
+                set_type(that, 'string');
                 break;
             }
             if (option.safe) {
@@ -4220,8 +4165,6 @@ klass:              do {
         default:
             if (option.safe) {
                 warn('adsafe_subscript_a', e);
-            } else {
-                warn('bad_type');
             }
         }
         step_out(']', that);
@@ -4235,7 +4178,7 @@ klass:              do {
     prefix('[', function () {
         this.arity = 'prefix';
         this.first = [];
-        this.type = 'array';
+        set_type(this, 'array');
         step_in('array');
         while (next_token.id !== '(end)') {
             while (next_token.id === ',') {
@@ -4269,7 +4212,7 @@ klass:              do {
         var id = optional_identifier(true);
         if (!id) {
             if (next_token.id === '(string)') {
-                id = next_token.value;
+                id = next_token.string;
                 if (option.safe) {
                     if (banned[id]) {
                         warn('adsafe_a');
@@ -4280,7 +4223,7 @@ klass:              do {
                 }
                 advance();
             } else if (next_token.id === '(number)') {
-                id = next_token.value.toString();
+                id = next_token.number.toString();
                 advance();
             }
         }
@@ -4334,7 +4277,7 @@ klass:              do {
                         break;
                     case 'while':
                     case 'do':
-                        if (exp.first.id !== 'true' && exp.first.value !== 1) {
+                        if (exp.first.id !== 'true' && exp.first.number !== 1) {
                             score += 1;
                         }
                         score += complexity(exp.first) + complexity(exp.block);
@@ -4342,7 +4285,7 @@ klass:              do {
                     case 'for':
                         if (exp.second !== undefined &&
                                 exp.second.id !== 'true' &&
-                                exp.second.value !== 1) {
+                                exp.second.number !== 1) {
                             score += 1;
                         }
                         score += complexity(exp.first) + complexity(exp.second) +
@@ -4390,7 +4333,6 @@ klass:              do {
     function do_function(func, name) {
         var old_funct      = funct,
             old_option     = option,
-            old_properties = properties,
             old_scope      = scope;
         funct = {
             '(name)'     : name || '\'' + (anonname || '').replace(nx, sanitize) + '\'',
@@ -4401,7 +4343,6 @@ klass:              do {
             '(scope)'    : scope,
             '(token)'    : func
         };
-        properties = old_properties && Object.create(old_properties);
         option = Object.create(old_option);
         scope = Object.create(old_scope);
         functions.push(funct);
@@ -4411,13 +4352,21 @@ klass:              do {
         }
         func.writeable = false;
         func.first = funct['(params)'] = function_params();
-        func.type = 'function';
         one_space();
         func.block = block(false);
+        set_type(func, funct['(return_type)'] ?
+            'function ' + funct['(return_type)'] :
+            'function');
+        if (funct['(old_property_type)']) {
+            property_type = funct['(old_property_type)'];
+            delete funct['(old_property_type)'];
+        }
         funct['(complexity)'] = complexity(func.block) + 1;
+        if (option.confusion) {
+            funct['(confusion)'] = true;
+        }
         funct      = old_funct;
         option     = old_option;
-        properties = old_properties;
         scope      = old_scope;
     }
 
@@ -4439,10 +4388,10 @@ klass:              do {
 
 
     prefix('{', function () {
-        var get, i, j, name, p, set, seen = {};
+        var get, i, j, name, p, set, seen = {}, type;
         this.arity = 'prefix';
         this.first = [];
-        this.type = 'object';
+        set_type(this, 'object');
         step_in();
         while (next_token.id !== '}') {
             indent.wrap = false;
@@ -4451,7 +4400,7 @@ klass:              do {
 // but requires that they be used in pairs.
 
             edge();
-            if (next_token.value === 'get' && peek().id !== ':') {
+            if (next_token.string === 'get' && peek().id !== ':') {
                 if (!option.es5) {
                     warn('es5');
                 }
@@ -4463,32 +4412,32 @@ klass:              do {
                 if (!i) {
                     stop('missing_property');
                 }
-                get.value = '';
+                get.string = '';
                 do_function(get);
                 if (funct['(loopage)']) {
                     warn('function_loop', get);
                 }
                 p = get.first;
                 if (p) {
-                    warn('parameter_a_get_b', p[0], p[0].value, i);
+                    warn('parameter_a_get_b', p[0], p[0].string, i);
                 }
                 comma();
                 set = next_token;
-                set.value = '';
+                set.string = '';
                 spaces();
                 edge();
                 advance('set');
                 one_space_only();
                 j = property_name();
                 if (i !== j) {
-                    stop('expected_a_b', token, i, j || next_token.value);
+                    stop('expected_a_b', token, i, j || next_token.string);
                 }
                 do_function(set);
                 p = set.first;
                 if (!p || p.length !== 1) {
                     stop('parameter_set_a', set, 'value');
-                } else if (p[0].value !== 'value') {
-                    stop('expected_a_b', p[0], 'value', p[0].value);
+                } else if (p[0].string !== 'value') {
+                    stop('expected_a_b', p[0], 'value', p[0].string);
                 }
                 name.first = [get, set];
             } else {
@@ -4501,6 +4450,15 @@ klass:              do {
                 discard();
                 spaces();
                 name.first = expression(10);
+                type = property_type[i];
+                if (type) {
+                    name.type = conform_type(type, name.first);
+                } else {
+                    type = get_type(name.first);
+                    if (type && type !== '*') {
+                        property_type[i] = name.type = type;
+                    }
+                }
             }
             this.first.push(name);
             if (seen[i] === true) {
@@ -4584,9 +4542,7 @@ klass:              do {
                 assign.second = expression(0);
                 assign.arity = 'infix';
                 this.first.push(assign);
-                if (assign.second.type) {
-                    name.type = assign.second.type;
-                }
+                conform_type(name, assign.second);
             } else {
                 this.first.push(name);
             }
@@ -4700,7 +4656,7 @@ klass:              do {
             edge();
             old_scope = scope;
             scope = Object.create(old_scope);
-            exception_variable = next_token.value;
+            exception_variable = next_token.string;
             this.first = exception_variable;
             if (!next_token.identifier) {
                 warn('expected_identifier_a', next_token);
@@ -4723,7 +4679,7 @@ klass:              do {
             one_space();
             this.third = block(false);
         } else if (!this.second) {
-            stop('expected_a_b', next_token, 'catch', next_token.value);
+            stop('expected_a_b', next_token, 'catch', next_token.string);
         }
         return this;
     });
@@ -4760,15 +4716,23 @@ klass:              do {
 
     labeled_stmt('switch', function () {
 
-// switch.first             the switch expression
-// switch.second            the array of cases. A case is 'case' or 'default' token:
-//    case.first            the array of case expressions
-//    case.second           the array of statements
+// switch.first         the switch expression
+// switch.second        the array of cases. A case is 'case' or 'default' token:
+//    case.first        the array of case expressions
+//    case.second       the array of statements
 // If all of the arrays of statements are disrupt, then the switch is disrupt.
 
-        var particular,
+        var cases = [],
+            particular,
             the_case = next_token,
             unbroken = true;
+
+        function find_duplicate_case(value) {
+            if (are_similar(particular, value)) {
+                warn('duplicate_a', value);
+            }
+        }
+
         funct['(breakage)'] += 1;
         one_space();
         advance('(');
@@ -4786,6 +4750,7 @@ klass:              do {
         this.second = [];
         while (next_token.id === 'case') {
             the_case = next_token;
+            cases.forEach(find_duplicate_case);
             the_case.first = [];
             the_case.arity = 'case';
             spaces();
@@ -4794,6 +4759,8 @@ klass:              do {
             for (;;) {
                 one_space();
                 particular = expression(0);
+                cases.forEach(find_duplicate_case);
+                cases.push(particular);
                 the_case.first.push(particular);
                 if (particular.id === 'NaN') {
                     warn('unexpected_a', particular);
@@ -4891,6 +4858,7 @@ klass:              do {
     });
 
     labeled_stmt('for', function () {
+
         var blok, filter, ok = false, paren = next_token, the_in, value;
         this.arity = 'statement';
         funct['(breakage)'] += 1;
@@ -4906,9 +4874,9 @@ klass:              do {
         edge();
         if (peek(0).id === 'in') {
             value = next_token;
-            switch (funct[value.value]) {
+            switch (funct[value.string]) {
             case 'unused':
-                funct[value.value] = 'var';
+                funct[value.string] = 'var';
                 break;
             case 'closure':
             case 'var':
@@ -4929,7 +4897,7 @@ klass:              do {
             blok = block(true);
             if (!option.forin) {
                 if (blok.length === 1 && typeof blok[0] === 'object' &&
-                        blok[0].value === 'if' && !blok[0]['else']) {
+                        blok[0].string === 'if' && !blok[0]['else']) {
                     filter = blok[0].first;
                     while (filter.id === '&&') {
                         filter = filter.first;
@@ -4938,34 +4906,34 @@ klass:              do {
                     case '===':
                     case '!==':
                         ok = filter.first.id === '[' ? (
-                            filter.first.first.value === the_in.second.value &&
-                            filter.first.second.value === the_in.first.value
+                            filter.first.first.string === the_in.second.string &&
+                            filter.first.second.string === the_in.first.string
                         ) : (
                             filter.first.id === 'typeof' &&
                             filter.first.first.id === '[' &&
-                            filter.first.first.first.value === the_in.second.value &&
-                            filter.first.first.second.value === the_in.first.value
+                            filter.first.first.first.string === the_in.second.string &&
+                            filter.first.first.second.string === the_in.first.string
                         );
                         break;
                     case '(':
                         ok = filter.first.id === '.' && ((
-                            filter.first.first.value === the_in.second.value &&
-                            filter.first.second.value === 'hasOwnProperty' &&
-                            filter.second[0].value === the_in.first.value
+                            filter.first.first.string === the_in.second.string &&
+                            filter.first.second.string === 'hasOwnProperty' &&
+                            filter.second[0].string === the_in.first.string
                         ) || (
-                            filter.first.first.value === 'ADSAFE' &&
-                            filter.first.second.value === 'has' &&
-                            filter.second[0].value === the_in.second.value &&
-                            filter.second[1].value === the_in.first.value
+                            filter.first.first.string === 'ADSAFE' &&
+                            filter.first.second.string === 'has' &&
+                            filter.second[0].string === the_in.second.string &&
+                            filter.second[1].string === the_in.first.string
                         ) || (
                             filter.first.first.id === '.' &&
                             filter.first.first.first.id === '.' &&
-                            filter.first.first.first.first.value === 'Object' &&
-                            filter.first.first.first.second.value === 'prototype' &&
-                            filter.first.first.second.value === 'hasOwnProperty' &&
-                            filter.first.second.value === 'call' &&
-                            filter.second[0].value === the_in.second.value &&
-                            filter.second[1].value === the_in.first.value
+                            filter.first.first.first.first.string === 'Object' &&
+                            filter.first.first.first.second.string === 'prototype' &&
+                            filter.first.first.second.string === 'hasOwnProperty' &&
+                            filter.first.second.string === 'call' &&
+                            filter.second[0].string === the_in.second.string &&
+                            filter.second[1].string === the_in.first.string
                         ));
                         break;
                     }
@@ -5025,7 +4993,7 @@ klass:              do {
     });
 
     disrupt_stmt('break', function () {
-        var label = next_token.value;
+        var label = next_token.string;
         this.arity = 'statement';
         if (funct['(breakage)'] === 0) {
             warn('unexpected_a', this);
@@ -5047,7 +5015,7 @@ klass:              do {
         if (!option['continue']) {
             warn('unexpected_a', this);
         }
-        var label = next_token.value;
+        var label = next_token.string;
         this.arity = 'statement';
         if (funct['(breakage)'] === 0) {
             warn('unexpected_a', this);
@@ -5066,6 +5034,9 @@ klass:              do {
     });
 
     disrupt_stmt('return', function () {
+        if (funct === global_funct) {
+            warn('unexpected_a', this);
+        }
         this.arity = 'statement';
         if (next_token.id !== ';' && next_token.line === token.line) {
             one_space_only();
@@ -5073,6 +5044,7 @@ klass:              do {
                 warn('wrap_regexp');
             }
             this.first = expression(20);
+            funct['(return_type)'] = conform_type(funct['(return_type)'], this.first);
         }
         return this;
     });
@@ -5124,12 +5096,12 @@ klass:              do {
                     if (next_token.id !== '(string)') {
                         warn('expected_string_a');
                     }
-                    if (object[next_token.value] === true) {
+                    if (object[next_token.string] === true) {
                         warn('duplicate_a');
-                    } else if (next_token.value === '__proto__') {
+                    } else if (next_token.string === '__proto__') {
                         warn('dangling_a');
                     } else {
-                        object[next_token.value] = true;
+                        object[next_token.string] = true;
                     }
                     advance();
                     advance(':');
@@ -5227,7 +5199,7 @@ klass:              do {
     function css_color() {
         var i, number, paren, value;
         if (next_token.identifier) {
-            value = next_token.value;
+            value = next_token.string;
             if (value === 'rgb' || value === 'rgba') {
                 advance();
                 paren = next_token;
@@ -5236,7 +5208,7 @@ klass:              do {
                     if (i) {
                         comma();
                     }
-                    number = next_token.value;
+                    number = next_token.number;
                     if (next_token.id !== '(string)' || number < 0) {
                         warn('expected_positive_a', next_token);
                         advance();
@@ -5256,7 +5228,7 @@ klass:              do {
                 }
                 if (value === 'rgba') {
                     comma();
-                    number = +next_token.value;
+                    number = next_token.number;
                     if (next_token.id !== '(string)' || number < 0 || number > 1) {
                         warn('expected_fraction_a', next_token);
                     }
@@ -5268,7 +5240,7 @@ klass:              do {
                 }
                 advance(')', paren);
                 return true;
-            } else if (css_colorData[next_token.value] === true) {
+            } else if (css_colorData[next_token.string] === true) {
                 advance();
                 return true;
             }
@@ -5288,10 +5260,10 @@ klass:              do {
         if (next_token.id === '(number)') {
             advance();
             if (next_token.id !== '(string)' &&
-                    css_lengthData[next_token.value] === true) {
+                    css_lengthData[next_token.string] === true) {
                 no_space_only();
                 advance();
-            } else if (+token.value !== 0) {
+            } else if (+token.number !== 0) {
                 warn('expected_linear_a');
             }
             return true;
@@ -5308,7 +5280,7 @@ klass:              do {
         if (next_token.id === '(number)') {
             advance();
             if (next_token.id !== '(string)' &&
-                    css_lengthData[next_token.value] === true) {
+                    css_lengthData[next_token.string] === true) {
                 no_space_only();
                 advance();
             }
@@ -5320,7 +5292,7 @@ klass:              do {
 
     function css_width() {
         if (next_token.identifier) {
-            switch (next_token.value) {
+            switch (next_token.string) {
             case 'thin':
             case 'medium':
             case 'thick':
@@ -5335,7 +5307,7 @@ klass:              do {
 
     function css_margin() {
         if (next_token.identifier) {
-            if (next_token.value === 'auto') {
+            if (next_token.string === 'auto') {
                 advance();
                 return true;
             }
@@ -5345,7 +5317,7 @@ klass:              do {
     }
 
     function css_attr() {
-        if (next_token.identifier && next_token.value === 'attr') {
+        if (next_token.identifier && next_token.string === 'attr') {
             advance();
             advance('(');
             if (!next_token.identifier) {
@@ -5373,7 +5345,7 @@ klass:              do {
 
 
     function css_counter() {
-        if (next_token.identifier && next_token.value === 'counter') {
+        if (next_token.identifier && next_token.string === 'counter') {
             advance();
             advance('(');
             advance();
@@ -5387,7 +5359,7 @@ klass:              do {
             advance(')');
             return true;
         }
-        if (next_token.identifier && next_token.value === 'counters') {
+        if (next_token.identifier && next_token.string === 'counters') {
             advance();
             advance('(');
             if (!next_token.identifier) {
@@ -5417,7 +5389,7 @@ klass:              do {
 
     function css_shape() {
         var i;
-        if (next_token.identifier && next_token.value === 'rect') {
+        if (next_token.identifier && next_token.string === 'rect') {
             advance();
             advance('(');
             for (i = 0; i < 4; i += 1) {
@@ -5435,9 +5407,9 @@ klass:              do {
 
     function css_url() {
         var c, url;
-        if (next_token.identifier && next_token.value === 'url') {
+        if (next_token.identifier && next_token.string === 'url') {
             next_token = lex.range('(', ')');
-            url = next_token.value;
+            url = next_token.string;
             c = url.charAt(0);
             if (c === '"' || c === '\'') {
                 if (url.slice(-1) !== c) {
@@ -5466,7 +5438,7 @@ klass:              do {
     css_any = [css_url, function () {
         for (;;) {
             if (next_token.identifier) {
-                switch (next_token.value.toLowerCase()) {
+                switch (next_token.string.toLowerCase()) {
                 case 'url':
                     css_url();
                     break;
@@ -5688,7 +5660,7 @@ klass:              do {
     function style_attribute() {
         var v;
         while (next_token.id === '*' || next_token.id === '#' ||
-                next_token.value === '_') {
+                next_token.string === '_') {
             if (!option.css) {
                 warn('unexpected_a');
             }
@@ -5708,8 +5680,8 @@ klass:              do {
             if (!next_token.identifier) {
                 warn('expected_style_attribute');
             } else {
-                if (Object.prototype.hasOwnProperty.call(css_attribute_data, next_token.value)) {
-                    v = css_attribute_data[next_token.value];
+                if (Object.prototype.hasOwnProperty.call(css_attribute_data, next_token.string)) {
+                    v = css_attribute_data[next_token.string];
                 } else {
                     v = css_any;
                     if (!option.css) {
@@ -5724,6 +5696,9 @@ klass:              do {
 
 
     function style_value(v) {
+
+        /*jslint confusion: true */
+
         var i = 0,
             n,
             once,
@@ -5735,7 +5710,7 @@ klass:              do {
         case 'function':
             return v();
         case 'string':
-            if (next_token.identifier && next_token.value === v) {
+            if (next_token.identifier && next_token.string === v) {
                 advance();
                 return true;
             }
@@ -5792,7 +5767,7 @@ klass:              do {
     function style_child() {
         if (next_token.id === '(number)') {
             advance();
-            if (next_token.value === 'n' && next_token.identifier) {
+            if (next_token.string === 'n' && next_token.identifier) {
                 no_space_only();
                 advance();
                 if (next_token.id === '+') {
@@ -5805,7 +5780,7 @@ klass:              do {
             return;
         } else {
             if (next_token.identifier &&
-                    (next_token.value === 'odd' || next_token.value === 'even')) {
+                    (next_token.string === 'odd' || next_token.string === 'even')) {
                 advance();
                 return;
             }
@@ -5826,7 +5801,7 @@ klass:              do {
             }
             v = style_attribute();
             advance(':');
-            if (next_token.identifier && next_token.value === 'inherit') {
+            if (next_token.identifier && next_token.string === 'inherit') {
                 advance();
             } else {
                 if (!style_value(v)) {
@@ -5837,15 +5812,15 @@ klass:              do {
             if (next_token.id === '!') {
                 advance('!');
                 no_space_only();
-                if (next_token.identifier && next_token.value === 'important') {
+                if (next_token.identifier && next_token.string === 'important') {
                     advance();
                 } else {
                     warn('expected_a_b',
-                        next_token, 'important', next_token.value);
+                        next_token, 'important', next_token.string);
                 }
             }
             if (next_token.id === '}' || next_token.id === xquote) {
-                warn('expected_a_b', next_token, ';', next_token.value);
+                warn('expected_a_b', next_token, ';', next_token.string);
             } else {
                 semicolon();
             }
@@ -5855,7 +5830,7 @@ klass:              do {
     function style_selector() {
         if (next_token.identifier) {
             if (!Object.prototype.hasOwnProperty.call(html_tag, option.cap ?
-                    next_token.value.toLowerCase() : next_token.value)) {
+                    next_token.string.toLowerCase() : next_token.string)) {
                 warn('expected_tagname_a');
             }
             advance();
@@ -5868,7 +5843,7 @@ klass:              do {
                 break;
             case ':':
                 advance(':');
-                switch (next_token.value) {
+                switch (next_token.string) {
                 case 'active':
                 case 'after':
                 case 'before':
@@ -5911,7 +5886,7 @@ klass:              do {
                 case 'not':
                     advance();
                     advance('(');
-                    if (next_token.id === ':' && peek(0).value === 'not') {
+                    if (next_token.id === ':' && peek(0).string === 'not') {
                         warn('not');
                     }
                     style_selector();
@@ -5944,9 +5919,9 @@ klass:              do {
                     warn('expected_attribute_a');
                 }
                 advance();
-                if (next_token.id === '=' || next_token.value === '~=' ||
-                        next_token.value === '$=' ||
-                        next_token.value === '|=' ||
+                if (next_token.id === '=' || next_token.string === '~=' ||
+                        next_token.string === '$=' ||
+                        next_token.string === '|=' ||
                         next_token.id === '*=' ||
                         next_token.id === '^=') {
                     advance();
@@ -6000,12 +5975,12 @@ klass:              do {
             i = peek();
             advance('@');
             if (next_token.identifier) {
-                switch (next_token.value) {
+                switch (next_token.string) {
                 case 'import':
                     advance();
                     if (!css_url()) {
                         warn('expected_a_b',
-                            next_token, 'url', next_token.value);
+                            next_token, 'url', next_token.string);
                         advance();
                     }
                     semicolon();
@@ -6013,7 +5988,7 @@ klass:              do {
                 case 'media':
                     advance();
                     for (;;) {
-                        if (!next_token.identifier || css_media[next_token.value] === true) {
+                        if (!next_token.identifier || css_media[next_token.string] === true) {
                             stop('expected_media_a');
                         }
                         advance();
@@ -6187,13 +6162,13 @@ klass:              do {
                         stop('adsafe_script', token);
                     }
                     if (script.length !== 1 ||
-                            aint(script[0],             'id',    '(') ||
-                            aint(script[0].first,       'id',    '.') ||
-                            aint(script[0].first.first, 'value', 'ADSAFE') ||
-                            aint(script[0].second[0],   'value', adsafe_id)) {
+                            aint(script[0],             'id',     '(') ||
+                            aint(script[0].first,       'id',     '.') ||
+                            aint(script[0].first.first, 'string', 'ADSAFE') ||
+                            aint(script[0].second[0],   'string', adsafe_id)) {
                         stop('adsafe_id_go');
                     }
-                    switch (script[0].first.second.value) {
+                    switch (script[0].first.second.string) {
                     case 'id':
                         if (adsafe_may || adsafe_went ||
                                 script[0].second.length !== 1) {
@@ -6209,8 +6184,8 @@ klass:              do {
                                 aint(script[0].second[1], 'id', 'function') ||
                                 !script[0].second[1].first ||
                                 script[0].second[1].first.length !== 2 ||
-                                aint(script[0].second[1].first[0], 'value', 'dom') ||
-                                aint(script[0].second[1].first[1], 'value', 'lib')) {
+                                aint(script[0].second[1].first[0], 'string', 'dom') ||
+                                aint(script[0].second[1].first[1], 'string', 'lib')) {
                             stop('adsafe_go', next_token);
                         }
                         adsafe_went = true;
@@ -6223,8 +6198,8 @@ klass:              do {
             }
             xmode = 'html';
             advance('</');
-            if (!next_token.identifier && next_token.value !== 'script') {
-                warn('expected_a_b', next_token, 'script', next_token.value);
+            if (!next_token.identifier && next_token.string !== 'script') {
+                warn('expected_a_b', next_token, 'script', next_token.string);
             }
             advance();
             xmode = 'outer';
@@ -6235,26 +6210,25 @@ klass:              do {
             styles();
             xmode = 'html';
             advance('</');
-            if (!next_token.identifier && next_token.value !== 'style') {
-                warn('expected_a_b', next_token, 'style', next_token.value);
+            if (!next_token.identifier && next_token.string !== 'style') {
+                warn('expected_a_b', next_token, 'style', next_token.string);
             }
             advance();
             xmode = 'outer';
             break;
         case 'input':
             switch (attribute.type) {
-            case 'radio':
-            case 'checkbox':
             case 'button':
+            case 'checkbox':
+            case 'radio':
             case 'reset':
             case 'submit':
                 break;
-            case 'text':
-            case 'file':
-            case 'password':
             case 'file':
             case 'hidden':
             case 'image':
+            case 'password':
+            case 'text':
                 if (option.adsafe && attribute.autocomplete !== 'off') {
                     warn('adsafe_autocomplete');
                 }
@@ -6287,13 +6261,16 @@ klass:              do {
     }
 
     function html() {
+
+        /*jslint confusion: true */
+
         var attribute, attributes, is_empty, name, old_white = option.white,
             quote, tag_name, tag, wmode;
         xmode = 'html';
         xquote = '';
         stack = null;
         for (;;) {
-            switch (next_token.value) {
+            switch (next_token.string) {
             case '<':
                 xmode = 'html';
                 advance('<');
@@ -6302,7 +6279,7 @@ klass:              do {
                 if (!tag_name.identifier) {
                     warn('bad_name_a', tag_name);
                 }
-                name = tag_name.value;
+                name = tag_name.string;
                 if (option.cap) {
                     name = name.toLowerCase();
                 }
@@ -6322,7 +6299,7 @@ klass:              do {
                     if (next_token.id === '/') {
                         advance('/');
                         if (next_token.id !== '>') {
-                            warn('expected_a_b', next_token, '>', next_token.value);
+                            warn('expected_a_b', next_token, '>', next_token.string);
                         }
                         break;
                     }
@@ -6331,13 +6308,13 @@ klass:              do {
                     }
                     if (!next_token.identifier) {
                         if (next_token.id === '(end)' || next_token.id === '(error)') {
-                            warn('expected_a_b', next_token, '>', next_token.value);
+                            warn('expected_a_b', next_token, '>', next_token.string);
                         }
                         warn('bad_name_a');
                     }
                     option.white = false;
                     spaces();
-                    attribute = next_token.value;
+                    attribute = next_token.string;
                     option.white = old_white;
                     advance();
                     if (!option.cap && attribute !== attribute.toLowerCase()) {
@@ -6356,7 +6333,7 @@ klass:              do {
                         advance('=');
                         quote = next_token.id;
                         if (quote !== '"' && quote !== '\'') {
-                            stop('expected_a_b', next_token, '"', next_token.value);
+                            stop('expected_a_b', next_token, '"', next_token.string);
                         }
                         xquote = quote;
                         wmode = option.white;
@@ -6366,7 +6343,7 @@ klass:              do {
                         statements();
                         option.white = wmode;
                         if (next_token.id !== quote) {
-                            stop('expected_a_b', next_token, quote, next_token.value);
+                            stop('expected_a_b', next_token, quote, next_token.string);
                         }
                         xmode = 'html';
                         xquote = '';
@@ -6377,7 +6354,7 @@ klass:              do {
                         advance('=');
                         quote = next_token.id;
                         if (quote !== '"' && quote !== '\'') {
-                            stop('expected_a_b', next_token, '"', next_token.value);
+                            stop('expected_a_b', next_token, '"', next_token.string);
                         }
                         xmode = 'styleproperty';
                         xquote = quote;
@@ -6390,7 +6367,7 @@ klass:              do {
                     } else {
                         if (next_token.id === '=') {
                             advance('=');
-                            tag = next_token.value;
+                            tag = next_token.string;
                             if (!next_token.identifier &&
                                     next_token.id !== '"' &&
                                     next_token.id !== '\'' &&
@@ -6420,7 +6397,7 @@ klass:              do {
                 if (!next_token.identifier) {
                     warn('bad_name_a');
                 }
-                name = next_token.value;
+                name = next_token.string;
                 if (option.cap) {
                     name = name.toLowerCase();
                 }
@@ -6437,7 +6414,7 @@ klass:              do {
                         next_token, closetag(tag_name.name), closetag(name));
                 }
                 if (next_token.id !== '>') {
-                    stop('expected_a_b', next_token, '>', next_token.value);
+                    stop('expected_a_b', next_token, '>', next_token.string);
                 }
                 xmode = 'outer';
                 advance('>');
@@ -6452,13 +6429,13 @@ klass:              do {
                     if (next_token.id === '>' || next_token.id === '(end)') {
                         break;
                     }
-                    if (next_token.value.indexOf('--') >= 0) {
+                    if (next_token.string.indexOf('--') >= 0) {
                         stop('unexpected_a', next_token, '--');
                     }
-                    if (next_token.value.indexOf('<') >= 0) {
+                    if (next_token.string.indexOf('<') >= 0) {
                         stop('unexpected_a', next_token, '<');
                     }
-                    if (next_token.value.indexOf('>') >= 0) {
+                    if (next_token.string.indexOf('>') >= 0) {
                         stop('unexpected_a', next_token, '>');
                     }
                 }
@@ -6470,7 +6447,7 @@ klass:              do {
             default:
                 if (next_token.id === '(end)') {
                     stop('missing_a', next_token,
-                        '</' + stack[stack.length - 1].value + '>');
+                        '</' + stack[stack.length - 1].string + '>');
                 } else {
                     advance();
                 }
@@ -6488,7 +6465,8 @@ klass:              do {
 
 // The actual JSLINT function itself.
 
-    itself = function (the_source, the_option) {
+    itself = function JSLint(the_source, the_option) {
+
         var i, predef, tree;
         JSLINT.comments = [];
         JSLINT.errors = [];
@@ -6497,6 +6475,7 @@ klass:              do {
             Object.create(syntax['(begin)']);
         predefined = {};
         add_to_predefined(standard);
+        property_type = Object.create(standard_property_type);
         if (the_option) {
             option = Object.create(the_option);
             predef = option.predef;
@@ -6545,7 +6524,6 @@ klass:              do {
         lookahead = [];
         member = {};
         node_js = false;
-        properties = null;
         prereg = true;
         src = false;
         stack = null;
@@ -6562,7 +6540,7 @@ klass:              do {
             advance();
             if (next_token.id === '(number)') {
                 stop('unexpected_a');
-            } else if (next_token.value.charAt(0) === '<') {
+            } else if (next_token.string.charAt(0) === '<') {
                 html();
                 if (option.adsafe && !adsafe_went) {
                     warn('adsafe_go', this);
@@ -6582,13 +6560,13 @@ klass:              do {
                     xmode = 'style';
                     advance();
                     if (token.id !== '@' || !next_token.identifier ||
-                            next_token.value !== 'charset' || token.line !== 1 ||
+                            next_token.string !== 'charset' || token.line !== 1 ||
                             token.from !== 1) {
                         stop('css');
                     }
                     advance();
                     if (next_token.id !== '(string)' &&
-                            next_token.value !== 'UTF-8') {
+                            next_token.string !== 'UTF-8') {
                         stop('css');
                     }
                     advance();
@@ -6599,7 +6577,7 @@ klass:              do {
                 default:
                     if (option.adsafe && option.fragment) {
                         stop('expected_a_b',
-                            next_token, '<div>', next_token.value);
+                            next_token, '<div>', next_token.string);
                     }
 
 // If the first token is predef semicolon, ignore it. This is sometimes used when
@@ -6617,8 +6595,8 @@ klass:              do {
                     if (option.adsafe && (tree.length !== 1 ||
                             aint(tree[0], 'id', '(') ||
                             aint(tree[0].first, 'id', '.') ||
-                            aint(tree[0].first.first, 'value', 'ADSAFE') ||
-                            aint(tree[0].first.second, 'value', 'lib') ||
+                            aint(tree[0].first.first, 'string', 'ADSAFE') ||
+                            aint(tree[0].first.second, 'string', 'lib') ||
                             tree[0].second.length !== 2 ||
                             tree[0].second[0].id !== '(string)' ||
                             aint(tree[0].second[1], 'id', 'function'))) {
@@ -6671,7 +6649,7 @@ klass:              do {
         }
 
         globals = Object.keys(global_scope).filter(function (value) {
-            return value.charAt(0) !== '(' ? value : undefined;
+            return value.charAt(0) !== '(' && typeof standard[value] !== 'boolean';
         });
         if (globals.length > 0) {
             data.globals = globals;
@@ -6715,7 +6693,7 @@ klass:              do {
                 }
             }
             function_data.name = the_function['(name)'];
-            function_data.param = the_function['(params)'];
+            function_data.params = the_function['(params)'];
             function_data.line = the_function['(line)'];
             function_data['(complexity)'] = the_function['(complexity)'];
             data.functions.push(function_data);
@@ -6725,7 +6703,7 @@ klass:              do {
             data.unused = unused;
         }
         if (undef.length > 0) {
-            data.undef = undef;
+            data['undefined'] = undef;
         }
 
         members = [];
@@ -6741,15 +6719,15 @@ klass:              do {
 
 
     itself.report = function (errors_only) {
-        var data = itself.data(),
-            err, evidence, i, j, key, keys, length, mem = '', name, names,
-            output = [], snippets, the_function, warning;
+        var data = itself.data(), err, evidence, i, italics, j, key, keys, length,
+            mem = '', name, names, output = [], snippets, the_function, type,
+            warning;
 
         function detail(h, value) {
             var comma_needed, singularity;
             if (Array.isArray(value)) {
                 output.push('<div><i>' + h + '</i> ');
-                value = value.sort().forEach(function (item) {
+                value.sort().forEach(function (item) {
                     if (item !== singularity) {
                         singularity = item;
                         output.push((comma_needed ? ', ' : '') + singularity);
@@ -6762,7 +6740,7 @@ klass:              do {
             }
         }
 
-        if (data.errors || data.unused || data.undef) {
+        if (data.errors || data.unused || data['undefined']) {
             err = true;
             output.push('<div id=errors><i>Error:</i>');
             if (data.errors) {
@@ -6770,8 +6748,9 @@ klass:              do {
                     warning = data.errors[i];
                     if (warning) {
                         evidence = warning.evidence || '';
-                        output.push('<p>Problem' + (isFinite(warning.line) ? ' at line ' +
-                            warning.line + ' character ' + warning.character : '') +
+                        output.push('<p>Problem' + (isFinite(warning.line) ?
+                            ' at line ' + String(warning.line) + ' character ' +
+                            String(warning.character) : '') +
                             ': ' + warning.reason.entityify() +
                             '</p><p class=evidence>' +
                             (evidence && (evidence.length > 80 ? evidence.slice(0, 77) + '...' :
@@ -6780,12 +6759,12 @@ klass:              do {
                 }
             }
 
-            if (data.undef) {
+            if (data['undefined']) {
                 snippets = [];
-                for (i = 0; i < data.undef.length; i += 1) {
-                    snippets[i] = '<code><u>' + data.undef[i].name + '</u></code>&nbsp;<i>' +
-                        data.undef[i].line + ' </i> <small>' +
-                        data.undef[i]['function'] + '</small>';
+                for (i = 0; i < data['undefined'].length; i += 1) {
+                    snippets[i] = '<code><u>' + data['undefined'][i].name + '</u></code>&nbsp;<i>' +
+                        String(data['undefined'][i].line) + ' </i> <small>' +
+                        data['undefined'][i]['function'] + '</small>';
                 }
                 output.push('<p><i>Undefined variable:</i> ' + snippets.join(', ') + '</p>');
             }
@@ -6793,7 +6772,7 @@ klass:              do {
                 snippets = [];
                 for (i = 0; i < data.unused.length; i += 1) {
                     snippets[i] = '<code><u>' + data.unused[i].name + '</u></code>&nbsp;<i>' +
-                        data.unused[i].line + ' </i> <small>' +
+                        String(data.unused[i].line) + ' </i> <small>' +
                         data.unused[i]['function'] + '</small>';
                 }
                 output.push('<p><i>Unused variable:</i> ' + snippets.join(', ') + '</p>');
@@ -6826,15 +6805,16 @@ klass:              do {
             for (i = 0; i < data.functions.length; i += 1) {
                 the_function = data.functions[i];
                 names = [];
-                if (the_function.param) {
-                    for (j = 0; j < the_function.param.length; j += 1) {
-                        names[j] = the_function.param[j].value;
+                if (the_function.params) {
+                    for (j = 0; j < the_function.params.length; j += 1) {
+                        names[j] = the_function.params[j].string;
                     }
                 }
-                output.push('<br><div class=function><i>' + the_function.line +
-                    '</i> ' + the_function.name.entityify() +
+                output.push('<br><div class=function><i>' +
+                    String(the_function.line) + '</i> ' +
+                    the_function.name.entityify() +
                     '(' + names.join(', ') + ')</div>');
-                detail('<big><b>Undefined</b></big>', the_function.undef);
+                detail('<big><b>Undefined</b></big>', the_function['undefined']);
                 detail('<big><b>Unused</b></big>', the_function.unused);
                 detail('Closure', the_function.closure);
                 detail('Variable', the_function['var']);
@@ -6849,25 +6829,64 @@ klass:              do {
                 keys = Object.keys(data.member);
                 if (keys.length) {
                     keys = keys.sort();
-                    mem = '<br><pre id=properties>/*properties ';
-                    length = 13;
-                    for (i = 0; i < keys.length; i += 1) {
-                        key = keys[i];
-                        name = ix.test(key) ? key :
-                            '\'' + key.entityify().replace(nx, sanitize) + '\'';
-                        if (length + name.length > 72) {
-                            output.push(mem + '<br>');
-                            mem = '    ';
-                            length = 1;
+                    output.push('<br><pre id=properties>/*properties<br>');
+                    mem = '    ';
+                    italics = 0;
+                    j = 0;
+                    if (option.confusion) {
+                        for (i = 0; i < keys.length; i += 1) {
+                            key = keys[i];
+                            if (typeof standard_property_type[key] !== 'string') {
+                                name = ix.test(key) ? key :
+                                    '\'' + key.entityify().replace(nx, sanitize) + '\'';
+                                if (data.member[key] === 1) {
+                                    name = '<i>' + name + '</i>';
+                                    italics += 1;
+                                    j = 1;
+                                }
+                                if (i < keys.length - 1) {
+                                    name += ', ';
+                                }
+                                if (mem.length + name.length - (italics * 7) > 80) {
+                                    output.push(mem + '<br>');
+                                    mem = '    ';
+                                    italics = j;
+                                }
+                                mem += name;
+                                j = 0;
+                            }
                         }
-                        length += name.length + 2;
-                        if (data.member[key] === 1) {
-                            name = '<i>' + name + '</i>';
+                    } else {
+                        for (i = 0; i < keys.length; i += 1) {
+                            key = keys[i];
+                            type = property_type[key];
+                            if (typeof type !== 'string') {
+                                type = '';
+                            }
+                            if (standard_property_type[key] !== type) {
+                                name = ix.test(key) ? key :
+                                    '\'' + key.entityify().replace(nx, sanitize) + '\'';
+                                length += name.length + 2;
+                                if (data.member[key] === 1) {
+                                    name = '<i>' + name + '</i>';
+                                    italics += 1;
+                                    j = 1;
+                                }
+                                if (type) {
+                                    name += ': ' + type;
+                                }
+                                if (i < keys.length - 1) {
+                                    name += ', ';
+                                }
+                                if (mem.length + name.length - (italics * 7) > 80) {
+                                    output.push(mem + '<br>');
+                                    mem = '    ';
+                                    italics = j;
+                                }
+                                mem += name;
+                                j = 0;
+                            }
                         }
-                        if (i < keys.length - 1) {
-                            name += ', ';
-                        }
-                        mem += name;
                     }
                     output.push(mem + '<br>*/</pre>');
                 }
@@ -6878,7 +6897,7 @@ klass:              do {
     };
     itself.jslint = itself;
 
-    itself.edition = '2011-06-12';
+    itself.edition = '2011-07-04';
 
     return itself;
 
