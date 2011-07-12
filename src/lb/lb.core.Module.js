@@ -20,15 +20,15 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-05
+ * 2011-07-12
  */
-/*jslint white:false, plusplus:false */
 /*global define */
 define(
   [
     "./lb.core",
     "./lb.base.type",
     "./lb.base.log",
+    "./lb.base.dom.factory",
     "./lb.core.plugins.builder",
     "./lb.base.config",
     "./lb.base.dom"
@@ -37,6 +37,7 @@ define(
     lbCore,
     type,
     logModule,
+    defaultFactory,
     defaultBuilder,
     config,
     dom
@@ -85,7 +86,7 @@ define(
         module = creator(sandbox);
       } catch(creationError){
         log('ERROR: failed to create module "'+id+
-            '" using creator "'+creator+
+            '" using creator "'+String(creator)+
             '"; '+creationError);
       }
 
@@ -159,7 +160,7 @@ define(
           }
           sandbox.dom.removeAllListeners();
           var box = $( sandbox.getId() ),
-              factory = getOption('lbFactory',lb.base.dom.factory);
+              factory = getOption('lbFactory',defaultFactory);
           if ( is(box) && is(factory,'destroyElement','function') ){
             factory.destroyElement(box);
           }

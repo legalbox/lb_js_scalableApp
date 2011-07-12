@@ -28,9 +28,8 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-07
+ * 2011-07-12
  */
-/*jslint white:false, plusplus:false */
 /*global define */
 (function(){
   // Builder of
@@ -39,7 +38,7 @@
   var undef,       // undefined value, do not trust global undefined
       cache = {};  // hash of module id => exports
 
-  function define(){
+  function define(arg0,arg1,arg2){
     // Function: define([id,] [dependencies,] factory)
     // Define a module.
     //
@@ -82,6 +81,26 @@
         exports = {},
         result;
 
+    switch(arguments.length){
+      case 0:   // define()
+        return; // nothing to define
+      case 1:   // define(factory)
+        factory = arg0;
+        break;
+      case 2:
+        if (typeof arg0==='string'){  // define(id,factory)
+          id = arg0;
+        } else {                      // define(dependencies,factory)
+          dependencies = arg0;
+        }
+        factory = arg1;
+        break;
+      default: // define(id,dependencies,factory)
+        id = arg0;
+        dependencies = arg1;
+        factory = arg2;
+    }
+
     function fail(message){
       // (private) Function: fail(message)
       // Throw an Error including given message in the description.
@@ -89,7 +108,7 @@
       // Parameter:
       //   message - string, message to include in the error description
 
-      throw Error("Failed to load module id '"+id+"': "+message);
+      throw new Error("Failed to load module id '"+String(id)+"': "+message);
     }
 
     function getAbsoluteId(relativeId){
@@ -158,33 +177,13 @@
       // Returns:
       //   any, the exports of the module defined with given id
 
-      var absoluteId = getAbsoluteId(relativeId);
+      var absoluteId = getAbsoluteId(relativeId),
+          exports = cache[absoluteId];
 
-      var exports = cache[absoluteId];
       if (exports === undef){
         fail("Module not loaded yet: '"+absoluteId+"'");
       }
       return exports;
-    }
-
-    switch(arguments.length){
-      case 0:   // define()
-        return; // nothing to define
-      case 1:   // define(factory)
-        factory = arguments[0];
-        break;
-      case 2:
-        if (typeof arguments[0]==='string'){  // define(id,factory)
-          id = arguments[0];
-        } else {                              // define(dependencies,factory)
-          dependencies = arguments[0];
-        }
-        factory = arguments[1];
-        break;
-      default: // define(id,dependencies,factory)
-        id = arguments[0];
-        dependencies = arguments[1];
-        factory = arguments[2];
     }
 
     for (i=0, length=dependencies.length; i<length; i++){
@@ -210,8 +209,8 @@
       fail(e);
     }
 
-    if (id !== undef) {
-      cache[id] = result? result : exports;
+    if (typeof id === 'string') {
+      cache[id] = result || exports;
     }
   }
 

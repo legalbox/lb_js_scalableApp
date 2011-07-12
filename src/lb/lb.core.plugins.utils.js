@@ -14,9 +14,8 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-04
+ * 2011-07-12
  */
-/*jslint white:false, plusplus:false */
 /*global define, window */
 define(
   [
@@ -198,7 +197,9 @@ define(
           try {
             callback();
           } catch(e){
-            log('ERROR: failure in setTimeout for callback '+callback+'.');
+            log(
+              'ERROR: failure in setTimeout for callback '+String(callback)+'.'
+            );
           }
         },delay);
       }

@@ -4,16 +4,17 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-06-30
+ * Version:   2011-07-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*jslint white:false, onevar:false, plusplus:false */
+/*jslint vars:true */
 /*global define, window, lb, setTimeout, document */
 define(
   [
+    "bezen.org/bezen",
     "bezen.org/bezen.assert",
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
@@ -21,6 +22,7 @@ define(
     "lb/lb.core.Sandbox"
   ],
   function(
+    bezen,
     assert,
     object,
     testrunner,
