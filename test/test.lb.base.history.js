@@ -7,13 +7,13 @@
  *
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-07-07
+ * Version:   2011-07-12
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*jslint white:false, onevar:false, plusplus:false */
+/*jslint vars:true */
 /*global define, window, lb, setTimeout, document */
 define(
   [
