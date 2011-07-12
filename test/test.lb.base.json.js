@@ -10,7 +10,7 @@
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*jslint vars:true */
+/*jslint vars:true, evil:true */
 /*global define, window, lb */
 define(
   [
