@@ -211,7 +211,7 @@ HISTORY
   2011-06-06, v1.7.5, Removed Combiner tool, cleaned-up build script
   2011-06-07, v1.7.6, Moved Ant macros to a separate file to facilitate reuse
   2011-07-08, v1.8.0, Now using RequireJS to manage module dependencies
-  2011-XX-XX, v1.8.1, ROADMAP: Upgraded and renamed JSLint, updated Ant macro
+  2011-07-12, v1.8.1, Upgraded jslint4java and JSLint, updated Ant macro
   2011-XX-XX, v1.9.0, ROADMAP: add foreach(), map(), reduce() in array API
   2011-XX-XX, v1.10.0, ROADMAP: add animate() method to CSS API of Sandbox
 
