@@ -28,7 +28,7 @@
  * http://creativecommons.org/licenses/BSD/
  *
  * Version:
- * 2011-07-07
+ * 2011-07-12
  */
 /*jslint white:false, plusplus:false */
 /*global define */
@@ -89,7 +89,7 @@
       // Parameter:
       //   message - string, message to include in the error description
 
-      throw Error("Failed to load module id '"+id+"': "+message);
+      throw new Error("Failed to load module id '"+id+"': "+message);
     }
 
     function getAbsoluteId(relativeId){
