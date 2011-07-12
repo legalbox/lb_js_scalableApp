@@ -157,9 +157,9 @@
       // Returns:
       //   any, the exports of the module defined with given id
 
-      var absoluteId = getAbsoluteId(relativeId);
+      var absoluteId = getAbsoluteId(relativeId),
+          exports = cache[absoluteId];
 
-      var exports = cache[absoluteId];
       if (exports === undef){
         fail("Module not loaded yet: '"+absoluteId+"'");
       }
