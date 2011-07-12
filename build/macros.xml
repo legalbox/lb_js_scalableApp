@@ -12,7 +12,7 @@
   Author: Marc Delhommeau &lt;marc.delhommeau@legalbox.com>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-07-11
+  Version: 2011-07-12
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -44,8 +44,14 @@
     <attribute name="dir"  default="." />
     <sequential>
       <echo>jslint: checking @{file} in @{dir}</echo>
+      <!--
+      options attribute lists the options to ignore in all files.
+      Use the jslint directive in script files to ignore additional options
+      in specific scripts, e.g.
+      /*jslint vars:true */
+      -->
       <jslint4java jslint="${macros.basedir}/lib/jslint/jslint.js"
-        options="bitwise,plusplus,unparam,sloppy,white"
+        options="bitwise,plusplus,unparam,sloppy,confusion,white"
         encoding="UTF-8" haltOnFailure="true">
         <formatter type="plain" />
         <!-- The two file sets are combined to handle two use cases:
