@@ -197,7 +197,9 @@ define(
           try {
             callback();
           } catch(e){
-            log('ERROR: failure in setTimeout for callback '+callback+'.');
+            log(
+              'ERROR: failure in setTimeout for callback '+String(callback)+'.'
+            );
           }
         },delay);
       }
