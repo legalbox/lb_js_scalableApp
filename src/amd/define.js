@@ -209,7 +209,7 @@
       fail(e);
     }
 
-    if (id !== undef) {
+    if (typeof id === 'string') {
       cache[id] = result || exports;
     }
   }
