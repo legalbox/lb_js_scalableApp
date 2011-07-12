@@ -14,6 +14,7 @@
 /*global define, window, lb, setTimeout, document */
 define(
   [
+    "bezen.org/bezen",
     "bezen.org/bezen.assert",
     "bezen.org/bezen.object",
     "bezen.org/bezen.testrunner",
@@ -21,6 +22,7 @@ define(
     "lb/lb.core.Sandbox"
   ],
   function(
+    bezen,
     assert,
     object,
     testrunner,
