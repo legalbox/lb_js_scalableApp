@@ -210,7 +210,7 @@
     }
 
     if (id !== undef) {
-      cache[id] = result? result : exports;
+      cache[id] = result || exports;
     }
   }
 
