@@ -20,11 +20,9 @@
  * Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved.
  * Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
  * - code extracted from closure/goog/net/xhrio_test.html
- * - code moved inside a closure to keep global scope clean
+ * - code wrapped in a module definition with dependencies for requireJS
  * - added goog.provide('goog.net.MockXmlHttp') and assigned MockXmlHttp to
  *   goog.net.MockXmlHttp
- * - added requires comments for goog.js, goog.net.XmlHttp.js and
- *   goog.net.WrapperXmlHttpFactory.js
  * - added properties on goog.net.MockXmlHttp:
  *     * MockXmlHttp.lb.all: array of instances created
  * - added properties on this.lb :
@@ -36,90 +34,92 @@
  * - set this.responseText to echo this.lb.data just before state COMPLETE
  */
 
-/*requires goog.js*/
-goog.provide('lb.test.MockXmlHttpFactory');
+define(
+  "closure/goog.net.MockXmlHttp",
+  [
+    "closure/goog",
+    "closure/goog.net.XmlHttp",
+    "closure/goog.net.WrapperXmlHttpFactory"
+  ],
+  function(goog){
 
-/*requires goog.net.XmlHttp.js*/
-/*requires goog.net.WrapperXmlHttpFactory.js*/
+    function MockXmlHttp() {}
+    // LB: added assignment for public access
+    goog.net.MockXmlHttp = MockXmlHttp;
 
-(function(){
-  // Closure scoping
+    MockXmlHttp.prototype.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
 
-  function MockXmlHttp() {}
-  // LB: added assignment for public access
-  goog.net.MockXmlHttp = MockXmlHttp;
+    MockXmlHttp.prototype.status = 200;
 
-  MockXmlHttp.prototype.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
+    MockXmlHttp.syncSend = false;
 
-  MockXmlHttp.prototype.status = 200;
+    MockXmlHttp.prototype.send = function(opt_data) {
+      this.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
 
-  MockXmlHttp.syncSend = false;
+      // LB: cache provided data, echoed in complete()
+      this.lb.data = opt_data;
 
-  MockXmlHttp.prototype.send = function(opt_data) {
-    this.readyState = goog.net.XmlHttp.ReadyState.UNINITIALIZED;
-
-    // LB: cache provided data, echoed in complete()
-    this.lb.data = opt_data;
-
-    if (MockXmlHttp.syncSend) {
-      this.complete();
-    }
-
-  };
-
-  MockXmlHttp.prototype.complete = function() {
-    this.readyState = goog.net.XmlHttp.ReadyState.LOADING;
-    this.onreadystatechange();
-
-    this.readyState = goog.net.XmlHttp.ReadyState.LOADED;
-    this.onreadystatechange();
-
-    this.readyState = goog.net.XmlHttp.ReadyState.INTERACTIVE;
-    this.onreadystatechange();
-
-    // LB: echo provided data
-    this.responseText = this.lb.data;
-
-    this.readyState = goog.net.XmlHttp.ReadyState.COMPLETE;
-    this.onreadystatechange();
-  };
-
-
-  MockXmlHttp.prototype.open = function(verb, uri, async) {
-    // LB: cache arguments
-    this.lb = {
-      method: verb,
-      url: uri,
-      async: async
-    };
-  };
-
-  MockXmlHttp.prototype.abort = function() {};
-
-  MockXmlHttp.prototype.setRequestHeader = function(key, value) {
-    // LB: cache headers
-    this.lb.headers = this.lb.headers || {};
-    this.lb.headers[key] = value;
-  };
-
-  // LB: cache instances created
-  MockXmlHttp.lb = {
-    all: [] // array of all instances created
-  };
-
-  var lastMockXmlHttp;
-  goog.net.XmlHttp.setGlobalFactory(
-    new goog.net.WrapperXmlHttpFactory(
-      function() {
-        lastMockXmlHttp = new MockXmlHttp();
-        // LB: push new instance to the list
-        MockXmlHttp.lb.all.push(lastMockXmlHttp);
-        return lastMockXmlHttp;
-      },
-      function() {
-        return {};
+      if (MockXmlHttp.syncSend) {
+        this.complete();
       }
-    )
-  );
 
-})();
+    };
+
+    MockXmlHttp.prototype.complete = function() {
+      this.readyState = goog.net.XmlHttp.ReadyState.LOADING;
+      this.onreadystatechange();
+
+      this.readyState = goog.net.XmlHttp.ReadyState.LOADED;
+      this.onreadystatechange();
+
+      this.readyState = goog.net.XmlHttp.ReadyState.INTERACTIVE;
+      this.onreadystatechange();
+
+      // LB: echo provided data
+      this.responseText = this.lb.data;
+
+      this.readyState = goog.net.XmlHttp.ReadyState.COMPLETE;
+      this.onreadystatechange();
+    };
+
+
+    MockXmlHttp.prototype.open = function(verb, uri, async) {
+      // LB: cache arguments
+      this.lb = {
+        method: verb,
+        url: uri,
+        async: async
+      };
+    };
+
+    MockXmlHttp.prototype.abort = function() {};
+
+    MockXmlHttp.prototype.setRequestHeader = function(key, value) {
+      // LB: cache headers
+      this.lb.headers = this.lb.headers || {};
+      this.lb.headers[key] = value;
+    };
+
+    // LB: cache instances created
+    MockXmlHttp.lb = {
+      all: [] // array of all instances created
+    };
+
+    var lastMockXmlHttp;
+    goog.net.XmlHttp.setGlobalFactory(
+      new goog.net.WrapperXmlHttpFactory(
+        function() {
+          lastMockXmlHttp = new MockXmlHttp();
+          // LB: push new instance to the list
+          MockXmlHttp.lb.all.push(lastMockXmlHttp);
+          return lastMockXmlHttp;
+        },
+        function() {
+          return {};
+        }
+      )
+    );
+
+    return MockXmlHttp;
+  }
+);

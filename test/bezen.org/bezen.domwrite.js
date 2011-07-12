@@ -5,16 +5,7 @@
  * author:    Eric Bréchemier <bezen@eric.brechemier.name>
  * license:   Creative Commons Attribution 3.0 Unported
  *            http://creativecommons.org/licenses/by/3.0/
- * version:   2010-01-14 "Calvin's Snowball"
- *
- * To Cecile, with Love,
- * you were the first to wait for the conception of this library
- *
- * Tested successfully in
- *   Firefox 2, Firefox 3, Firefox 3.5,
- *   Internet Explorer 6, Internet Explorer 7, Internet Explorer 8,
- *   Chrome 3, Safari 3, Safari 4,
- *   Opera 9.64, Opera 10.10
+ * version:   based on 2010-01-14
  *
  * I developed this library to allow a deferred loading for third party
  * scripts making use of document.write().
@@ -166,406 +157,410 @@
  *     LABjs (Loading And Blocking JavaScript)
  *     http://labjs.com/
  */
-/*requires bezen.js */
-/*requires bezen.string.js */
-/*requires bezen.array.js */
-/*requires bezen.dom.js */
+
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * updated module pattern for use with requireJS
+
 /*jslint evil:true, nomen:false, white:false, onevar:false, plusplus:false */
-/*global bezen, document, setTimeout */
-bezen.domwrite = (function() {
-  // Builder of
-  // Closure for Simulated document.write and document.writeln
+/*global document, setTimeout */
+define("bezen.org/bezen.domwrite",["./bezen", "./bezen.string", "./bezen.array", "./bezen.dom"],
+  function(bezen,  string,           array,           dom) {
 
-  // Define aliases
-  var nix = bezen.nix,
-      trim = bezen.string.trim,
-      empty = bezen.array.empty,
-      hasAttribute = bezen.dom.hasAttribute,
-      appendScript = bezen.dom.appendScript,
-  // Original browser functions
-      originalDocumentWrite = document.write,
-      originalDocumentWriteln = document.writeln;
-   
-  // array of HTML markup written in subsequent calls to domWrite function.
-  // The collectMarkup function collects the markup and empties the array.
-  var markupArray = [];
-   
-  var domWrite = function(markup) {
-    // simulated document.write function.
-    // It is intended to enable, after window onload, the dynamic loading 
-    // of external scripts that call the document.write function.
-    //
-    // Note: unlike native document.write, domWrite does not call
-    //       document.open() after window onload, thus preventing
-    //       the document reset which happens in this case.
-    //
-    // params:
-    //   markup - (string) HTML markup
+    // Define aliases
+    var nix = bezen.nix,
+        trim = string.trim,
+        empty = array.empty,
+        hasAttribute = dom.hasAttribute,
+        appendScript = dom.appendScript,
+    // Original browser functions
+        originalDocumentWrite = document.write,
+        originalDocumentWriteln = document.writeln;
      
-    markupArray.push( markup );
-  };
-   
-  var domWriteln = function(markup) {
-    // simulated document.writeln function
-    //
-    // params:
-    //   markup - (string) HTML markup
+    // array of HTML markup written in subsequent calls to domWrite function.
+    // The collectMarkup function collects the markup and empties the array.
+    var markupArray = [];
      
-    domWrite( markup+'\n' );
-  };
-
-  var collectMarkup = function() {
-    // retrieve the markup collected by domWrite
-    // or null if no markup was collected
-    //
-    // return: (string)
-    //   null if domWrite has not called since last call to collectMarkup,
-    //   otherwise the concatenated markup collected by domWrite (ordered)
-    //   
-    if (markupArray.length === 0) {
-      return null;
-    }
-     
-    var markup = markupArray.join('');
-    empty(markupArray);
-    return markup;
-  };
-   
-  var parseMarkup = function(markup) {
-    // parse HTML by inserting markup in a new div outside the DOM
-    //
-    // This is the method used in this module to parse the markup written
-    // to document.write and document.writeln, in a call to render().
-    //
-    // Note: The <br> hack is required for proper parsing of script 
-    //       elements in IE. It consists in inserting a <br> element
-    //       at start of markup (then removed before returning result).
-    //
-    // param:
-    //   markup - (string) (!nil) HTML markup to parse
-    //
-    // return: (DOM node)
-    //   the first child node (might be null), within its parent parser div
-     
-    var divParser = document.createElement("div");
-    divParser.innerHTML = '<br/>'+markup;
-    divParser.removeChild( divParser.firstChild );
-    return divParser.firstChild;
-  };
-   
-  var isJavascriptScript = function(node) {
-    // check whether this node is a script element identified as javascript
-    //
-    // params:
-    //   node - (DOM node) (!nil) the node to check
-    //
-    // return: (boolean)
-    //   false if node.nodeName !== "SCRIPT"
-    //         or (node.language 
-    //             && node.language.toLowerCase() !== "javascript")
-    //         or (node.type
-    //             && node.type.replace(
-    //                  /^\s+|\s+$/g,""
-    //                ).toLowerCase() !== "text/javascript"
-    //   true otherwise 
-    //
-    // Note: this method does not take into account the overload of default
-    //       script type using HTTP or meta parameter.
-    //       For cross-browser compatibility, it also ignores alternate MIME
-    //       types for javascript:
-    //       - "application/javascript" (the new standard)
-    //       - "application/x-javascript" (private extension)
-    //       Only the deprecated "text/javascript" is supported here.
-    //
-    
-    if ( node.nodeName !== "SCRIPT" ) {
-      return false;
-    }
-      
-    if ( node.language && 
-         node.language.toLowerCase() !== "javascript" ) {
-      return false;
-    }
-
-    if ( node.type &&
-         trim(node.type).toLowerCase() !== "text/javascript" ) {
-      return false;
-    }
-    
-    return true;
-  };
-   
-  var appendScriptClone = function(parent, scriptElt, listener) {
-    // clone a script element with custom code to ensure 
-    // that it runs and that provided callback is triggered
-    // then append it to parent.
-    //
-    // Note: to design this method, I performed extensive tests of dynamic
-    //       loading in these browsers:
-    //         - IE6, IE7, IE8,
-    //         - FF2, FF3, FF3.5,
-    //         - Safari 3.1, Safari 4.0,
-    //         - Chrome 2,
-    //         - Opera 9.6 and Opera 10
-    //
-    // The steps to clone external scripts are:
-    //   - create a new script node
-    //   - copy all (non-default) attributes
-    //   - copy the script text
-    //
-    // The steps are different for internal scripts:
-    //   - clone it in a shallow way with cloneNode(false)
-    //   - copy the script text
-    //   - set the "type" attribute to "any" before appending to the DOM
-    //   - restore the original type attribute afterwards
-    // These steps ensure that the internal script is cloned but does not run,
-    // which allows to trigger the callback in a reliable way:
-    //   - evaluate the script text using a new Function()
-    //   - trigger the callback (after yield) with setTimeout
-    //
-    // params:
-    //   parent - (DOM element) (!nil) parent element to append the script to
-    //   scriptElt - (DOM element) (!nil) the script element to copy
-    //               It must be a Javascript script.
-    //   listener - (function) (!nil) the listener function to be triggered
-    //              when the script has been loaded and run
-    //
-    // Known Limitations:
-    //   - in case of error in an external or internal script cloned with this
-    //     method, the listener is never triggered. I thought about using the
-    //     script.onerror handler to detect errors and go on, but this handler
-    //     is only triggered for external scripts, for unusual errors such as
-    //     interruption of the download or missing local file, and cannot be
-    //     relied on cross-browser. In addition, parsing errors or other 
-    //     Javascript errors do not trigger the script.onerror handler, only,
-    //     in some browsers, the global window.onerror handler.
-    //
-    //   - for consistency between internal and external scripts, I refrained
-    //     from adding a try/catch mechanism around the evaluation of the
-    //     internal script code. As a consequence, any error thrown during the
-    //     evaluation will break the chain of loading in the same manner.
-    //
-    // References:
-    //   How to trigger script.onerror in Internet Explorer? - StackOverflow
-    //   http://stackoverflow.com/questions/2027849
-    //         /how-to-trigger-script-onerror-in-internet-explorer
-    //
-    //   onerror Event - MSDN
-    //   http://msdn.microsoft.com/en-us/library/cc197053%28VS.85%29.aspx
-     
-    if ( hasAttribute(scriptElt,"src") ) {
-      var externalScript = document.createElement("script");
-      for (var i=0; i<scriptElt.attributes.length; i++) {
-        var attribute = scriptElt.attributes[i];
-        if (  hasAttribute( scriptElt, attribute.name )  ) {
-          externalScript.setAttribute(attribute.name, attribute.value);
-        }
-      }
-      externalScript.text = scriptElt.text;
-      appendScript(parent, externalScript, listener);
-    } else {
-      var internalScript = scriptElt.cloneNode(false);
-      internalScript.text = scriptElt.text;
-      internalScript.type = "any";        
-      parent.appendChild( internalScript );
-      // revert "type" attribute to its original state
-      if ( hasAttribute(scriptElt, "type") ) {
-        // restore original value
-        internalScript.setAttribute("type", scriptElt.type);
-      } else {
-        // remove newly created type attribute
-        internalScript.removeAttribute("type");
-      }       
+    var domWrite = function(markup) {
+      // simulated document.write function.
+      // It is intended to enable, after window onload, the dynamic loading 
+      // of external scripts that call the document.write function.
+      //
+      // Note: unlike native document.write, domWrite does not call
+      //       document.open() after window onload, thus preventing
+      //       the document reset which happens in this case.
+      //
+      // params:
+      //   markup - (string) HTML markup
        
-      // global eval script text to run it now, just once
-      (  new Function( internalScript.text )  )();
-       
-      // run the callback just after
-      listener();
-    }
-  };
- 
-  // Note: the declaration of render before use by loadPiecemeal is required
-  //       by JSLint - these two methods are mutually recursive
-  var render;
-
-  var loadPiecemeal = function(parent, input, callback) {
-    // load input created by parseMarkup node by node, by:
-    //   - inserting a clone of the input node in the document
-    //   - loading scripts and loading in turn any markup collected
-    //   - going on with the following node in the input, in "document order"
-    //   - finally, firing the callback after reaching the end of the input
-    //
-    // Note: this method is intended for private use, in combination with
-    //       domWrite and render to simulate document.write
-    //
-    // params:
-    //   parent - (DOM element) (!nil) current parent to append cloned nodes to
-    //   input - (DOM node) (null) current node in the input generated by 
-    //           the parser parseMarkup(). A null value means that the end of 
-    //           the input has been reached
-    //   callback - (function) (!nil) the function to trigger after the end of 
-    //              successful loading.
-    //              Warning: the callback function is mandatory here, as it
-    //                       is required to report the end of the processing
-    //
-    
-    if (input===null) {
-      // end of the input
-      callback();
-      return;
-    }
-     
-    var nextInput = null;
-    var nextParent = parent;
-    var nextStep = function() {
-      loadPiecemeal(nextParent, nextInput, callback);
+      markupArray.push( markup );
     };
      
-    if ( isJavascriptScript(input) ) {
-      setTimeout(function(){
-        appendScriptClone(parent, input, function() { 
-          render(parent, nextStep);
-        });
-      },0);
-      // keep nextInput null - skip first child for cross-browser consistency
+    var domWriteln = function(markup) {
+      // simulated document.writeln function
+      //
+      // params:
+      //   markup - (string) HTML markup
        
-    } else {
-      // regular node
-      var clone = input.cloneNode(false);
-      parent.appendChild(clone);
-      setTimeout(nextStep, 0);
+      domWrite( markup+'\n' );
+    };
+
+    var collectMarkup = function() {
+      // retrieve the markup collected by domWrite
+      // or null if no markup was collected
+      //
+      // return: (string)
+      //   null if domWrite has not called since last call to collectMarkup,
+      //   otherwise the concatenated markup collected by domWrite (ordered)
+      //   
+      if (markupArray.length === 0) {
+        return null;
+      }
        
-      if (input.firstChild) {
-        var scriptCount = input.getElementsByTagName('script').length;
-        if ( scriptCount === 0 ) {
-          // shortcut: if there is no script within
-          //           copy all descendants at once as innerHTML
-          clone.innerHTML = input.innerHTML;
+      var markup = markupArray.join('');
+      empty(markupArray);
+      return markup;
+    };
+     
+    var parseMarkup = function(markup) {
+      // parse HTML by inserting markup in a new div outside the DOM
+      //
+      // This is the method used in this module to parse the markup written
+      // to document.write and document.writeln, in a call to render().
+      //
+      // Note: The <br> hack is required for proper parsing of script 
+      //       elements in IE. It consists in inserting a <br> element
+      //       at start of markup (then removed before returning result).
+      //
+      // param:
+      //   markup - (string) (!nil) HTML markup to parse
+      //
+      // return: (DOM node)
+      //   the first child node (might be null), within its parent parser div
+       
+      var divParser = document.createElement("div");
+      divParser.innerHTML = '<br/>'+markup;
+      divParser.removeChild( divParser.firstChild );
+      return divParser.firstChild;
+    };
+     
+    var isJavascriptScript = function(node) {
+      // check whether this node is a script element identified as javascript
+      //
+      // params:
+      //   node - (DOM node) (!nil) the node to check
+      //
+      // return: (boolean)
+      //   false if node.nodeName !== "SCRIPT"
+      //         or (node.language 
+      //             && node.language.toLowerCase() !== "javascript")
+      //         or (node.type
+      //             && node.type.replace(
+      //                  /^\s+|\s+$/g,""
+      //                ).toLowerCase() !== "text/javascript"
+      //   true otherwise 
+      //
+      // Note: this method does not take into account the overload of default
+      //       script type using HTTP or meta parameter.
+      //       For cross-browser compatibility, it also ignores alternate MIME
+      //       types for javascript:
+      //       - "application/javascript" (the new standard)
+      //       - "application/x-javascript" (private extension)
+      //       Only the deprecated "text/javascript" is supported here.
+      //
+      
+      if ( node.nodeName !== "SCRIPT" ) {
+        return false;
+      }
+        
+      if ( node.language && 
+           node.language.toLowerCase() !== "javascript" ) {
+        return false;
+      }
+
+      if ( node.type &&
+           trim(node.type).toLowerCase() !== "text/javascript" ) {
+        return false;
+      }
+      
+      return true;
+    };
+     
+    var appendScriptClone = function(parent, scriptElt, listener) {
+      // clone a script element with custom code to ensure 
+      // that it runs and that provided callback is triggered
+      // then append it to parent.
+      //
+      // Note: to design this method, I performed extensive tests of dynamic
+      //       loading in these browsers:
+      //         - IE6, IE7, IE8,
+      //         - FF2, FF3, FF3.5,
+      //         - Safari 3.1, Safari 4.0,
+      //         - Chrome 2,
+      //         - Opera 9.6 and Opera 10
+      //
+      // The steps to clone external scripts are:
+      //   - create a new script node
+      //   - copy all (non-default) attributes
+      //   - copy the script text
+      //
+      // The steps are different for internal scripts:
+      //   - clone it in a shallow way with cloneNode(false)
+      //   - copy the script text
+      //   - set the "type" attribute to "any" before appending to the DOM
+      //   - restore the original type attribute afterwards
+      // These steps ensure that the internal script is cloned but does not run,
+      // which allows to trigger the callback in a reliable way:
+      //   - evaluate the script text using a new Function()
+      //   - trigger the callback (after yield) with setTimeout
+      //
+      // params:
+      //   parent - (DOM element) (!nil) parent element to append the script to
+      //   scriptElt - (DOM element) (!nil) the script element to copy
+      //               It must be a Javascript script.
+      //   listener - (function) (!nil) the listener function to be triggered
+      //              when the script has been loaded and run
+      //
+      // Known Limitations:
+      //   - in case of error in an external or internal script cloned with this
+      //     method, the listener is never triggered. I thought about using the
+      //     script.onerror handler to detect errors and go on, but this handler
+      //     is only triggered for external scripts, for unusual errors such as
+      //     interruption of the download or missing local file, and cannot be
+      //     relied on cross-browser. In addition, parsing errors or other 
+      //     Javascript errors do not trigger the script.onerror handler, only,
+      //     in some browsers, the global window.onerror handler.
+      //
+      //   - for consistency between internal and external scripts, I refrained
+      //     from adding a try/catch mechanism around the evaluation of the
+      //     internal script code. As a consequence, any error thrown during the
+      //     evaluation will break the chain of loading in the same manner.
+      //
+      // References:
+      //   How to trigger script.onerror in Internet Explorer? - StackOverflow
+      //   http://stackoverflow.com/questions/2027849
+      //         /how-to-trigger-script-onerror-in-internet-explorer
+      //
+      //   onerror Event - MSDN
+      //   http://msdn.microsoft.com/en-us/library/cc197053%28VS.85%29.aspx
+       
+      if ( hasAttribute(scriptElt,"src") ) {
+        var externalScript = document.createElement("script");
+        for (var i=0; i<scriptElt.attributes.length; i++) {
+          var attribute = scriptElt.attributes[i];
+          if (  hasAttribute( scriptElt, attribute.name )  ) {
+            externalScript.setAttribute(attribute.name, attribute.value);
+          }
+        }
+        externalScript.text = scriptElt.text;
+        appendScript(parent, externalScript, listener);
+      } else {
+        var internalScript = scriptElt.cloneNode(false);
+        internalScript.text = scriptElt.text;
+        internalScript.type = "any";        
+        parent.appendChild( internalScript );
+        // revert "type" attribute to its original state
+        if ( hasAttribute(scriptElt, "type") ) {
+          // restore original value
+          internalScript.setAttribute("type", scriptElt.type);
         } else {
-          // go the long way
-          nextInput = input.firstChild;
-          nextParent = clone;
+          // remove newly created type attribute
+          internalScript.removeAttribute("type");
+        }       
+         
+        // global eval script text to run it now, just once
+        (  new Function( internalScript.text )  )();
+         
+        // run the callback just after
+        listener();
+      }
+    };
+   
+    // Note: the declaration of render before use by loadPiecemeal is required
+    //       by JSLint - these two methods are mutually recursive
+    var render;
+
+    var loadPiecemeal = function(parent, input, callback) {
+      // load input created by parseMarkup node by node, by:
+      //   - inserting a clone of the input node in the document
+      //   - loading scripts and loading in turn any markup collected
+      //   - going on with the following node in the input, in "document order"
+      //   - finally, firing the callback after reaching the end of the input
+      //
+      // Note: this method is intended for private use, in combination with
+      //       domWrite and render to simulate document.write
+      //
+      // params:
+      //   parent - (DOM element) (!nil) current parent to append cloned nodes to
+      //   input - (DOM node) (null) current node in the input generated by 
+      //           the parser parseMarkup(). A null value means that the end of 
+      //           the input has been reached
+      //   callback - (function) (!nil) the function to trigger after the end of 
+      //              successful loading.
+      //              Warning: the callback function is mandatory here, as it
+      //                       is required to report the end of the processing
+      //
+      
+      if (input===null) {
+        // end of the input
+        callback();
+        return;
+      }
+       
+      var nextInput = null;
+      var nextParent = parent;
+      var nextStep = function() {
+        loadPiecemeal(nextParent, nextInput, callback);
+      };
+       
+      if ( isJavascriptScript(input) ) {
+        setTimeout(function(){
+          appendScriptClone(parent, input, function() { 
+            render(parent, nextStep);
+          });
+        },0);
+        // keep nextInput null - skip first child for cross-browser consistency
+         
+      } else {
+        // regular node
+        var clone = input.cloneNode(false);
+        parent.appendChild(clone);
+        setTimeout(nextStep, 0);
+         
+        if (input.firstChild) {
+          var scriptCount = input.getElementsByTagName('script').length;
+          if ( scriptCount === 0 ) {
+            // shortcut: if there is no script within
+            //           copy all descendants at once as innerHTML
+            clone.innerHTML = input.innerHTML;
+          } else {
+            // go the long way
+            nextInput = input.firstChild;
+            nextParent = clone;
+          }
         }
       }
-    }
-     
-    // Note: I do not return in the above if/else, but plan the nextStep
-    //       closure execution with listeners / setTimeout.
-    //       I can then update safely the nextInput and nextParent 
-    //       referenced by the closure.
-    // Important: this relies on the fact that setTimeout defers the execution
-    //       of the next step after the end of the current thread of execution.
-    //       It will work here only as long as a setTimeout *is* met on all
-    //       paths (internal script / external script / regular node).
-    //       It worked *most*of*the*time* by appending an external script to 
-    //       the DOM and setting the next step to the callback, except, 
-    //       sometimes, in Safari, where the script may run immediately,
-    //       followed by the callback, without waiting for the end of the 
-    //       current method. I first fixed it by using setTimeout to append 
-    //       the external script. I then moved it to the upper lever, around
-    //       appendScriptClone in loadPiecemeal.
-    //       This behavior must be preserved across future refactorings.
-    
-    // if there is no first child (or if this is a script node)
-    // move to the next sibling
-    if (nextInput === null) {
-      nextInput = input.nextSibling;
-    }
-     
-    // if there is no next sibling
-    // move to the first sibling found in an ancestor
-    var inputAncestor = input.parentNode;
-    while( nextInput === null && inputAncestor !== null) {
-      nextInput = inputAncestor.nextSibling;
-      nextParent = nextParent.parentNode;
-      inputAncestor = inputAncestor.parentNode;
-    }      
-     
-    // return to yield
-    return;
-  };
+       
+      // Note: I do not return in the above if/else, but plan the nextStep
+      //       closure execution with listeners / setTimeout.
+      //       I can then update safely the nextInput and nextParent 
+      //       referenced by the closure.
+      // Important: this relies on the fact that setTimeout defers the execution
+      //       of the next step after the end of the current thread of execution.
+      //       It will work here only as long as a setTimeout *is* met on all
+      //       paths (internal script / external script / regular node).
+      //       It worked *most*of*the*time* by appending an external script to 
+      //       the DOM and setting the next step to the callback, except, 
+      //       sometimes, in Safari, where the script may run immediately,
+      //       followed by the callback, without waiting for the end of the 
+      //       current method. I first fixed it by using setTimeout to append 
+      //       the external script. I then moved it to the upper lever, around
+      //       appendScriptClone in loadPiecemeal.
+      //       This behavior must be preserved across future refactorings.
+      
+      // if there is no first child (or if this is a script node)
+      // move to the next sibling
+      if (nextInput === null) {
+        nextInput = input.nextSibling;
+      }
+       
+      // if there is no next sibling
+      // move to the first sibling found in an ancestor
+      var inputAncestor = input.parentNode;
+      while( nextInput === null && inputAncestor !== null) {
+        nextInput = inputAncestor.nextSibling;
+        nextParent = nextParent.parentNode;
+        inputAncestor = inputAncestor.parentNode;
+      }      
+       
+      // return to yield
+      return;
+    };
 
-  var capture = function() {
-    // start capturing markup written to document.write and document.writeln,
-    // by replacing the functions with methods domWrite and domWriteln from
-    // this module
-    //
-    // In order to preserve any replacement function already set to write or
-    // writeln, the capturing functions domWrite and domWriteln are only set
-    // if the corresponding property is still equal to the original browser 
-    // function (saved as reference in a variable when this module loaded).
-    //
-    // For example, if document.write has already been replaced by a function
-    // defined by bezen.ready to capture the script defer hack, while
-    // document.writeln is still the original browser function, the former
-    // will be preserved, and the latter set to the domWriteln function.
+    var capture = function() {
+      // start capturing markup written to document.write and document.writeln,
+      // by replacing the functions with methods domWrite and domWriteln from
+      // this module
+      //
+      // In order to preserve any replacement function already set to write or
+      // writeln, the capturing functions domWrite and domWriteln are only set
+      // if the corresponding property is still equal to the original browser 
+      // function (saved as reference in a variable when this module loaded).
+      //
+      // For example, if document.write has already been replaced by a function
+      // defined by bezen.ready to capture the script defer hack, while
+      // document.writeln is still the original browser function, the former
+      // will be preserved, and the latter set to the domWriteln function.
+       
+      var dom = document;
+      if (dom.write===originalDocumentWrite){
+        dom.write = domWrite;
+      }
+      if (dom.writeln===originalDocumentWriteln){
+        dom.writeln = domWriteln;
+      }
+    };
      
-    var dom = document;
-    if (dom.write===originalDocumentWrite){
-      dom.write = domWrite;
-    }
-    if (dom.writeln===originalDocumentWriteln){
-      dom.writeln = domWriteln;
-    }
-  };
-   
-  // Note: already declared before use by loadPiecemeal:
-  // these two methods are mutually recursive
-  render = function(parent, callback) {
-    // load markup collected by domWrite in a progressive way,
-    // to simulate document.write: after loading a script, 
-    // any markup collected is first loaded and appended at current location,
-    // then the processing of remaining markup is resumed. 
-    //
-    // params:
-    //   parent - (DOM element) (optional) (default: document.body) the parent 
-    //            to append new markup to
-    //   callback - (function) (optional) (default: bezen.nix) function to
-    //              call after successful loading of the complete markup
-    //
-    // Note: 
-    //   In case no markup has been collected, the callback fires immediately.
-    //
-    if (parent instanceof Function) {
-      // callback provided as first parameter, no parent provided
-      callback = parent;
-      parent = document.body;
-    } else {
-      parent = parent || document.body;
-      callback = callback || nix;
-    }
+    // Note: already declared before use by loadPiecemeal:
+    // these two methods are mutually recursive
+    render = function(parent, callback) {
+      // load markup collected by domWrite in a progressive way,
+      // to simulate document.write: after loading a script, 
+      // any markup collected is first loaded and appended at current location,
+      // then the processing of remaining markup is resumed. 
+      //
+      // params:
+      //   parent - (DOM element) (optional) (default: document.body) the parent 
+      //            to append new markup to
+      //   callback - (function) (optional) (default: bezen.nix) function to
+      //              call after successful loading of the complete markup
+      //
+      // Note: 
+      //   In case no markup has been collected, the callback fires immediately.
+      //
+      if (parent instanceof Function) {
+        // callback provided as first parameter, no parent provided
+        callback = parent;
+        parent = document.body;
+      } else {
+        parent = parent || document.body;
+        callback = callback || nix;
+      }
+      
+      var markup = collectMarkup();
+      if (markup===null) {
+        callback();
+      } else {
+        loadPiecemeal(parent, parseMarkup(markup), callback);
+      }
+    };
     
-    var markup = collectMarkup();
-    if (markup===null) {
-      callback();
-    } else {
-      loadPiecemeal(parent, parseMarkup(markup), callback);
-    }
-  };
-  
-  var restore = function(){
-    // restore the original browser functions (saved in variables during the
-    // loading of this module) to document.write and document.writeln
+    var restore = function(){
+      // restore the original browser functions (saved in variables during the
+      // loading of this module) to document.write and document.writeln
+      
+      document.write = originalDocumentWrite;
+      document.writeln = originalDocumentWriteln;
+    };
     
-    document.write = originalDocumentWrite;
-    document.writeln = originalDocumentWriteln;
-  };
-  
-  return { // public API
-    capture: capture,
-    parseMarkup: parseMarkup,
-    render: render,
-    restore: restore,
-     
-    _: { // private section, for unit tests
-      markupArray: markupArray,
-      domWrite: domWrite,
-      domWriteln: domWriteln,
-      collectMarkup: collectMarkup,
-      isJavascriptScript: isJavascriptScript,
-      appendScriptClone: appendScriptClone,
-      loadPiecemeal: loadPiecemeal
-    }
-  };
-}());
+    // Assign to bezen.domwrite
+    // for backward compatibility
+    bezen.domwrite = { // public API
+      capture: capture,
+      parseMarkup: parseMarkup,
+      render: render,
+      restore: restore,
+       
+      _: { // private section, for unit tests
+        markupArray: markupArray,
+        domWrite: domWrite,
+        domWriteln: domWriteln,
+        collectMarkup: collectMarkup,
+        isJavascriptScript: isJavascriptScript,
+        appendScriptClone: appendScriptClone,
+        loadPiecemeal: loadPiecemeal
+      }
+    };
+    return bezen.domwrite;
+  }
+);

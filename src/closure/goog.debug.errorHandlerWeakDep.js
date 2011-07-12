@@ -16,7 +16,8 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/errorhandlerweakdep.js to 
 //   goog.debug.errorHandlerWeakDep.js
-// * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview File which defines dummy object to work around undefined
@@ -24,21 +25,25 @@
  * {@link goog.debug.ErrorHandler#protectEntryPoint}.
  *
  */
-/*requires goog.js*/
-goog.provide('goog.debug.errorHandlerWeakDep');
+define(["./goog"], function(goog){
+
+  goog.provide('goog.debug.errorHandlerWeakDep');
 
 
-/**
- * Dummy object to work around undefined properties compiler warning.
- * @type {Object}
- */
-goog.debug.errorHandlerWeakDep = {
   /**
-   * @param {Function} fn An entry point function to be protected.
-   * @param {boolean=} opt_tracers Whether to install tracers around the
-   *     fn.
-   * @return {Function} A protected wrapper function that calls the
-   *     entry point function.
+   * Dummy object to work around undefined properties compiler warning.
+   * @type {Object}
    */
-  protectEntryPoint: function(fn, opt_tracers) { return fn; }
-};
+  goog.debug.errorHandlerWeakDep = {
+    /**
+     * @param {Function} fn An entry point function to be protected.
+     * @param {boolean=} opt_tracers Whether to install tracers around the
+     *     fn.
+     * @return {Function} A protected wrapper function that calls the
+     *     entry point function.
+     */
+    protectEntryPoint: function(fn, opt_tracers) { return fn; }
+  };
+
+  return goog.debug.errorHandlerWeakDep;
+});

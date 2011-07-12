@@ -12,6 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
+// * renamed file from goog/events/listener.js to goog.events.Listener.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
+
 /**
  * @fileoverview Listener object.
  * @see ../demos/events.html
@@ -21,140 +27,145 @@
 /**
  * Namespace for events
  */
-goog.provide('goog.events.Listener');
+define(["./goog"], function(goog){
+
+  goog.provide('goog.events.Listener');
 
 
 
-/**
- * Simple class that stores information about a listener
- * @constructor
- */
-goog.events.Listener = function() {
-};
+  /**
+   * Simple class that stores information about a listener
+   * @constructor
+   */
+  goog.events.Listener = function() {
+  };
 
 
-/**
- * Counter used to create a unique key
- * @type {number}
- * @private
- */
-goog.events.Listener.counter_ = 0;
+  /**
+   * Counter used to create a unique key
+   * @type {number}
+   * @private
+   */
+  goog.events.Listener.counter_ = 0;
 
 
-/**
- * Whether the listener is a function or an object that implements handleEvent.
- * @type {boolean}
- * @private
- */
-goog.events.Listener.prototype.isFunctionListener_;
+  /**
+   * Whether the listener is a function or an object that implements handleEvent.
+   * @type {boolean}
+   * @private
+   */
+  goog.events.Listener.prototype.isFunctionListener_;
 
 
-/**
- * Call back function or an object with a handleEvent function.
- * @type {Function|Object|null}
- */
-goog.events.Listener.prototype.listener;
+  /**
+   * Call back function or an object with a handleEvent function.
+   * @type {Function|Object|null}
+   */
+  goog.events.Listener.prototype.listener;
 
 
-/**
- * Proxy for callback that passes through {@link goog.events#HandleEvent_}
- * @type {Function}
- */
-goog.events.Listener.prototype.proxy;
+  /**
+   * Proxy for callback that passes through {@link goog.events#HandleEvent_}
+   * @type {Function}
+   */
+  goog.events.Listener.prototype.proxy;
 
 
-/**
- * Object or node that callback is listening to
- * @type {Object|goog.events.EventTarget}
- */
-goog.events.Listener.prototype.src;
+  /**
+   * Object or node that callback is listening to
+   * @type {Object|goog.events.EventTarget}
+   */
+  goog.events.Listener.prototype.src;
 
 
-/**
- * Type of event
- * @type {string}
- */
-goog.events.Listener.prototype.type;
+  /**
+   * Type of event
+   * @type {string}
+   */
+  goog.events.Listener.prototype.type;
 
 
-/**
- * Whether the listener is being called in the capture or bubble phase
- * @type {boolean}
- */
-goog.events.Listener.prototype.capture;
+  /**
+   * Whether the listener is being called in the capture or bubble phase
+   * @type {boolean}
+   */
+  goog.events.Listener.prototype.capture;
 
 
-/**
- * Optional object whose context to execute the listener in
- * @type {Object|undefined}
- */
-goog.events.Listener.prototype.handler;
+  /**
+   * Optional object whose context to execute the listener in
+   * @type {Object|undefined}
+   */
+  goog.events.Listener.prototype.handler;
 
 
-/**
- * The key of the listener.
- * @type {number}
- */
-goog.events.Listener.prototype.key = 0;
+  /**
+   * The key of the listener.
+   * @type {number}
+   */
+  goog.events.Listener.prototype.key = 0;
 
 
-/**
- * Whether the listener has been removed.
- * @type {boolean}
- */
-goog.events.Listener.prototype.removed = false;
+  /**
+   * Whether the listener has been removed.
+   * @type {boolean}
+   */
+  goog.events.Listener.prototype.removed = false;
 
 
-/**
- * Whether to remove the listener after it has been called.
- * @type {boolean}
- */
-goog.events.Listener.prototype.callOnce = false;
+  /**
+   * Whether to remove the listener after it has been called.
+   * @type {boolean}
+   */
+  goog.events.Listener.prototype.callOnce = false;
 
 
-/**
- * Initializes the listener.
- * @param {Function|Object} listener Callback function, or an object with a
- *     handleEvent function.
- * @param {Function} proxy Wrapper for the listener that patches the event.
- * @param {Object} src Source object for the event.
- * @param {string} type Event type.
- * @param {boolean} capture Whether in capture or bubble phase.
- * @param {Object=} opt_handler Object in whose context to execute the callback.
- */
-goog.events.Listener.prototype.init = function(listener, proxy, src, type,
-                                               capture, opt_handler) {
-  // we do the test of the listener here so that we do  not need to
-  // continiously do this inside handleEvent
-  if (goog.isFunction(listener)) {
-    this.isFunctionListener_ = true;
-  } else if (listener && listener.handleEvent &&
-      goog.isFunction(listener.handleEvent)) {
-    this.isFunctionListener_ = false;
-  } else {
-    throw Error('Invalid listener argument');
-  }
+  /**
+   * Initializes the listener.
+   * @param {Function|Object} listener Callback function, or an object with a
+   *     handleEvent function.
+   * @param {Function} proxy Wrapper for the listener that patches the event.
+   * @param {Object} src Source object for the event.
+   * @param {string} type Event type.
+   * @param {boolean} capture Whether in capture or bubble phase.
+   * @param {Object=} opt_handler Object in whose context to execute the callback.
+   */
+  goog.events.Listener.prototype.init = function(listener, proxy, src, type,
+                                                 capture, opt_handler) {
+    // we do the test of the listener here so that we do  not need to
+    // continiously do this inside handleEvent
+    if (goog.isFunction(listener)) {
+      this.isFunctionListener_ = true;
+    } else if (listener && listener.handleEvent &&
+        goog.isFunction(listener.handleEvent)) {
+      this.isFunctionListener_ = false;
+    } else {
+      throw Error('Invalid listener argument');
+    }
 
-  this.listener = listener;
-  this.proxy = proxy;
-  this.src = src;
-  this.type = type;
-  this.capture = !!capture;
-  this.handler = opt_handler;
-  this.callOnce = false;
-  this.key = ++goog.events.Listener.counter_;
-  this.removed = false;
-};
+    this.listener = listener;
+    this.proxy = proxy;
+    this.src = src;
+    this.type = type;
+    this.capture = !!capture;
+    this.handler = opt_handler;
+    this.callOnce = false;
+    this.key = ++goog.events.Listener.counter_;
+    this.removed = false;
+  };
 
 
-/**
- * Calls the internal listener
- * @param {Object} eventObject Event object to be passed to listener.
- * @return {boolean} The result of the internal listener call.
- */
-goog.events.Listener.prototype.handleEvent = function(eventObject) {
-  if (this.isFunctionListener_) {
-    return this.listener.call(this.handler || this.src, eventObject);
-  }
-  return this.listener.handleEvent.call(this.listener, eventObject);
-};
+  /**
+   * Calls the internal listener
+   * @param {Object} eventObject Event object to be passed to listener.
+   * @return {boolean} The result of the internal listener call.
+   */
+  goog.events.Listener.prototype.handleEvent = function(eventObject) {
+    if (this.isFunctionListener_) {
+      return this.listener.call(this.handler || this.src, eventObject);
+    }
+    return this.listener.handleEvent.call(this.listener, eventObject);
+  };
+
+  return goog.events.Listener;
+});

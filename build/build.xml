@@ -8,7 +8,7 @@
   Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
   Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
-  Version: 2011-06-07
+  Version: 2011-07-08
 
   Based on Build script for bezen.org JavaScript library
   CC-BY: Eric Bréchemier - http://bezen.org/javascript/
@@ -24,15 +24,26 @@
     <delete dir="out"/>
   </target>
 
-  <target name="checkLib"
+  <target name="checkAmd"
+    description="Check Asynchronous Module Definition source with JSLint">
+    <jslint dir="../src/amd" />
+  </target>
+
+  <target name="checkClosure"
           description="Check Google Closure source files with JSLint">
     <!-- food for thought: fails with terrible errors -->
     <jslint dir="../src/closure" />
   </target>
 
   <target name="checkSrc"
-          description="Check JavaScript source files with JSLint">
-    <jslint dir="../src" />
+          description="Check JavaScript modules source files with JSLint">
+    <!-- check ../src/{project name} if available -->
+    <available file="../src/${ant.project.name}"
+      property="modules.src" value="../src/${ant.project.name}" />
+    <!-- otherwise check ../src -->
+    <property name="modules.src" value="../src" />
+
+    <jslint dir="${modules.src}" />
   </target>
 
   <target name="checkTest" description="Check test files with JSLint">
@@ -52,102 +63,52 @@
   <target name="doc" depends="document" description="alias for document" />
 
   <target name="combine"
-    description="Combine JavaScript files using concat task">
-    <mkdir dir="out/js"/>
-    <concat binary="true" destfile="out/js/${ant.project.name}-full.js">
-      <!-- Google Closure (extracts) -->
-      <file file="../src/closure/goog.js"/>
-      <file file="../src/closure/goog.array.js"/>
-      <file file="../src/closure/goog.string.js"/>
-      <file file="../src/closure/goog.object.js"/>
-      <file file="../src/closure/goog.structs.js"/>
-      <file file="../src/closure/goog.iter.js"/>
-      <file file="../src/closure/goog.structs.Map.js"/>
-      <file file="../src/closure/goog.structs.Set.js"/>
-      <file file="../src/closure/goog.debug.js"/>
-      <file file="../src/closure/goog.debug.LogRecord.js"/>
-      <file file="../src/closure/goog.debug.LogBuffer.js"/>
-      <file file="../src/closure/goog.debug.Logger.js"/>
-      <file file="../src/closure/goog.debug.RelativeTimeProvider.js"/>
-      <file file="../src/closure/goog.debug.Formatter.js"/>
-      <file file="../src/closure/goog.debug.Console.js"/>
-      <file file="../src/closure/goog.userAgent.js"/>
-      <file file="../src/closure/goog.dom.BrowserFeature.js"/>
-      <file file="../src/closure/goog.dom.TagName.js"/>
-      <file file="../src/closure/goog.dom.classes.js"/>
-      <file file="../src/closure/goog.math.Coordinate.js"/>
-      <file file="../src/closure/goog.math.Size.js"/>
-      <file file="../src/closure/goog.dom.js"/>
-      <file file="../src/closure/goog.debug.errorHandlerWeakDep.js"/>
-      <file file="../src/closure/goog.Disposable.js"/>
-      <file file="../src/closure/goog.events.Event.js"/>
-      <file file="../src/closure/goog.events.EventType.js"/>
-      <file file="../src/closure/goog.events.BrowserFeature.js"/>
-      <file file="../src/closure/goog.reflect.js"/>
-      <file file="../src/closure/goog.events.BrowserEvent.js"/>
-      <file file="../src/closure/goog.events.EventWrapper.js"/>
-      <file file="../src/closure/goog.events.Listener.js"/>
-      <file file="../src/closure/goog.structs.SimplePool.js"/>
-      <file file="../src/closure/goog.userAgent.jscript.js"/>
-      <file file="../src/closure/goog.events.pools.js"/>
-      <file file="../src/closure/goog.events.js"/>
-      <file file="../src/closure/goog.events.EventTarget.js"/>
-      <file file="../src/closure/goog.Timer.js"/>
-      <file file="../src/closure/goog.events.EventHandler.js"/>
-      <file file="../src/closure/goog.history.EventType.js"/>
-      <file file="../src/closure/goog.history.Event.js"/>
-      <file file="../src/closure/goog.History.js"/>
-      <file file="../src/closure/goog.json.js"/>
-      <file file="../src/closure/goog.net.ErrorCode.js"/>
-      <file file="../src/closure/goog.net.EventType.js"/>
-      <file file="../src/closure/goog.net.HttpStatus.js"/>
-      <file file="../src/closure/goog.net.XmlHttpFactory.js"/>
-      <file file="../src/closure/goog.net.WrapperXmlHttpFactory.js"/>
-      <file file="../src/closure/goog.net.XmlHttp.js"/>
-      <file file="../src/closure/goog.net.xhrMonitor.js"/>
-      <file file="../src/closure/goog.uri.utils.js"/>
-      <file file="../src/closure/goog.net.XhrIo.js"/>
-      <!-- Scalable JavaScript Application -->
-      <file file="../src/lb.js"/>
-      <file file="../src/lb.base.js"/>
-      <file file="../src/lb.base.type.js"/>
-      <file file="../src/lb.base.object.js"/>
-      <file file="../src/lb.base.array.js"/>
-      <file file="../src/lb.base.config.js"/>
-      <file file="../src/lb.base.dom.js"/>
-      <file file="../src/lb.base.dom.css.js"/>
-      <file file="../src/lb.base.dom.Listener.js"/>
-      <file file="../src/lb.base.dom.factory.js"/>
-      <file file="../src/lb.base.history.js"/>
-      <file file="../src/lb.base.i18n.js"/>
-      <file file="../src/lb.base.i18n.data.js"/>
-      <file file="../src/lb.base.log.js"/>
-      <file file="../src/lb.base.string.js"/>
-      <file file="../src/lb.base.template.js"/>
-      <file file="../src/lb.base.template.string.js"/>
-      <file file="../src/lb.base.template.html.js"/>
-      <file file="../src/lb.base.template.i18n.js"/>
-      <file file="../src/lb.base.json.js"/>
-      <file file="../src/lb.base.ajax.js"/>
-      <file file="../src/lb.core.js"/>
-      <file file="../src/lb.core.events.js"/>
-      <file file="../src/lb.core.events.publisher.js"/>
-      <file file="../src/lb.core.events.Subscriber.js"/>
-      <file file="../src/lb.core.application.js"/>
-      <file file="../src/lb.core.Sandbox.js"/>
-      <file file="../src/lb.core.plugins.js"/>
-      <file file="../src/lb.core.plugins.css.js"/>
-      <file file="../src/lb.core.plugins.dom.js"/>
-      <file file="../src/lb.core.plugins.events.js"/>
-      <file file="../src/lb.core.plugins.i18n.js"/>
-      <file file="../src/lb.core.plugins.server.js"/>
-      <file file="../src/lb.core.plugins.url.js"/>
-      <file file="../src/lb.core.plugins.utils.js"/>
-      <file file="../src/lb.core.plugins.builder.js"/>
-      <file file="../src/lb.core.Module.js"/>
-      <file file="../src/lb.data.js" />
-      <file file="../src/lb.ui.js" />
-    </concat>
+    description="Combine JavaScript files using requireJS optimization tool">
+    <!--
+      Absolute locations are needed for the build config;
+      otherwise, locations are relative to the config file.
+
+      Paths use '/' as separator even on Windows, otherwise
+      '\' results in escape sequences in JavaScript strings
+    -->
+    <pathconvert property="src.dir" dirsep="/">
+      <path location="../src" />
+    </pathconvert>
+
+    <pathconvert property="out.dir" dirsep="/">
+      <path location="out" />
+    </pathconvert>
+
+    <!--
+    Note:
+    The modules to combine must be listed explicitly for the optimizer tool.
+    There is no option to combine all scripts found in the source folder.
+    https://groups.google.com/group/requirejs/browse_thread/thread/3dc1d075cb8cd4b4/52407c37e426adee?lnk=gst&q=%22concatenate+all+scripts%22#52407c37e426adee
+    -->
+
+    <!-- list all scripts files found in source folder -->
+    <fileset id="src.files" dir="${src.dir}">
+      <include name="**/*.js" />
+    </fileset>
+
+    <!-- convert the list to the "inside" of an array of modules:
+         a", "b", "c", "d
+    -->
+    <pathconvert property="all.modules.inner"
+      refid="src.files" dirsep="/" pathsep='","'>
+      <!-- convert to a path relative to source folder -->
+      <map from="${src.dir}/" to="" />
+      <!-- remove the .js extension to refer to the module, not the file -->
+      <mapper type="glob" from="*.js" to="*" />
+    </pathconvert>
+
+    <!-- add the initial '["' and final '"]' -->
+    <property name="all.modules" value='["${all.modules.inner}"]' />
+
+    <!-- combine all modules -->
+    <requirejs in="${src.dir}" modules="${all.modules}"
+               config="${out.dir}/config"
+               out="${out.dir}/js/${ant.project.name}-full.js"  />
   </target>
 
   <target name="setTimestamp">

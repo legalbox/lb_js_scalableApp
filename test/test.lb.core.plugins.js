@@ -4,38 +4,46 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-04-21
+ * Version:   2011-07-05
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.plugins.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window */
-(function() {
-  // Builder of
-  // Closure object for Test of lb.core.plugins
+/*global define, window, lb */
+define(
+  [
+    "bezen.org/bezen.assert",
+    "bezen.org/bezen.object",
+    "bezen.org/bezen.testrunner",
+    "lb/lb.core.plugins"
+  ],
+  function(
+    assert,
+    object,
+    testrunner,
+    plugins
+  ){
 
-  // Define aliases
-      /*requires bezen.assert.js */
-  var assert = bezen.assert,
-      /*requires bezen.object.js */
-      object = bezen.object,
-      /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner;
+    function testNamespace(){
 
-  function testNamespace(){
+      assert.isTrue( object.exists(plugins),
+                        "plugins namespace module not found in dependencies");
 
-    assert.isTrue( object.exists(window,'lb','core','plugins'),
+      if ( object.exists(window) ){
+        assert.isTrue( object.exists(window,'lb','core','plugins'),
                                     "lb.core.plugins namespace was not found");
+        assert.equals( plugins, lb.core.plugins,
+         "same module expected in lb.core.plugins for backward compatibility");
+      }
+    }
+
+    var tests = {
+      testNamespace: testNamespace
+    };
+
+    testrunner.define(tests, "lb.core.plugins");
+    return tests;
   }
-
-  var tests = {
-    testNamespace: testNamespace
-  };
-
-  testrunner.define(tests, "lb.core.plugins");
-  return tests;
-
-}());
+);

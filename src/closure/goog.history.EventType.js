@@ -15,20 +15,26 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/history/eventtype.js to goog.history.EventType.js
-// * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Event types for goog.history.
  *
  */
-/*requires goog.js*/
-goog.provide('goog.history.EventType');
+
+define(["./goog"], function(goog){
+
+  goog.provide('goog.history.EventType');
 
 
-/**
- * Event types for goog.history.
- * @enum {string}
- */
-goog.history.EventType = {
-  NAVIGATE: 'navigate'
-};
+  /**
+   * Event types for goog.history.
+   * @enum {string}
+   */
+  goog.history.EventType = {
+    NAVIGATE: 'navigate'
+  };
+
+  return goog.history.EventType;
+});

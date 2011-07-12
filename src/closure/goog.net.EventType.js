@@ -15,27 +15,33 @@
 // Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/net/eventtype.js to goog.net.EventType.js
-// * added requires comment for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Common events for the network classes.
  */
-/*requires goog.js*/
-goog.provide('goog.net.EventType');
+
+define(["./goog"], function(goog){
+
+  goog.provide('goog.net.EventType');
 
 
-/**
- * Event names for network events
- * @enum {string}
- */
-goog.net.EventType = {
-  COMPLETE: 'complete',
-  SUCCESS: 'success',
-  ERROR: 'error',
-  ABORT: 'abort',
-  READY: 'ready',
-  READY_STATE_CHANGE: 'readystatechange',
-  TIMEOUT: 'timeout',
-  INCREMENTAL_DATA: 'incrementaldata',
-  PROGRESS: 'progress'
-};
+  /**
+   * Event names for network events
+   * @enum {string}
+   */
+  goog.net.EventType = {
+    COMPLETE: 'complete',
+    SUCCESS: 'success',
+    ERROR: 'error',
+    ABORT: 'abort',
+    READY: 'ready',
+    READY_STATE_CHANGE: 'readystatechange',
+    TIMEOUT: 'timeout',
+    INCREMENTAL_DATA: 'incrementaldata',
+    PROGRESS: 'progress'
+  };
+
+  return goog.net.EventType;
+});

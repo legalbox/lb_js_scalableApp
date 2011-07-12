@@ -58,6 +58,7 @@
     </sequential>
   </macrodef>
 
+  <!-- Generate HTML documentation from comments in source files -->
   <macrodef name="naturaldocs">
     <attribute name="in" description="path to input folder for JS files" />
     <attribute name="out" description="path to folder for HTML output" />
@@ -80,9 +81,45 @@
     </sequential>
   </macrodef>
 
+  <!-- Combine JavaScript files using requireJS -->
+  <macrodef name="requirejs">
+    <attribute name="in"
+      description="location of source folder which contains JS files" />
+    <attribute name="modules"
+      description="modules to combine, JSON array of strings" />
+    <attribute name="out"
+      description="location of the combined file to create" />
+    <attribute name="config"
+      description="location of the folder for generated build config" />
+    <sequential>
+      <echo>requirejs: started combining @{modules} => @{out}</echo>
+
+      <mkdir dir="@{config}" />
+      <copy file="${macros.basedir}/lib/requirejs/build-config.json.tpl"
+            tofile="@{config}/build-config.json" overwrite="true" />
+      <replace file="@{config}/build-config.json" encoding="UTF-8">
+        <replacefilter token="#src.dir#" value="@{in}" />
+        <replacefilter token="#modules.array#" value="@{modules}" />
+        <replacefilter token="#out.file#" value="@{out}" />
+      </replace>
+
+      <java jar="${macros.basedir}/lib/requirejs/rhino/js.jar"
+        fork="true" failonerror="true">
+        <arg line="${macros.basedir}/lib/requirejs/bin/x.js" />
+        <arg line="${macros.basedir}/lib/requirejs/bin" />
+        <arg line="${macros.basedir}/lib/requirejs/build/build.js" />
+        <arg line="@{config}/build-config.json" />
+      </java>
+
+      <echo>requirejs: completed combining @{in} => @{out}</echo>
+      <echo/>
+    </sequential>
+  </macrodef>
+
+  <!-- Minify JavaScript/CSS files -->
   <macrodef name="yuicompressor">
-    <attribute name="in" />
-    <attribute name="out" />
+    <attribute name="in" description="path to input file" />
+    <attribute name="out" description="path to output file (minified)" />
     <sequential>
       <echo>yuicompressor: started processing @{in} => @{out}</echo>
       <java jar="${macros.basedir}/lib/yuicompressor/yuicompressor-2.4.2.jar"

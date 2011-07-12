@@ -16,74 +16,79 @@
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/relativetimeprovider.js to 
 //   goog.debug.RelativeTimeProvider.js
-// * added requires comments for goog.js
+// * wrapped code in a function in a call to define for dependency management
+//   using requireJS
 
 /**
  * @fileoverview Definition the goog.debug.RelativeTimeProvider class.
  *
  */
-/*requires goog.js*/
-goog.provide('goog.debug.RelativeTimeProvider');
+define(["./goog"], function(goog){
+
+  goog.provide('goog.debug.RelativeTimeProvider');
 
 
 
-/**
- * A simple object to keep track of a timestamp considered the start of
- * something. The main use is for the logger system to maintain a start time
- * that is occasionally reset. For example, in Gmail, we reset this relative
- * time at the start of a user action so that timings are offset from the
- * beginning of the action. This class also provides a singleton as the default
- * behavior for most use cases is to share the same start time.
- *
- * @constructor
- */
-goog.debug.RelativeTimeProvider = function() {
   /**
-   * The start time.
-   * @type {number}
+   * A simple object to keep track of a timestamp considered the start of
+   * something. The main use is for the logger system to maintain a start time
+   * that is occasionally reset. For example, in Gmail, we reset this relative
+   * time at the start of a user action so that timings are offset from the
+   * beginning of the action. This class also provides a singleton as the default
+   * behavior for most use cases is to share the same start time.
+   *
+   * @constructor
+   */
+  goog.debug.RelativeTimeProvider = function() {
+    /**
+     * The start time.
+     * @type {number}
+     * @private
+     */
+    this.relativeTimeStart_ = goog.now();
+  };
+
+
+  /**
+   * Default instance.
+   * @type {goog.debug.RelativeTimeProvider}
    * @private
    */
-  this.relativeTimeStart_ = goog.now();
-};
+  goog.debug.RelativeTimeProvider.defaultInstance_ =
+      new goog.debug.RelativeTimeProvider();
 
 
-/**
- * Default instance.
- * @type {goog.debug.RelativeTimeProvider}
- * @private
- */
-goog.debug.RelativeTimeProvider.defaultInstance_ =
-    new goog.debug.RelativeTimeProvider();
+  /**
+   * Sets the start time to the specified time.
+   * @param {number} timeStamp The start time.
+   */
+  goog.debug.RelativeTimeProvider.prototype.set = function(timeStamp) {
+    this.relativeTimeStart_ = timeStamp;
+  };
 
 
-/**
- * Sets the start time to the specified time.
- * @param {number} timeStamp The start time.
- */
-goog.debug.RelativeTimeProvider.prototype.set = function(timeStamp) {
-  this.relativeTimeStart_ = timeStamp;
-};
+  /**
+   * Resets the start time to now.
+   */
+  goog.debug.RelativeTimeProvider.prototype.reset = function() {
+    this.set(goog.now());
+  };
 
 
-/**
- * Resets the start time to now.
- */
-goog.debug.RelativeTimeProvider.prototype.reset = function() {
-  this.set(goog.now());
-};
+  /**
+   * @return {number} The start time.
+   */
+  goog.debug.RelativeTimeProvider.prototype.get = function() {
+    return this.relativeTimeStart_;
+  };
 
 
-/**
- * @return {number} The start time.
- */
-goog.debug.RelativeTimeProvider.prototype.get = function() {
-  return this.relativeTimeStart_;
-};
+  /**
+   * @return {goog.debug.RelativeTimeProvider} The default instance.
+   */
+  goog.debug.RelativeTimeProvider.getDefaultInstance = function() {
+    return goog.debug.RelativeTimeProvider.defaultInstance_;
+  };
 
-
-/**
- * @return {goog.debug.RelativeTimeProvider} The default instance.
- */
-goog.debug.RelativeTimeProvider.getDefaultInstance = function() {
-  return goog.debug.RelativeTimeProvider.defaultInstance_;
-};
+  return goog.debug.RelativeTimeProvider;
+});

@@ -4,38 +4,46 @@
  * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
  * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
- * Version:   2011-01-05
+ * Version:   2011-06-30
  *
  * Based on Test Runner from bezen.org JavaScript library
  * CC-BY: Eric Bréchemier - http://bezen.org/javascript/
  */
 
-/*requires lb.core.events.js */
 /*jslint white:false, onevar:false, plusplus:false */
-/*global lb, bezen, window */
-(function() {
-  // Builder of
-  // Closure object for Test of lb.core.events
+/*global define, window, lb */
+define(
+  [
+    "bezen.org/bezen.assert",
+    "bezen.org/bezen.object",
+    "bezen.org/bezen.testrunner",
+    "lb/lb.core.events"
+  ],
+  function(
+    assert,
+    object,
+    testrunner,
+    events
+  ){
 
-  // Define aliases
-      /*requires bezen.assert.js */
-  var assert = bezen.assert,
-      /*requires bezen.object.js */
-      object = bezen.object,
-      /*requires bezen.testrunner.js */
-      testrunner = bezen.testrunner;
+    function testNamespace(){
 
-  function testNamespace(){
+      assert.isTrue( object.exists(events),
+                                  "events module not found in dependencies");
 
-    assert.isTrue( object.exists(window,'lb','core','events'),
-                                    "lb.core.events namespace was not found");
+      if ( object.exists(window) ) {
+        assert.isTrue( object.exists(window,'lb','core','events'),
+                                   "lb.core.events namespace was not found");
+        assert.equals( events, lb.core.events,
+          "same module expected in lb.core.events for backward compatibility");
+      }
+    }
+
+    var tests = {
+      testNamespace: testNamespace
+    };
+
+    testrunner.define(tests, "lb.core.events");
+    return tests;
   }
-
-  var tests = {
-    testNamespace: testNamespace
-  };
-
-  testrunner.define(tests, "lb.core.events");
-  return tests;
-
-}());
+);
