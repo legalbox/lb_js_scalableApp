@@ -108,7 +108,7 @@
       // Parameter:
       //   message - string, message to include in the error description
 
-      throw new Error("Failed to load module id '"+id+"': "+message);
+      throw new Error("Failed to load module id '"+String(id)+"': "+message);
     }
 
     function getAbsoluteId(relativeId){
