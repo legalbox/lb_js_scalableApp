@@ -81,6 +81,26 @@
         exports = {},
         result;
 
+    switch(arguments.length){
+      case 0:   // define()
+        return; // nothing to define
+      case 1:   // define(factory)
+        factory = arguments[0];
+        break;
+      case 2:
+        if (typeof arguments[0]==='string'){  // define(id,factory)
+          id = arguments[0];
+        } else {                              // define(dependencies,factory)
+          dependencies = arguments[0];
+        }
+        factory = arguments[1];
+        break;
+      default: // define(id,dependencies,factory)
+        id = arguments[0];
+        dependencies = arguments[1];
+        factory = arguments[2];
+    }
+
     function fail(message){
       // (private) Function: fail(message)
       // Throw an Error including given message in the description.
@@ -164,26 +184,6 @@
         fail("Module not loaded yet: '"+absoluteId+"'");
       }
       return exports;
-    }
-
-    switch(arguments.length){
-      case 0:   // define()
-        return; // nothing to define
-      case 1:   // define(factory)
-        factory = arguments[0];
-        break;
-      case 2:
-        if (typeof arguments[0]==='string'){  // define(id,factory)
-          id = arguments[0];
-        } else {                              // define(dependencies,factory)
-          dependencies = arguments[0];
-        }
-        factory = arguments[1];
-        break;
-      default: // define(id,dependencies,factory)
-        id = arguments[0];
-        dependencies = arguments[1];
-        factory = arguments[2];
     }
 
     for (i=0, length=dependencies.length; i<length; i++){
