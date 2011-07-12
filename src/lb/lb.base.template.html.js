@@ -118,7 +118,7 @@ define(
         } catch ( childNodeFilterError ) {
           log(
             'Failed to apply HTML filters to child node '+childNodes[i]+
-            ' in position '+(i+1)+
+            ' in position '+String(i+1)+
             ' of element '+node.nodeName+ ( node.id? '#'+node.id :
             (node.className?' class="'+node.className+'"':'') )+
             ': '+childNodeFilterError

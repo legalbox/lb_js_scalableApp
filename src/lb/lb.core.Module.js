@@ -84,7 +84,7 @@ define(
         module = creator(sandbox);
       } catch(creationError){
         log('ERROR: failed to create module "'+id+
-            '" using creator "'+creator+
+            '" using creator "'+String(creator)+
             '"; '+creationError);
       }
 
