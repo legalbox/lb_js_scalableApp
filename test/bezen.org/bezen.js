@@ -32,7 +32,7 @@
  * Version:
  * 2011-07-12
  */
-/*jslint white:false, plusplus:false */
+
 /*global define */
 (function(){
   // Builder of
