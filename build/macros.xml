@@ -52,7 +52,7 @@
       -->
       <jslint4java jslint="${macros.basedir}/lib/jslint/jslint.js"
         options="bitwise,plusplus,unparam,sloppy,confusion,white"
-        encoding="UTF-8" haltOnFailure="true">
+        encoding="UTF-8" haltOnFailure="false">
         <formatter type="plain" />
         <!-- The two file sets are combined to handle two use cases:
           1) only file attribute is present
