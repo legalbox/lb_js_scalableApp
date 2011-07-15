@@ -56,6 +56,7 @@ define(
         logger.setLevel(Level.INFO);
       }
       logger.info(message);
+      console.log(message);
     }
 
     // Assign to lb.base.log
