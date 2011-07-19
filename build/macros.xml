@@ -132,7 +132,6 @@
           fork="true"
           failonerror="true"
       >
-        <arg value="-v" />
         <arg line="--charset UTF-8" />
         <arg line="-o @{out}" />
         <arg line="@{in}" />
