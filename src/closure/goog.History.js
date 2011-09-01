@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Modifications Copyright 2010-2011 Legalbox SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/history/history.js to
 //   goog.History.js
 // * bug fix: avoid duplicate firing of initial hash in IE
 //   In goog.History.prototype.setEnabled, I moved the dispatchEvent call for
 //   the initial hash to the previous block in if (!goog.userAgent.IE).
-//   The code is annotated with comments starting with // [Legal-Box#01]
+//   The code is annotated with comments starting with // [Legalbox#01]
 // * bug fix: avoid duplicate firing of initial hash in FF
 //   In goog.History.prototype.setEnabled, I added an initialization of the
 //   last token before the dispatchEvent for the initial hash in HTML5 case.
-//   The code is annotated with a comment starting with // [Legal-Box#02]
+//   The code is annotated with a comment starting with // [Legalbox#02]
 //
 // Notes:
 //
@@ -524,7 +524,7 @@ define(["./goog","./goog.Timer","./goog.dom","./goog.events",
         this.eventHandler_.listen(
             this.window_, goog.events.EventType.HASHCHANGE, this.onHashChange_);
         this.enabled_ = true;
-        // [Legal-Box#02] added missing initialization of last token
+        // [Legalbox#02] added missing initialization of last token
         this.lastToken_ = this.getToken();
         this.dispatchEvent(new goog.history.Event(this.getToken(), false));
       } else if (!goog.userAgent.IE || this.documentLoaded) {
@@ -539,12 +539,12 @@ define(["./goog","./goog.Timer","./goog.dom","./goog.events",
         // However this causes the hash to get replaced with a null token in IE.
         if (!goog.userAgent.IE) {
           this.lastToken_ = this.getToken();
-          // [Legal-Box#01] moved from after the loop to here
+          // [Legalbox#01] moved from after the loop to here
           this.dispatchEvent(new goog.history.Event(this.getToken(), false));
         }
 
         this.timer_.start();
-        // [Legal-Box#01] moved from here to within the loop before
+        // [Legalbox#01] moved from here to within the loop before
         // this.dispatchEvent(new goog.history.Event(this.getToken(), false));
       }
 

@@ -2,10 +2,10 @@
  * test.lb.base.history.js - Unit Tests of lb.base.history module
  *
  * Authors:
- *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Eric Bréchemier <contact@legalbox.com>
  *   o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
- * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
+ * Copyright: Legalbox (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
  * Version:   2011-07-12
  *

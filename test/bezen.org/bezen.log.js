@@ -50,7 +50,7 @@
  *   log.error('Issue detected with '+object+' in callback '+callback,true);
  */
 
-// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Modifications Copyright 2010-2011 Legalbox SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * updated module pattern for use with requireJS
 

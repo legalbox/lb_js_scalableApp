@@ -1,4 +1,4 @@
-jslint4java-1.4.8-SNAPSHOT.jar is a custom build made by Legal-Box,
+jslint4java-1.4.8-SNAPSHOT.jar is a custom build made by Legalbox,
 based on the trunk of jslint4java on 2011-07-11:
 
   Update to JSLint 2011-07-01

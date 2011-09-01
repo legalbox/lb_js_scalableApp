@@ -1,8 +1,8 @@
 /*
  * test.lb.core.application.js - Unit Tests of Core Application
  *
- * Author:    Eric Bréchemier <legalbox@eric.brechemier.name>
- * Copyright: Legal-Box (c) 2010-2011, All Rights Reserved
+ * Author:    Eric Bréchemier <contact@legalbox.com>
+ * Copyright: Legalbox (c) 2010-2011, All Rights Reserved
  * License:   BSD License - http://creativecommons.org/licenses/BSD/
  * Version:   2011-07-12
  *

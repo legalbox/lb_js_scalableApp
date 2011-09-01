@@ -63,11 +63,11 @@
  *     http://msdn.microsoft.com/en-us/library/ms537656%28VS.85%29.aspx
  *
  * Authors:
- * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Eric Bréchemier <contact@legalbox.com>
  * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
- * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ * Legalbox SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License

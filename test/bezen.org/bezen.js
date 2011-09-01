@@ -20,10 +20,10 @@
  * Reference:
  * http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
  *
- * Author: Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Author: Eric Bréchemier <contact@legalbox.com>
  *
  * Copyright:
- * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ * Legalbox SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
@@ -243,7 +243,7 @@
  * version:   based on 2010-01-14
  */
 
-// Modifications Copyright 2010-2011 Legal-Box SAS, All Rights Reserved
+// Modifications Copyright 2010-2011 Legalbox SAS, All Rights Reserved
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * updated module pattern for use with requireJS
 

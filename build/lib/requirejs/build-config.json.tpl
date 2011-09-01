@@ -11,10 +11,10 @@
  * of the minified version for debugging purpose.
  *
  * Author:
- * Eric Bréchemier <legalbox@eric.brechemier.name>
+ * Eric Bréchemier <contact@legalbox.com>
  *
  * Copyright:
- * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ * Legalbox SA (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License

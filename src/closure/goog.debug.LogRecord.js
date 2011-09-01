@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Modifications Copyright 2010-2011 Legal-Box SAS
+// Modifications Copyright 2010-2011 Legalbox SAS
 // Licensed under the BSD License - http://creativecommons.org/licenses/BSD/
 // * renamed file from goog/debug/logrecord.js to goog.debug.LogRecord.js
 // * wrapped code in a function in a call to define for dependency management

@@ -8,11 +8,11 @@
  * getOption() to retrieve a single value.
  *
  * Authors:
- *   o Eric Bréchemier <legalbox@eric.brechemier.name>
+ *   o Eric Bréchemier <contact@legalbox.com>
  *   o Marc delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
- * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ * Legalbox SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License
@@ -59,7 +59,7 @@ define(
       // In order to avoid clashes in the names of configuration properties,
       // each property should use a prefix corresponding to the implementor of
       // the module which makes use of it. All configuration properties used in
-      // modules implemented by Legal-Box will use the prefix 'lb', e.g.
+      // modules implemented by Legalbox will use the prefix 'lb', e.g.
       // 'lbFactory' for the DOM Element Factory.
       //
       // Parameter:

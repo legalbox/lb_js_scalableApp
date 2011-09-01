@@ -22,11 +22,11 @@
  * codes is managed in <lb.base.i18n.data>.
  *
  * Authors:
- * o Eric Bréchemier <legalbox@eric.brechemier.name>
+ * o Eric Bréchemier <contact@legalbox.com>
  * o Marc Delhommeau <marc.delhommeau@legalbox.com>
  *
  * Copyright:
- * Legal-Box SAS (c) 2010-2011, All Rights Reserved
+ * Legalbox SAS (c) 2010-2011, All Rights Reserved
  *
  * License:
  * BSD License

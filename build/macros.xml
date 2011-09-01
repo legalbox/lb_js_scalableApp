@@ -3,14 +3,14 @@
   <description>
   Macro definitions for projects based on
   The Scalable JavaScript Application Framework
-  by Legal-Box, Paris
+  by Legalbox, Paris
 
   These macro definitions allow to use a simpler syntax to call the tools
   included in lib folder.
 
-  Author: Eric Bréchemier &lt;legalbox@eric.brechemier.name>
+  Author: Eric Bréchemier &lt;contact@legalbox.com>
   Author: Marc Delhommeau &lt;marc.delhommeau@legalbox.com>
-  Copyright: Legal-Box SAS (c) 2010-2011, All Rights Reserved
+  Copyright: Legalbox SA (c) 2010-2011, All Rights Reserved
   License: BSD License - http://creativecommons.org/licenses/BSD/
   Version: 2011-07-12
 
