@@ -45,7 +45,7 @@ define(
 
     // Assign to lb.core.Module
     // for backward-compatibility in browser environment
-    lbCore.Module = function (id, creator) {
+    lbCore.Module = function (id, creator, initVal) {
       // Function: new Module(id,creator): Module
       // Constructor of a new Core Module.
       //
@@ -53,6 +53,7 @@ define(
       //   id - string, the module identifier, e.g. 'lb.ui.myModule'
       //   creator - function, a creator function returning a custom module.
       //             A new Sandbox instance will be provided as parameter.
+      //   initVal - Initial Value for a Module
       //
       // Returns:
       //   object, the new instance of Module
@@ -83,7 +84,7 @@ define(
 
       try {
         sandbox = getOption('lbBuilder',defaultBuilder).buildSandbox(id);
-        module = creator(sandbox);
+        module = creator(sandbox, initVal);
       } catch(creationError){
         log('ERROR: failed to create module "'+id+
             '" using creator "'+String(creator)+
